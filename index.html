@@ -9,28 +9,12 @@
 <body>
     <div id="myData"></div>
     <script>
-        fetch('person.json')
-  .then(res => res.json())
-  .then(json => {
-    //json vaiable contains object with data
-  })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-        function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = 'Name: ' + data[i].firstName + ' ' + data[i].lastName;
-                mainContainer.appendChild(div);
-            }
-        }
+fetch('person.json')
+.then(response => response.json())
+.then(data => {
+  console.log(data) // Prints result from `response.json()` in getRequest
+})
+.catch(error => console.error(error))
     </script>
 </body>
 </html>
