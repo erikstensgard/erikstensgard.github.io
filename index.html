@@ -7,10 +7,13 @@
     <title>JSON Test</title>
 </head>
 <body>
-<p>Testing</p>
     <div id="myData"></div>
     <script>
-        fetch('https://github.com/erikstensgard/erikstensgard.github.io/blob/50a03fed142f82c0ebb2a9198e4fe75fc1474284/people.json')
+        fetch('person.json')
+  .then(res => res.json())
+  .then(json => {
+    //json vaiable contains object with data
+  })
             .then(function (response) {
                 return response.json();
             })
