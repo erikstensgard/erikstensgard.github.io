@@ -10,10 +10,6 @@
     <div id="myData"></div>
     <script>
         fetch('people.json')
-  .then(res => res.json())
-  .then(json => {
-    //json vaiable contains object with data
-  })
             .then(function (response) {
                 return response.json();
             })
@@ -31,10 +27,6 @@
                 mainContainer.appendChild(div);
             }
         }
-.then(json => {
-  console.log(data) // Prints result from `response.json()` in getRequest
-})
-.catch(error => console.error(error))
     </script>
 </body>
-</html>
+</html> 
