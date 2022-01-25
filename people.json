@@ -1,4 +1,6 @@
-[
+{
+  "people":
+  [ 
      {
         "id" : 1,
         "firstName" : "John",
@@ -14,4 +16,5 @@
         "firstName" : "George",
         "lastName" : "Hansen"
     }
-]
+  ]
+}
