@@ -12,27 +12,22 @@
     <script>
         fetch('OrderMenus.json')
         
-            .then(  
-    function(response) {  
-      if (response.status !== 200) {  
-        console.warn('Looks like there was a problem. Status Code: ' + 
-          response.status);  
-        return;  
-      }
-
+      .then(function(response) 
       // Examine the text in the response  
-      response.json().then(function(data) {  
+      response.json().then(function(data) 
+     {  
         let option;
     
-    	for (let i = 0; i < data.length; i++) {
+    	for (let i = 0; i < data.length; i++) 
+     {
           option = document.createElement('option');
       	  option.text = data[i].Text;
       	  option.value = data[i].Name;
       	  dropdown.add(option);
-    	}    
-      });  
-    }  
-  )       
+    }    
+        }                          
+            );
+   
             .then(function (response) {
                 return response.json();
             })
