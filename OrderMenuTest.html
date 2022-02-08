@@ -7,9 +7,9 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <div id="myData"></div>
+    <div id="OrderMenus"></div>
     <script>
-        fetch('people.json')
+        fetch('OrderMenus.json')
   .then(res => res.json())
   .then(json => {
     //json vaiable contains object with data
@@ -24,10 +24,10 @@
                 console.log('error: ' + err);
             });
         function appendData(data) {
-            var mainContainer = document.getElementById("myData");
+            var mainContainer = document.getElementById("OrderMenus");
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                div.innerHTML = 'Name: ' + data[i].firstName + ' ' + data[i].lastName;
+                div.innerHTML = 'Name: ' + data[i].Name
                 mainContainer.appendChild(div);
             }
         }
