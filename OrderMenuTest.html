@@ -6,18 +6,16 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 10
+    <p>Testing Menu Display test 11
     </p>
-    <select id="locality-dropdown" name="locality">
-</select>
-    <option value="AB">Alberta</option>
+    <select id="OrderMenuDropdown" name="Dropdown"></select>
     <div id="myData"></div>
     <script>
-let dropdown = document.getElementById('locality-dropdown');
+let dropdown = document.getElementById('OrderMenuDropdown');
 dropdown.length = 0;
 
 let defaultOption = document.createElement('option');
-defaultOption.Text = 'Choose Order Menu';
+defaultOption.Name = 'Choose Order Menu';
 
 dropdown.add(defaultOption);
 dropdown.selectedIndex = 0;
