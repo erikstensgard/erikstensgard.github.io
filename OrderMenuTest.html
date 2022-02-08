@@ -6,15 +6,15 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 7
+    <p>Testing Menu Display test 8
     </p>
     <div id="myData"></div>
     <script>
-let dropdown = document.getElementById('locality-dropdown');
+let dropdown = document.getElementById('Name');
 dropdown.length = 0;
 
 let defaultOption = document.createElement('option');
-defaultOption.text = 'Choose State/Province';
+defaultOption.Text = 'Choose Order Menu';
 
 dropdown.add(defaultOption);
 dropdown.selectedIndex = 0;
@@ -45,7 +45,9 @@ dropdown.selectedIndex = 0;
       .catch(function(err) {  
         console.error('Fetch Error -', err);  
       });
-            fetch('OrderMenus.json')
+   </script>
+  <script> 
+        fetch('OrderMenus.json')
             .then(function (response) {
                 return response.json();
             })
