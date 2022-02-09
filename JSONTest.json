@@ -158,29 +158,5 @@
 {"Row" : 24, "Column" : 1, "Item" : null, "Text" : "($$$) = 51-100 dollars per day",  "Header" : 0}, 
 {"Row" : 25, "Column" : 1, "Item" : null, "Text" : "($$$$) = 101-400 dollars per day",  "Header" : 0}, 
 {"Row" : 26, "Column" : 1, "Item" : null, "Text" : "($$$$$) = >400 dollars per day",  "Header" : 0}, 
-{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}]},
-
-{"Name" : "ORZID GMENU ER/UC ABX LYME DISEASE" 
-[{"Row" : 1, "Column" : 1, "Item" : "ORZID GMENU ER/UC ABX GENERAL INFORMATION ED", "Text" : "", "Header" : 0}, 
-{"Row" : 15, "Column" : 1, "Item" : "ORZID GMENU ER/UC LYME DISEASE PROPHYLAXIS", "Text" : "Lyme Disease Prophylaxis", "Header" : 0}, 
-{"Row" : 20, "Column" : 1, "Item" : "ORZID3 GMENU LYME ERYTHEMA MIGRANS", "Text" : "Erythema migrans associated with Lyme disease", "Header" : 0}, 
-{"Row" : 21, "Column" : 1, "Item" : "ORZID GMENU ER/UC LYME ACUTE NEURO DISEASE", "Text" : "Acute neurological disease associated with Lyme disease", "Header" : 0}, 
-{"Row" : 22, "Column" : 1, "Item" : "ORZID3 GMENU LYME ARTHRITIS ASSOC", "Text" : "Arthritis associated with Lyme disease", "Header" : 0}, 
-{"Row" : 23, "Column" : 1, "Item" : "ORZID GMENU ER/UC LYME CARDIAC DISEASE", "Text" : "Cardiac disease associated with Lyme disease", "Header" : 0}, 
-{"Row" : 3, "Column" : 1, "Item" : null, "Text" : "LYME DISEASE",  "Header" : 1}, 
-{"Row" : 5, "Column" : 1, "Item" : null, "Text" : "Lyme disease results from the transmission of Borrelia burgdorferi from an",  "Header" : 0}, 
-{"Row" : 6, "Column" : 1, "Item" : null, "Text" : "Ixodes spp. tick bite. Patients who display signs of illness or fever within 30 ",  "Header" : 0}, 
-{"Row" : 7, "Column" : 1, "Item" : null, "Text" : "days of removing an attached tick should be evaluated for tick-borne illness. ",  "Header" : 0}, 
-{"Row" : 8, "Column" : 1, "Item" : null, "Text" : "In the upper Midwest these are Lyme disease, human anaplasmosis, babesiosis, and",  "Header" : 0}, 
-{"Row" : 9, "Column" : 1, "Item" : null, "Text" : "Powassan virus disease. Patients who have been bitten by an Ixodes spp. tick",  "Header" : 0}, 
-{"Row" : 10, "Column" : 1, "Item" : null, "Text" : "(deer tick) but who do not display signs or symptoms of infection should not",  "Header" : 0}, 
-{"Row" : 11, "Column" : 1, "Item" : null, "Text" : "be treated with antimicrobials. ",  "Header" : 0}, 
-{"Row" : 13, "Column" : 1, "Item" : null, "Text" : "Prophylactic antimicrobial treatment may be beneficial in certain patients who",  "Header" : 0}, 
-{"Row" : 14, "Column" : 1, "Item" : null, "Text" : "have been bitten while in endemic areas.",  "Header" : 0}, 
-{"Row" : 17, "Column" : 1, "Item" : null, "Text" : "Except for erythema migrans, Lyme disease is a complicated, difficult disease to",  "Header" : 0}, 
-{"Row" : 18, "Column" : 1, "Item" : null, "Text" : "diagnose and treat. Infectious Diseases consultation is strongly encouraged.",  "Header" : 0}, 
-{"Row" : 26, "Column" : 1, "Item" : null, "Text" : "References",  "Header" : 0}, 
-{"Row" : 28, "Column" : 1, "Item" : null, "Text" : "Mandell Chapter: Lyme Disease (Lyme Borreliosis) Due to Borrelia burgdorferi",  "Header" : 0}, 
-{"Row" : 29, "Column" : 1, "Item" : null, "Text" : "Minnesota Department of Health, Disease Control Newsletter (2006), 34.2:9-24",  "Header" : 0}, 
-{"Row" : 30, "Column" : 1, "Item" : null, "Text" : "Wormser GP Clin Infect Dis (2006), 43: 1089", "Header" : 0}]}
+{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}]}
 ]}
