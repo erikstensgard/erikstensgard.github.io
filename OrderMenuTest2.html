@@ -6,7 +6,7 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 5
+    <p>Testing Menu Display test 6
     </p>
     <select id="OrderMenuDropdown" name="Dropdown"></select>
     <div id="myData"></div>
@@ -48,26 +48,19 @@ dropdown.selectedIndex = 0;
       });
    </script>
   <script> 
-        fetch('JSONTest.json')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-        function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            var fields = ["Name", "Name.Row"];
-            for (var i = 0; i < fields.length; i++) {
-                var value = getproperty (data, fields[i]);
-                var div = document.createElement("div");
-                div.innerHTML = fields[i].Name;
+        var OrderMenus = fetch('JSONTest.json')
+        for( var OrderMenuName in OrderMenus ){
+  //productName would be "laptop", "cellphone", etc.
+  //products[productName] would be an array of brand/price objects
+  var product = OrderMenus[OrderMenuName];
+  for( var i=0; i<product.length; i++ ){
+      var div = document.createElement("div");
+                div.innerHTML = 'Name: ' + product[i].Name + ' ';
                 mainContainer.appendChild(div);
-            }
-        }
+    //product[i].brand
+    //product[i].price
+  }
+}
     </script>
 </body>
 </html>
