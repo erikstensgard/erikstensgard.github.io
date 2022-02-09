@@ -1,6 +1,6 @@
 [
 {"Name" : "ORZID GMENU ABX COVID-19 ANTIBODIES" :
-[{"Row" : 1, "Column" : 1, "Item" : "ORZID GMENU ER/UC ABX GENERAL INFORMATION ED", "Text" : "Select here for help, legend, consults, alternative antimicrobials and more (ED)", "Header" : 0}, 
+{{"Row" : 1, "Column" : 1, "Item" : "ORZID GMENU ER/UC ABX GENERAL INFORMATION ED", "Text" : "Select here for help, legend, consults, alternative antimicrobials and more (ED)", "Header" : 0}, 
 {"Row" : 9, "Column" : 1, "Item" : "ORZ GTX ABX URL MINNEAPOLIS COVID SHAREPOINT SITE", "Text" : "[Link] COVID-19 SharePoint Site", "Header" : 0}, 
 {"Row" : 7, "Column" : 1, "Item" : null, "Text" : "site for inclusion/exclusion criteria, supportive care and additional ",  "Header" : 0}, 
 {"Row" : 8, "Column" : 1, "Item" : null, "Text" : "information.",  "Header" : 0}, 
@@ -36,10 +36,10 @@
 {"Row" : 21, "Column" : 1, "Item" : "ORZ GTX ABX COVID-19 MONOCLONAL ANTIBODY SOP", "Text" : "Monoclonal Antibody Allocation SOP", "Header" : 0}, 
 {"Row" : 19, "Column" : 1, "Item" : null, "Text" : "For more information on prioritization of COVID-19 monoclonal antibodies",  "Header" : 0}, 
 {"Row" : 20, "Column" : 1, "Item" : null, "Text" : "for treatment due to supply constraints:",  "Header" : 0}, 
-{"Row" : 4, "Column" : 1, "Item" : null, "Text" : "MPLS ED COVID-19 MONOCLONAL ANTIBODY PHARMACOLOGIC RECOMMENDATIONS", "Header" : 1}]},
+{"Row" : 4, "Column" : 1, "Item" : null, "Text" : "MPLS ED COVID-19 MONOCLONAL ANTIBODY PHARMACOLOGIC RECOMMENDATIONS", "Header" : 1}}},
 
 {"Name" : "ORZID GMENU ABX GENRL ALT AM LIST" 
-[{"Row" : 4, "Column" : 1, "Item" : "PSJIZID ALT ACYCLOVIR 500MG IV BID", "Text" : "Acyclovir IV", "Header" : 0}, 
+{{"Row" : 4, "Column" : 1, "Item" : "PSJIZID ALT ACYCLOVIR 500MG IV BID", "Text" : "Acyclovir IV", "Header" : 0}, 
 {"Row" : 5, "Column" : 1, "Item" : "PSJZID ALT ACYCLOVIR 800MG PO TID", "Text" : "Acyclovir PO", "Header" : 0}, 
 {"Row" : 6, "Column" : 1, "Item" : "PSJIZID ALT AMIKACIN 250MG IV QDAY", "Text" : "Amikacin IV", "Header" : 0}, 
 {"Row" : 7, "Column" : 1, "Item" : "PSJZID ALT AMOXICILLIN 500MG PO TID", "Text" : "Amoxicillin PO", "Header" : 0}, 
@@ -113,10 +113,10 @@
 {"Row" : 33, "Column" : 2, "Item" : "PSJZID ALT VALACYCLOVIR 1000MG PO BID", "Text" : "Valacyclovir PO", "Header" : 0}, 
 {"Row" : 34, "Column" : 2, "Item" : "PSJZID ALT VANCOMYCIN SOLN 125MG PO Q6H", "Text" : "Vancomycin PO", "Header" : 0}, 
 {"Row" : 35, "Column" : 2, "Item" : "PSJIZID ALT VANCOMYCIN 1000MG IV Q12H", "Text" : "Vancomycin IV", "Header" : 0}, 
-{"Row" : 18, "Column" : 2, "Item" : null, "Text" : "Oseltamivir (see Influenza Menu)", "Header" : 0}]},
+{"Row" : 18, "Column" : 2, "Item" : null, "Text" : "Oseltamivir (see Influenza Menu)", "Header" : 0}}},
 
 {"Name" : "ORZID GMENU ABX GENRL ALTERNATIVE DRUG" :
-[{"Row" : 9, "Column" : 1, "Item" : "ORZ SET ABX ALLERGIC TO RECOMMENDED DRUGS", "Text" : "Allergic to recommended drug(s)", "Header" : 0}, 
+{{"Row" : 9, "Column" : 1, "Item" : "ORZ SET ABX ALLERGIC TO RECOMMENDED DRUGS", "Text" : "Allergic to recommended drug(s)", "Header" : 0}, 
 {"Row" : 10, "Column" : 1, "Item" : "ORZ SET ABX DECREASED RENAL CLR", "Text" : "Decreased renal clearance", "Header" : 0}, 
 {"Row" : 11, "Column" : 1, "Item" : "ORZ SET ABX LIVER SECRETORY", "Text" : "Liver secretory or metabolic impairment", "Header" : 0}, 
 {"Row" : 12, "Column" : 1, "Item" : "ORZ SET ABX DRUG INTERACTION", "Text" : "Drug interaction", "Header" : 0}, 
@@ -133,10 +133,10 @@
 {"Row" : 18, "Column" : 1, "Item" : null, "Text" : "Note: Alternative antimicrobial selections will be reviewed and we may contact",  "Header" : 0}, 
 {"Row" : 19, "Column" : 1, "Item" : null, "Text" : "prescribers to learn more about situations that need alternatives, improve the",  "Header" : 0}, 
 {"Row" : 20, "Column" : 1, "Item" : null, "Text" : "CDSS, and in some cases offer suggestions.",  "Header" : 0}, 
-{"Row" : 22, "Column" : 1, "Item" : null, "Text" : "Clarification/Comments:", "Header" : 1}]},
+{"Row" : 22, "Column" : 1, "Item" : null, "Text" : "Clarification/Comments:", "Header" : 1}}},
 
 {"Name" : "ORZID GMENU ER/UC ABX GENERAL INFORMATION ED" :
-[{"Row" : 3, "Column" : 1, "Item" : "ORZID2 GMENU ABX HELP PAGE", "Text" : "Help and Additional Information Menu", "Header" : 0}, 
+{{"Row" : 3, "Column" : 1, "Item" : "ORZID2 GMENU ABX HELP PAGE", "Text" : "Help and Additional Information Menu", "Header" : 0}, 
 {"Row" : 4, "Column" : 1, "Item" : "ORZ GMENU CONSULTS MAIN IP", "Text" : "Inpatient Consult Menu - place consults to specialty service", "Header" : 0}, 
 {"Row" : 5, "Column" : 1, "Item" : "ORZ GMENU CONSULTS MAIN OP", "Text" : "Outpatient Consult Menu - place consults to specialty service", "Header" : 0}, 
 {"Row" : 6, "Column" : 1, "Item" : "ORZID2 GMENU ABX SUSCEPTIBILITIES (ANTIBIOGRAM)", "Text" : "Antibiogram", "Header" : 0}, 
@@ -158,5 +158,5 @@
 {"Row" : 24, "Column" : 1, "Item" : null, "Text" : "($$$) = 51-100 dollars per day",  "Header" : 0}, 
 {"Row" : 25, "Column" : 1, "Item" : null, "Text" : "($$$$) = 101-400 dollars per day",  "Header" : 0}, 
 {"Row" : 26, "Column" : 1, "Item" : null, "Text" : "($$$$$) = >400 dollars per day",  "Header" : 0}, 
-{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}]}
+{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}}}
 ]
