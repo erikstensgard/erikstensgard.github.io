@@ -6,7 +6,7 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 8
+    <p>Testing Menu Display test 9
     </p>
     <select id="OrderMenuDropdown" name="Dropdown"></select>
     <div id="myData"></div>
@@ -62,7 +62,7 @@ dropdown.selectedIndex = 0;
             var mainContainer = document.getElementById("myData");
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                div.innerHTML = 'Name: ' + data.Name;
+                div.innerHTML = 'Name: ' + data[i].Name;
                 mainContainer.appendChild(div);
             }
         }
