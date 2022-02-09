@@ -6,7 +6,7 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 12
+    <p>Testing Menu Display test 1
     </p>
     <select id="OrderMenuDropdown" name="Dropdown"></select>
     <div id="myData"></div>
@@ -20,7 +20,7 @@ defaultOption.text = 'Choose Order Menu';
 dropdown.add(defaultOption);
 dropdown.selectedIndex = 0;
 
-        fetch('OrderMenus.json')
+        fetch('JSONTest.json')
               .then(  
         function(response) {  
           if (response.status !== 200) {  
@@ -48,7 +48,7 @@ dropdown.selectedIndex = 0;
       });
    </script>
   <script> 
-        fetch('OrderMenus.json')
+        fetch('JSONTest.json')
             .then(function (response) {
                 return response.json();
             })
