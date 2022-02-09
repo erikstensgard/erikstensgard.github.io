@@ -60,11 +60,11 @@ dropdown.selectedIndex = 0;
             });
         function appendData(data) {
             var mainContainer = document.getElementById("myData");
-            var fields = ["name"];
+            var fields = ["Order Menus.Name"];
             for (var i = 0; i < fields.length; i++) {
-                var value = get property (data, fields[i]);
+                var value = getproperty (data, fields[i]);
                 var div = document.createElement("div");
-                div.innerHTML = fields[i];
+                div.innerHTML = fields[i].Name;
                 mainContainer.appendChild(div);
             }
         }
