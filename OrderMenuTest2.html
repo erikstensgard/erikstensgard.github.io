@@ -6,14 +6,13 @@
     <title>JSON Test</title>
 </head>
 <body>
-    <p>Testing Menu Display test 13
+    <p>Testing Menu Display test 14
     </p>
     <select id="OrderMenuDropdown" name="Dropdown"></select>
     <div id="myData"></div>
    
   <script> 
-      var json =  [
-{"Name" : "ORZID GMENU ABX COVID-19 ANTIBODIES" 
+      var json =  [{"Name" : "ORZID GMENU ABX COVID-19 ANTIBODIES" 
 [{"Row" : 1, "Column" : 1, "Item" : "ORZID GMENU ER/UC ABX GENERAL INFORMATION ED", "Text" : "Select here for help, legend, consults, alternative antimicrobials and more (ED)", "Header" : 0}, 
 {"Row" : 9, "Column" : 1, "Item" : "ORZ GTX ABX URL MINNEAPOLIS COVID SHAREPOINT SITE", "Text" : "[Link] COVID-19 SharePoint Site", "Header" : 0}, 
 {"Row" : 7, "Column" : 1, "Item" : null, "Text" : "site for inclusion/exclusion criteria, supportive care and additional ",  "Header" : 0}, 
@@ -172,13 +171,13 @@
 {"Row" : 24, "Column" : 1, "Item" : null, "Text" : "($$$) = 51-100 dollars per day",  "Header" : 0}, 
 {"Row" : 25, "Column" : 1, "Item" : null, "Text" : "($$$$) = 101-400 dollars per day",  "Header" : 0}, 
 {"Row" : 26, "Column" : 1, "Item" : null, "Text" : "($$$$$) = >400 dollars per day",  "Header" : 0}, 
-{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}]}
-]       
+{"Row" : 7, "Column" : 1, "Item" : "ORZID2 GMENU ABX BETA-LACTAM ALLERGY ASSESMENT", "Text" : "Beta-lactam Reaction Assessment", "Header" : 0}]}]       
           
 for (var i=0; i<json.Name.length; i++) {
    for (var key in json.Name[i]) {
        for (var j= 0; j<json.Name[i][key].length; j++) {
            console.log(json.Name[i][key][j])
+       }}}
     </script>
 </body>
 </html>
