@@ -60,7 +60,7 @@ dropdown.selectedIndex = 0;
             });
         function appendData(data) {
             var mainContainer = document.getElementById("myData");
-            var fields = ["Order Menus.Name"];
+            var fields = ["Name", "Name.Row"];
             for (var i = 0; i < fields.length; i++) {
                 var value = getproperty (data, fields[i]);
                 var div = document.createElement("div");
