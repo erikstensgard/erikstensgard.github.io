@@ -13,30 +13,17 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<div id="Dropdown"></div>
+<select id="dropdown">
+</select>
+
+<div id="dropdown"></div>
     <script>
-        fetch('ODJSON.json')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-        
-       
-        function appendData(data) {
-        var mainContainer = document.getElementById("Dropdown");
-        var option = document.createElement("option");    
-                for (var i = 0; i < data.length; i++) {
-                option.text = data[i].Name
-                var div = dropdown.add(option);
-                div.innerHTML = 'Order Menu' + data[i].Name
-                mainContainer.appendChild(div);
-            }
-        }
+       var option = document.createElement("option");
+option.text = "Test";
+var option2 = document.createElement("option");
+option2.text = "Another Test";
+document.getElementById("dropdown").add(option);
+document.getElementById("dropdown").add(option2);
 </script>
 
     <div id="myData"></div>
