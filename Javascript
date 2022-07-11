@@ -1,0 +1,6 @@
+var option = document.createElement("option");
+option.text = "Test";
+var option2 = document.createElement("option");
+option2.text = "Another Test";
+document.getElementById("dropdown").add(option);
+document.getElementById("dropdown").add(option2);
