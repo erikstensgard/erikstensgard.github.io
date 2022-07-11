@@ -21,11 +21,13 @@
 <div id="dropdown2"></div>
     <script>
         let dropdown = document.getElementById('myData');
-       	for (let i = 0; i < data.length; i++) {
+       	function (data){
+        for (let i = 0; i < data.length; i++) {
           option = document.createElement('option');
       	  option.text = data[i].name;
       	  option.value = data[i].abbreviation;
       	  dropdown.add(option);
+        }
         }
 </script>
 
