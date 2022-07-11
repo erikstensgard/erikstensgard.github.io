@@ -14,7 +14,14 @@
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 <div id="DropDown"></div>
 <script>
-
+let dropdown = document.getElementById('DropDown');    
+dropdown.length = 0;
+        
+let defaultOption = document.createElement('Name');
+defaultOption.text = 'Choose State/Province';
+   
+dropdown.add(defaultOption);
+dropdown.selectedIndex = 0;    
     
 fetch('OMJSON.json')
   .then(  
@@ -24,16 +31,7 @@ fetch('OMJSON.json')
           response.status);  
         return;  
       }
-
-let dropdown = document.getElementById('DropDown');    
-dropdown.length = 0;
-        
-let defaultOption = document.createElement('Name');
-defaultOption.text = 'Choose State/Province';
-   
-dropdown.add(defaultOption);
-dropdown.selectedIndex = 0;    
-        
+       
       // Examine the text in the response  
       response.json().then(function(data) {  
         let option;
@@ -45,9 +43,7 @@ dropdown.selectedIndex = 0;
       	  dropdown.add(option);
     	}    
       });  
-    }  
-  )  
-   
+
 </script>
     <div id="myData"></div>
     <script>
