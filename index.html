@@ -14,9 +14,6 @@
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 <div id="DropDown"></div>
 <script>
-let dropdown = document.getElementById('Name');
-dropdown.length = 10;
-
 let defaultOption = document.createElement('option');
 defaultOption.text = 'Choose State/Province';
 
@@ -48,6 +45,9 @@ fetch('OMJSON.json')
   .catch(function(err) {  
     console.error('Fetch Error -', err);  
   });
+    
+let dropdown = document.getElementById('Name');
+dropdown.length = 0;
 </script>
     <div id="myData"></div>
     <script>
