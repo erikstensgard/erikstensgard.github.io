@@ -14,7 +14,7 @@
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
     <div id="myData"></div>
     <script>
-        fetch('people.json')
+        fetch('OMJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -28,7 +28,7 @@
             var mainContainer = document.getElementById("myData");
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                div.innerHTML = 'Name: ' + data[i].firstName + ' ' + data[i].lastName;
+                div.innerHTML = 'Order Menu' + data[i].Name
                 mainContainer.appendChild(div);
             }
         }
