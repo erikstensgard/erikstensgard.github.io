@@ -14,10 +14,10 @@
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 <div id="DropDown"></div>
 <script>
-let dropdown = document.getElementById('DropDown');    
+var mainContainer = document.getElementById('DropDown');    
 dropdown.length = 0;
         
-let defaultOption = document.createElement('Option');
+var div = document.createElement('Option');
 defaultOption.text = 'Choose State/Province';
 defaultOption.value = 'Choose State/Province';
    
@@ -37,11 +37,12 @@ fetch('OMJSON.json')
       response.json().then(function(data) {  
         let option;
     
-    	for (let i = 0; i < data.length; i++) {
+    	for (var i = 0; i < data.length; i++) {
           option = document.createElement('Option');
       	  option.text = data[i].Name;
       	  option.value = data[i].DisplayText;
       	  dropdown.add(option);
+          mainContainer.appendChild(div);
     	}    
       });  
      }  
