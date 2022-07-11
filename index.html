@@ -25,8 +25,9 @@ fetch('OMJSON.json')
         return;  
       }
 
-let dropdown = document.getElementById('Name');    
-    
+let dropdown = document.getElementById('DropDown');    
+dropdown.length = 0;
+        
 let defaultOption = document.createElement('Name');
 defaultOption.text = 'Choose State/Province';
    
