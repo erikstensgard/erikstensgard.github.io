@@ -15,14 +15,7 @@
 <div id="DropDown"></div>
 <script>
 var mainContainer = document.getElementById('DropDown');    
-        
-var div = document.createElement('DefaultOption');
-defaultOption.text = 'Choose State/Province';
-defaultOption.value = 'Choose State/Province';
-   
-dropdown.add(defaultOption);
-dropdown.selectedIndex = 0;
-    
+            
 fetch('OMJSON.json')
   .then(  
     function(response) {  
