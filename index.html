@@ -15,6 +15,25 @@
 
 <select id="dropdown">
 </select>
+<select id="dropdown2">
+</select>
+
+<div id="dropdown2"></div>
+    <script>
+        let dropdown = document.getElementById('myData');
+function(data) {  
+        let option;
+    
+    	for (let i = 0; i < data.length; i++) {
+          option = document.createElement('option');
+      	  option.text = data[i].name;
+      	  option.value = data[i].abbreviation;
+      	  dropdown.add(option);
+    	}    
+      });  
+        )
+</script>
+
 
 <div id="dropdown"></div>
     <script>
