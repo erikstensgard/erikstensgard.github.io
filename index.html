@@ -19,9 +19,10 @@ dropdown.length = 0;
         
 let defaultOption = document.createElement('Option');
 defaultOption.text = 'Choose State/Province';
+defaultOption.value = 'Choose State/Province';
    
 dropdown.add(defaultOption);
-dropdown.selectedIndex = 0;    
+dropdown.selectedIndex = 0;
     
 fetch('OMJSON.json')
   .then(  
