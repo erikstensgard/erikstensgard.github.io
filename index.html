@@ -14,31 +14,10 @@
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 <div id="DropDown"></div>
 <script>
-let dropdown = document.getElementById('DropDown');    
-            
-fetch('OMJSON.json')
-  .then(  
-    function(response) {  
-      if (response.status !== 200) {  
-        console.warn('Looks like there was a problem. Status Code: ' + 
-          response.status);  
-        return;  
-      }
-       
-      // Examine the text in the response  
-      response.json().then(function(data) {  
-        let option;
-    
-    	for (var i = 0; i < data.length; i++) {
-          option = document.createElement('Option');
-      	  option.text = data[i].Name;
-      	  option.value = data[i].DisplayText;
-      	  dropdown.add(option);
-          mainContainer.appendChild(div);
-    	}    
-      });  
-     }  
-   )
+         var option = document.createElement("option");
+           var dropdown = document.getElementById("dropdown");
+           option.text = "Test";
+           dropdown.add(option);
 
 </script>
     <div id="myData"></div>
