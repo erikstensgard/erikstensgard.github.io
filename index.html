@@ -19,16 +19,20 @@
 </select>
 
 <div id="dropdown2"></div>
-    <script>
-        let dropdown = document.getElementById('myData');
-       	function (data){
-        for (let i = 0; i < data.length; i++) {
-          option = document.createElement('option');
-      	  option.text = data[i].name;
-      	  option.value = data[i].abbreviation;
-      	  dropdown.add(option);
-        }
-        }
+<script>
+let data = [{
+    "id": "1",
+    "name": "name_1"
+  },
+  {
+    "id": "2",
+    "name": "name_2"
+  }
+];
+
+var selectElement = document.getElementById('mySelect');
+
+data.map(item => mySelect.appendChild(new Option(item.name, item.id)).cloneNode(true));
 </script>
 
 
