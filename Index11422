@@ -20,9 +20,6 @@
 </ul>
 <script>
 let jsonData = 
-    <div id="myData"></div>
-    
-    <script>
         fetch('ODJSON.json')
             .then(function (response) {
                 return response.json();
@@ -33,14 +30,6 @@ let jsonData =
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-        function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")"
-                mainContainer.appendChild(div);
-            }
-        }
 
 let data = JSON.parse(jsonData)
 
