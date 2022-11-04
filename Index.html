@@ -20,7 +20,15 @@
 
 </ul>
 <script>
-let jsonData = fetch('MinneapolisODJSON.json')
+let jsonData = 
+fetch('MinneapolisODJSON.json', { 
+  method: 'GET'
+})
+.then(function(response) { return response.json(); })
+.then(function(json) {
+  // use the json
+});
+    
 let data = JSON.parse(jsonData)
 
 function search_animal() {
