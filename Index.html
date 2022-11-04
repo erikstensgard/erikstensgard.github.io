@@ -32,6 +32,7 @@ let Alldata =  fetch('MinneapolisODJSON.json')
 function search_OD() {
   let input = document.getElementById('ODsearchbar').value
   input = input.toLowerCase();
+  let x = document.querySelector('#AllData');
   x.innerHTML = ""
 
   for (i = 0; i < Alldata.length; i++) {
