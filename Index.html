@@ -13,12 +13,14 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V13</p>
-<input id="ODsearchbar" onkeyup="search_OD()" type="text" name="search">
+<p>V14</p>
+
+
+</script>
+
 <div id="AllData"></div>  
 <script>
-
-let Alldata =  fetch('MinneapolisODJSON.json')
+        fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -28,31 +30,19 @@ let Alldata =  fetch('MinneapolisODJSON.json')
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-    
-function search_OD() {
-  let input = document.getElementById('ODsearchbar').value
-  input = input.toLowerCase();
-  let x = document.querySelector('#AllData');
-  x.innerHTML = ""
-
-  for (i = 0; i < Alldata.length; i++) {
-    let obj = Alldata[i];
-
-    if (obj.Name.toLowerCase().includes(input)) {
-            function appendData(data) {
+      
+      function appendData(data) {
             var mainContainer = document.getElementById("AllData");
             
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")"
+                div.innerHTML = data[i].Name - data[i].Version
                 mainContainer.appendChild(div);
             }
         }
-    }
-  }
-}
-   
 </script>
+
+
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
 
