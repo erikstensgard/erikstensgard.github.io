@@ -13,10 +13,12 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V22</p>
+<p>V23</p>
 
 
+<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
 <div id="myData"></div>  
+
 <script>
         fetch('MinneapolisODJSON.json')
             .then(function (response) {
@@ -28,7 +30,12 @@
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-      
+ 
+function search_animal() {
+  let input = document.getElementById('searchbar').value
+  input = input.toLowerCase();
+        
+   if (obj.Name.toLowerCase().includes(input)) {
       function appendData(data) {
             var mainContainer = document.getElementById("myData");
             
@@ -38,6 +45,8 @@
                 mainContainer.appendChild(div);
             }
         }
+     }
+   }
 </script>
 
 <script>
