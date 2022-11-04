@@ -20,16 +20,18 @@
 
 </ul>
 <script>
-let jsonData = 
-fetch('MinneapolisODJSON.json', { 
-  method: 'GET'
-})
-.then(function(response) { return response.json(); })
-.then(function(json) {
-  // use the json
-});
+        fetch('MinneapolisODJSON.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });    
     
-let data = JSON.parse(jsonData)
+let data = JSON.parse(Data)
 
 function search_animal() {
   let input = document.getElementById('searchbar').value
