@@ -19,18 +19,7 @@
 
 </ul>
 <script>
-let jsonData = 
-        fetch('ODJSON.json')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-
+let jsonData =  fetch('ODJSON.json')       
 let data = JSON.parse(jsonData)
 
 function search_animal() {
