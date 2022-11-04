@@ -13,18 +13,11 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V16</p>
+<p>V17</p>
 <h1>JSON.stringify()</h1>
-<div class="sample"></div>
 <div style="font-weight: bold;" class="result"></div>
-<button class="Btn">CLICK HERE</button>
-<h3>
-Click on the above button to convert the above object into a JSON string
-</h3>
-
 <script>
         
-   let sampleEle = document.querySelector(".sample");
    let resultEle = document.querySelector(".result");
    let obj =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
@@ -35,13 +28,10 @@ Click on the above button to convert the above object into a JSON string
             })
             .catch(function (err) {
                 console.log('error: ' + err);
-            });;
-   sampleEle.innerHTML =obj.Name +obj.DisplayText
-   document.querySelector(".Btn").addEventListener("click", () => {
-      resultEle.innerHTML = JSON.stringify(obj);
-   });
+            });
+   resultEle.innerHTML = JSON.stringify(obj)
+    
 </script>
-
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
 
