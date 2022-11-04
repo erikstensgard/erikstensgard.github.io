@@ -13,12 +13,12 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V11</p>
+<p>V12</p>
 <input id="ODsearchbar" onkeyup="search_OD()" type="text" name="search">
 <div id="AllData"></div>  
 <script>
 
-let data =  fetch('MinneapolisODJSON.json')
+let Alldata =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -34,8 +34,8 @@ function search_OD() {
   input = input.toLowerCase();
   x.innerHTML = ""
 
-  for (i = 0; i < data.length; i++) {
-    let obj = data[i];
+  for (i = 0; i < Alldata.length; i++) {
+    let obj = Alldata[i];
 
     if (obj.Name.toLowerCase().includes(input)) {
             function appendData(data) {
