@@ -19,7 +19,7 @@
 
 </ul>
 <script>
-let jsonData =  fetch('ODJSON.json')       
+let jsonData =  fetch('MinneapolisODJSON.json')       
 let data = JSON.parse(jsonData)
 
 function search_animal() {
