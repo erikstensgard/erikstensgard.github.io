@@ -13,13 +13,13 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V17</p>
-<h1>JSON.stringify()</h1>
-<div style="font-weight: bold;" class="result"></div>
+<p>V18</p>
+
+
+
+<div id="AnyData"></div>  
 <script>
-        
-   let resultEle = document.querySelector(".result");
-   let obj =  fetch('MinneapolisODJSON.json')
+        fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -29,18 +29,20 @@
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-   resultEle.innerHTML = JSON.stringify(obj)
-    
+      
+      function appendData(data) {
+            var mainContainer = document.getElementById("AnyData");
+            
+            for (var i = 0; i < data.length; i++) {
+                var div = document.createElement("div");
+                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")" + " (" data[i].Version + ")"
+                mainContainer.appendChild(div);
+            }
+        }
 </script>
 
-<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
-
-<ul id="list-holder">
-
-</ul>
 
 <script>
-
 let data =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
