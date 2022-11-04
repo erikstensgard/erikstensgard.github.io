@@ -13,14 +13,20 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V15</p>
+<p>V16</p>
+<h1>JSON.stringify()</h1>
+<div class="sample"></div>
+<div style="font-weight: bold;" class="result"></div>
+<button class="Btn">CLICK HERE</button>
+<h3>
+Click on the above button to convert the above object into a JSON string
+</h3>
 
-
-</script>
-
-<div id="AllData"></div>  
 <script>
-        fetch('MinneapolisODJSON.json')
+        
+   let sampleEle = document.querySelector(".sample");
+   let resultEle = document.querySelector(".result");
+   let obj =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -29,19 +35,12 @@
             })
             .catch(function (err) {
                 console.log('error: ' + err);
-            });
-      
-      function appendData(data) {
-            var mainContainer = document.getElementById("AllData");
-            
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = data[i].DisplayText + data[i].Name + data[i].Version
-                mainContainer.appendChild(div);
-            }
-        }
+            });;
+   sampleEle.innerHTML =obj.Name +obj.DisplayText
+   document.querySelector(".Btn").addEventListener("click", () => {
+      resultEle.innerHTML = JSON.stringify(obj);
+   });
 </script>
-
 
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
