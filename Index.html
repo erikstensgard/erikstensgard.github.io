@@ -23,7 +23,7 @@
 
 <script>
 
-let data =   fetch('MinneapolisODJSON.json')
+let jsonData =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -33,7 +33,9 @@ let data =   fetch('MinneapolisODJSON.json')
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-      
+    
+let data = JSON.parse(jsonData)    
+
 function search_animal() {
   let input = document.getElementById('searchbar').value
   input = input.toLowerCase();
