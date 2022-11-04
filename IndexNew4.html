@@ -13,7 +13,7 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V24</p>
+<p>V25</p>
 
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
@@ -34,7 +34,10 @@
 function search_animal() {
   let input = document.getElementById('searchbar').value
   input = input.toLowerCase();
-        
+    
+    for (i = 0; i < data.length; i++) {
+    let obj = data[i];
+           
    if (obj.Name.toLowerCase().includes(input)) {
       function appendData(data) {
             var mainContainer = document.getElementById("myData");
