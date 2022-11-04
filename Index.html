@@ -13,7 +13,7 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V3</p>
+<p>V4</p>
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
 
@@ -22,7 +22,8 @@
 </ul>
 
 <script>
-fetch('MinneapolisODJSON.json')
+
+let data = JSON.parse(fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -31,7 +32,7 @@ fetch('MinneapolisODJSON.json')
             })
             .catch(function (err) {
                 console.log('error: ' + err);
-            });
+            });)
 
 </script>
 
