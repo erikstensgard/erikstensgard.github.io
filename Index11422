@@ -19,50 +19,7 @@
 
 </ul>
 <script>
-let jsonData = `[
-   {
-      "Name":"PSOZID ACETAMINOPHEN 650MG PO Q6H PRN",
-      "DisplayGroup":"OUTPATIENT MEDICATIONS",
-      "OrderableItem1":"ACETAMINOPHEN TAB",
-      "Urgency":"ROUTINE",
-      "WordProcessing1":"{FLD:MIN_ACETAMINOPHEN}{FLD:EB 20/240}",
-      "Instructions1":"650MG",
-      "Route1":"ORALLY",
-      "DispenseDrug":"ACETAMINOPHEN 325MG TAB",
-      "Routing":"WINDOW",
-      "Quantity":"100",
-      "Refills":"0",
-      "Schedule1":"Q6H PRN",
-      "Strength1":"325MG",
-      "Dose1":"650 MG 2 TABLETS 650MG 263 325",
-      "DaysSupply":"30",
-      "PatientInstructions":"*NOT TO EXCEED 4000MG IN 24 HOURS FROM ALL SOURCES*",
-      "DisplayText":"Acetaminophen 650 MG PO q6h prn",
-      "Verify":"YES",
-      "Version":"Minneapolis"
-   }
-]`
-
-let data = JSON.parse(jsonData)
-
-function search_animal() {
-  let input = document.getElementById('searchbar').value
-  input = input.toLowerCase();
-  let x = document.querySelector('#list-holder');
-  x.innerHTML = ""
-
-  for (i = 0; i < data.length; i++) {
-    let obj = data[i];
-
-    if (obj.Name.toLowerCase().includes(input)) {
-      const elem = document.createElement("li")
-      elem.innerHTML = `${obj.Name} - ${obj.Version}`
-      x.appendChild(elem)
-    }
-  }
-}
-</script>
-
+let jsonData = 
     <div id="myData"></div>
     
     <script>
@@ -84,6 +41,24 @@ function search_animal() {
                 mainContainer.appendChild(div);
             }
         }
-</script>
+
+let data = JSON.parse(jsonData)
+
+function search_animal() {
+  let input = document.getElementById('searchbar').value
+  input = input.toLowerCase();
+  let x = document.querySelector('#list-holder');
+  x.innerHTML = ""
+
+  for (i = 0; i < data.length; i++) {
+    let obj = data[i];
+
+    if (obj.Name.toLowerCase().includes(input)) {
+      const elem = document.createElement("li")
+      elem.innerHTML = `${obj.Name} - ${obj.DisplayText}`
+      x.appendChild(elem)
+    }
+  }
+}
 </body>
 </html>
