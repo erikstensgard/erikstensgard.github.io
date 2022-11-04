@@ -13,7 +13,45 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V10</p>
+<p>V11</p>
+<input id="ODsearchbar" onkeyup="search_OD()" type="text" name="search">
+<div id="AllData"></div>  
+<script>
+
+let data =  fetch('MinneapolisODJSON.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+    
+function search_OD() {
+  let input = document.getElementById('ODsearchbar').value
+  input = input.toLowerCase();
+  x.innerHTML = ""
+
+  for (i = 0; i < data.length; i++) {
+    let obj = data[i];
+
+    if (obj.Name.toLowerCase().includes(input)) {
+            function appendData(data) {
+            var mainContainer = document.getElementById("AllData");
+            
+            for (var i = 0; i < data.length; i++) {
+                var div = document.createElement("div");
+                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")"
+                mainContainer.appendChild(div);
+            }
+        }
+    }
+  }
+}
+   
+</script>
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
 
@@ -45,12 +83,12 @@ function search_animal() {
 
     if (obj.Name.toLowerCase().includes(input)) {
       const elem = document.createElement("li")
-      elem.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")"
+      elem.innerHTML = `${obj.Name} - ${obj.Version}`
       x.appendChild(elem)
     }
   }
 }
-    
+   
 </script>
 
 <div id="myData"></div>  
