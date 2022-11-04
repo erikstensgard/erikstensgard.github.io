@@ -13,9 +13,8 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
    
-   <div id="myData"></div>
-   
-    <script>
+<div id="myData"></div>  
+<script>
         fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
@@ -37,5 +36,42 @@
             }
         }
 </script>
+
+<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
+<ul id="list-holder">
+</ul>
+<script>
+        fetch('MinneapolisODJSON.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+      
+let data = JSON.parse(Data)
+
+function search_animal() {
+  let input = document.getElementById('searchbar').value
+  input = input.toLowerCase();
+  let x = document.querySelector('#list-holder');
+  x.innerHTML = ""
+
+  for (i = 0; i < data.length; i++) {
+    let obj = data[i];
+
+    if (obj.Name.toLowerCase().includes(input)) {
+      const elem = document.createElement("li")
+      elem.innerHTML = `${obj.Name} - ${obj.Version}`
+      x.appendChild(elem)
+    }
+  }
+}
+
+</script>
+
 </body>
 </html>
