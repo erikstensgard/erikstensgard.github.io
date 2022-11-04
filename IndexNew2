@@ -22,7 +22,7 @@
 <script>
 let jsonData = `[
    {
-      "Name":"PSOZID ACETAMINOPHEN 650MG PO Q6H PRN",
+      "Name":"PSOZID ACETAMINOPHEN 650MG PO Q6H PRN1",
       "DisplayGroup":"OUTPATIENT MEDICATIONS",
       "OrderableItem1":"ACETAMINOPHEN TAB",
       "Urgency":"ROUTINE",
