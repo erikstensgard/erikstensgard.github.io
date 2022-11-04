@@ -12,7 +12,11 @@
        <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
-   
+
+<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
+<ul id="list-holder">
+</ul>
+
 <div id="myData"></div>  
 <script>
         fetch('MinneapolisODJSON.json')
@@ -37,11 +41,9 @@
         }
 </script>
 
-<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
-<ul id="list-holder">
-</ul>
+
 <script>
-        fetch('MinneapolisODJSON.json')
+ Let mydata =  fetch('MinneapolisODJSON.json')
             .then(function (response) {
                 return response.json();
             })
@@ -52,7 +54,7 @@
                 console.log('error: ' + err);
             });
       
-let data = JSON.parse(Data)
+let data = JSON.parse(mydata)
 
 function search_animal() {
   let input = document.getElementById('searchbar').value
