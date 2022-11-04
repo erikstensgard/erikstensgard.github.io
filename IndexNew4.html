@@ -13,7 +13,7 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<p>V25</p>
+<p>V26</p>
 
 
 <input id="searchbar" onkeyup="search_animal()" type="text" name="search">
@@ -31,25 +31,28 @@
                 console.log('error: ' + err);
             });
  
-function search_animal() {
+function search_animal() 
+  {
   let input = document.getElementById('searchbar').value
   input = input.toLowerCase();
-    
-    for (i = 0; i < data.length; i++) {
+  for (i = 0; i < data.length; i++) 
+    {
     let obj = data[i];
-           
-   if (obj.Name.toLowerCase().includes(input)) {
-      function appendData(data) {
+    if (obj.Name.toLowerCase().includes(input)) 
+        {
+        function appendData(data) 
+            {
             var mainContainer = document.getElementById("myData");
-            
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.length; i++) 
+                {
                 var div = document.createElement("div");
                 div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")" + data[i].Version + ")"
                 mainContainer.appendChild(div);
+                }
             }
-        }
-     }
-   }
+          }
+      }
+  }
 </script>
 
 </body>
