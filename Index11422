@@ -17,34 +17,6 @@
 </select>
 <select id="mySelect" onchange="alert(this.value)"></select>
 
-<div id="mySelect"></div>
-<script>
-let data = [{
-    "id": "1",
-    "name": "name_1"
-  },
-  {
-    "id": "2",
-    "name": "name_2"
-  }
-];
-
-var selectElement = document.getElementById('mySelect');
-
-data.map(item => mySelect.appendChild(new Option(item.name, item.id)).cloneNode(true));
-</script>
-
-
-<div id="dropdown"></div>
-    <script>
-       var option = document.createElement("option");
-option.text = "Test";
-var option2 = document.createElement("option");
-option2.text = "Another Test";
-document.getElementById("dropdown").add(option);
-document.getElementById("dropdown").add(option2);
-</script>
-
     <div id="myData"></div>
     <script>
         fetch('ODJSON.json')
