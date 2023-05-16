@@ -15,8 +15,6 @@
 
 <p>V22</p>
 
-<input id="searchbar" title = "search" placeholder="PSOZID ACETAMINOPHEN 650MG PO Q6H PRN" onkeyup="search_animal()" type="text" name="search">
-
 <ul id="list-holder">
 
 </ul>
@@ -41,37 +39,6 @@
                 mainContainer.appendChild(div);
             }
         }
-</script>
-
-<script>
-let jsonData =  fetch('MinneapolisODJSON.json')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-
-function search_animal() {
-  let input = document.getElementById('searchbar').value
-  input = input.toLowerCase();
-  let x = document.querySelector('#list-holder');
-  x.innerHTML = ""
-
-  for (i = 0; i < jsonData.length; i++) {
-    let obj = jsonData[i];
-
-    if (obj.Name.toLowerCase().includes(input)) {
-      const elem = document.createElement("li")
-      elem.innerHTML = `${obj.Name}`
-      x.appendChild(elem)
-    }
-  }
-}
-   
 </script>
 </body>
 </html>
