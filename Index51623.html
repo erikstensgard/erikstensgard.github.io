@@ -1,29 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fetch JSON File Dynamically Display Using Dropdown HTML JavaScript</title>
+  <title>JSON Filter Demo</title>
 </head>
 <body>
-  <select id="country">
-    <option value="none">Select a country</option>
+  <h1>JSON Filter Demo</h1>
+
+  <select id="filterDropdown">
+    <option value="option1">Option 1</option>
+    <option value="option2">Option 2</option>
+    <option value="option3">Option 3</option>
   </select>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.6.0/fetch.min.js"></script>
+
+  <div id="resultContainer"></div>
+
   <script>
-    function fetchCountryData() {
-      const url = "ODSON.json";
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const countries = data.countries;
-          for (const country of countries) {
-            const option = document.createElement("option");
-            option.value = country.Name;
-            $("country").append(option);
-            ;
-          }
-        });
+    // Fetch JSON Data
+    fetch('MinneapolisODJSON.json')
+      .then(response => response.json())
+      .then(data => {
+        // Call a function to populate the dropdown with options from the JSON file
+        populateDropdown(data);
+      })
+      .catch(error => console.error('Error fetching JSON:', error));
+
+    // Populate Dropdown
+    function populateDropdown(data) {
+      const dropdown = document.getElementById('filterDropdown');
+
+      // Iterate over the JSON data and create an option element for each item
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.value;
+        option.textContent = item.label;
+        dropdown.appendChild(option);
+      });
+
+      // Add an event listener to the dropdown to trigger filtering
+      dropdown.addEventListener('change', filterData);
     }
-    fetchCountryData();
+
+    // Filter Data
+    function filterData() {
+      const selectedOption = this.value;
+      const resultContainer = document.getElementById('resultContainer');
+
+      // Clear previous results
+      resultContainer.innerHTML = '';
+
+      // Filter the JSON data based on the selected option
+      const filteredData = jsonData.filter(item => item.value === selectedOption);
+
+      // Display the filtered results
+      filteredData.forEach(item => {
+        const resultItem = document.createElement('div');
+        resultItem.textContent = item.label;
+        resultContainer.appendChild(resultItem);
+      });
+    }
   </script>
 </body>
 </html>
