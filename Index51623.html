@@ -20,6 +20,9 @@
 <ul id="list-holder">
 
 </ul>
+<select id="mySelect">
+  <option value="">Select a Country</option>
+    
 <div id="myData"></div>  
 <script>
         fetch('MinneapolisODJSON.json')
@@ -75,10 +78,10 @@ function search_animal() {
 
     // Create a dropdown list for the countries
 var mySelect = document.getElementById("mySelect");
-for (var i = 0; i < obj.length; i++) {
+for (var i = 0; i < data.length; i++) {
   var option = document.createElement("option");
-  option.value = obj[i].name;
-  option.innerHTML = obj[i].name;
+  option.value = data[i].name;
+  option.innerHTML = data[i].name;
   mySelect.appendChild(option);
 }
 
@@ -92,7 +95,6 @@ mySelect.addEventListener("change", function() {
     
    
 </script>
-<select id="mySelect">
-  <option value="">Select a Country</option>
+
 </body>
 </html>
