@@ -15,49 +15,51 @@
   <div id="resultContainer"></div>
 
   <script>
-    // Fetch JSON Data
-    fetch('MinneapolisODJSON.json')
-      .then(response => response.json())
-      .then(data => {
-        // Call a function to populate the dropdown with options from the JSON file
-        populateDropdown(data);
-      })
-      .catch(error => console.error('Error fetching JSON:', error));
 
-    // Populate Dropdown
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
+  // Fetch JSON Data
+  fetch('MinneapolisODJSON.json')
+    .then(response => response.json())
+    .then(data => {
+      // Call a function to populate the dropdown with options from the JSON file
+      populateDropdown(data);
+    })
+    .catch(error => console.error('Error fetching JSON:', error));
 
-      // Iterate over the JSON data and create an option element for each item
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.value;
-        option.textContent = item.label;
-        dropdown.appendChild(option);
-      });
+  // Populate Dropdown
+  function populateDropdown(data) {
+    const dropdown = document.getElementById('filterDropdown');
 
-      // Add an event listener to the dropdown to trigger filtering
-      dropdown.addEventListener('change', filterData);
-    }
+    // Iterate over the JSON data and create an option element for each item
+    data.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.value;
+      option.textContent = item.label;
+      dropdown.appendChild(option);
+    });
 
-    // Filter Data
-    function filterData() {
-      const selectedOption = this.value;
-      const resultContainer = document.getElementById('resultContainer');
+    // Add an event listener to the dropdown to trigger filtering
+    dropdown.addEventListener('change', filterData);
+  }
 
-      // Clear previous results
-      resultContainer.innerHTML = '';
+  // Filter Data
+  function filterData() {
+    const selectedOption = this.value;
+    const resultContainer = document.getElementById('resultContainer');
 
-      // Filter the JSON data based on the selected option
-      const filteredData = jsonData.filter(item => item.value === selectedOption);
+    // Clear previous results
+    resultContainer.innerHTML = '';
 
-      // Display the filtered results
-      filteredData.forEach(item => {
-        const resultItem = document.createElement('div');
-        resultItem.textContent = item.label;
-        resultContainer.appendChild(resultItem);
-      });
-    }
-  </script>
+    // Filter the JSON data based on the selected option
+    const filteredData = data.filter(item => item.value === selectedOption);
+
+    // Display the filtered results
+    filteredData.forEach(item => {
+      const resultItem = document.createElement('div');
+      resultItem.textContent = item.label;
+      resultContainer.appendChild(resultItem);
+    });
+  }
+</script>
+
 </body>
 </html>
