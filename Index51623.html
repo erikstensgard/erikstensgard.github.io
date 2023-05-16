@@ -15,9 +15,11 @@
 
 <p>V22</p>
 
-<ul id="list-holder">
+<select id="mySelect">
+  <option value="">Select a Country</option>
+</select>
 
-</ul>
+<div id="myData"></div>  
 <script>
         fetch('MinneapolisODJSON.json')
             .then(function (response) {
@@ -40,5 +42,6 @@
             }
         }
 </script>
+
 </body>
 </html>
