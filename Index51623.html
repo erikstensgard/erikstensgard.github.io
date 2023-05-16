@@ -42,18 +42,16 @@
             }
         }
     
- fetch(url)
-
-    for (const name of data) {
+    for (const OD of data) {
       const option = document.createElement('option');
-      option.value = name.name;
-      option.text = name.name;
+      option.value = OD.name;
+      option.text = OD.name;
       document.getElementById('mySelect').appendChild(option);
     }
 
     // Set the default value of the select list to the first item in the object.
     document.getElementById('mySelect').selectedIndex = 0;
-  });
+  
     
 </script>
 
