@@ -15,44 +15,24 @@
 
 <p>V22</p>
 
-<select id="mySelect">
-  <option value="">Select a Country</option>
-</select>
+<div id="select_box_wrapper">
+  <select id="countries"></select>
+</div>
 
 <div id="myData"></div>  
 <script>
-        fetch('MinneapolisODJSON.json')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-      
-      function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")" + data[i].Version + ")"
-                mainContainer.appendChild(div);
-            }
-        }
     
-    for (const OD of data) {
-      const option = document.createElement('option');
-      option.value = OD.name;
-      option.text = OD.name;
-      document.getElementById('mySelect').appendChild(option);
-    }
+var countries = fetch('MinneapolisODJSON.json')
+var selectHTML='';
 
-    // Set the default value of the select list to the first item in the object.
-    document.getElementById('mySelect').selectedIndex = 0;
-  
-    
+for (var key in countries)
+ {
+     selectHTML +='<option value="'+key+'">'+countries[key]+'</option>';
+ }
+ 
+ document.getElementById('countries').innerHTML = selectHTML;
+        
+
 </script>
 
 </body>
