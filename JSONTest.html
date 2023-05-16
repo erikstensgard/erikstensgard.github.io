@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>Dynamic JSON Data</title>
+</head>
+<body>
+
+<h1>Dynamic JSON Data</h1>
+
+<select id="mySelect">
+  <option value="">Select a Country</option>
+</select>
+
+<div id="myData"></div>
+
+<script>
+
+// Get the JSON data from the file
+var jsonData = `
+{
+  "countries": [
+    {
+      "name": "United States",
+      "population": 332,403,201
+    },
+    {
+      "name": "China",
+      "population": 1,444,216,107
+    },
+    {
+      "name": "India",
+      "population": 1,393,402,977
+    },
+    {
+      "name": "Indonesia",
+      "population": 273,523,615
+    },
+    {
+      "name": "Pakistan",
+      "population": 220,892,340
+    }
+  ]
+}`;
+
+// Parse the JSON data
+var countries = JSON.parse(jsonData);
+
+// Create a dropdown list for the countries
+var mySelect = document.getElementById("mySelect");
+for (var i = 0; i < countries.length; i++) {
+  var option = document.createElement("option");
+  option.value = countries[i].name;
+  option.innerHTML = countries[i].name;
+  mySelect.appendChild(option);
+}
+
+// When the user selects a country, update the data
+mySelect.addEventListener("change", function() {
+  var selectedCountry = this.value;
+  var myData = document.getElementById("myData");
+  myData.innerHTML = countries[selectedCountry].population;
+});
+
+</script>
+
+</body>
+</html>
