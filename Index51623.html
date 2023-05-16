@@ -13,7 +13,9 @@
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
-<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
+<select id="sel">
+
+</select>
 
 <ul id="list-holder">
 
@@ -70,7 +72,27 @@ function search_animal() {
     }
   }
 }
+
+    // Create a dropdown list for the countries
+var mySelect = document.getElementById("mySelect");
+for (var i = 0; i < obj.length; i++) {
+  var option = document.createElement("option");
+  option.value = obj[i].name;
+  option.innerHTML = obj[i].name;
+  mySelect.appendChild(option);
+}
+
+// When the user selects a country, update the data
+mySelect.addEventListener("change", function() {
+  var selectedCountry = this.value;
+  var myData = document.getElementById("myData");
+  myData.innerHTML = obj[selectedCountry].DisplayText;
+}
+    
+    
    
 </script>
+<select id="mySelect">
+  <option value="">Select a Country</option>
 </body>
 </html>
