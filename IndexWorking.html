@@ -59,7 +59,8 @@ async function filterData(event) {
   filteredData.forEach(item => {
     const resultItem = document.createElement('div');
     resultItem.textContent = item.Name;
-    resultContainer.appendChild(resultItem);
+    resultItem.textContent = item.DisplayText;
+      resultContainer.appendChild(resultItem);
   });
 }
 
