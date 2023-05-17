@@ -21,7 +21,7 @@
 
 </ul>
 
-<div id="myData"></div>  
+
 <script>
         fetch('MinneapolisODJSON.json')
             .then(function (response) {
@@ -46,7 +46,7 @@
 </script>
 
 <script>
-let data =  fetch('MinneapolisODJSON.json')
+let data =  JSON.parse(fetch('MinneapolisODJSON.json'))
     
 function search_animal() {
   let input = document.getElementById('searchbar').value
