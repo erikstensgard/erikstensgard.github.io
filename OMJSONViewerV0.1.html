@@ -12,8 +12,6 @@
        <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
-<button onclick="viewAllContents()">View All Contents</button>
-
   <select id="filterDropdown">
   </select>
 
@@ -53,31 +51,16 @@ async function filterData(event) {
   resultContainer.innerHTML = '';
 
   // Filter the JSON data based on the selected option
-  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
+  const filteredData = await array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
   // Display the filtered results
   filteredData.forEach(item => {
     const resultItem = document.createElement('div');
-    resultItem.textContent = item.Contents;
+    resultItem.textContent = item.Contents.Subarray(1)  ;
       resultContainer.appendChild(resultItem);
   });
 }
-function viewAllContents() {
-  const resultContainer = document.getElementById('resultContainer');
 
-  // Clear previous results
-  resultContainer.innerHTML = '';
-
-  // Get the contents of the item object
-  const contents = item.contents;
-
-  // Iterate over the contents and display them in the result container
-  contents.forEach(content => {
-    const resultItem = document.createElement('div');
-    resultItem.textContent = content.Item;
-    resultContainer.appendChild(resultItem);
-  });
-}
 // Run the fetchData function
 fetchData().then(populateDropdown);
 </script>
