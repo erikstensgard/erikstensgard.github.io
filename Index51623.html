@@ -72,5 +72,53 @@ function search_animal() {
 }
    
 </script>
+
+<script>
+  // Fetch JSON Data
+  fetch('MinneapolisODJSON.json')
+    .then(response => response.json())
+    .then(data => {
+      // Call a function to populate the dropdown with options from the JSON file
+      populateDropdown(data);
+    })
+    .catch(error => console.error('Error fetching JSON:', error));
+
+  // Populate Dropdown
+  function populateDropdown(data) {
+    const dropdown = document.getElementById('filterDropdown');
+
+    // Iterate over the JSON data and create an option element for each item
+    data.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = item.DisplayText;
+      dropdown.appendChild(option);
+    });
+
+    // Add an event listener to the dropdown to trigger filtering
+    dropdown.addEventListener('change', filterData);
+  }
+
+  // Filter Data
+  function filterData() {
+    const selectedOption = this.value;
+    const resultContainer = document.getElementById('resultContainer');
+
+    // Clear previous results
+    resultContainer.innerHTML = '';
+
+    // Filter the JSON data based on the selected option
+    const filteredData = data.filter(item => item.Name === selectedOption);
+
+    // Display the filtered results
+    filteredData.forEach(item => {
+      const resultItem = document.createElement('div');
+      resultItem.textContent = item.DisplayText;
+      resultContainer.appendChild(resultItem);
+    });
+  }
+</script>
+
+
 </body>
 </html>
