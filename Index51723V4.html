@@ -28,7 +28,9 @@
       // Call a function to populate the dropdown with options from the JSON file
       populateDropdown(data);
     })  
-    .catch(error => console.error('Error fetching JSON:', error));
+    .catch(error => console.error('Error fetching JSON:', error))
+    document.getElementById("whereToPrint").innerHTML = JSON.stringify(Data, null, 4);
+    ;
 
   // Populate Dropdown
   function populateDropdown(data) {
@@ -63,7 +65,7 @@
   }
 
 // Other Display
-    document.getElementById("whereToPrint").innerHTML = JSON.stringify(Fetch('MinneapolisODJSON.json'), null, 4);
+    
 
 </script>
 
