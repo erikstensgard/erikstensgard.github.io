@@ -58,8 +58,7 @@ async function filterData(event) {
   // Display the filtered results
   filteredData.forEach(item => {
     const resultItem = document.createElement('div');
-    resultItem.textContent = item.Name;
-    resultItem.textContent = item.DisplayText;
+    resultItem.textContent = string.concat(item.Name, item.DisplayText);
       resultContainer.appendChild(resultItem);
   });
 }
