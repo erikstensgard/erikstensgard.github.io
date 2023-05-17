@@ -59,8 +59,8 @@ const filteredData = await Array.from(await fetchData()).filter(item => item.Nam
 filteredData.forEach(item => {
 const resultItem = document.createElement('div');
 if (item.contents) {
-item.contents.forEach(content => {
-resultItem.textContent = content.row;
+item.contents.forEach(contents => {
+resultItem.textContent = contents.item;
 });
 }
 resultContainer.appendChild(resultItem);
