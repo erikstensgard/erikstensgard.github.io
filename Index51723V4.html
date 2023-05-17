@@ -51,7 +51,7 @@
       resultContainer.innerHTML = '';
 
       // Filter the JSON data based on the selected option
-      const filteredData = Array.from(data).filter(item => item.Name === selectedOption);
+      const filteredData = Array.from(data).filter(selectedOption);
 
       // Display the filtered results
       filteredData.forEach(item => {
