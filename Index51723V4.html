@@ -49,7 +49,11 @@
 
       // Clear previous results
       resultContainer.innerHTML = '';
-
+        
+function filterData(data) {
+  const selectedOption = this.value;
+  const resultContainer = document.getElementById('resultContainer');
+    
       // Filter the JSON data based on the selected option
       const filteredData = Array.from(data).filter(selectedOption);
 
