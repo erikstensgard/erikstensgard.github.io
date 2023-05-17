@@ -49,15 +49,15 @@
   }
 
 // Filter Data
-function filterData(data) {
-  const selectedOption = this.value;
+function filterData(event) {
+  const selectedOption = event.target.value;
   const resultContainer = document.getElementById('resultContainer');
 
   // Clear previous results
   resultContainer.innerHTML = '';
 
   // Filter the JSON data based on the selected option
-  const filteredData = Array.from(data).filter(item => item.Name === selectedOption);
+  const filteredData = data.filter(item => item.Name === selectedOption);
 
   // Display the filtered results
   filteredData.forEach(item => {
