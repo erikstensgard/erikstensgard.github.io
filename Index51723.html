@@ -46,21 +46,8 @@
     dropdown.addEventListener('change', filterData);
   }
 
-  // Filter Data
-      async function fetchData() {
-    const response = await fetch('MinneapolisODJSON.json')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to populate the dropdown with options from the JSON file
-      populateDropdown(data);
-    })
-    .catch(error => console.error('Error fetching JSON:', error));  
-         
-      // Call a function to populate the dropdown with options from the JSON file
-      filterData();
-    })
-    .catch(error => console.error('Error fetching JSON:', error));  
-  function filterData() {
+// Filter Data
+  function filterData(data) {
     const selectedOption = this.value;
     const resultContainer = document.getElementById('resultContainer');
 
