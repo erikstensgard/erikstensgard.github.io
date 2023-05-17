@@ -20,9 +20,9 @@
   <div id="resultContainer"></div>
 
 <script>
-  // Fetch JSON Data
-     async function fetchData() {
-    const response = await fetch('MinneapolisODJSON.json')
+    // Fetch JSON Data
+  async function fetchData() {
+    const response = await  fetch('MinneapolisODJSON.json')
     .then(function (response) {
                 return response.json();
             })
@@ -33,6 +33,10 @@
                 console.log('error: ' + err);
             });
     const data = await response.json();
+
+    // Call a function to populate the dropdown with options from the JSON file
+    populateDropdown(data);
+  }
 
   // Populate Dropdown
   function populateDropdown(data) {
