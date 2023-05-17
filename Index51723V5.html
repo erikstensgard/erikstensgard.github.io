@@ -55,7 +55,7 @@ function filterData(event) {
   resultContainer.innerHTML = '';
 
   // Filter the JSON data based on the selected option
-  const filteredData = data.filter(item => item.Name === selectedOption);
+  const filteredData = Array.from(data).filter(item => item.Name === selectedOption);
 
   // Display the filtered results
   filteredData.forEach(item => {
