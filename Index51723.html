@@ -47,22 +47,23 @@
   }
 
 // Filter Data
-  function filterData(data) {
-    const selectedOption = this.value;
-    const resultContainer = document.getElementById('resultContainer');
+function filterData() {
+  const selectedOption = this.value;
+  const resultContainer = document.getElementById('resultContainer');
 
-    // Clear previous results
-    resultContainer.innerHTML = '';
+  // Clear previous results
+  resultContainer.innerHTML = '';
 
-    // Filter the JSON data based on the selected option
-    const filteredData = data.filter(item => item.Name === selectedOption);
+  // Filter the JSON data based on the selected option
+  const filteredData = Array.from(data).filter(item => item.Name === selectedOption);
 
-    // Display the filtered results
-    filteredData.forEach(item => {
-      const resultItem = document.createElement('div');
-      resultItem.textContent = item.Name;
-      resultContainer.appendChild(resultItem);
-    });
+  // Display the filtered results
+  filteredData.forEach(item => {
+    const resultItem = document.createElement('div');
+    resultItem.textContent = item.Name;
+    resultContainer.appendChild(resultItem);
+  });
+    
   }
 </script>
 
