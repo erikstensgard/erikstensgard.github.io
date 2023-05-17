@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Test</title>
+</head>
+<body>
+    <p>Testing this web page, Data below is stored in the JSON file "people.json" in the 
+       github repository erikstensgard.github.io. This is the main web page of the website, "index.htm"
+       it is also stored in the erikstensgard.github.io repository.
+       <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
+       <br><a href="OrderMenuTest.html">Order Menus</a></p>
+       <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
+
+
+  <select id="filterDropdown">
+  </select>
+
+  <div id="resultContainer"></div>
+
+
+<script>
+  // Fetch JSON Data
+  async function fetchData() {
+    const response = await fetch('MinneapolisODJSON.json');
+    const data = await response.json();
+
+    // Call a function to populate the dropdown with options from the JSON file
+    populateDropdown(data);
+  }
+
+  // Populate Dropdown
+  function populateDropdown(data) {
+    const dropdown = document.getElementById('filterDropdown');
+
+    // Iterate over the JSON data and create an option element for each item
+    data.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = item.Name;
+      dropdown.appendChild(option);
+    });
+
+    // Add an event listener to the dropdown to trigger filtering
+    dropdown.addEventListener('change', filterData);
+  }
+
+// Filter Data
+async function filterData() {
+  const selectedOption = this.value;
+  const resultContainer = document.getElementById('resultContainer');
+
+  // Clear previous results
+  resultContainer.innerHTML = '';
+
+  // Filter the JSON data based on the selected option
+  const filteredData = await data.filter(item => item.Name === selectedOption);
+
+  // Display the filtered results
+  filteredData.forEach(item => {
+    const resultItem = document.createElement('div');
+    resultItem.textContent = item.Name;
+    resultContainer.appendChild(resultItem);
+  });
+}
+
+  // Run the fetchData function when the page loads
+  window.onload = fetchData;
+</script>
+
+
+</body>
+</html>
