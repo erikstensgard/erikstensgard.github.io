@@ -60,8 +60,8 @@ async function filterData(event) {
     const resultItem = document.createElement('div');
     resultItem.textContent = item.Contents.forEach(content => {
 resultItem.textContent = content.Item;
-});
-      }
+})
+      });
       resultContainer.appendChild(resultItem);
   });
 }
