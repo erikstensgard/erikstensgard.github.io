@@ -12,6 +12,8 @@
        <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
+
+
   <select id="filterDropdown">
   </select>
 
@@ -51,7 +53,7 @@ async function filterData(event) {
   resultContainer.innerHTML = '';
 
   // Filter the JSON data based on the selected option
-  const filteredData = await array.from(await fetchData()).filter(item => item.Name === selectedOption);
+  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
   // Display the filtered results
   filteredData.forEach(item => {
