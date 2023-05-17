@@ -60,7 +60,7 @@ filteredData.forEach(item => {
 const resultItem = document.createElement('div');
 if (item.contents) {
 item.contents.forEach(content => {
-resultItem.textContent = content.Item;
+resultItem.textContent = content.row;
 });
 }
 resultContainer.appendChild(resultItem);
