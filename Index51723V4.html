@@ -45,7 +45,7 @@
     });
 
     // Add an event listener to the dropdown to trigger filtering
-    dropdown.addEventListener('change', filterData);
+     dropdown.addEventListener('change', () => filterData(data));
   }
 
 // Filter Data
