@@ -22,7 +22,7 @@
 
 <script>
   // Fetch JSON Data
-  var data; fetch('MinneapolisODJSON.json')
+  fetch('MinneapolisODJSON.json')
     .then(response => response.json())
     .then(data => {
       // Call a function to populate the dropdown with options from the JSON file
@@ -47,7 +47,7 @@
   }
 
   // Filter Data
-    fetch('MinneapolisODJSON.json')
+    var data; fetch('MinneapolisODJSON.json')
     .then(response => response.json())
     .then(data => {
       // Call a function to populate the dropdown with options from the JSON file
