@@ -56,7 +56,7 @@ async function filterData(event) {
   // Display the filtered results
   filteredData.forEach(item => {
     const resultItem = document.createElement('div');
-    resultItem.textContent = item.Contents.Subarray(1)  ;
+    resultItem.textContent = item.Contents;
       resultContainer.appendChild(resultItem);
   });
 }
