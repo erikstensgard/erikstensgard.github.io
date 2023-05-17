@@ -33,7 +33,7 @@
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-      
+   
       function appendData(data) {
             var mainContainer = document.getElementById("myData");
             
@@ -46,7 +46,13 @@
 </script>
 
 <script>
-let data =  JSON.parse(fetch('MinneapolisODJSON.json'))
+let data =  fetch(('MinneapolisODJSON.json', { 
+  method: 'GET'
+})
+.then(function(response) { return response.json(); })
+.then(function(json) {
+  // use the json
+});  
     
 function search_animal() {
   let input = document.getElementById('searchbar').value
