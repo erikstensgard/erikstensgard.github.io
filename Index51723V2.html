@@ -15,25 +15,15 @@
 
 
   <select id="filterDropdown">
-    <option value="option1">PSOZID ACETAMINOPHEN 650MG PO Q6H PRN/option>
-    <option value="option2">Option 2</option>
-    <option value="option3">Option 3</option>
   </select>
 
   <div id="resultContainer"></div>
 
-<p>V22</p>
-
-<input id="searchbar" onkeyup="search_animal()" type="text" name="search">
-
-<ul id="list-holder">
-
-</ul>
-
-
 <script>
-        fetch('MinneapolisODJSON.json')
-            .then(function (response) {
+  // Fetch JSON Data
+     async function fetchData() {
+    const response = await fetch('MinneapolisODJSON.json')
+    .then(function (response) {
                 return response.json();
             })
             .then(function (data) {
@@ -42,55 +32,7 @@
             .catch(function (err) {
                 console.log('error: ' + err);
             });
-   
-      function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = data[i].DisplayText + " (" + data[i].Name + ")" + data[i].Version + ")"
-                mainContainer.appendChild(div);
-            }
-        }
-</script>
-
-<script>
-let data =  fetch('MinneapolisODJSON.json', { 
-  method: 'GET'
-})
-.then(function(response) { return response.json(); })
-.then(function(json) {
-  // use the json
-});  
-    
-function search_animal() {
-  let input = document.getElementById('searchbar').value
-  input = input.toLowerCase();
-  let x = document.querySelector('#list-holder');
-  x.innerHTML = ""
-
-  for (i = 0; i < data.length; i++) {
-    let obj = data[i];
-
-    if (obj.Name.toLowerCase().includes(input)) {
-      const elem = document.createElement("li")
-      elem.innerHTML = `${obj.Name} - ${obj.Version}`
-      x.appendChild(elem)
-    }
-  }
-}
-   
-</script>
-
-<script>
-  // Fetch JSON Data
-  fetch('MinneapolisODJSON.json')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to populate the dropdown with options from the JSON file
-      populateDropdown(data);
-    })
-    .catch(error => console.error('Error fetching JSON:', error));
+    const data = await response.json();
 
   // Populate Dropdown
   function populateDropdown(data) {
@@ -100,7 +42,7 @@ function search_animal() {
     data.forEach(item => {
       const option = document.createElement('option');
       option.value = item.Name;
-      option.textContent = item.DisplayText;
+      option.textContent = item.Name;
       dropdown.appendChild(option);
     });
 
@@ -122,7 +64,7 @@ function search_animal() {
     // Display the filtered results
     filteredData.forEach(item => {
       const resultItem = document.createElement('div');
-      resultItem.textContent = item.DisplayText;
+      resultItem.textContent = item.Name;
       resultContainer.appendChild(resultItem);
     });
   }
