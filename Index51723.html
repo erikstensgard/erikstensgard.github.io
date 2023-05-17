@@ -22,13 +22,13 @@
 
 <script>
   // Fetch JSON Data
-  var data; fetch('MinneapolisODJSON.json')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to populate the dropdown with options from the JSON file
-      populateDropdown(data);
-    })
-    .catch(error => console.error('Error fetching JSON:', error));
+  async function fetchData() {
+    const response = await fetch('MinneapolisODJSON.json');
+    const data = await response.json();
+
+    // Call a function to populate the dropdown with options from the JSON file
+    populateDropdown(data);
+  }
 
   // Populate Dropdown
   function populateDropdown(data) {
@@ -47,7 +47,7 @@
   }
 
   // Filter Data
-  function filterData() {
+  async function filterData() {
     const selectedOption = this.value;
     const resultContainer = document.getElementById('resultContainer');
 
@@ -55,7 +55,7 @@
     resultContainer.innerHTML = '';
 
     // Filter the JSON data based on the selected option
-    const filteredData = data.filter(item => item.Name === selectedOption);
+    const filteredData = await data.filter(item => item.Name === selectedOption);
 
     // Display the filtered results
     filteredData.forEach(item => {
@@ -64,6 +64,9 @@
       resultContainer.appendChild(resultItem);
     });
   }
+
+  // Run the fetchData function when the page loads
+  window.onload = fetchData;
 </script>
 
 
