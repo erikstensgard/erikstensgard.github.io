@@ -46,25 +46,24 @@ function populateDropdown(data) {
 
 // Filter Data
 async function filterData(event) {
-const selectedOption = event.target.value;
-const resultContainer = document.getElementById('resultContainer');
+  const selectedOption = event.target.value;
+  const resultContainer = document.getElementById('resultContainer');
 
-// Clear previous results
-resultContainer.innerHTML = '';
+  // Clear previous results
+  resultContainer.innerHTML = '';
 
-// Filter the JSON data based on the selected option
-const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
+  // Filter the JSON data based on the selected option
+  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-// Display the filtered results
-filteredData.forEach(item => {
-const resultItem = document.createElement('div');
-if (item.contents) {
-item.contents.forEach(contents => {
-resultItem.textContent = contents.item;
+  // Display the filtered results
+  filteredData.forEach(item => {
+    const resultItem = document.createElement('div');
+    resultItem.textContent = item.Contents.forEach(content => {
+resultItem.textContent = content.Item;
 });
-}
-resultContainer.appendChild(resultItem);
-});
+      }
+      resultContainer.appendChild(resultItem);
+  });
 }
 
 // Run the fetchData function
