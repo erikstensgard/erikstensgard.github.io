@@ -12,9 +12,7 @@
        <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
-<button onclick="viewAllContents()">View All Contents
-onclick="viewAllContents()"
-</button>
+<button onclick="viewAllContents()">View All Contents</button>
 
   <select id="filterDropdown">
   </select>
@@ -76,7 +74,7 @@ function viewAllContents() {
   // Iterate over the contents and display them in the result container
   contents.forEach(content => {
     const resultItem = document.createElement('div');
-    resultItem.textContent = content;
+    resultItem.textContent = content.Item;
     resultContainer.appendChild(resultItem);
   });
 }
