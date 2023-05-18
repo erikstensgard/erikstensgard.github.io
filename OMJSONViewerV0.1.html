@@ -55,9 +55,9 @@ async function filterData(event) {
   // Filter the JSON data based on the selected option
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-    item.forEach((content, index) => {
+    filteredData.forEach((item, index) => {
   // debugger;
-  content.forEach((subItem, subIndex) => {
+ item.forEach((subItem, subIndex) => {
     // debugger;
        const resultItem = document.createElement('div');
       if (results[subIndex]) {
