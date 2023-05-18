@@ -156,8 +156,6 @@ async function filterData(event) {
   resultContainer.appendChild(table);
 }
 
-
-
         // Initialize the page
         async function initializePage() {
           // Fetch the JSON data
