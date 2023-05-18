@@ -120,7 +120,7 @@
                 if (!Text && Item) {
                   const otherItem = otherData.find(item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase());
                   if (otherItem) {
-                    displayText = otherItem.DisplayText;
+                    displayText = otherItem.Name;
 
                     // Add click event listener to display information
                     bodyRow.addEventListener('click', () => {
