@@ -110,7 +110,7 @@
       if (matchingOption) {
         const dropdown = document.getElementById('filterDropdown');
         dropdown.value = item.Item;
-        await filterData({ target: dropdown }, jsonData);
+        await filterData({ target: dropdown });
       } else {
         const otherData = await fetchOtherData();
         const matchingItem = otherData.find(
@@ -124,9 +124,10 @@
     }
 
     // Updated filterData function
-    async function filterData(event, jsonData) {
+    async function filterData(event) {
       const selectedOption = event.target.value;
 
+      const jsonData = await fetchData();
       const otherData = await fetchOtherData();
 
       // Filter the JSON data based on the selected option
@@ -186,7 +187,7 @@
       const jsonData = await fetchData();
       const dropdown = document.getElementById('filterDropdown');
       populateDropdown(jsonData);
-      filterData({ target: dropdown }, jsonData);
+      filterData({ target: dropdown });
     }
 
     // Call initialize function
@@ -195,3 +196,4 @@
 </body>
 
 </html>
+
