@@ -60,12 +60,10 @@ async function filterData(event) {
     item.contents.Foreach(item => {
       const resultItem = document.createElement('div');
       resultItem.textContent = item.Contents;
-      resultContainer.appendChild(resultItem);
-  
-   });
+      resultContainer.appendChild(resultItem); 
+   }}));
 }
-}
-
+                       
  // Run the fetchData function
 fetchData().then(populateDropdown);
 </script>
