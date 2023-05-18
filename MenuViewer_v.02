@@ -41,64 +41,6 @@ async function fetchData() {
   const data = await response.json();
   return data;
 }
-async function fetchOtherData() {
-  const response = await fetch('ODJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Populate Dropdown
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-
-  // Iterate over the JSON data and create an option element for each item
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.Name;
-    dropdown.appendChild(option);
-  });
-
-  // Add an event listener to the dropdown to trigger filtering
-  dropdown.addEventListener('change', filterData);
-}
-
-// Fetch JSON Data
-async function fetchData() {
-  const response = await fetch('OMJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Fetch Other JSON Data
-async function fetchOtherData() {
-  const response = await fetch('ODJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Populate Dropdown
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-
-  // Iterate over the JSON data and create an option element for each item
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.Name;
-    dropdown.appendChild(option);
-  });
-
-  // Add an event listener to the dropdown to trigger filtering
-  dropdown.addEventListener('change', filterData);
-}
-
-// Fetch JSON Data
-async function fetchData() {
-  const response = await fetch('OMJSON.json');
-  const data = await response.json();
-  return data;
-}
 
 // Fetch Other JSON Data
 async function fetchOtherData() {
@@ -211,7 +153,7 @@ function displayOtherItemInfo(item) {
   // You can customize the display logic here
 }
 
-// Run the fetchData function
+// Run the fetchData and populateDropdown functions
 fetchData().then(populateDropdown);
 </script>
 
