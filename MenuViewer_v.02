@@ -62,28 +62,41 @@
       dropdown.addEventListener('change', filterData);
     }
 
-    // Display other item information
-    function displayOtherItemInfo(item, container) {
-      const infoContainer = document.createElement('div');
+    // Display item information
+function displayItemInfo(item, container) {
+  const infoContainer = document.createElement('div');
 
-      for (const key in item) {
-        const label = document.createElement('strong');
-        label.textContent = `${key}: `;
-        const value = document.createElement('span');
-        value.textContent = item[key];
-        infoContainer.appendChild(label);
-        infoContainer.appendChild(value);
-        infoContainer.appendChild(document.createElement('br'));
-      }
+  for (const key in item) {
+    const label = document.createElement('strong');
+    label.textContent = `${key}: `;
+    const value = document.createElement('span');
+    value.textContent = item[key];
+    infoContainer.appendChild(label);
+    infoContainer.appendChild(value);
+    infoContainer.appendChild(document.createElement('br'));
+  }
 
-      container.innerHTML = '';
-      container.appendChild(infoContainer);
+  container.innerHTML = '';
+  container.appendChild(infoContainer);
+}
+
+// Function to handle row click event
+function handleRowClick(item, resultContainer) {
+  if (item.Item) {
+    const matchingItem = otherData.find(
+      dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItem) {
+      displayItemInfo(matchingItem, resultContainer);
     }
+  }
+}
 
-   // Filter Data
+// Updated filterData function
 async function filterData(event) {
   const selectedOption = event.target.value;
-
+  
   // Fetch the JSON data
   const jsonData = await fetchData();
   const otherData = await fetchOtherData();
@@ -109,30 +122,20 @@ async function filterData(event) {
         const { Text, Item, Header } = matchingItem;
 
         const displayCell = document.createElement('td');
-
-        if (!Text && Item) {
-          const otherItem = otherData.find(
-            item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase()
-          );
-
-          if (otherItem) {
-            displayCell.textContent = otherItem.Name;
-            bodyRow.style.cursor = 'pointer';
-
-            // Add click event listener to display information
-            bodyRow.addEventListener('click', () => {
-              displayOtherItemInfo(otherItem, resultContainer);
-            });
-          }
-        } else {
-          displayCell.textContent = Text;
-        }
+        displayCell.textContent = Text || Item || '';
 
         if (Header === 1) {
           displayCell.classList.add('bold');
         }
 
         bodyRow.appendChild(displayCell);
+
+        if (Item) {
+          bodyRow.style.cursor = 'pointer';
+          bodyRow.addEventListener('click', () => {
+            handleRowClick(matchingItem, resultContainer);
+          });
+        }
       } else {
         // Add a blank cell for empty rows
         const emptyCell = document.createElement('td');
