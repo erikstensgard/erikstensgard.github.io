@@ -86,11 +86,13 @@ async function filterData(event) {
   nameTh.textContent = filteredData[0].Name;
   headerRow.appendChild(nameTh);
 
-  columns.forEach(column => {
-    const th = document.createElement('th');
-    th.textContent = `Column ${column}`;
-    headerRow.appendChild(th);
-  });
+  if (columns.size > 0) {
+    columns.forEach(column => {
+      const th = document.createElement('th');
+      th.textContent = `Column ${column}`;
+      headerRow.appendChild(th);
+    });
+  }
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
@@ -104,29 +106,39 @@ async function filterData(event) {
       // Replace "(null)" with an empty string if `Item` is null
       const displayText = Item ? `${Text} (${Item})` : Text;
 
-      // Bold the display text when Header is 0
-      const displayClass = Header === 0 ? 'bold' : '';
+      // Bold the display text when Header = 0
+      const displayCell = document.createElement('td');
+      if (Header === 0) {
+        displayCell.classList.add('bold');
+      }
+      displayCell.textContent = displayText;
+      bodyRow.appendChild(displayCell);
 
-      const nameTd = document.createElement('td');
-      nameTd.textContent = displayText;
-      nameTd.classList.add(displayClass);
-      bodyRow.appendChild(nameTd);
-
-      columns.forEach(column => {
-        const td = document.createElement('td');
-        // Check if the current column matches the item's column
-        if (Column === column) {
-          td.textContent = displayText;
-          td.classList.add(displayClass);
-        }
-        bodyRow.appendChild(td);
-      });
+      if (columns.size > 0) {
+        columns.forEach(column => {
+          const cell = document.createElement('td');
+          if (column === Column) {
+            cell.textContent = displayText;
+          }
+          bodyRow.appendChild(cell);
+        });
+      }
 
       tbody.appendChild(bodyRow);
     });
   });
 
   table.appendChild(tbody);
+
+  if (columns.size === 0) {
+    const noResultsRow = document.createElement('tr');
+    const noResultsCell = document.createElement('td');
+    noResultsCell.setAttribute('colspan', '2');
+    noResultsCell.textContent = 'No results found for the selected option.';
+    noResultsRow.appendChild(noResultsCell);
+    tbody.appendChild(noResultsRow);
+  }
+
   resultContainer.appendChild(table);
 }
 
