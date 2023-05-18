@@ -63,6 +63,36 @@ function populateDropdown(data) {
   dropdown.addEventListener('change', filterData);
 }
 
+// Fetch JSON Data
+async function fetchData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Fetch Other JSON Data
+async function fetchOtherData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Populate Dropdown
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+
+  // Iterate over the JSON data and create an option element for each item
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
+
+  // Add an event listener to the dropdown to trigger filtering
+  dropdown.addEventListener('change', filterData);
+}
+
 // Filter Data
 async function filterData(event) {
   const selectedOption = event.target.value;
@@ -71,10 +101,15 @@ async function filterData(event) {
   // Clear previous results
   resultContainer.innerHTML = '';
 
+  // Fetch the JSON data
+  const jsonData = await fetchData();
+  const otherData = await fetchOtherData();
+
   // Filter the JSON data based on the selected option
-  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
+  const filteredData = jsonData.filter(item => item.Name === selectedOption);
 
   const table = document.createElement('table');
+  table.classList.add('table');
 
   const tbody = document.createElement('tbody');
 
@@ -86,9 +121,6 @@ async function filterData(event) {
   headerRow.appendChild(headerItem);
 
   tbody.appendChild(headerRow);
-
-  // Fetch the other JSON data
-  const otherData = await fetchOtherData();
 
   // Create the table body
   filteredData.forEach(content => {
@@ -104,8 +136,14 @@ async function filterData(event) {
       if (matchingItem) {
         const { Text, Item, Header } = matchingItem;
 
-        // Replace "(null)" with an empty string if `Item` is null
-        const displayText = Item ? `${Text} (${Item})` : Text;
+        let displayText = Text;
+
+        if (!Text && Item) {
+          const otherItem = otherData.find(item => item.Name === Item);
+          if (otherItem) {
+            displayText = otherItem.DisplayText;
+          }
+        }
 
         const displayCell = document.createElement('td');
         displayCell.textContent = displayText;
@@ -129,6 +167,9 @@ async function filterData(event) {
 
   resultContainer.appendChild(table);
 }
+
+// Run the fetchData and populateDropdown functions
+fetchData().then(populateDropdown);
 
 // Run the fetchData function
 fetchData().then(populateDropdown);
