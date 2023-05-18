@@ -62,14 +62,15 @@ async function filterData(event) {
        const resultItem = document.createElement('div');
       if (results[subIndex]) {
       results[subIndex] = results[subIndex] + subItem
-    } else {
+      } 
+      else {
       results[subIndex] = subItem
+        
     }
+      resultContainer.appendChild(results);
   })
-})
+});
 
- resultContainer.appendChild(results);
-    
 // Run the fetchData function
 fetchData().then(populateDropdown);
 </script>
