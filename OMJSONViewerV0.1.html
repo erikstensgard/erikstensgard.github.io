@@ -59,17 +59,17 @@ async function filterData(event) {
   const results = [];
 
   filteredData.forEach((content, index) => {
-    Object.values(content).forEach((subItem, subIndex) => {
-        const resultItem = document.createElement('div');
-        if (results[subIndex]) {
-          results[subIndex] = results[subIndex] + subItem;
-        } else {
-          results[subIndex] = subItem;
-        }
-        resultItem.textContent = results[subIndex]; // Use resultItem instead of results
-        resultContainer.appendChild(resultItem);
-    });
+  Object.values(content).forEach((subItem, subIndex) => {
+    const resultItem = document.createElement('div');
+    if (results[subIndex]) {
+      results[subIndex] = results[subIndex] + subItem.Name; // Display the "Name" property
+    } else {
+      results[subIndex] = subItem.Name + subItem.Row; // Display the "Name" property
+    }
+    resultItem.textContent = results[subIndex];
+    resultContainer.appendChild(resultItem);
   });
+});
 }
 
 // Run the fetchData function
