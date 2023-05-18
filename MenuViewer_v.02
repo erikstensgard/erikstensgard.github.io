@@ -5,18 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON Test</title>
     <style>
-table {
-  border-collapse: collapse;
-}
-
-th, td {
-  border: none;
-  padding: 8px;
-}
-
-.bold {
-  font-weight: bold;
-}
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        .bold {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -27,155 +25,147 @@ th, td {
        <br><a href="OrderMenuTest.html">Order Menus</a></p>
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
+    <select id="filterDropdown">
+    </select>
 
-<select id="filterDropdown"></select>
-<div id="resultContainer"></div>
+    <div id="resultContainer"></div>
 
-
-<script>
-// Fetch JSON Data
-async function fetchData() {
-  const response = await fetch('OMJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Fetch Other JSON Data
-async function fetchOtherData() {
-  const response = await fetch('ODJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Populate Dropdown
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-
-  // Iterate over the JSON data and create an option element for each item
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.Name;
-    dropdown.appendChild(option);
-  });
-
-  // Add an event listener to the dropdown to trigger filtering
-  dropdown.addEventListener('change', filterData);
-}
-
-// Filter Data
-async function filterData(event) {
-  const selectedOption = event.target.value;
-  const resultContainer = document.getElementById('resultContainer');
-
-  // Clear previous results
-  resultContainer.innerHTML = '';
-
-  // Fetch the JSON data
-  const jsonData = await fetchData();
-  const otherData = await fetchOtherData();
-
-  // Filter the JSON data based on the selected option
-  const filteredData = jsonData.filter(item => item.Name === selectedOption);
-
-  const table = document.createElement('table');
-  table.classList.add('table');
-
-  const tbody = document.createElement('tbody');
-
-  // Create the table header row
-  const headerRow = document.createElement('tr');
-
-  const headerItem = document.createElement('th');
-  headerItem.textContent = filteredData[0].Name; // Use the first item's Name as the header
-  headerRow.appendChild(headerItem);
-
-  tbody.appendChild(headerRow);
-
-  // Create the table body
-  filteredData.forEach(content => {
-    const { Contents } = content;
-
-    // Find the maximum row number in the Contents array
-    const maxRow = Math.max(...Contents.map(item => item.Row));
-
-    for (let row = 1; row <= maxRow; row++) {
-      const bodyRow = document.createElement('tr');
-
-      const matchingItem = Contents.find(item => item.Row === row);
-      if (matchingItem) {
-        const { Text, Item, Header } = matchingItem;
-
-        let displayText = Text;
-
-        if (!Text && Item) {
-          const otherItem = otherData.find(item => item.Name === Item);
-          if (otherItem) {
-            displayText = otherItem.DisplayText;
-
-            // Add click event listener to display information
-            bodyRow.addEventListener('click', () => {
-              displayOtherItemInfo(otherItem, resultContainer);
-            });
-            bodyRow.style.cursor = 'pointer';
-          }
+    <script>
+        // Fetch JSON Data
+        async function fetchData() {
+          const response = await fetch('OMJSON.json');
+          const data = await response.json();
+          return data;
         }
 
-        const displayCell = document.createElement('td');
-        displayCell.textContent = displayText;
-
-        if (Header === 1) {
-          displayCell.classList.add('bold');
+        // Fetch Other JSON Data
+        async function fetchOtherData() {
+          const response = await fetch('ODJSON.json');
+          const data = await response.json();
+          return data;
         }
 
-        bodyRow.appendChild(displayCell);
-      } else {
-        // Add a blank cell for empty rows
-        const emptyCell = document.createElement('td');
-        bodyRow.appendChild(emptyCell);
-      }
+        // Populate Dropdown
+        function populateDropdown(data) {
+          const dropdown = document.getElementById('filterDropdown');
 
-      tbody.appendChild(bodyRow);
-    }
-  });
+          // Iterate over the JSON data and create an option element for each item
+          data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.Name;
+            option.textContent = item.Name;
+            dropdown.appendChild(option);
+          });
 
-  table.appendChild(tbody);
+          // Add an event listener to the dropdown to trigger filtering
+          dropdown.addEventListener('change', filterData);
+        }
 
-  resultContainer.appendChild(table);
-}
+        // Display Other Item Information
+        function displayOtherItemInfo(item, resultContainer) {
+          resultContainer.innerHTML = '';
 
-// Function to display other item information
-function displayOtherItemInfo(item, resultContainer) {
-  resultContainer.innerHTML = ''; // Clear previous results
+          const detailsList = document.createElement('ul');
+          detailsList.innerHTML = `
+            <li><strong>Name:</strong> ${item.Name}</li>
+            <li><strong>Display Group:</strong> ${item.DisplayGroup}</li>
+            <li><strong>Orderable Item:</strong> ${item.OrderableItem1}</li>
+            <li><strong>Urgency:</strong> ${item.Urgency}</li>
+            <li><strong>Word Processing:</strong> ${item.WordProcessing}</li>
+            <li><strong>Instructions:</strong> ${item.Instructions1}</li>
+            <li><strong>Route:</strong> ${item.Route1}</li>
+            <li><strong>Dispense Drug:</strong> ${item.DispenseDrug}</li>
+            <li><strong>Routing:</strong> ${item.Routing}</li>
+            <li><strong>Quantity:</strong> ${item.Quantity}</li>
+            <li><strong>Refills:</strong> ${item.Refills}</li>
+            <li><strong>Schedule:</strong> ${item.Schedule1}</li>
+            <li><strong>Strength:</strong> ${item.Strength1}</li>
+            <li><strong>Dose:</strong> ${item.Dose1}</li>
+            <li><strong>Days Supply:</strong> ${item['Days Supply']}</li>
+          `;
 
-  const infoTable = document.createElement('table');
-  infoTable.classList.add('table');
+          resultContainer.appendChild(detailsList);
+        }
 
-  const infoTbody = document.createElement('tbody');
+        // Filter Data
+        async function filterData(event) {
+          const selectedOption = event.target.value;
 
-  // Iterate over the item properties and create table rows
-  Object.keys(item).forEach(key => {
-    const infoRow = document.createElement('tr');
+          // Fetch the JSON data
+          const jsonData = await fetchData();
+          const otherData = await fetchOtherData();
 
-    const infoKeyCell = document.createElement('td');
-    infoKeyCell.textContent = key;
-    infoRow.appendChild(infoKeyCell);
+          // Filter the JSON data based on the selected option
+          const filteredData = jsonData.filter(item => item.Name === selectedOption);
 
-    const infoValueCell = document.createElement('td');
-    infoValueCell.textContent = item[key];
-    infoRow.appendChild(infoValueCell);
+          const table = document.createElement('table');
+          table.classList.add('table');
 
-    infoTbody.appendChild(infoRow);
-  });
+          const tbody = document.createElement('tbody');
 
-  infoTable.appendChild(infoTbody);
-  resultContainer.appendChild(infoTable);
-}
+          // Create the table body
+          filteredData.forEach(content => {
+            const { Contents } = content;
+            const maxRow = Math.max(...Contents.map(item => item.Row));
 
-// Run the fetchData and populateDropdown functions
-fetchData().then(populateDropdown);
-</script>
+            for (let row = 1; row <= maxRow; row++) {
+              const bodyRow = document.createElement('tr');
 
+              const matchingItem = Contents.find(item => item.Row === row);
+              if (matchingItem) {
+                const { Text, Item, Header } = matchingItem;
 
+                let displayText = Text;
+
+                if (!Text && Item) {
+                  const otherItem = otherData.find(item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase());
+                  if (otherItem) {
+                    displayText = otherItem.DisplayText;
+
+                    // Add click event listener to display information
+                    bodyRow.addEventListener('click', () => {
+                      displayOtherItemInfo(otherItem, resultContainer);
+                    });
+                    bodyRow.style.cursor = 'pointer';
+                  }
+                }
+
+                const displayCell = document.createElement('td');
+                displayCell.textContent = displayText;
+
+                if (Header === 1) {
+                  displayCell.classList.add('bold');
+                }
+
+                bodyRow.appendChild(displayCell);
+              } else {
+                // Add a blank cell for empty rows
+                const emptyCell = document.createElement('td');
+                bodyRow.appendChild(emptyCell);
+              }
+
+              tbody.appendChild(bodyRow);
+            }
+          });
+
+          table.appendChild(tbody);
+
+          const resultContainer = document.getElementById('resultContainer');
+          resultContainer.innerHTML = '';
+          resultContainer.appendChild(table);
+        }
+
+        // Initialize the page
+        async function initializePage() {
+          // Fetch the JSON data
+          const jsonData = await fetchData();
+
+          // Populate the dropdown with the data
+          populateDropdown(jsonData);
+        }
+
+        // Initialize the page when the DOM content is loaded
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>
