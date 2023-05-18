@@ -56,15 +56,14 @@ async function filterData(event) {
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
   // Display the filtered results
-  filteredData.forEach(item => {
-    item.contents.Foreach(item => {
-      const resultItem = document.createElement('div');
-      resultItem.textContent = item.Contents;
-      resultContainer.appendChild(resultItem); 
-   })});
+  filteredData.forEach(item.content => {
+    const resultItem = document.createElement('div');
+    resultItem.textContent = item.Content;
+      resultContainer.appendChild(resultItem);
+  });
 }
-                       
- // Run the fetchData function
+
+// Run the fetchData function
 fetchData().then(populateDropdown);
 </script>
 
