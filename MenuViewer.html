@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON Test</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
 </head>
 <body>
     <p>Testing this web page, Data below is stored in the JSON file "people.json" in the 
@@ -55,24 +64,61 @@ async function filterData(event) {
   // Filter the JSON data based on the selected option
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-  filteredData.forEach((content, index) => {
-    const contentName = document.createElement('div');
-    contentName.textContent = content.Name;
-    resultContainer.appendChild(contentName);
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
 
-    content.Contents.forEach((subItem) => {
-      const subItemContainer = document.createElement('div');
-      const row = document.createElement('div');
-      const item = document.createElement('div');
+  // Create the table header row
+  const headerRow = document.createElement('tr');
+  const columns = new Set(); // Use a Set to collect unique column values
 
-      row.textContent = `Row: ${subItem.Row}`;
-      item.textContent = `Item: ${subItem.Item}`;
-
-      subItemContainer.appendChild(row);
-      subItemContainer.appendChild(item);
-      resultContainer.appendChild(subItemContainer);
+  filteredData.forEach(content => {
+    content.Contents.forEach(subItem => {
+      columns.add(subItem.Column);
     });
   });
+
+  columns.forEach(column => {
+    const th = document.createElement('th');
+    th.textContent = `Column ${column}`;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create the table body rows
+  const rows = new Map(); // Use a Map to store row indices and their corresponding data
+
+  filteredData.forEach(content => {
+    content.Contents.forEach(subItem => {
+      const row = subItem.Row;
+      const column = subItem.Column;
+      const displayText = `${subItem.Text} (${subItem.Item})`;
+
+      if (!rows.has(row)) {
+        rows.set(row, new Array(columns.size).fill(''));
+      }
+
+      const rowData = rows.get(row);
+      rowData[column - 1] = displayText;
+    });
+  });
+
+  rows.forEach((rowData, rowIndex) => {
+    const bodyRow = document.createElement('tr');
+
+    rowData.forEach(columnData => {
+      const td = document.createElement('td');
+      td.textContent = columnData;
+      bodyRow.appendChild(td);
+    });
+
+    tbody.appendChild(bodyRow);
+  });
+
+  table.appendChild(tbody);
+  resultContainer.appendChild(table);
 }
 
 // Run the fetchData function
