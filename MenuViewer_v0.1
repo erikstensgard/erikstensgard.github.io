@@ -79,23 +79,36 @@ async function filterData(event) {
 
   // Create the table body
   filteredData.forEach(content => {
-    content.Contents.forEach(subItem => {
-      const { Text, Item, Header } = subItem;
+    const { Contents } = content;
+
+    // Find the maximum row number in the Contents array
+    const maxRow = Math.max(...Contents.map(item => item.Row));
+
+    for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
 
-      // Replace "(null)" with an empty string if `Item` is null
-      const displayText = Item ? `${Text} (${Item})` : Text;
+      const matchingItem = Contents.find(item => item.Row === row);
+      if (matchingItem) {
+        const { Text, Item, Header } = matchingItem;
 
-      // Bold the display text when Header = 0
-      const displayCell = document.createElement('td');
-      if (Header === 0) {
-        displayCell.classList.add('bold');
+        // Replace "(null)" with an empty string if `Item` is null
+        const displayText = Item ? `${Text} (${Item})` : Text;
+
+        // Bold the display text when Header = 0
+        const displayCell = document.createElement('td');
+        if (Header === 0) {
+          displayCell.classList.add('bold');
+        }
+        displayCell.textContent = displayText;
+        bodyRow.appendChild(displayCell);
+      } else {
+        // Add a blank cell for empty rows
+        const emptyCell = document.createElement('td');
+        bodyRow.appendChild(emptyCell);
       }
-      displayCell.textContent = displayText;
-      bodyRow.appendChild(displayCell);
 
       tbody.appendChild(bodyRow);
-    });
+    }
   });
 
   table.appendChild(tbody);
