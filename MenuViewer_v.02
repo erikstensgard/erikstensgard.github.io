@@ -87,7 +87,7 @@
           resultContainer.appendChild(detailsList);
         }
 
-       // Filter Data
+      // Filter Data
 async function filterData(event) {
   const selectedOption = event.target.value;
 
@@ -115,13 +115,12 @@ async function filterData(event) {
       if (matchingItem) {
         const { Text, Item, Header } = matchingItem;
 
-        let displayText = Text;
+        const displayCell = document.createElement('td');
 
         if (!Text && Item) {
           const otherItem = otherData.find(item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase());
           if (otherItem) {
-            displayText = otherItem.Name;
-
+            displayCell.textContent = otherItem.Name;
             bodyRow.style.cursor = 'pointer';
 
             // Add click event listener to display information
@@ -129,10 +128,9 @@ async function filterData(event) {
               displayOtherItemInfo(otherItem, resultContainer);
             });
           }
+        } else {
+          displayCell.textContent = Text;
         }
-
-        const displayCell = document.createElement('td');
-        displayCell.textContent = displayText;
 
         if (Header === 1) {
           displayCell.classList.add('bold');
