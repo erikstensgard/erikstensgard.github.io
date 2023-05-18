@@ -60,7 +60,7 @@ async function filterData(event) {
       const resultItem = document.createElement('div');
       if (typeof subItem === 'object' && subItem !== null) {
         // Check if subItem is an object
-        resultItem.textContent = subItem.Name; // Display the "Name" property or modify according to your needs
+        resultItem.textContent = subItem.Name + subItem.Version; // Display the "Name" property or modify according to your needs
       } else {
         resultItem.textContent = subItem; // Use the subItem as is if it's not an object
       }
