@@ -28,43 +28,11 @@ th, td {
        <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
 
-  <select id="filterDropdown">
-  </select>
-
-  <div id="resultContainer"></div>
+<select id="filterDropdown"></select>
+<div id="resultContainer"></div>
 
 
 <script>
-// Fetch JSON Data
-async function fetchData() {
-  const response = await fetch('OMJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Fetch Other JSON Data
-async function fetchOtherData() {
-  const response = await fetch('ODJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Populate Dropdown
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-
-  // Iterate over the JSON data and create an option element for each item
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.Name;
-    dropdown.appendChild(option);
-  });
-
-  // Add an event listener to the dropdown to trigger filtering
-  dropdown.addEventListener('change', filterData);
-}
-
 // Fetch JSON Data
 async function fetchData() {
   const response = await fetch('OMJSON.json');
@@ -147,7 +115,7 @@ async function filterData(event) {
 
             // Add click event listener to display information
             bodyRow.addEventListener('click', () => {
-              displayOtherItemInfo(otherItem);
+              displayOtherItemInfo(otherItem, resultContainer);
             });
             bodyRow.style.cursor = 'pointer';
           }
@@ -177,9 +145,31 @@ async function filterData(event) {
 }
 
 // Function to display other item information
-function displayOtherItemInfo(item) {
-  console.log(item); // Display the information from the ODJSON.json file for the selected item
-  // You can customize the display logic here
+function displayOtherItemInfo(item, resultContainer) {
+  resultContainer.innerHTML = ''; // Clear previous results
+
+  const infoTable = document.createElement('table');
+  infoTable.classList.add('table');
+
+  const infoTbody = document.createElement('tbody');
+
+  // Iterate over the item properties and create table rows
+  Object.keys(item).forEach(key => {
+    const infoRow = document.createElement('tr');
+
+    const infoKeyCell = document.createElement('td');
+    infoKeyCell.textContent = key;
+    infoRow.appendChild(infoKeyCell);
+
+    const infoValueCell = document.createElement('td');
+    infoValueCell.textContent = item[key];
+    infoRow.appendChild(infoValueCell);
+
+    infoTbody.appendChild(infoRow);
+  });
+
+  infoTable.appendChild(infoTbody);
+  resultContainer.appendChild(infoTable);
 }
 
 // Run the fetchData and populateDropdown functions
