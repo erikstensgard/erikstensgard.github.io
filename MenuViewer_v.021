@@ -83,15 +83,15 @@ function displayItemInfo(item, container) {
 
 // Function to handle row click event
 async function handleRowClick(item, resultContainer) {
-  if (item.Item) {
-    const otherData = await fetchOtherData();
-    const matchingItem = otherData.find(
-      dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
+  const jsonData = await fetchData();
+  const matchingOption = jsonData.find(
+    dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-    if (matchingItem) {
-      displayItemInfo(matchingItem, resultContainer);
-    }
+  if (matchingOption) {
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = item.Item;
+    await filterData({ target: dropdown });
   }
 }
 
@@ -159,7 +159,8 @@ async function filterData(event) {
     // Initial function to load data and populate the dropdown
     async function initialize() {
       const jsonData = await fetchData();
-      populateDropdown(jsonData);
+     populateDropdown(jsonData);
+    filterData({ target: dropdown }, jsonData);
     }
 
     // Call initialize function
