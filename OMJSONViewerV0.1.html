@@ -55,14 +55,21 @@ async function filterData(event) {
   // Filter the JSON data based on the selected option
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-  // Display the filtered results
-  filteredData.forEach(item.content => {
-    const resultItem = document.createElement('div');
-    resultItem.textContent = item.Content;
-      resultContainer.appendChild(resultItem);
-  });
-}
+    items.forEach((item, index) => {
+  // debugger;
+  item.forEach((subItem, subIndex) => {
+    // debugger;
+       const resultItem = document.createElement('div');
+      if (results[subIndex]) {
+      results[subIndex] = results[subIndex] + subItem
+    } else {
+      results[subIndex] = subItem
+    }
+  })
+})
 
+ resultContainer.appendChild(results);
+    
 // Run the fetchData function
 fetchData().then(populateDropdown);
 </script>
