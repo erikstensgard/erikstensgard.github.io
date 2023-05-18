@@ -87,7 +87,7 @@
           resultContainer.appendChild(detailsList);
         }
 
-        // Filter Data
+       // Filter Data
 async function filterData(event) {
   const selectedOption = event.target.value;
 
@@ -123,6 +123,11 @@ async function filterData(event) {
             displayText = otherItem.Name;
 
             bodyRow.style.cursor = 'pointer';
+
+            // Add click event listener to display information
+            bodyRow.addEventListener('click', () => {
+              displayOtherItemInfo(otherItem, resultContainer);
+            });
           }
         }
 
@@ -134,13 +139,6 @@ async function filterData(event) {
         }
 
         bodyRow.appendChild(displayCell);
-
-        if (Item && displayText !== Text) {
-          // Add click event listener to display information
-          bodyRow.addEventListener('click', () => {
-            displayOtherItemInfo(otherItem, resultContainer);
-          });
-        }
       } else {
         // Add a blank cell for empty rows
         const emptyCell = document.createElement('td');
@@ -157,6 +155,7 @@ async function filterData(event) {
   resultContainer.innerHTML = '';
   resultContainer.appendChild(table);
 }
+
 
 
         // Initialize the page
