@@ -12,7 +12,7 @@
 
     th,
     td {
-      border: 1px solid black;
+      border: none;
       padding: 8px;
     }
 
@@ -79,7 +79,7 @@
           if (matchingItem) {
             value.textContent = matchingItem.DisplayText;
           } else {
-            value.textContent = '';
+            value.textContent = item[key];
           }
         } else {
           value.textContent = item[key];
@@ -94,15 +94,35 @@
       container.appendChild(infoContainer);
     }
 
-    // Filter Data
-    async function filterData(event, jsonData) {
+    // Function to handle row click event
+    async function handleRowClick(item, resultContainer) {
+      const jsonData = await fetchData();
+      const matchingOption = jsonData.find(
+        dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+
+      if (matchingOption) {
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = item.Item;
+        await filterData({ target: dropdown });
+      } else {
+        const otherData = await fetchOtherData();
+        const matchingItem = otherData.find(
+          otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
+
+        if (matchingItem) {
+          displayItemInfo(matchingItem, resultContainer);
+        }
+      }
+    }
+
+    // Updated filterData function
+    async function filterData(event) {
       const selectedOption = event.target.value;
 
-      if (!jsonData) {
-        jsonData = await fetchData();
-      }
-
       // Fetch the JSON data
+      const jsonData = await fetchData();
       const otherData = await fetchOtherData();
 
       // Filter the JSON data based on the selected option
@@ -128,32 +148,21 @@
             const displayCell = document.createElement('td');
 
             if (!Text && Item) {
-              const matchingOption = jsonData.find(
-                dataItem => dataItem.Name.trim().toLowerCase() === Item.trim().toLowerCase()
+              const otherData = await fetchOtherData();
+              const matchingOption = otherData.find(
+                otherItem => otherItem.Name.trim().toLowerCase() === Item.trim().toLowerCase()
               );
-              
+
               if (matchingOption) {
-                displayCell.textContent = Item;
+                displayCell.textContent = matchingOption.DisplayText;
                 bodyRow.style.cursor = 'pointer';
 
-                // Add click event listener to filter data
+                // Add click event listener to display information
                 bodyRow.addEventListener('click', () => {
-                  filterData({ target: { value: Item } }, jsonData);
+                  displayItemInfo(matchingOption, resultContainer);
                 });
               } else {
-                const matchingOtherItem = otherData.find(
-                  otherItem => otherItem.Name.trim().toLowerCase() === Item.trim().toLowerCase()
-                );
-
-                if (matchingOtherItem) {
-                  displayCell.textContent = matchingOtherItem.DisplayText;
-                  bodyRow.style.cursor = 'pointer';
-
-                  // Add click event listener to display information
-                  bodyRow.addEventListener('click', () => {
-                    displayItemInfo(matchingOtherItem, resultContainer);
-                  });
-                }
+                displayCell.textContent = Item;
               }
             } else {
               displayCell.textContent = Text;
@@ -164,6 +173,13 @@
             }
 
             bodyRow.appendChild(displayCell);
+
+            if (Item) {
+              bodyRow.style.cursor = 'pointer';
+              bodyRow.addEventListener('click', () => {
+                handleRowClick(matchingItem, resultContainer);
+              });
+            }
           } else {
             // Add a blank cell for empty rows
             const emptyCell = document.createElement('td');
@@ -185,6 +201,7 @@
     async function initialize() {
       const jsonData = await fetchData();
       populateDropdown(jsonData);
+      filterData({ target: dropdown });
     }
 
     // Call initialize function
