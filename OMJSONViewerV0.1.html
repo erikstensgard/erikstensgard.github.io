@@ -62,9 +62,9 @@ filteredData.forEach((content, index) => {
   Object.values(content).forEach((subItem, subIndex) => {
     const resultItem = document.createElement('div');
     if (results[subIndex]) {
-      results[subIndex] = results[subIndex] + subItem.Item; // Display the "Name" property
+      results[subIndex] = results[subIndex] + subItem.Name; // Display the "Name" property
     } else {
-      results[subIndex] = subItem.Item; // Display the "Name" property
+      results[subIndex] = subItem.Name; // Display the "Name" property
     }
     resultItem.textContent = results[subIndex];
     resultContainer.appendChild(resultItem);
