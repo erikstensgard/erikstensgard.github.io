@@ -93,6 +93,36 @@ function populateDropdown(data) {
   dropdown.addEventListener('change', filterData);
 }
 
+// Fetch JSON Data
+async function fetchData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Fetch Other JSON Data
+async function fetchOtherData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Populate Dropdown
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+
+  // Iterate over the JSON data and create an option element for each item
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
+
+  // Add an event listener to the dropdown to trigger filtering
+  dropdown.addEventListener('change', filterData);
+}
+
 // Filter Data
 async function filterData(event) {
   const selectedOption = event.target.value;
@@ -142,6 +172,12 @@ async function filterData(event) {
           const otherItem = otherData.find(item => item.Name === Item);
           if (otherItem) {
             displayText = otherItem.DisplayText;
+
+            // Add click event listener to display information
+            bodyRow.addEventListener('click', () => {
+              displayOtherItemInfo(otherItem);
+            });
+            bodyRow.style.cursor = 'pointer';
           }
         }
 
@@ -168,8 +204,12 @@ async function filterData(event) {
   resultContainer.appendChild(table);
 }
 
-// Run the fetchData and populateDropdown functions
-fetchData().then(populateDropdown);
+// Function to display other item information
+function displayOtherItemInfo(item) {
+  // Display the information from the ODJSON.json file for the selected item
+  console.log(item);
+  // You can customize the display logic here
+}
 
 // Run the fetchData function
 fetchData().then(populateDropdown);
