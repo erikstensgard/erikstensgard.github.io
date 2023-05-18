@@ -55,21 +55,18 @@ async function filterData(event) {
   // Filter the JSON data based on the selected option
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-  // Create an array to store the results
-  const results = [];
-
-filteredData.forEach((content, index) => {
-  Object.values(content).forEach((subItem, subIndex) => {
-    const resultItem = document.createElement('div');
-    if (results[subIndex]) {
-      results[subIndex] = results[subIndex] + subItem.Name; // Display the "Name" property
-    } else {
-      results[subIndex] = subItem.Name; // Display the "Name" property
-    }
-    resultItem.textContent = results[subIndex];
-    resultContainer.appendChild(resultItem);
+  filteredData.forEach((content, index) => {
+    Object.values(content).forEach((subItem, subIndex) => {
+      const resultItem = document.createElement('div');
+      if (typeof subItem === 'object' && subItem !== null) {
+        // Check if subItem is an object
+        resultItem.textContent = subItem.Name; // Display the "Name" property or modify according to your needs
+      } else {
+        resultItem.textContent = subItem; // Use the subItem as is if it's not an object
+      }
+      resultContainer.appendChild(resultItem);
+    });
   });
-});
 }
 
 // Run the fetchData function
