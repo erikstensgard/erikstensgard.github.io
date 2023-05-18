@@ -8,12 +8,10 @@
         table {
             border-collapse: collapse;
         }
-        th, td {
-            border: 1px solid black;
+
+        table, th, td {
+            border: none;
             padding: 8px;
-        }
-        .bold {
-            font-weight: bold;
         }
     </style>
 </head>
@@ -68,7 +66,6 @@ async function filterData(event) {
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
   const table = document.createElement('table');
-  table.classList.add('table');
 
   const tbody = document.createElement('tbody');
 
@@ -90,27 +87,28 @@ async function filterData(event) {
 
     for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
-
+      
       const matchingItem = Contents.find(item => item.Row === row);
       if (matchingItem) {
         const { Text, Item, Header } = matchingItem;
-
+        
         // Replace "(null)" with an empty string if `Item` is null
         const displayText = Item ? `${Text} (${Item})` : Text;
-
-        // Bold the display text when Header = 0
+        
         const displayCell = document.createElement('td');
-        if (Header === 0) {
-          displayCell.classList.add('bold');
-        }
         displayCell.textContent = displayText;
+        
+        if (Header === 1) {
+          bodyRow.classList.add('bold');
+        }
+        
         bodyRow.appendChild(displayCell);
       } else {
         // Add a blank cell for empty rows
         const emptyCell = document.createElement('td');
         bodyRow.appendChild(emptyCell);
       }
-
+      
       tbody.appendChild(bodyRow);
     }
   });
