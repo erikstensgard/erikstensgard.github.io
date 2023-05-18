@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Test</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <p>Testing this web page, Data below is stored in the JSON file "people.json" in the 
+       github repository erikstensgard.github.io. This is the main web page of the website, "index.htm"
+       it is also stored in the erikstensgard.github.io repository.
+       <br><a href="https://www.wikipedia.org/">Testing a link to wikipedia</a></p>
+       <br><a href="OrderMenuTest.html">Order Menus</a></p>
+       <br><a href="OrderMenuTest2.html">Updated Order Menus</a></p>
 
+
+  <select id="filterDropdown">
+  </select>
+
+  <div id="resultContainer"></div>
+
+
+<script>
+// Fetch JSON Data
+async function fetchData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Populate Dropdown
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+
+  // Iterate over the JSON data and create an option element for each item
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
+
+  // Add an event listener to the dropdown to trigger filtering
+  dropdown.addEventListener('change', filterData);
+}
+
+// Filter Data
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const resultContainer = document.getElementById('resultContainer');
+
+  // Clear previous results
+  resultContainer.innerHTML = '';
+
+  // Filter the JSON data based on the selected option
+  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
+
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+
+  // Create the table header row
+  const headerRow = document.createElement('tr');
+  const columns = new Set(); // Use a Set to collect unique column values
+
+  filteredData.forEach(content => {
+    content.Contents.forEach(subItem => {
+      columns.add(subItem.Column);
+    });
+  });
+
+  // Replace "Column 1" with the `Name` property
+  const nameTh = document.createElement('th');
+  nameTh.textContent = filteredData[0].Name;
+  headerRow.appendChild(nameTh);
+
+  columns.forEach(column => {
+    const th = document.createElement('th');
+    th.textContent = `Column ${column}`;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create the table body
+  filteredData.forEach(content => {
+    content.Contents.forEach(subItem => {
+      const { Row, Column, Text, Item, Header } = subItem;
+      const bodyRow = document.createElement('tr');
+
+      // Replace "(null)" with an empty string if `Item` is null
+      const displayText = Item ? `${Text} (${Item})` : Text;
+
+      // Bold the display text when Header is 0
+      const displayClass = Header === 0 ? 'bold' : '';
+
+      const nameTd = document.createElement('td');
+      nameTd.textContent = displayText;
+      nameTd.classList.add(displayClass);
+      bodyRow.appendChild(nameTd);
+
+      columns.forEach(column => {
+        const td = document.createElement('td');
+        // Check if the current column matches the item's column
+        if (Column === column) {
+          td.textContent = displayText;
+          td.classList.add(displayClass);
+        }
+        bodyRow.appendChild(td);
+      });
+
+      tbody.appendChild(bodyRow);
+    });
+  });
+
+  table.appendChild(tbody);
+  resultContainer.appendChild(table);
+}
+
+// Run the fetchData function
+fetchData().then(populateDropdown);
+</script>
+
+
+</body>
+</html>
