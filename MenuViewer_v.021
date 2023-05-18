@@ -70,7 +70,22 @@ function displayItemInfo(item, container) {
     const label = document.createElement('strong');
     label.textContent = `${key}: `;
     const value = document.createElement('span');
-    value.textContent = item[key];
+
+    if (key === "Text" && !item.Text) {
+      const otherData = fetchOtherData().then(data => {
+        const matchingItem = data.find(
+          otherItem => otherItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase()
+        );
+        if (matchingItem) {
+          value.textContent = matchingItem.DisplayText;
+        } else {
+          value.textContent = item[key];
+        }
+      });
+    } else {
+      value.textContent = item[key];
+    }
+
     infoContainer.appendChild(label);
     infoContainer.appendChild(value);
     infoContainer.appendChild(document.createElement('br'));
