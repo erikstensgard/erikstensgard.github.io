@@ -148,8 +148,7 @@ async function filterData(event) {
 
 // Function to display other item information
 function displayOtherItemInfo(item) {
-  // Display the information from the ODJSON.json file for the selected item
-  console.log(item);
+  console.log(item); // Display the information from the ODJSON.json file for the selected item
   // You can customize the display logic here
 }
 
