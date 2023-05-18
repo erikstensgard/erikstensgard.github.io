@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON Test</title>
     <style>
-        table {
-            border-collapse: collapse;
-        }
+table {
+  border-collapse: collapse;
+}
 
-        table, th, td {
-            border: none;
-            padding: 8px;
-        }
+th, td {
+  border: none;
+  padding: 8px;
+}
+
+.bold {
+  font-weight: bold;
+}
     </style>
 </head>
 <body>
@@ -87,28 +91,28 @@ async function filterData(event) {
 
     for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
-      
+
       const matchingItem = Contents.find(item => item.Row === row);
       if (matchingItem) {
         const { Text, Item, Header } = matchingItem;
-        
+
         // Replace "(null)" with an empty string if `Item` is null
         const displayText = Item ? `${Text} (${Item})` : Text;
-        
+
         const displayCell = document.createElement('td');
         displayCell.textContent = displayText;
-        
+
         if (Header === 1) {
-          bodyRow.classList.add('bold');
+          displayCell.classList.add('bold');
         }
-        
+
         bodyRow.appendChild(displayCell);
       } else {
         // Add a blank cell for empty rows
         const emptyCell = document.createElement('td');
         bodyRow.appendChild(emptyCell);
       }
-      
+
       tbody.appendChild(bodyRow);
     }
   });
