@@ -55,31 +55,18 @@ async function filterData(event) {
   // Filter the JSON data based on the selected option
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
-// Filter Data
-async function filterData(event) {
-  const selectedOption = event.target.value;
-  const resultContainer = document.getElementById('resultContainer');
-
-  // Clear previous results
-  resultContainer.innerHTML = '';
-
-  // Filter the JSON data based on the selected option
-  const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
-
   filteredData.forEach((content, index) => {
-    // debugger;
     Object.values(content).forEach((subItem, subIndex) => {
-      // debugger;
         const resultItem = document.createElement('div');
         if (results[subIndex]) {
-        results[subIndex] = results[subIndex] + subItem;
+          results[subIndex] = results[subIndex] + subItem;
         } else {
-        results[subIndex] = subItem;
+          results[subIndex] = subItem;
         }
-        resultContainer.appendChild(results);
-    })
-  })
-};
+        resultContainer.appendChild(resultItem);
+    });
+  });
+}
 
 // Run the fetchData function
 fetchData().then(populateDropdown);
