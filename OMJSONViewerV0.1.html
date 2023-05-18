@@ -56,15 +56,21 @@ async function filterData(event) {
   const filteredData = await Array.from(await fetchData()).filter(item => item.Name === selectedOption);
 
   filteredData.forEach((content, index) => {
-    Object.values(content).forEach((subItem, subIndex) => {
-      const resultItem = document.createElement('div');
-      if (typeof subItem === 'object' && subItem !== null) {
-        // Check if subItem is an object
-        resultItem.textContent = subItem.Name + subItem.Item + subItem.Version; // Display the "Name" property or modify according to your needs
-      } else {
-        resultItem.textContent = subItem; // Use the subItem as is if it's not an object
-      }
-      resultContainer.appendChild(resultItem);
+    const contentName = document.createElement('div');
+    contentName.textContent = content.Name;
+    resultContainer.appendChild(contentName);
+
+    content.Contents.forEach((subItem) => {
+      const subItemContainer = document.createElement('div');
+      const row = document.createElement('div');
+      const item = document.createElement('div');
+
+      row.textContent = `Row: ${subItem.Row}`;
+      item.textContent = `Item: ${subItem.Item}`;
+
+      subItemContainer.appendChild(row);
+      subItemContainer.appendChild(item);
+      resultContainer.appendChild(subItemContainer);
     });
   });
 }
