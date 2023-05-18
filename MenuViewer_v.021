@@ -63,7 +63,7 @@
     }
 
 // Display item information
-function displayItemInfo(item, container) {
+async function displayItemInfo(item, container) {
   const infoContainer = document.createElement('div');
 
   for (const key in item) {
@@ -71,17 +71,16 @@ function displayItemInfo(item, container) {
     label.textContent = `${key}: `;
     const value = document.createElement('span');
 
-    if (key === "Text" && !item.Text) {
-      const otherData = fetchOtherData().then(data => {
-        const matchingItem = data.find(
-          otherItem => otherItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase()
-        );
-        if (matchingItem) {
-          value.textContent = matchingItem.DisplayText;
-        } else {
-          value.textContent = item[key];
-        }
-      });
+    if (key === "Text" && !item.Text && item.Item) {
+      const otherData = await fetchOtherData();
+      const matchingItem = otherData.find(
+        otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+      if (matchingItem) {
+        value.textContent = matchingItem.DisplayText;
+      } else {
+        value.textContent = item[key];
+      }
     } else {
       value.textContent = item[key];
     }
@@ -109,7 +108,7 @@ async function handleRowClick(item, resultContainer) {
   } else {
     const otherData = await fetchOtherData();
     const matchingItem = otherData.find(
-      dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
     );
 
     if (matchingItem) {
@@ -117,6 +116,7 @@ async function handleRowClick(item, resultContainer) {
     }
   }
 }
+
 
 // Updated filterData function
 async function filterData(event) {
