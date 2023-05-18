@@ -62,7 +62,7 @@
       dropdown.addEventListener('change', filterData);
     }
 
-    // Display item information
+// Display item information
 function displayItemInfo(item, container) {
   const infoContainer = document.createElement('div');
 
@@ -80,9 +80,11 @@ function displayItemInfo(item, container) {
   container.appendChild(infoContainer);
 }
 
+
 // Function to handle row click event
-function handleRowClick(item, resultContainer) {
+async function handleRowClick(item, resultContainer) {
   if (item.Item) {
+    const otherData = await fetchOtherData();
     const matchingItem = otherData.find(
       dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
     );
@@ -92,6 +94,7 @@ function handleRowClick(item, resultContainer) {
     }
   }
 }
+
 
 // Updated filterData function
 async function filterData(event) {
