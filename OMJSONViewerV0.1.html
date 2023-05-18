@@ -70,13 +70,13 @@ async function filterData(event) {
     // debugger;
     Object.values(content).forEach((subItem, subIndex) => {
       // debugger;
-const resultItem = document.createElement('div');
-if (results[subIndex]) {
-  results[subIndex] = results[subIndex] + subItem;
-} else {
-  results[subIndex] = subItem;
-}
-resultContainer.appendChild(results);
+        const resultItem = document.createElement('div');
+        if (results[subIndex]) {
+        results[subIndex] = results[subIndex] + subItem;
+        } else {
+        results[subIndex] = subItem;
+        }
+        resultContainer.appendChild(results);
     })
   })
 };
