@@ -80,7 +80,6 @@ function displayItemInfo(item, container) {
   container.appendChild(infoContainer);
 }
 
-
 // Function to handle row click event
 async function handleRowClick(item, resultContainer) {
   const jsonData = await fetchData();
@@ -91,10 +90,18 @@ async function handleRowClick(item, resultContainer) {
   if (matchingOption) {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = item.Item;
-    await filterData({ target: dropdown });
+    await filterData({ target: dropdown }, jsonData);
+  } else {
+    const otherData = await fetchOtherData();
+    const matchingItem = otherData.find(
+      dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItem) {
+      displayItemInfo(matchingItem, resultContainer);
+    }
   }
 }
-
 
 // Updated filterData function
 async function filterData(event) {
