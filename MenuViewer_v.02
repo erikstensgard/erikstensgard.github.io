@@ -88,72 +88,76 @@
         }
 
         // Filter Data
-        async function filterData(event) {
-          const selectedOption = event.target.value;
+async function filterData(event) {
+  const selectedOption = event.target.value;
 
-          // Fetch the JSON data
-          const jsonData = await fetchData();
-          const otherData = await fetchOtherData();
+  // Fetch the JSON data
+  const jsonData = await fetchData();
+  const otherData = await fetchOtherData();
 
-          // Filter the JSON data based on the selected option
-          const filteredData = jsonData.filter(item => item.Name === selectedOption);
+  // Filter the JSON data based on the selected option
+  const filteredData = jsonData.filter(item => item.Name === selectedOption);
 
-          const table = document.createElement('table');
-          table.classList.add('table');
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-          const tbody = document.createElement('tbody');
+  const tbody = document.createElement('tbody');
 
-          // Create the table body
-          filteredData.forEach(content => {
-            const { Contents } = content;
-            const maxRow = Math.max(...Contents.map(item => item.Row));
+  // Create the table body
+  filteredData.forEach(content => {
+    const { Contents } = content;
+    const maxRow = Math.max(...Contents.map(item => item.Row));
 
-            for (let row = 1; row <= maxRow; row++) {
-              const bodyRow = document.createElement('tr');
+    for (let row = 1; row <= maxRow; row++) {
+      const bodyRow = document.createElement('tr');
 
-              const matchingItem = Contents.find(item => item.Row === row);
-              if (matchingItem) {
-                const { Text, Item, Header } = matchingItem;
+      const matchingItem = Contents.find(item => item.Row === row);
+      if (matchingItem) {
+        const { Text, Item, Header } = matchingItem;
 
-                let displayText = Text;
+        let displayText = Text;
 
-                if (!Text && Item) {
-                  const otherItem = otherData.find(item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase());
-                  if (otherItem) {
-                    displayText = otherItem.Name;
+        if (!Text && Item) {
+          const otherItem = otherData.find(item => item.Name.trim().toLowerCase() === Item.trim().toLowerCase());
+          if (otherItem) {
+            displayText = otherItem.Name;
 
-                    // Add click event listener to display information
-                    bodyRow.addEventListener('click', () => {
-                      displayOtherItemInfo(otherItem, resultContainer);
-                    });
-                    bodyRow.style.cursor = 'pointer';
-                  }
-                }
-
-                const displayCell = document.createElement('td');
-                displayCell.textContent = displayText;
-
-                if (Header === 1) {
-                  displayCell.classList.add('bold');
-                }
-
-                bodyRow.appendChild(displayCell);
-              } else {
-                // Add a blank cell for empty rows
-                const emptyCell = document.createElement('td');
-                bodyRow.appendChild(emptyCell);
-              }
-
-              tbody.appendChild(bodyRow);
-            }
-          });
-
-          table.appendChild(tbody);
-
-          const resultContainer = document.getElementById('resultContainer');
-          resultContainer.innerHTML = '';
-          resultContainer.appendChild(table);
+            bodyRow.style.cursor = 'pointer';
+          }
         }
+
+        const displayCell = document.createElement('td');
+        displayCell.textContent = displayText;
+
+        if (Header === 1) {
+          displayCell.classList.add('bold');
+        }
+
+        bodyRow.appendChild(displayCell);
+
+        if (Item && displayText !== Text) {
+          // Add click event listener to display information
+          bodyRow.addEventListener('click', () => {
+            displayOtherItemInfo(otherItem, resultContainer);
+          });
+        }
+      } else {
+        // Add a blank cell for empty rows
+        const emptyCell = document.createElement('td');
+        bodyRow.appendChild(emptyCell);
+      }
+
+      tbody.appendChild(bodyRow);
+    }
+  });
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
+
 
         // Initialize the page
         async function initializePage() {
