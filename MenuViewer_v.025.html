@@ -149,18 +149,21 @@ function createODTable(data) {
 
 // Function to handle row click event
 async function handleRowClick(item) {
-  const odData = await fetchODData();
-  const matchingItem = odData.find(
-    odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  const omData = await fetchOMData();
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
   if (matchingItem) {
-    createODTable(matchingItem);
+    createOMTable(matchingItem);
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = matchingItem.Name;
+  } else {
+    createODTable(item);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = item.Item;
   }
 }
-
 
 // Function to handle the go back arrow button click event
 function goBack() {
