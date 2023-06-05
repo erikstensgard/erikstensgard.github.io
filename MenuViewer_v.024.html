@@ -40,7 +40,7 @@
   <div id="resultContainer"></div>
 
   <script>
-   // Fetch OMJSON Data
+ // Fetch OMJSON Data
 async function fetchOMData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -69,13 +69,15 @@ function populateDropdown(data) {
 
 // Function to handle row click event
 async function handleRowClick(item, resultContainer) {
-  const odData = await fetchODData();
-  const matchingItem = odData.find(
-    odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  const omData = await fetchOMData();
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
   if (matchingItem) {
-    displayItemInfo(matchingItem, resultContainer);
+    createOMTable(matchingItem);
+  } else {
+    displayItemInfo(item, resultContainer);
   }
 }
 
@@ -100,104 +102,96 @@ function displayItemInfo(item, container) {
 }
 
 // Function to create the table with OMJSON data
-async function createOMTable(selectedOption, odData) {
-  const omData = await fetchOMData();
+function createOMTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-  // Find the selected option in the omData (OMJSON)
-  const selectedData = omData.find(item => item.Name === selectedOption);
+  const tbody = document.createElement('tbody');
 
-  if (selectedData) {
-    const table = document.createElement('table');
-    table.classList.add('table');
+  // Create the table body using selectedData
+  const { Contents } = selectedData;
+  const maxRow = Math.max(...Contents.map(item => item.Row));
+  const columns = Math.max(...Contents.map(item => item.Column));
 
-    const tbody = document.createElement('tbody');
+  for (let row = 1; row <= maxRow; row++) {
+    const bodyRow = document.createElement('tr');
 
-    // Create the table body using selectedData
-    const { Contents } = selectedData;
-    const maxRow = Math.max(...Contents.map(item => item.Row));
-    const columns = Math.max(...Contents.map(item => item.Column));
+    for (let column = 1; column <= columns; column++) {
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
 
-    for (let row = 1; row <= maxRow; row++) {
-      const bodyRow = document.createElement('tr');
+      const displayCell = document.createElement('td');
 
-      for (let column = 1; column <= columns; column++) {
-        const matchingItems = Contents.filter(
-          item => item.Row === row && item.Column === column
-        );
+      if (matchingItems.length > 0) {
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header } = matchingItem;
+          const cellContent = Text || Item || '';
 
-        const displayCell = document.createElement('td');
+          const cellContentElement = document.createElement('div');
+          cellContentElement.textContent = cellContent;
 
-        if (matchingItems.length > 0) {
-          matchingItems.forEach(matchingItem => {
-            const { Text, Item, Header } = matchingItem;
-            const cellContent = Text || Item || '';
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
 
-            const cellContentElement = document.createElement('div');
-            cellContentElement.textContent = cellContent;
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem, resultContainer);
+            });
+          }
 
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-            }
-
-            if (Item) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem, resultContainer);
-              });
-            }
-
-            displayCell.appendChild(cellContentElement);
-          });
-        }
-
-        bodyRow.appendChild(displayCell);
+          displayCell.appendChild(cellContentElement);
+        });
       }
 
-      tbody.appendChild(bodyRow);
+      bodyRow.appendChild(displayCell);
     }
 
-    table.appendChild(tbody);
-
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = '';
-    resultContainer.appendChild(table);
-  } else {
-    // If selectedOption is not found in omData, display the ODJSON data
-    createODTable(selectedOption, odData);
+    tbody.appendChild(bodyRow);
   }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
 }
 
 // Function to create the table with ODJSON data
-function createODTable(selectedOption, odData) {
-  const selectedData = odData.find(item => item.Name === selectedOption);
+function createODTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-  if (selectedData) {
-    const table = document.createElement('table');
-    table.classList.add('table');
+  const tbody = document.createElement('tbody');
 
-    const tbody = document.createElement('tbody');
+  const bodyRow = document.createElement('tr');
+  const displayCell = document.createElement('td');
+  displayCell.textContent = selectedData.Contents;
+  bodyRow.appendChild(displayCell);
+  tbody.appendChild(bodyRow);
 
-    const bodyRow = document.createElement('tr');
-    const displayCell = document.createElement('td');
-    displayCell.textContent = selectedData.Contents;
-    bodyRow.appendChild(displayCell);
-    tbody.appendChild(bodyRow);
+  table.appendChild(tbody);
 
-    table.appendChild(tbody);
-
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = '';
-    resultContainer.appendChild(table);
-  }
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
 }
 
 // Function to filter data based on the selected option
 async function filterData(event) {
   const selectedOption = event.target.value;
-  const odData = await fetchODData();
+  const omData = await fetchOMData();
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-  // Call createOMTable to display OMJSON data if available, otherwise call createODTable to display ODJSON data
-  createOMTable(selectedOption, odData);
+  if (matchingData) {
+    createOMTable(matchingData);
+  } else {
+    const odData = await fetchODData();
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    createODTable(odMatchingData);
+  }
 }
 
 // Function to handle the go back arrow button click event
