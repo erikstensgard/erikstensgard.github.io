@@ -83,7 +83,7 @@ function handleRowClick(item) {
     selectedData = matchingItem;
     createOMTable(matchingItem);
     pushHistory(matchingItem.Name);
-  } else {
+  } else if (item.Type === 'ODJSON') {
     selectedData = item;
     createODTable(item);
     pushHistory(item.Item);
