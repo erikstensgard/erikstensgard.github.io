@@ -114,7 +114,7 @@
           if (matchingItems.length > 0) {
             matchingItems.forEach(matchingItem => {
               const { Text, Item, Header } = matchingItem;
-              const cellContent = Text || Item || '';
+              const cellContent = Text || Item;
 
               const cellContentElement = document.createElement('div');
               cellContentElement.textContent = cellContent;
@@ -157,8 +157,17 @@
       const bodyRow = document.createElement('tr');
       const displayCell = document.createElement('td');
       const cellContentElement = document.createElement('div');
-      cellContentElement.textContent = selectedData.Item;
-      displayCell.appendChild(cellContentElement);
+
+      // Display all properties from ODJSON item
+      for (const prop in selectedData) {
+        if (selectedData.hasOwnProperty(prop)) {
+          const propValue = selectedData[prop];
+          const propElement = document.createElement('p');
+          propElement.textContent = `${prop}: ${propValue}`;
+          displayCell.appendChild(propElement);
+        }
+      }
+
       bodyRow.appendChild(displayCell);
       tbody.appendChild(bodyRow);
 
@@ -225,7 +234,6 @@
 
     // Call the initialize function
     initialize();
-
   </script>
 </body>
 
