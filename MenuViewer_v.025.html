@@ -194,12 +194,45 @@ async function filterData(event) {
   }
 }
 
+// Keep track of the previous dropdown selections
+const previousSelections = [];
+
 // Function to handle the go back arrow button click event
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
 
-  // Trigger the filterData function with the previous selection
-  filterData({ target: dropdown });
+  // Check if there are previous selections
+  if (previousSelections.length > 0) {
+    // Remove the last selection from the list
+    previousSelections.pop();
+
+    // Get the previous selection
+    const previousSelection = previousSelections[previousSelections.length - 1];
+
+    // Set the dropdown value to the previous selection
+    dropdown.value = previousSelection;
+
+    // Trigger the filterData function with the previous selection
+    filterData({ target: dropdown });
+  }
+}
+
+// Function to handle the selection change event
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const omData = await fetchOMData();
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    createOMTable(matchingData);
+  } else {
+    const odData = await fetchODData();
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    createODTable(odMatchingData);
+  }
+
+  // Store the selected option in the previous selections list
+  previousSelections.push(selectedOption);
 }
 
 // Attach the goBack function to the go back arrow button
