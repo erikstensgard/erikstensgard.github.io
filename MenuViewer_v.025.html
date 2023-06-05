@@ -40,7 +40,7 @@
   <div id="resultContainer"></div>
 
   <script>
- // Fetch OMJSON Data
+// Fetch OMJSON Data
 async function fetchOMData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -72,56 +72,24 @@ function populateDropdown(data) {
   dropdown.addEventListener('change', filterData);
 }
 
-// Display OMJSON Table
-function createOMTable(item) {
-  const table = document.createElement('table');
-  table.classList.add('table');
-
-  const tbody = document.createElement('tbody');
+// Display item information
+function displayItemInfo(item, container) {
+  const infoContainer = document.createElement('div');
 
   for (const key in item) {
-    const row = document.createElement('tr');
-    const header = document.createElement('th');
-    header.textContent = key;
-    const value = document.createElement('td');
+    const label = document.createElement('strong');
+    label.textContent = `${key}: `;
+    const value = document.createElement('span');
+
     value.textContent = item[key];
 
-    row.appendChild(header);
-    row.appendChild(value);
-    tbody.appendChild(row);
+    infoContainer.appendChild(label);
+    infoContainer.appendChild(value);
+    infoContainer.appendChild(document.createElement('br'));
   }
 
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  resultContainer.appendChild(table);
-}
-
-// Display ODJSON Table
-function createODTable(item) {
-  const table = document.createElement('table');
-  table.classList.add('table');
-
-  const tbody = document.createElement('tbody');
-
-  for (const key in item) {
-    const row = document.createElement('tr');
-    const header = document.createElement('th');
-    header.textContent = key;
-    const value = document.createElement('td');
-    value.textContent = item[key];
-
-    row.appendChild(header);
-    row.appendChild(value);
-    tbody.appendChild(row);
-  }
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  resultContainer.appendChild(table);
+  container.innerHTML = '';
+  container.appendChild(infoContainer);
 }
 
 // Keep track of previous dropdown selections
@@ -161,14 +129,14 @@ async function filterData(event) {
   );
 
   if (omMatchingItem) {
-    createOMTable(omMatchingItem);
+    displayItemInfo(omMatchingItem, resultContainer);
   } else {
     const odMatchingItem = odData.find(
       odItem => odItem.Item.trim().toLowerCase() === selectedOption.trim().toLowerCase()
     );
 
     if (odMatchingItem) {
-      createODTable(odMatchingItem);
+      displayItemInfo(odMatchingItem, resultContainer);
     }
   }
 
@@ -181,7 +149,6 @@ async function initialize() {
   const omData = await fetchOMData();
   const dropdown = document.getElementById('filterDropdown');
   populateDropdown(omData);
-  createOMTable({}); // Initially, display an empty OMJSON table
 }
 
 // Call initialize function
