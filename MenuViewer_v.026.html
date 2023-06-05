@@ -159,27 +159,16 @@ function createODTable(selectedData) {
   const bodyRow = document.createElement('tr');
   const displayCell = document.createElement('td');
 
-  const { Row, Column, Item, Text, Header } = selectedData;
+  const odItem = odData.find(
+    item => item.Item.trim().toLowerCase() === selectedData.Item.trim().toLowerCase()
+  );
 
-  const rowElement = document.createElement('p');
-  rowElement.textContent = 'Row: ' + Row;
-  displayCell.appendChild(rowElement);
-
-  const columnElement = document.createElement('p');
-  columnElement.textContent = 'Column: ' + Column;
-  displayCell.appendChild(columnElement);
-
-  const itemElement = document.createElement('p');
-  itemElement.textContent = 'Item: ' + Item;
-  displayCell.appendChild(itemElement);
-
-  const textElement = document.createElement('p');
-  textElement.textContent = 'Text: ' + Text;
-  displayCell.appendChild(textElement);
-
-  const headerElement = document.createElement('p');
-  headerElement.textContent = 'Header: ' + Header;
-  displayCell.appendChild(headerElement);
+  const odDataKeys = Object.keys(odItem);
+  odDataKeys.forEach(key => {
+    const odDataElement = document.createElement('p');
+    odDataElement.textContent = key + ': ' + odItem[key];
+    displayCell.appendChild(odDataElement);
+  });
 
   bodyRow.appendChild(displayCell);
   tbody.appendChild(bodyRow);
@@ -247,6 +236,7 @@ async function initialize() {
 
 // Call the initialize function
 initialize();
+
 
   </script>
 </body>
