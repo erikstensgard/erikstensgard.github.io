@@ -40,7 +40,7 @@
   <div id="resultContainer"></div>
 
   <script>
-   // Fetch OMJSON Data
+  // Fetch OMJSON Data
 async function fetchOMData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -210,14 +210,16 @@ function popHistory() {
 // Function to go back to the previously selected item
 function goBack() {
   if (history.length > 1) {
-    const selectedItem = history.pop();
+    popHistory(); // Remove the current item from the history
+    const previousItem = history[history.length - 1]; // Get the previous item
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedItem;
+    dropdown.value = previousItem;
     filterData({ target: dropdown });
   } else if (history.length === 1) {
-    const selectedItem = history.pop();
+    popHistory(); // Remove the current item from the history
+    const previousItem = history[history.length - 1]; // Get the previous item
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedItem;
+    dropdown.value = previousItem;
     const resultContainer = document.getElementById('resultContainer');
     resultContainer.innerHTML = '';
   }
