@@ -84,11 +84,14 @@ function handleRowClick(item) {
     createOMTable(matchingItem);
     pushHistory(matchingItem.Name);
   } else {
-    selectedData = item;
-    createODTable(item);
-    pushHistory(item.Item);
+    selectedData = odData.find(
+      odItem => odItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+    createODTable(selectedData);
+    pushHistory(selectedData.Item);
   }
 }
+
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
