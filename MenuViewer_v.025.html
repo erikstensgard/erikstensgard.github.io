@@ -33,7 +33,9 @@
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
-  <select id="filterDropdown"></select>
+  <select id="filterDropdown">
+    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
+  </select>
 
   <div id="resultContainer"></div>
 
@@ -73,7 +75,6 @@
       );
 
       if (matchingItem) {
-        pushHistory(item); // Add the clicked item to the history
         createOMTable(matchingItem);
       } else {
         displayItemInfo(item, resultContainer);
@@ -179,32 +180,21 @@
     }
 
     // Function to filter data based on the selected option
-    async function filterData(event) {
-      const selectedOption = event.target.value;
+    async function filterData(event, selectedItem) {
+      const selectedOption = selectedItem || event.target.value;
       const omData = await fetchOMData();
       const matchingData = omData.find(item => item.Name === selectedOption);
 
       if (matchingData) {
-        pushHistory(matchingData); // Add the selected item to the history
         createOMTable(matchingData);
       } else {
         const odData = await fetchODData();
         const odMatchingData = odData.find(item => item.Name === selectedOption);
         createODTable(odMatchingData);
       }
-    }
 
-    // Track the history of clicked and selected items
-    let history = [];
-
-    // Function to add an item to the history
-    function pushHistory(item) {
-      history.push(item);
-    }
-
-    // Function to remove the last item from the history
-    function popHistory() {
-      history.pop();
+      // Add the selected item to the history
+      pushHistory(selectedOption);
     }
 
     // Function to handle the go back arrow button click event
@@ -225,9 +215,54 @@
       }
     }
 
-    // Attach the goBack function to the go back arrow button
+    // Function to handle the go back arrow button click event for multiple previous items
+    function goBackMultiple() {
+      const dropdown = document.getElementById('filterDropdown');
+
+      // Remove the last item from the history
+      popHistory();
+
+      if (history.length > 0) {
+        const selectedItem = history[history.length - 1];
+        if (selectedItem) {
+          filterData({ target: dropdown, selectedItem });
+          // Check if the button is still clicked and go back again
+          if (isGoBackButtonClicked) {
+            setTimeout(goBackMultiple, 500); // Adjust the delay if needed
+          }
+        }
+      } else {
+        // If history is empty, load initial data
+        initialize();
+      }
+    }
+
+    // Track the state of the go back button
+    let isGoBackButtonClicked = false;
+
+    // Attach event listeners for go back button click events
     const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', goBack);
+    goBackButton.addEventListener('mousedown', () => {
+      isGoBackButtonClicked = true;
+      goBackMultiple();
+    });
+
+    goBackButton.addEventListener('mouseup', () => {
+      isGoBackButtonClicked = false;
+    });
+
+    // History to track the selected items
+    const history = [];
+
+    // Function to add selected item to the history
+    function pushHistory(selectedItem) {
+      history.push(selectedItem);
+    }
+
+    // Function to remove the last item from the history
+    function popHistory() {
+      history.pop();
+    }
 
     // Initial function to load data and populate the dropdown
     async function initialize() {
@@ -239,6 +274,7 @@
 
     // Call initialize function
     initialize();
+
   </script>
 </body>
 
