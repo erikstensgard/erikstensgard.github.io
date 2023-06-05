@@ -33,51 +33,7 @@
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
-  <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
-  </select>
-
-  <div id="resultContainer"></div>
-
-  <script>
-  <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Test</title>
-  <style>
-    table {
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      border: none;
-      padding: 8px;
-    }
-
-    .clickable {
-      color: blue;
-      cursor: pointer;
-    }
-
-    .bold {
-      font-weight: bold;
-      background-color: lightblue;
-    }
-  </style>
-</head>
-
-<body>
-  <button id="goBackButton">&larr; Go Back</button>
-
-  <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
-
-  <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
-  </select>
+  <select id="filterDropdown"></select>
 
   <div id="resultContainer"></div>
 
@@ -229,6 +185,7 @@
       const matchingData = omData.find(item => item.Name === selectedOption);
 
       if (matchingData) {
+        pushHistory(matchingData); // Add the selected item to the history
         createOMTable(matchingData);
       } else {
         const odData = await fetchODData();
@@ -237,7 +194,7 @@
       }
     }
 
-    // Track the history of clicked items
+    // Track the history of clicked and selected items
     let history = [];
 
     // Function to add an item to the history
@@ -257,8 +214,15 @@
       // Remove the last item from the history
       popHistory();
 
-      // Trigger the filterData function with the previous selection
-      filterData({ target: dropdown });
+      if (history.length > 0) {
+        const selectedItem = history[history.length - 1];
+        if (selectedItem) {
+          filterData({ target: dropdown, selectedItem });
+        }
+      } else {
+        // If history is empty, load initial data
+        initialize();
+      }
     }
 
     // Attach the goBack function to the go back arrow button
@@ -275,11 +239,6 @@
 
     // Call initialize function
     initialize();
-  </script>
-</body>
-
-</html>
-
   </script>
 </body>
 
