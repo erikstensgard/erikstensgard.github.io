@@ -129,7 +129,7 @@ async function filterData(event) {
   );
 
   if (omMatchingItem) {
-    displayItemInfo(omMatchingItem, resultContainer);
+    createTable([omMatchingItem], []);
   } else {
     const odMatchingItem = odData.find(
       odItem => odItem.Item.trim().toLowerCase() === selectedOption.trim().toLowerCase()
@@ -144,11 +144,48 @@ async function filterData(event) {
   previousSelections.push(selectedOption);
 }
 
+// Function to create table based on filtered data
+function createTable(filteredData, otherData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
+
+  const tbody = document.createElement('tbody');
+
+  filteredData.forEach(item => {
+    const row = document.createElement('tr');
+
+    for (const key in item) {
+      const cell = document.createElement('td');
+      cell.textContent = item[key];
+      row.appendChild(cell);
+    }
+
+    tbody.appendChild(row);
+  });
+
+  otherData.forEach(item => {
+    const row = document.createElement('tr');
+
+    for (const key in item) {
+      const cell = document.createElement('td');
+      cell.textContent = item[key];
+      row.appendChild(cell);
+    }
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
+
 // Initial function to load data and populate the dropdown
 async function initialize() {
   const omData = await fetchOMData();
   const dropdown = document.getElementById('filterDropdown');
   populateDropdown(omData);
+  createTable(omData, []);
 }
 
 // Call initialize function
