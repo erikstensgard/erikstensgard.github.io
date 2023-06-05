@@ -36,6 +36,8 @@
 
   <div id="resultContainer"></div>
 
+  <button id="goBackButton" style="display: none;">Go Back</button>
+
   <script>
     // Fetch JSON Data
     async function fetchData() {
@@ -103,9 +105,25 @@
         );
 
         if (matchingItem) {
+          const goBackButton = document.getElementById('goBackButton');
+          goBackButton.style.display = 'block';
+          goBackButton.addEventListener('click', () => {
+            goBack(resultContainer);
+          });
+
           displayItemInfo(matchingItem, resultContainer);
         }
       }
+    }
+
+    // Go back to the main menu
+    async function goBack(resultContainer) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = '';
+      resultContainer.innerHTML = '';
+
+      const goBackButton = document.getElementById('goBackButton');
+      goBackButton.style.display = 'none';
     }
 
     // Updated filterData function
@@ -131,25 +149,27 @@
         for (let row = 1; row <= maxRow; row++) {
           const bodyRow = document.createElement('tr');
 
-          const matchingItem = Contents.find(item => item.Row === row);
-          if (matchingItem) {
-            const { Text, Item, Header } = matchingItem;
+          const matchingItems = Contents.filter(item => item.Row === row);
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header } = matchingItem;
 
-            const displayCell = document.createElement('td');
-            displayCell.textContent = Text || Item || '';
+              const displayCell = document.createElement('td');
+              displayCell.textContent = Text || Item || '';
 
-            if (Header === 1) {
-              displayCell.classList.add('bold');
-            }
+              if (Header === 1) {
+                displayCell.classList.add('bold');
+              }
 
-            bodyRow.appendChild(displayCell);
+              bodyRow.appendChild(displayCell);
 
-            if (Item) {
-              bodyRow.classList.add('clickable');
-              bodyRow.addEventListener('click', () => {
-                handleRowClick(matchingItem, resultContainer);
-              });
-            }
+              if (Item) {
+                bodyRow.classList.add('clickable');
+                bodyRow.addEventListener('click', () => {
+                  handleRowClick(matchingItem, resultContainer);
+                });
+              }
+            });
           } else {
             // Add a blank cell for empty rows
             const emptyCell = document.createElement('td');
