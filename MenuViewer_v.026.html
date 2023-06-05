@@ -84,11 +84,17 @@ async function handleRowClick(item, resultContainer) {
     createOMTable(matchingItem);
   } else {
     const odData = await fetchODData();
-    const odMatchingData = odData.find(item => item.Name === item.Item);
-    createODTable(odMatchingData);
+    const odMatchingData = odData.find(odItem => odItem.Name === item.Item);
+    if (odMatchingData) {
+      createODTable(odMatchingData);
+    } else {
+      const noDataMsg = document.createElement('p');
+      noDataMsg.textContent = 'No Data available';
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(noDataMsg);
+    }
   }
 }
-
 
 // Display item information
 function displayItemInfo(item) {
