@@ -70,6 +70,7 @@ function populateDropdown(data) {
 
   dropdown.addEventListener('change', filterData);
 }
+
 // Display item information
 async function displayItemInfo(item, container) {
   const infoContainer = document.createElement('div');
@@ -202,20 +203,11 @@ let previousSelection = '';
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
 
-  // Get the index of the previous selection
-  const previousIndex = dropdown.selectedIndex - 1;
+  // Set the dropdown value to the previous selection
+  dropdown.value = previousSelection;
 
-  // Check if the previous index is valid
-  if (previousIndex >= 0) {
-    const previousOption = dropdown.options[previousIndex];
-    const previousValue = previousOption.value;
-
-    // Set the dropdown value to the previous selection
-    dropdown.value = previousValue;
-
-    // Trigger the filterData function with the previous selection
-    filterData({ target: dropdown });
-  }
+  // Trigger the filterData function with the previous selection
+  filterData({ target: dropdown });
 }
 
 // Attach the goBack function to the go back arrow button
