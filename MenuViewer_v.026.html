@@ -90,7 +90,6 @@ function handleRowClick(item) {
   }
 }
 
-
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -155,13 +154,11 @@ function createODTable(selectedData) {
 
   const tbody = document.createElement('tbody');
 
-  selectedData.Contents.forEach(content => {
-    const bodyRow = document.createElement('tr');
-    const displayCell = document.createElement('td');
-    displayCell.textContent = content;
-    bodyRow.appendChild(displayCell);
-    tbody.appendChild(bodyRow);
-  });
+  const bodyRow = document.createElement('tr');
+  const displayCell = document.createElement('td');
+  displayCell.textContent = selectedData.Item;
+  bodyRow.appendChild(displayCell);
+  tbody.appendChild(bodyRow);
 
   table.appendChild(tbody);
 
@@ -169,7 +166,6 @@ function createODTable(selectedData) {
   resultContainer.innerHTML = '';
   resultContainer.appendChild(table);
 }
-
 
 // Function to filter data based on the selected option
 async function filterData(event) {
