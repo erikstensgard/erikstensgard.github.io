@@ -206,7 +206,7 @@ function goBack() {
 
 // Attach the goBack function to the go back arrow button
 const goBackButton = document.getElementById('goBackButton');
-goBackButton.addEventListener('click', goBack);
+goBackButton.onclick = goBack;
 
 // Initial function to load data and populate the dropdown
 async function initialize() {
