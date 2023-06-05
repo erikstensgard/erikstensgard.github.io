@@ -168,7 +168,7 @@ function createODTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-function filterData(event) {
+async function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
@@ -187,13 +187,13 @@ function filterData(event) {
 // Function to handle the go back button click event
 function goBack() {
   if (history.length > 1) {
-    popHistory();
-    const previousItem = history[history.length - 1];
+    history.pop(); // Remove the current item from history
+    const previousItem = history.pop(); // Get the previous item
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
   } else if (history.length === 1) {
-    popHistory();
+    history.pop(); // Remove the last item from history
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.selectedIndex = -1;
@@ -206,11 +206,6 @@ function goBack() {
 // Function to push the selected item to the history
 function pushHistory(item) {
   history.push(item);
-}
-
-// Function to remove the last item from the history
-function popHistory() {
-  history.pop();
 }
 
 // Initialize the application
