@@ -29,7 +29,7 @@
 </head>
 
 <body>
-  <button id="goBackButton" style="display: none;">&larr; Go Back</button>
+  <button id="goBackButton">&larr; Go Back</button>
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
@@ -40,65 +40,55 @@
   <div id="resultContainer"></div>
 
   <script>
-    // Fetch OMJSON Data
-    async function fetchOMData() {
-      const response = await fetch('OMJSON.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch OMJSON Data
+async function fetchOMData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Fetch ODJSON Data
-    async function fetchODData() {
-      const response = await fetch('ODJSON.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch ODJSON Data
+async function fetchODData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Global variables
-    let omData = []; // OMJSON data
-    let odData = []; // ODJSON data
-    let selectedData = null; // Currently selected data
-    let history = []; // History of selected items
+// Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
 
-    // Function to populate dropdown with OMJSON data
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
+// Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
 
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.Name;
-        dropdown.appendChild(option);
-      });
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
+}
 
-      dropdown.addEventListener('change', () => {
-        const selectedOption = dropdown.options[dropdown.selectedIndex];
-        const selectedItem = omData.find(item => item.Name === selectedOption.value);
-        if (selectedItem) {
-          selectedData = selectedItem;
-          createOMTable(selectedItem);
-          pushHistory(selectedItem.Name);
-        }
-      });
-    }
+// Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-    // Function to handle row click event
-    async function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
-
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        selectedData = item;
-        createODTable(item);
-        pushHistory(item.Item);
-      }
-    }
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    selectedData = item;
+    createODTable(item);
+    pushHistory(item.Item);
+  }
+}
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
@@ -115,16 +105,33 @@ function createOMTable(selectedData) {
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
-      const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
 
       const displayCell = document.createElement('td');
 
-      if (matchingItem) {
-        const clickableItem = document.createElement('a');
-        clickableItem.textContent = matchingItem.Item;
-        clickableItem.href = matchingItem.Link;
-        clickableItem.target = '_blank';
-        displayCell.appendChild(clickableItem);
+      if (matchingItems.length > 0) {
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header } = matchingItem;
+          const cellContent = Text || Item || '';
+
+          const cellContentElement = document.createElement('div');
+          cellContentElement.textContent = cellContent;
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
+
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+          }
+
+          displayCell.appendChild(cellContentElement);
+        });
       }
 
       bodyRow.appendChild(displayCell);
@@ -138,76 +145,88 @@ function createOMTable(selectedData) {
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.innerHTML = '';
   resultContainer.appendChild(table);
-
-  const goBackButton = document.getElementById('goBackButton');
-  goBackButton.style.display = 'block';
 }
 
-    // Function to create the table with ODJSON data
-    function createODTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
+// Function to create the table with ODJSON data
+function createODTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-      const tbody = document.createElement('tbody');
+  const tbody = document.createElement('tbody');
 
-      for (let key in selectedData) {
-        const bodyRow = document.createElement('tr');
+  selectedData.Contents.forEach(content => {
+    const bodyRow = document.createElement('tr');
+    const displayCell = document.createElement('td');
+    displayCell.textContent = content;
+    bodyRow.appendChild(displayCell);
+    tbody.appendChild(bodyRow);
+  });
 
-        const keyCell = document.createElement('td');
-        keyCell.textContent = key;
-        bodyRow.appendChild(keyCell);
+  table.appendChild(tbody);
 
-        const valueCell = document.createElement('td');
-        valueCell.textContent = selectedData[key];
-        bodyRow.appendChild(valueCell);
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
 
-        tbody.appendChild(bodyRow);
-      }
 
-      table.appendChild(tbody);
+// Function to filter data based on the selected option
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+}
 
-      const goBackButton = document.getElementById('goBackButton');
-      goBackButton.style.display = 'block';
-    }
+// Function to handle the go back button click event
+function goBack() {
+  if (history.length > 1) {
+    history.pop(); // Remove the current item from history
+    const previousItem = history.pop(); // Get the previous item
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  } else if (history.length === 1) {
+    history.pop(); // Remove the last item from history
 
-    // Function to push selected item to history
-    function pushHistory(item) {
-      history.push(item);
-    }
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.selectedIndex = -1;
 
-    // Initialize the application
-    async function initialize() {
-      omData = await fetchOMData();
-      odData = await fetchODData();
-      populateDropdown(omData);
-    }
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+  }
+}
 
-    initialize();
+// Function to push the selected item to the history
+function pushHistory(item) {
+  history.push(item);
+}
 
-    // Go back button click event
-    const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', () => {
-      history.pop();
-      const previousItem = history[history.length - 1];
-      if (previousItem) {
-        const selectedItem = omData.find(item => item.Name === previousItem);
-        if (selectedItem) {
-          selectedData = selectedItem;
-          createOMTable(selectedItem);
-        } else {
-          selectedData = odData.find(item => item.Item === previousItem);
-          createODTable(selectedData);
-        }
-      } else {
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = '';
-        goBackButton.style.display = 'none';
-      }
-    });
+// Initialize the application
+async function initialize() {
+  omData = await fetchOMData();
+  odData = await fetchODData();
+  populateDropdown(omData);
+
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.addEventListener('change', filterData);
+
+  const goBackButton = document.getElementById('goBackButton');
+  goBackButton.addEventListener('click', goBack);
+}
+
+// Call the initialize function
+initialize();
+
   </script>
 </body>
 
