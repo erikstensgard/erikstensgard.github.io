@@ -220,9 +220,12 @@ function goBack() {
     filterData({ target: dropdown });
   } else if (history.length === 1) {
     popHistory(); // Remove the current item from the history
-    const previousItem = history[history.length - 1]; // Get the previous item
+
+    // Clear the dropdown selection
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
+    dropdown.selectedIndex = -1;
+
+    // Clear the result container
     const resultContainer = document.getElementById('resultContainer');
     resultContainer.innerHTML = '';
   }
