@@ -74,21 +74,21 @@ function populateDropdown() {
 }
 
 // Function to handle row click event
-async function handleRowClick(item) {
+async function handleRowClick(item, resultContainer) {
+  const omData = await fetchOMData();
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
   if (matchingItem) {
-    selectedData = matchingItem;
     createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
   } else {
-    selectedData = null;
-    createODTable(item.Item);
-    pushHistory(item.Item);
+    const odData = await fetchODData();
+    const odMatchingData = odData.find(item => item.Name === item.Item);
+    createODTable(odMatchingData);
   }
 }
+
 
 // Display item information
 function displayItemInfo(item) {
