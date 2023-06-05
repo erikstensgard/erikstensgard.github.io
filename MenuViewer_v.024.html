@@ -129,7 +129,7 @@ async function filterData(event) {
   const jsonData = await fetchData();
   const otherData = await fetchOtherData();
 
-  // Store the previous selection
+  // Update the previous selection
   previousSelection = selectedOption;
 
   // Filter the JSON data based on the selected option
@@ -200,7 +200,7 @@ let previousSelection = '';
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
 
-  // Restore the previous dropdown selection
+  // Set the dropdown value to the previous selection
   dropdown.value = previousSelection;
 
   // Trigger the filterData function
