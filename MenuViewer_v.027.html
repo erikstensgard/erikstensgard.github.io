@@ -147,18 +147,26 @@
       resultContainer.appendChild(table);
     }
 
-    // Function to create the table with ODJSON data
+  // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
   const tbody = document.createElement('tbody');
 
-  const bodyRow = document.createElement('tr');
-  const displayCell = document.createElement('td');
-  displayCell.textContent = selectedData.Text; // Use the 'Text' property
-  bodyRow.appendChild(displayCell);
-  tbody.appendChild(bodyRow);
+  for (const key in selectedData) {
+    const bodyRow = document.createElement('tr');
+
+    const labelCell = document.createElement('td');
+    labelCell.textContent = key;
+    bodyRow.appendChild(labelCell);
+
+    const valueCell = document.createElement('td');
+    valueCell.textContent = selectedData[key];
+    bodyRow.appendChild(valueCell);
+
+    tbody.appendChild(bodyRow);
+  }
 
   table.appendChild(tbody);
 
@@ -166,6 +174,7 @@ function createODTable(selectedData) {
   resultContainer.innerHTML = '';
   resultContainer.appendChild(table);
 }
+
     // Function to filter data based on the selected option
     async function filterData(event) {
       const selectedOption = event.target.value;
