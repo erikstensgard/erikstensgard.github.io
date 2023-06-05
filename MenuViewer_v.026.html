@@ -154,11 +154,20 @@ function createODTable(selectedData) {
 
   const tbody = document.createElement('tbody');
 
-  const bodyRow = document.createElement('tr');
-  const displayCell = document.createElement('td');
-  displayCell.textContent = selectedData.Item;
-  bodyRow.appendChild(displayCell);
-  tbody.appendChild(bodyRow);
+  const keys = Object.keys(selectedData);
+  keys.forEach(key => {
+    const bodyRow = document.createElement('tr');
+
+    const keyCell = document.createElement('td');
+    keyCell.textContent = key;
+    bodyRow.appendChild(keyCell);
+
+    const valueCell = document.createElement('td');
+    valueCell.textContent = selectedData[key];
+    bodyRow.appendChild(valueCell);
+
+    tbody.appendChild(bodyRow);
+  });
 
   table.appendChild(tbody);
 
