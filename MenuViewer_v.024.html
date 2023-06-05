@@ -65,9 +65,11 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 
+  // Set the default selection to "ORZID2 GMENU ABX INPT MAIN"
+  dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
+
   dropdown.addEventListener('change', filterData);
 }
-
 // Display item information
 async function displayItemInfo(item, container) {
   const infoContainer = document.createElement('div');
@@ -199,6 +201,13 @@ let previousSelection = '';
 // Function to handle the go back arrow button click event
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
+
+  // Get the previous selection from the dropdown options
+  const previousIndex = dropdown.selectedIndex - 1;
+  const previousOption = dropdown.options[previousIndex];
+
+  // Update the previous selection
+  previousSelection = previousOption ? previousOption.value : '';
 
   // Set the dropdown value to the previous selection
   dropdown.value = previousSelection;
