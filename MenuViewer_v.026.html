@@ -186,6 +186,9 @@ function createODTable(selectedOption) {
     const resultContainer = document.getElementById('resultContainer');
     resultContainer.innerHTML = '';
     resultContainer.appendChild(table);
+  } else {
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'No data available';
   }
 }
 
