@@ -202,18 +202,20 @@ let previousSelection = '';
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
 
-  // Get the previous selection from the dropdown options
+  // Get the index of the previous selection
   const previousIndex = dropdown.selectedIndex - 1;
-  const previousOption = dropdown.options[previousIndex];
 
-  // Update the previous selection
-  previousSelection = previousOption ? previousOption.value : '';
+  // Check if the previous index is valid
+  if (previousIndex >= 0) {
+    const previousOption = dropdown.options[previousIndex];
+    const previousValue = previousOption.value;
 
-  // Set the dropdown value to the previous selection
-  dropdown.value = previousSelection;
+    // Set the dropdown value to the previous selection
+    dropdown.value = previousValue;
 
-  // Trigger the filterData function
-  filterData({ target: dropdown });
+    // Trigger the filterData function with the previous selection
+    filterData({ target: dropdown });
+  }
 }
 
 // Attach the goBack function to the go back arrow button
