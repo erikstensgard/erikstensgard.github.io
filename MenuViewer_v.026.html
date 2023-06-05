@@ -148,35 +148,32 @@
     }
 
     // Function to create the table with ODJSON data
-    function createODTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
+function createODTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-      const tbody = document.createElement('tbody');
+  const tbody = document.createElement('tbody');
 
+  for (const prop in selectedData) {
+    if (selectedData.hasOwnProperty(prop)) {
+      const propValue = selectedData[prop];
       const bodyRow = document.createElement('tr');
       const displayCell = document.createElement('td');
-      const cellContentElement = document.createElement('div');
-
-      // Display all properties from ODJSON item
-      for (const prop in selectedData) {
-        if (selectedData.hasOwnProperty(prop)) {
-          const propValue = selectedData[prop];
-          const propElement = document.createElement('p');
-          propElement.textContent = `${prop}: ${propValue}`;
-          displayCell.appendChild(propElement);
-        }
-      }
-
+      const propElement = document.createElement('p');
+      propElement.textContent = `${prop}: ${propValue}`;
+      displayCell.appendChild(propElement);
       bodyRow.appendChild(displayCell);
       tbody.appendChild(bodyRow);
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
     }
+  }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
+
 
     // Function to filter data based on the selected option
     async function filterData(event) {
