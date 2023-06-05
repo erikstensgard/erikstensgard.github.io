@@ -94,15 +94,24 @@
 
     // Function to handle row click event
     async function handleRowClick(item, resultContainer) {
-      const otherData = await fetchOtherData();
-      const matchingItem = otherData.find(
-        otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+  const jsonData = await fetchData();
+  const matchingOption = jsonData.find(
+    dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-      if (matchingItem) {
-        displayItemInfo(matchingItem, resultContainer);
-      }
+  if (matchingOption) {
+    displayItemInfo(matchingOption, resultContainer);
+  } else {
+    const otherData = await fetchOtherData();
+    const matchingItem = otherData.find(
+      otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItem) {
+      displayItemInfo(matchingItem, resultContainer);
     }
+  }
+}
 
     // filterData function
     async function filterData(event) {
