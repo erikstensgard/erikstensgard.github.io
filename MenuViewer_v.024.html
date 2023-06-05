@@ -120,7 +120,8 @@
       }
     }
 
-   async function filterData(event) {
+    // filterData function
+    async function filterData(event) {
   const selectedOption = event.target.value;
   const jsonData = await fetchData();
   const otherData = await fetchOtherData();
@@ -130,7 +131,8 @@
 
   createTable(filteredData, otherData);
 }
-async function createTable(filteredData, otherData) {
+
+      async function createTable(filteredData, otherData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -181,68 +183,17 @@ async function createTable(filteredData, otherData) {
   resultContainer.innerHTML = '';
   resultContainer.appendChild(table);
 }
-Finally, update the initialize function to call the createTable function instead of the filterData function:
-javascript
-Copy code
-async function initialize() {
- 
-
-
-
-      // Create the table body
-      filteredData.forEach(content => {
-        const { Contents } = content;
-        const maxRow = Math.max(...Contents.map(item => item.Row));
-
-        for (let row = 1; row <= maxRow; row++) {
-          const bodyRow = document.createElement('tr');
-
-          const matchingItem = Contents.find(item => item.Row === row);
-          if (matchingItem) {
-            const { Text, Item, Header } = matchingItem;
-
-            const displayCell = document.createElement('td');
-            displayCell.textContent = Text || Item || '';
-
-            if (Header === 1) {
-              displayCell.classList.add('bold');
-            }
-
-            bodyRow.appendChild(displayCell);
-
-            if (Item) {
-              bodyRow.classList.add('clickable');
-              bodyRow.addEventListener('click', () => {
-                handleRowClick(matchingItem, resultContainer);
-              });
-            }
-          } else {
-            // Add a blank cell for empty rows
-            const emptyCell = document.createElement('td');
-            bodyRow.appendChild(emptyCell);
-          }
-
-          tbody.appendChild(bodyRow);
-        }
-      });
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
-    }
-
     // Initial function to load data and populate the dropdown
     async function initialize() {
-      const jsonData = await fetchData();
-      const dropdown = document.getElementById('filterDropdown');
-      populateDropdown(jsonData);
-      filterData({ target: dropdown });
-    }
+  const jsonData = await fetchData();
+  const dropdown = document.getElementById('filterDropdown');
+  populateDropdown(jsonData);
+  createTable(jsonData, []);
+}
 
-    // Call initialize function
-    initialize();
+// Call initialize function
+initialize();
+
   </script>
 </body>
 
