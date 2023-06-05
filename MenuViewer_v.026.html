@@ -157,7 +157,7 @@
       const bodyRow = document.createElement('tr');
       const displayCell = document.createElement('td');
       const cellContentElement = document.createElement('div');
-      cellContentElement.textContent = selectedData.Contents;
+      cellContentElement.textContent = selectedData.Item;
       displayCell.appendChild(cellContentElement);
       bodyRow.appendChild(displayCell);
       tbody.appendChild(bodyRow);
@@ -179,7 +179,7 @@
         createOMTable(matchingData);
         pushHistory(matchingData.Name);
       } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        const odMatchingData = odData.find(item => item.Item === selectedOption);
         selectedData = odMatchingData;
         createODTable(odMatchingData);
         pushHistory(odMatchingData.Item);
