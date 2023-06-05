@@ -209,11 +209,17 @@ function popHistory() {
 
 // Function to go back to the previously selected item
 function goBack() {
-  if (history.length > 0) {
+  if (history.length > 1) {
     const selectedItem = history.pop();
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
+  } else if (history.length === 1) {
+    const selectedItem = history.pop();
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedItem;
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
   }
 }
 
