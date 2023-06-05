@@ -129,6 +129,9 @@ async function filterData(event) {
   const jsonData = await fetchData();
   const otherData = await fetchOtherData();
 
+  // Store the previous selection
+  previousSelection = selectedOption;
+
   // Filter the JSON data based on the selected option
   const filteredData = jsonData.filter(item => item.Name === selectedOption);
 
