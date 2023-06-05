@@ -40,6 +40,48 @@
   <div id="resultContainer"></div>
 
   <script>
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Test</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 8px;
+    }
+
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="goBackButton">&larr; Go Back</button>
+
+  <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
+
+  <select id="filterDropdown">
+    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
+  </select>
+
+  <div id="resultContainer"></div>
+
+  <script>
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('OMJSON.json');
@@ -67,48 +109,20 @@
       });
     }
 
-   // Modify the handleRowClick function
-async function handleRowClick(item, resultContainer) {
-  const omData = await fetchOMData();
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
+    // Function to handle row click event
+    async function handleRowClick(item, resultContainer) {
+      const omData = await fetchOMData();
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
 
-  if (matchingItem) {
-    pushHistory(item); // Add the clicked item to the history
-    createOMTable(matchingItem);
-  } else {
-    displayItemInfo(item, resultContainer);
-  }
-}
-
-// Track the history of clicked items
-let history = [];
-
-// Function to add an item to the history
-function pushHistory(item) {
-  history.push(item);
-}
-
-// Function to remove the last item from the history
-function popHistory() {
-  history.pop();
-}
-
-// Function to handle the go back arrow button click event
-function goBack() {
-  const dropdown = document.getElementById('filterDropdown');
-  
-  // Remove the last item from the history
-  popHistory();
-
-  // Trigger the filterData function with the previous selection
-  filterData({ target: dropdown });
-}
-
-// Attach the goBack function to the go back arrow button
-const goBackButton = document.getElementById('goBackButton');
-goBackButton.addEventListener('click', goBack);
+      if (matchingItem) {
+        pushHistory(item); // Add the clicked item to the history
+        createOMTable(matchingItem);
+      } else {
+        displayItemInfo(item, resultContainer);
+      }
+    }
 
     // Display item information
     function displayItemInfo(item, container) {
@@ -223,9 +237,25 @@ goBackButton.addEventListener('click', goBack);
       }
     }
 
+    // Track the history of clicked items
+    let history = [];
+
+    // Function to add an item to the history
+    function pushHistory(item) {
+      history.push(item);
+    }
+
+    // Function to remove the last item from the history
+    function popHistory() {
+      history.pop();
+    }
+
     // Function to handle the go back arrow button click event
     function goBack() {
       const dropdown = document.getElementById('filterDropdown');
+
+      // Remove the last item from the history
+      popHistory();
 
       // Trigger the filterData function with the previous selection
       filterData({ target: dropdown });
@@ -245,6 +275,11 @@ goBackButton.addEventListener('click', goBack);
 
     // Call initialize function
     initialize();
+  </script>
+</body>
+
+</html>
+
   </script>
 </body>
 
