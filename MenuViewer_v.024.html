@@ -109,7 +109,7 @@ async function handleRowClick(item, resultContainer) {
 
   if (matchingOption) {
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = item.Item;
+    dropdown.value = matchingOption.Name;
     filterData({ target: dropdown });
   } else {
     const otherData = await fetchOtherData();
