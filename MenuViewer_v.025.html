@@ -40,8 +40,7 @@
   <div id="resultContainer"></div>
 
   <script>
-
-// Fetch OMJSON Data
+  // Fetch OMJSON Data
 async function fetchOMData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -77,6 +76,7 @@ async function handleRowClick(item, resultContainer) {
 
   if (matchingItem) {
     createOMTable(matchingItem);
+    pushHistory(item.Item); // Add the selected item to the history
   } else {
     displayItemInfo(item, resultContainer);
   }
@@ -188,10 +188,12 @@ async function filterData(event) {
 
   if (matchingData) {
     createOMTable(matchingData);
+    pushHistory(selectedOption); // Add the selected option to the history
   } else {
     const odData = await fetchODData();
     const odMatchingData = odData.find(item => item.Name === selectedOption);
     createODTable(odMatchingData);
+    pushHistory(selectedOption); // Add the selected option to the history
   }
 }
 
