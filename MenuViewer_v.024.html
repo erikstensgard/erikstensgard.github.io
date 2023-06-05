@@ -41,119 +41,116 @@
 
   <script>
     // Fetch JSON Data
-    async function fetchData() {
-      const response = await fetch('OMJSON.json');
-      const data = await response.json();
-      return data;
-    }
+async function fetchData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Fetch Other JSON Data
-    async function fetchOtherData() {
-      const response = await fetch('ODJSON.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch Other JSON Data
+async function fetchOtherData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Populate Dropdown
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
+// Populate Dropdown
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
 
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.Name;
-        dropdown.appendChild(option);
-      });
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
 
-      dropdown.addEventListener('change', filterData);
-    }
+  dropdown.addEventListener('change', filterData);
+}
 
-    // Display item information
-    async function displayItemInfo(item, container) {
-      const infoContainer = document.createElement('div');
+// Display item information
+async function displayItemInfo(item, container) {
+  const infoContainer = document.createElement('div');
 
-      for (const key in item) {
-        const label = document.createElement('strong');
-        label.textContent = `${key}: `;
-        const value = document.createElement('span');
+  for (const key in item) {
+    const label = document.createElement('strong');
+    label.textContent = `${key}: `;
+    const value = document.createElement('span');
 
-        if (key === "Text" && !item.Text && item.Item) {
-          const otherData = await fetchOtherData();
-          const matchingItem = otherData.find(
-            otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-          );
-          if (matchingItem) {
-            value.textContent = matchingItem.DisplayText;
-          } else {
-            value.textContent = item[key];
-          }
-        } else {
-          value.textContent = item[key];
-        }
-
-        infoContainer.appendChild(label);
-        infoContainer.appendChild(value);
-        infoContainer.appendChild(document.createElement('br'));
-      }
-
-      container.innerHTML = '';
-      container.appendChild(infoContainer);
-    }
-
-    // Function to handle row click event
-    async function handleRowClick(item, resultContainer) {
-      const jsonData = await fetchData();
-      const matchingOption = jsonData.find(
-        dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
-
-      if (matchingOption) {
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = item.Item;
-        await filterData({ target: dropdown });
-      } else {
-        const otherData = await fetchOtherData();
-        const matchingItem = otherData.find(
-          otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (matchingItem) {
-          displayItemInfo(matchingItem, resultContainer);
-        }
-      }
-    }
-
-    // filterData function
-    async function filterData(event) {
-      const selectedOption = event.target.value;
-      const jsonData = await fetchData();
+    if (key === "Text" && !item.Text && item.Item) {
       const otherData = await fetchOtherData();
-
-      // Filter the JSON data based on the selected option
-      const filteredData = jsonData.filter(item => item.Name === selectedOption);
-
-      createTable(filteredData, otherData);
+      const matchingItem = otherData.find(
+        otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+      if (matchingItem) {
+        value.textContent = matchingItem.DisplayText;
+      } else {
+        value.textContent = item[key];
+      }
+    } else {
+      value.textContent = item[key];
     }
 
-    //Create Table function
-    async function createTable(filteredData, otherData) {
+    infoContainer.appendChild(label);
+    infoContainer.appendChild(value);
+    infoContainer.appendChild(document.createElement('br'));
+  }
+
+  container.innerHTML = '';
+  container.appendChild(infoContainer);
+}
+
+// Function to handle row click event
+async function handleRowClick(item, resultContainer) {
+  const jsonData = await fetchData();
+  const matchingOption = jsonData.find(
+    dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingOption) {
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = item.Item;
+    await filterData({ target: dropdown });
+  } else {
+    const otherData = await fetchOtherData();
+    const matchingItem = otherData.find(
+      otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItem) {
+      displayItemInfo(matchingItem, resultContainer);
+    }
+  }
+}
+
+// filterData function
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const jsonData = await fetchData();
+  const otherData = await fetchOtherData();
+
+  // Filter the JSON data based on the selected option
+  const filteredData = jsonData.filter(item => item.Name === selectedOption);
+
+  createTable(filteredData, otherData);
+}
+
+async function createTable(filteredData, otherData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
   const tbody = document.createElement('tbody');
 
-  const { Contents } = filteredData[0]; // Only consider the first item since we want to display only the selected item
-
+  // Create the table body
+  const { Contents } = filteredData[0];
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
 
-    const matchingItems = Contents.filter(item => item.Row === row);
-
     for (let column = 1; column <= columns; column++) {
-      const matchingItem = matchingItems.find(item => item.Column === column);
+      const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
 
       const displayCell = document.createElement('td');
 
@@ -186,35 +183,35 @@
   resultContainer.appendChild(table);
 }
 
+// Keep track of the previous dropdown selection
+let previousSelection = '';
 
-    // Keep track of the previous dropdown selection
-    let previousSelection = '';
+// Function to handle the go back arrow button click event
+function goBack() {
+  const dropdown = document.getElementById('filterDropdown');
 
-    // Function to handle the go back arrow button click event
-    function goBack() {
-      const dropdown = document.getElementById('filterDropdown');
+  // Restore the previous dropdown selection
+  dropdown.value = previousSelection;
 
-      // Restore the previous dropdown selection
-      dropdown.value = previousSelection;
+  // Trigger the filterData function
+  filterData({ target: dropdown });
+}
 
-      // Trigger the filterData function
-      filterData({ target: dropdown });
-    }
+// Attach the goBack function to the go back arrow button
+const goBackButton = document.getElementById('goBackButton');
+goBackButton.addEventListener('click', goBack);
 
-    // Attach the goBack function to the go back arrow button
-    const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', goBack);
+// Initial function to load data and populate the dropdown
+async function initialize() {
+  const jsonData = await fetchData();
+  const dropdown = document.getElementById('filterDropdown');
+  populateDropdown(jsonData);
+  createTable(jsonData.slice(0, 1), []); // Display only the first item initially
+}
 
-    // Initial function to load data and populate the dropdown
-    async function initialize() {
-      const jsonData = await fetchData();
-      const dropdown = document.getElementById('filterDropdown');
-      populateDropdown(jsonData);
-      createTable(jsonData, []);
-    }
+// Call initialize function
+initialize();
 
-    // Call initialize function
-    initialize();
   </script>
 </body>
 
