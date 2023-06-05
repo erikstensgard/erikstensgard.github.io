@@ -71,6 +71,16 @@
         option.textContent = item.Name;
         dropdown.appendChild(option);
       });
+
+      dropdown.addEventListener('change', () => {
+        const selectedOption = dropdown.options[dropdown.selectedIndex];
+        const selectedItem = omData.find(item => item.Name === selectedOption.value);
+        if (selectedItem) {
+          selectedData = selectedItem;
+          createOMTable(selectedItem);
+          pushHistory(selectedItem.Name);
+        }
+      });
     }
 
     // Function to handle row click event
@@ -105,31 +115,23 @@
         const bodyRow = document.createElement('tr');
 
         for (let column = 1; column <= columns; column++) {
-          const matchingItems = Contents.filter(
-            item => item.Row === row && item.Column === column
-          );
-
           const displayCell = document.createElement('td');
+          const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
 
-          if (matchingItems.length > 0) {
-            matchingItems.forEach(matchingItem => {
-              const { Text, Item, Header } = matchingItem;
-              const cellContent = Text || Item || '';
+          if (matchingItem) {
+            const cellContentElement = document.createElement('div');
+            cellContentElement.textContent = matchingItem.Item;
 
-              const cellContentElement = document.createElement('div');
-              cellContentElement.textContent = cellContent;
+            if (matchingItem.Header) {
+              cellContentElement.classList.add('bold');
+            }
 
-              if (Header) {
-                cellContentElement.classList.add('bold');
-              }
+            if (matchingItem.Item) {
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => handleRowClick(matchingItem));
+            }
 
-              if (Item) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => handleRowClick(matchingItem));
-              }
-
-              displayCell.appendChild(cellContentElement);
-            });
+            displayCell.appendChild(cellContentElement);
           }
 
           bodyRow.appendChild(displayCell);
@@ -179,6 +181,11 @@
       goBackButton.style.display = 'block';
     }
 
+    // Function to push selected item to history
+    function pushHistory(item) {
+      history.push(item);
+    }
+
     // Initialize the application
     async function initialize() {
       omData = await fetchOMData();
@@ -191,9 +198,22 @@
     // Go back button click event
     const goBackButton = document.getElementById('goBackButton');
     goBackButton.addEventListener('click', () => {
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      goBackButton.style.display = 'none';
+      history.pop();
+      const previousItem = history[history.length - 1];
+      if (previousItem) {
+        const selectedItem = omData.find(item => item.Name === previousItem);
+        if (selectedItem) {
+          selectedData = selectedItem;
+          createOMTable(selectedItem);
+        } else {
+          selectedData = odData.find(item => item.Item === previousItem);
+          createODTable(selectedData);
+        }
+      } else {
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.innerHTML = '';
+        goBackButton.style.display = 'none';
+      }
     });
   </script>
 </body>
