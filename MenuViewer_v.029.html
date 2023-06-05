@@ -110,7 +110,7 @@
           const previousDataAttr = JSON.stringify(previousData);
           goBackButton.setAttribute('data-previous-data', previousDataAttr);
           goBackButton.addEventListener('click', () => {
-            goBack(resultContainer, previousData);
+            goBack(resultContainer);
           });
 
           displayItemInfo(matchingItem, resultContainer);
@@ -119,16 +119,21 @@
     }
 
     // Go back to the main menu
-    async function goBack(resultContainer, previousData) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = previousData.selectedOption;
+    async function goBack(resultContainer) {
+      const goBackButton = document.getElementById('goBackButton');
+      const previousDataAttr = goBackButton.getAttribute('data-previous-data');
+      const previousData = JSON.parse(previousDataAttr);
+
       resultContainer.innerHTML = previousData.resultHTML;
 
-      const goBackButton = document.getElementById('goBackButton');
       goBackButton.style.display = previousData.goBackButtonDisplay;
+      goBackButton.setAttribute('data-previous-data', previousData.goBackButtonData);
 
-      // Remove the stored previous data attribute
-      goBackButton.removeAttribute('data-previous-data');
+      // Update the go back button to go back to the previous item
+      goBackButton.removeEventListener('click', goBack);
+      goBackButton.addEventListener('click', () => {
+        goBack(resultContainer);
+      });
     }
 
     // Updated filterData function
@@ -174,7 +179,8 @@
                   handleRowClick(matchingItem, resultContainer, {
                     selectedOption,
                     resultHTML: resultContainer.innerHTML,
-                    goBackButtonDisplay: 'block'
+                    goBackButtonDisplay: 'block',
+                    goBackButtonData: goBackButton.getAttribute('data-previous-data')
                   });
                 });
               }
@@ -197,6 +203,7 @@
 
       const goBackButton = document.getElementById('goBackButton');
       goBackButton.style.display = 'none';
+      goBackButton.removeAttribute('data-previous-data');
     }
 
     // Initial function to load data and populate the dropdown
