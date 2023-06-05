@@ -40,83 +40,71 @@
   <div id="resultContainer"></div>
 
   <script>
-    // Fetch JSON Data
-    async function fetchData() {
-      const response = await fetch('OMJSON.json');
-      const data = await response.json();
-      return data;
-    }
+   // Fetch OMJSON Data
+async function fetchOMData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Fetch Other JSON Data
-    async function fetchOtherData() {
-      const response = await fetch('ODJSON.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch ODJSON Data
+async function fetchODData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-    // Populate Dropdown
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = ''; // Clear previous options
+// Populate Dropdown with OMJSON data
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = ''; // Clear previous options
 
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.Name;
-        dropdown.appendChild(option);
-      });
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    dropdown.appendChild(option);
+  });
+}
 
-      // Set the default selection to "ORZID2 GMENU ABX INPT MAIN"
-      dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
+// Function to handle row click event
+async function handleRowClick(item, resultContainer) {
+  const odData = await fetchODData();
+  const matchingItem = odData.find(
+    odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-      dropdown.addEventListener('change', filterData);
-    }
+  if (matchingItem) {
+    displayItemInfo(matchingItem, resultContainer);
+  }
+}
 
-    // Display item information
-    function displayItemInfo(item, container) {
-      const infoContainer = document.createElement('div');
+// Display item information
+function displayItemInfo(item, container) {
+  const infoContainer = document.createElement('div');
 
-      for (const key in item) {
-        const label = document.createElement('strong');
-        label.textContent = `${key}: `;
-        const value = document.createElement('span');
+  for (const key in item) {
+    const label = document.createElement('strong');
+    label.textContent = `${key}: `;
+    const value = document.createElement('span');
 
-        value.textContent = item[key];
+    value.textContent = item[key];
 
-        infoContainer.appendChild(label);
-        infoContainer.appendChild(value);
-        infoContainer.appendChild(document.createElement('br'));
-      }
+    infoContainer.appendChild(label);
+    infoContainer.appendChild(value);
+    infoContainer.appendChild(document.createElement('br'));
+  }
 
-      container.innerHTML = '';
-      container.appendChild(infoContainer);
-    }
+  container.innerHTML = '';
+  container.appendChild(infoContainer);
+}
 
-    // Function to handle row click event
-    async function handleRowClick(item, resultContainer) {
-      const otherData = await fetchOtherData();
-      const matchingItem = otherData.find(
-        otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+// Function to create the table with OMJSON data
+async function createOMTable(selectedOption, odData) {
+  const omData = await fetchOMData();
 
-      if (matchingItem) {
-        displayItemInfo(matchingItem, resultContainer);
-      }
-    }
-
-    // filterData function
-    async function filterData(event) {
-      const selectedOption = event.target.value;
-      const otherData = await fetchOtherData();
-      createTable(selectedOption, otherData);
-    }
-
-    // Function to create the table with OMJSON data
-async function createTable(selectedOption, otherData) {
-  const jsonData = await fetchData();
-
-  // Find the selected option in the jsonData (OMJSON)
-  const selectedData = jsonData.find(item => item.Name === selectedOption);
+  // Find the selected option in the omData (OMJSON)
+  const selectedData = omData.find(item => item.Name === selectedOption);
 
   if (selectedData) {
     const table = document.createElement('table');
@@ -174,56 +162,66 @@ async function createTable(selectedOption, otherData) {
     resultContainer.innerHTML = '';
     resultContainer.appendChild(table);
   } else {
-    // If selectedOption is not found in jsonData, display the ODJSON data
-    superCreateTable(selectedOption, otherData);
+    // If selectedOption is not found in omData, display the ODJSON data
+    createODTable(selectedOption, odData);
   }
 }
 
-    // Existing createTable() function
-    async function superCreateTable(filteredData, otherData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
+// Function to create the table with ODJSON data
+function createODTable(selectedOption, odData) {
+  const selectedData = odData.find(item => item.Name === selectedOption);
 
-      const tbody = document.createElement('tbody');
+  if (selectedData) {
+    const table = document.createElement('table');
+    table.classList.add('table');
 
-      // Create the table body using filteredData
-      // ... existing code here ...
+    const tbody = document.createElement('tbody');
 
-      table.appendChild(tbody);
+    const bodyRow = document.createElement('tr');
+    const displayCell = document.createElement('td');
+    displayCell.textContent = selectedData.Contents;
+    bodyRow.appendChild(displayCell);
+    tbody.appendChild(bodyRow);
 
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
-    }
+    table.appendChild(tbody);
 
-    // Keep track of the previous dropdown selection
-    let previousSelection = '';
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+    resultContainer.appendChild(table);
+  }
+}
 
-    // Function to handle the go back arrow button click event
-    function goBack() {
-      const dropdown = document.getElementById('filterDropdown');
+// Function to filter data based on the selected option
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const odData = await fetchODData();
 
-      // Set the dropdown value to the previous selection
-      dropdown.value = previousSelection;
+  // Call createOMTable to display OMJSON data if available, otherwise call createODTable to display ODJSON data
+  createOMTable(selectedOption, odData);
+}
 
-      // Trigger the filterData function with the previous selection
-      filterData({ target: dropdown });
-    }
+// Function to handle the go back arrow button click event
+function goBack() {
+  const dropdown = document.getElementById('filterDropdown');
 
-    // Attach the goBack function to the go back arrow button
-    const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', goBack);
+  // Trigger the filterData function with the previous selection
+  filterData({ target: dropdown });
+}
 
-    // Initial function to load data and populate the dropdown
-    async function initialize() {
-      const jsonData = await fetchData();
-      const dropdown = document.getElementById('filterDropdown');
-      populateDropdown(jsonData);
-      createTable('', []); // Initially, display an empty table
-    }
+// Attach the goBack function to the go back arrow button
+const goBackButton = document.getElementById('goBackButton');
+goBackButton.addEventListener('click', goBack);
 
-    // Call initialize function
-    initialize();
+// Initial function to load data and populate the dropdown
+async function initialize() {
+  const omData = await fetchOMData();
+  const dropdown = document.getElementById('filterDropdown');
+  populateDropdown(omData);
+  dropdown.addEventListener('change', filterData);
+}
+
+// Call initialize function
+initialize();
 
   </script>
 </body>
