@@ -67,19 +67,48 @@
       });
     }
 
-    // Function to handle row click event
-    async function handleRowClick(item, resultContainer) {
-      const omData = await fetchOMData();
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+   // Modify the handleRowClick function
+async function handleRowClick(item, resultContainer) {
+  const omData = await fetchOMData();
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-      if (matchingItem) {
-        createOMTable(matchingItem);
-      } else {
-        displayItemInfo(item, resultContainer);
-      }
-    }
+  if (matchingItem) {
+    pushHistory(item); // Add the clicked item to the history
+    createOMTable(matchingItem);
+  } else {
+    displayItemInfo(item, resultContainer);
+  }
+}
+
+// Track the history of clicked items
+let history = [];
+
+// Function to add an item to the history
+function pushHistory(item) {
+  history.push(item);
+}
+
+// Function to remove the last item from the history
+function popHistory() {
+  history.pop();
+}
+
+// Function to handle the go back arrow button click event
+function goBack() {
+  const dropdown = document.getElementById('filterDropdown');
+  
+  // Remove the last item from the history
+  popHistory();
+
+  // Trigger the filterData function with the previous selection
+  filterData({ target: dropdown });
+}
+
+// Attach the goBack function to the go back arrow button
+const goBackButton = document.getElementById('goBackButton');
+goBackButton.addEventListener('click', goBack);
 
     // Display item information
     function displayItemInfo(item, container) {
