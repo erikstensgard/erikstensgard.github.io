@@ -40,7 +40,7 @@
   <div id="resultContainer"></div>
 
   <script>
-  // Fetch OMJSON Data
+ // Fetch OMJSON Data
 async function fetchOMData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -54,10 +54,16 @@ async function fetchODData() {
   return data;
 }
 
-// Populate Dropdown with OMJSON data
+// Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
+
+// Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = ''; // Clear previous options
+  dropdown.innerHTML = '';
 
   data.forEach(item => {
     const option = document.createElement('option');
@@ -68,38 +74,20 @@ function populateDropdown(data) {
 }
 
 // Function to handle row click event
-async function handleRowClick(item, resultContainer) {
-  const omData = await fetchOMData();
+function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
   if (matchingItem) {
+    selectedData = matchingItem;
     createOMTable(matchingItem);
-    pushHistory(item.Item); // Add the selected item to the history
+    pushHistory(matchingItem.Name);
   } else {
-    displayItemInfo(item, resultContainer);
+    selectedData = item;
+    createODTable(item);
+    pushHistory(item.Item);
   }
-}
-
-// Display item information
-function displayItemInfo(item, container) {
-  const infoContainer = document.createElement('div');
-
-  for (const key in item) {
-    const label = document.createElement('strong');
-    label.textContent = `${key}: `;
-    const value = document.createElement('span');
-
-    value.textContent = item[key];
-
-    infoContainer.appendChild(label);
-    infoContainer.appendChild(value);
-    infoContainer.appendChild(document.createElement('br'));
-  }
-
-  container.innerHTML = '';
-  container.appendChild(infoContainer);
 }
 
 // Function to create the table with OMJSON data
@@ -109,7 +97,6 @@ function createOMTable(selectedData) {
 
   const tbody = document.createElement('tbody');
 
-  // Create the table body using selectedData
   const { Contents } = selectedData;
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
@@ -139,7 +126,7 @@ function createOMTable(selectedData) {
           if (Item) {
             cellContentElement.classList.add('clickable');
             cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem, resultContainer);
+              handleRowClick(matchingItem);
             });
           }
 
@@ -181,28 +168,44 @@ function createODTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-async function filterData(event) {
+function filterData(event) {
   const selectedOption = event.target.value;
-  const omData = await fetchOMData();
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
+    selectedData = matchingData;
     createOMTable(matchingData);
-    pushHistory(selectedOption); // Add the selected option to the history
+    pushHistory(matchingData.Name);
   } else {
-    const odData = await fetchODData();
     const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
     createODTable(odMatchingData);
-    pushHistory(selectedOption); // Add the selected option to the history
+    pushHistory(odMatchingData.Item);
   }
 }
 
-// History to track the selected items
-const history = [];
+// Function to handle the go back button click event
+function goBack() {
+  if (history.length > 1) {
+    popHistory();
+    const previousItem = history[history.length - 1];
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  } else if (history.length === 1) {
+    popHistory();
 
-// Function to add selected item to the history
-function pushHistory(selectedItem) {
-  history.push(selectedItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.selectedIndex = -1;
+
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+  }
+}
+
+// Function to push the selected item to the history
+function pushHistory(item) {
+  history.push(item);
 }
 
 // Function to remove the last item from the history
@@ -210,40 +213,20 @@ function popHistory() {
   history.pop();
 }
 
-// Function to go back to the previously selected item
-function goBack() {
-  if (history.length > 1) {
-    popHistory(); // Remove the current item from the history
-    const previousItem = history[history.length - 1]; // Get the previous item
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  } else if (history.length === 1) {
-    popHistory(); // Remove the current item from the history
-
-    // Clear the dropdown selection
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.selectedIndex = -1;
-
-    // Clear the result container
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = '';
-  }
-}
-
-// Attach the goBack function to the go back arrow button
-const goBackButton = document.getElementById('goBackButton');
-goBackButton.addEventListener('click', goBack);
-
-// Initial function to load data and populate the dropdown
+// Initialize the application
 async function initialize() {
-  const omData = await fetchOMData();
-  const dropdown = document.getElementById('filterDropdown');
+  omData = await fetchOMData();
+  odData = await fetchODData();
   populateDropdown(omData);
+
+  const dropdown = document.getElementById('filterDropdown');
   dropdown.addEventListener('change', filterData);
+
+  const goBackButton = document.getElementById('goBackButton');
+  goBackButton.addEventListener('click', goBack);
 }
 
-// Call initialize function
+// Call the initialize function
 initialize();
 
   </script>
