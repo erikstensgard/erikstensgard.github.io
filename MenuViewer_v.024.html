@@ -57,6 +57,7 @@ async function fetchOtherData() {
 // Populate Dropdown
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = ''; // Clear previous options
 
   data.forEach(item => {
     const option = document.createElement('option');
@@ -72,7 +73,7 @@ function populateDropdown(data) {
 }
 
 // Display item information
-async function displayItemInfo(item, container) {
+function displayItemInfo(item, container) {
   const infoContainer = document.createElement('div');
 
   for (const key in item) {
@@ -80,19 +81,7 @@ async function displayItemInfo(item, container) {
     label.textContent = `${key}: `;
     const value = document.createElement('span');
 
-    if (key === "Text" && !item.Text && item.Item) {
-      const otherData = await fetchOtherData();
-      const matchingItem = otherData.find(
-        otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
-      if (matchingItem) {
-        value.textContent = matchingItem.DisplayText;
-      } else {
-        value.textContent = item[key];
-      }
-    } else {
-      value.textContent = item[key];
-    }
+    value.textContent = item[key];
 
     infoContainer.appendChild(label);
     infoContainer.appendChild(value);
@@ -105,24 +94,13 @@ async function displayItemInfo(item, container) {
 
 // Function to handle row click event
 async function handleRowClick(item, resultContainer) {
-  const jsonData = await fetchData();
-  const matchingOption = jsonData.find(
-    dataItem => dataItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  const otherData = await fetchOtherData();
+  const matchingItem = otherData.find(
+    otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
-  if (matchingOption) {
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = matchingOption.Name;
-    filterData({ target: dropdown });
-  } else {
-    const otherData = await fetchOtherData();
-    const matchingItem = otherData.find(
-      otherItem => otherItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
-
-    if (matchingItem) {
-      displayItemInfo(matchingItem, resultContainer);
-    }
+  if (matchingItem) {
+    displayItemInfo(matchingItem, resultContainer);
   }
 }
 
@@ -131,9 +109,6 @@ async function filterData(event) {
   const selectedOption = event.target.value;
   const jsonData = await fetchData();
   const otherData = await fetchOtherData();
-
-  // Update the previous selection
-  previousSelection = selectedOption;
 
   // Filter the JSON data based on the selected option
   const filteredData = jsonData.filter(item => item.Name === selectedOption);
@@ -203,16 +178,25 @@ let previousSelection = '';
 function goBack() {
   const dropdown = document.getElementById('filterDropdown');
 
-  // Set the dropdown value to the previous selection
-  dropdown.value = previousSelection;
+  // Get the index of the previous selection
+  const previousIndex = dropdown.selectedIndex - 1;
 
-  // Trigger the filterData function with the previous selection
-  filterData({ target: dropdown });
+  // Check if the previous index is valid
+  if (previousIndex >= 0) {
+    const previousOption = dropdown.options[previousIndex];
+    const previousValue = previousOption.value;
+
+    // Set the dropdown value to the previous selection
+    dropdown.value = previousValue;
+
+    // Trigger the filterData function with the previous selection
+    filterData({ target: dropdown });
+  }
 }
 
 // Attach the goBack function to the go back arrow button
 const goBackButton = document.getElementById('goBackButton');
-goBackButton.onclick = goBack;
+goBackButton.addEventListener('click', goBack);
 
 // Initial function to load data and populate the dropdown
 async function initialize() {
