@@ -124,10 +124,12 @@
       const previousDataAttr = goBackButton.getAttribute('data-previous-data');
       const previousData = JSON.parse(previousDataAttr);
 
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = previousData.selectedOption;
       resultContainer.innerHTML = previousData.resultHTML;
 
       goBackButton.style.display = previousData.goBackButtonDisplay;
-      goBackButton.setAttribute('data-previous-data', previousData.goBackButtonData);
+      goBackButton.setAttribute('data-previous-data', previousDataAttr);
 
       // Update the go back button to go back to the previous item
       goBackButton.removeEventListener('click', goBack);
@@ -179,8 +181,7 @@
                   handleRowClick(matchingItem, resultContainer, {
                     selectedOption,
                     resultHTML: resultContainer.innerHTML,
-                    goBackButtonDisplay: 'block',
-                    goBackButtonData: goBackButton.getAttribute('data-previous-data')
+                    goBackButtonDisplay: 'block'
                   });
                 });
               }
