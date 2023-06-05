@@ -40,7 +40,7 @@
 <div id="resultContainer"></div>
 
   <script>
-    // Fetch JSON Data
+  // Fetch JSON Data
 async function fetchData() {
   const response = await fetch('OMJSON.json');
   const data = await response.json();
@@ -110,7 +110,7 @@ async function handleRowClick(item, resultContainer) {
   if (matchingOption) {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = item.Item;
-    await filterData({ target: dropdown });
+    filterData({ target: dropdown });
   } else {
     const otherData = await fetchOtherData();
     const matchingItem = otherData.find(
@@ -163,8 +163,8 @@ async function createTable(filteredData, otherData) {
         }
 
         if (Item) {
-          bodyRow.classList.add('clickable');
-          bodyRow.addEventListener('click', () => {
+          displayCell.classList.add('clickable');
+          displayCell.addEventListener('click', () => {
             handleRowClick(matchingItem, resultContainer);
           });
         }
@@ -206,7 +206,7 @@ async function initialize() {
   const jsonData = await fetchData();
   const dropdown = document.getElementById('filterDropdown');
   populateDropdown(jsonData);
-  createTable(jsonData.slice(0, 1), []); // Display only the first item initially
+  createTable([], []); // Initially, display an empty table
 }
 
 // Call initialize function
