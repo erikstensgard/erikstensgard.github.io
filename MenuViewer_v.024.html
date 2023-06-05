@@ -175,15 +175,15 @@
     let previousSelection = '';
 
     // Function to handle the go back arrow button click event
-    function goBack() {
-      const dropdown = document.getElementById('filterDropdown');
+function goBack() {
+  const dropdown = document.getElementById('filterDropdown');
 
-      // Set the dropdown value to the previous selection
-      dropdown.value = previousSelection;
+  // Store the previous selection
+  previousSelection = dropdown.value;
 
-      // Trigger the filterData function with the previous selection
-      filterData({ target: dropdown });
-    }
+  // Trigger the filterData function with the previous selection
+  filterData({ target: dropdown });
+}
 
     // Attach the goBack function to the go back arrow button
     const goBackButton = document.getElementById('goBackButton');
