@@ -201,16 +201,9 @@ function goBack() {
     history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
-    if (previousItem !== 'ORZID2 GMENU ABX INPT MAIN') {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = previousItem;
-      filterData({ target: dropdown });
-    } else {
-      history.pop(); // Remove the last item from history
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = previousItem;
-      filterData({ target: dropdown });
-    }
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
   } else if (history.length === 1) {
     history.pop(); // Remove the last item from history
 
@@ -219,6 +212,7 @@ function goBack() {
     filterData({ target: dropdown });
   }
 }
+
 
     // Function to push the selected item to the history
     function pushHistory(item) {
