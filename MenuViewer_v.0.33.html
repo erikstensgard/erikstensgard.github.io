@@ -96,8 +96,7 @@
         }
       }
     }
-
-  // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -124,7 +123,6 @@ function createOMTable(selectedData) {
           const cellContent = Text || Item || '';
 
           const cellContentElement = document.createElement('div');
-          cellContentElement.textContent = cellContent;
 
           if (Header === 1) {
             cellContentElement.classList.add('bold');
@@ -144,9 +142,12 @@ function createOMTable(selectedData) {
                 handleRowClick(matchingItem);
               });
 
-              cellContentElement.innerHTML = '';
               cellContentElement.appendChild(linkElement);
+            } else {
+              cellContentElement.textContent = cellContent;
             }
+          } else {
+            cellContentElement.textContent = cellContent;
           }
 
           displayCell.appendChild(cellContentElement);
@@ -167,6 +168,8 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
+  
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
       const table = document.createElement('table');
