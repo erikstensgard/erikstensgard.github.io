@@ -84,15 +84,18 @@
         selectedData = matchingItem;
         createOMTable(matchingItem);
         pushHistory(matchingItem.Name);
-      } else if (!item.Item) {
-        matchingItemIndex = odData.findIndex(
+      } else {
+        const odMatchingItem = odData.find(
           odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
 
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
+        if (odMatchingItem) {
+          const displayText = odMatchingItem['Display Text'];
+          const odDataWithDisplayText = { ...odMatchingItem, Text: displayText };
+
+          selectedData = odDataWithDisplayText;
+          createODTable(odDataWithDisplayText);
+          pushHistory(odDataWithDisplayText.Item);
         }
       }
     }
@@ -135,15 +138,6 @@
                 cellContentElement.addEventListener('click', () => {
                   handleRowClick(matchingItem);
                 });
-              } else if (!Text && matchingItem.Item) {
-                const odMatchingItem = odData.find(
-                  odItem => odItem.Name.trim().toLowerCase() === matchingItem.Item.trim().toLowerCase()
-                );
-
-                if (odMatchingItem && odMatchingItem['Display Text']) {
-                  const odDisplayText = odMatchingItem['Display Text'];
-                  cellContentElement.textContent = odDisplayText;
-                }
               }
 
               displayCell.appendChild(cellContentElement);
@@ -238,15 +232,20 @@
       omData = await fetchOMData();
       odData = await fetchODData();
       populateDropdown(omData);
-      loadMainMenu();
+
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.addEventListener('change', filterData);
+
+      const goBackButton = document.getElementById('goBackButton');
+      goBackButton.addEventListener('click', goBack);
+
+      const mainMenuButton = document.getElementById('mainMenuButton');
+      mainMenuButton.addEventListener('click', loadMainMenu);
+
+      loadMainMenu(); // Load the main menu by default
     }
 
-    // Event listeners
-    document.getElementById('goBackButton').addEventListener('click', goBack);
-    document.getElementById('mainMenuButton').addEventListener('click', loadMainMenu);
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
-
-    // Initialize the application
+    // Call the initialize function
     initialize();
   </script>
 </body>
