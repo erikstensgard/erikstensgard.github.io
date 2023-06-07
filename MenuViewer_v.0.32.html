@@ -30,10 +30,7 @@
 
 <body>
   <button id="goBackButton">&larr; Go Back</button>
-
-  <p>
-    <button id="mainMenuButton">Main Menu</button>
-  </p>
+  <button id="mainMenuButton">Main Menu</button>
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
@@ -222,11 +219,10 @@
       history.push(item);
     }
 
-    // Function to handle the Main Menu button click event
+    // Function to load the main menu by default
     function loadMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
-      const mainMenuOption = 'ORZID2 GMENU ABX INPT MAIN';
-      dropdown.value = mainMenuOption;
+      dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
       filterData({ target: dropdown });
     }
 
@@ -244,11 +240,12 @@
 
       const mainMenuButton = document.getElementById('mainMenuButton');
       mainMenuButton.addEventListener('click', loadMainMenu);
+
+      loadMainMenu(); // Load the main menu by default
     }
 
     // Call the initialize function
     initialize();
-
   </script>
 </body>
 
