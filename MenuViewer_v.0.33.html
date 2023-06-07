@@ -85,14 +85,14 @@
       createOMTable(matchingItem);
       pushHistory(matchingItem.Name);
     } else {
-      matchingItemIndex = odData.findIndex(
+      const matchingODItem = odData.find(
         odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
       );
 
-      if (matchingItemIndex !== -1) {
-        selectedData = odData[matchingItemIndex];
-        createODTable(selectedData);
-        pushHistory(selectedData.Item);
+      if (matchingODItem) {
+        selectedData = matchingODItem;
+        createODTable(matchingODItem);
+        pushHistory(matchingODItem.Name);
       }
     }
   }
@@ -134,19 +134,15 @@
                 odItem => odItem.Name.trim().toLowerCase() === Item.trim().toLowerCase()
               );
 
-              if (odMatchingItem && odMatchingItem['Display Text']) {
-                const linkElement = document.createElement('a');
-                linkElement.textContent = Text || odMatchingItem['Display Text'];
-                linkElement.href = '#';
-                linkElement.classList.add('clickable');
-                linkElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
+              const linkElement = document.createElement('a');
+              linkElement.textContent = Text || (odMatchingItem && odMatchingItem['Display Text']) || cellContent;
+              linkElement.href = '#';
+              linkElement.classList.add('clickable');
+              linkElement.addEventListener('click', () => {
+                handleRowClick(matchingItem);
+              });
 
-                cellContentElement.appendChild(linkElement);
-              } else {
-                cellContentElement.textContent = cellContent;
-              }
+              cellContentElement.appendChild(linkElement);
             } else {
               cellContentElement.textContent = cellContent;
             }
