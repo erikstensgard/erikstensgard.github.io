@@ -205,6 +205,11 @@ function goBack() {
       const dropdown = document.getElementById('filterDropdown');
       dropdown.value = previousItem;
       filterData({ target: dropdown });
+    } else {
+      history.pop(); // Remove the last item from history
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = previousItem;
+      filterData({ target: dropdown });
     }
   } else if (history.length === 1) {
     history.pop(); // Remove the last item from history
@@ -214,8 +219,6 @@ function goBack() {
     filterData({ target: dropdown });
   }
 }
-
-
 
     // Function to push the selected item to the history
     function pushHistory(item) {
