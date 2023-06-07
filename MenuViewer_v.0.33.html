@@ -219,10 +219,10 @@
       history.push(item);
     }
 
-    // Function to load the main menu
+    // Function to load the main menu by default
     function loadMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
       filterData({ target: dropdown });
     }
 
@@ -240,9 +240,10 @@
 
       const mainMenuButton = document.getElementById('mainMenuButton');
       mainMenuButton.addEventListener('click', loadMainMenu);
+
+      loadMainMenu();
     }
 
-    // Start the application
     initialize();
   </script>
 </body>
