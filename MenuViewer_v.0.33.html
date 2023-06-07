@@ -74,31 +74,32 @@
       });
     }
 
-    // Function to handle row click event
-    function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+// Function to handle row click event
+function handleRowClick(item) {
+  if (item.Text.trim() === '') {
+    const matchingItem = odData.find(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
 
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        const odMatchingItem = odData.find(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (odMatchingItem) {
-          const displayText = odMatchingItem['Display Text'];
-          const odDataWithDisplayText = { ...odMatchingItem, Text: displayText };
-
-          selectedData = odDataWithDisplayText;
-          createODTable(odDataWithDisplayText);
-          pushHistory(odDataWithDisplayText.Item);
-        }
-      }
+    if (matchingItem) {
+      selectedData = matchingItem;
+      createODTable(matchingItem);
+      pushHistory(matchingItem.Name);
+      return;
     }
+  }
+
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  }
+}
+
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
