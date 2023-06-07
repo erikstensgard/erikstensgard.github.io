@@ -74,28 +74,41 @@
       });
     }
 
-    // Function to handle row click event
-    function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  // Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    const { Text, Item } = matchingItem;
+    if (Text !== "") {
+      selectedData = matchingItem;
+      createOMTable(matchingItem);
+      pushHistory(matchingItem.Name);
+    } else {
+      const matchingODItem = odData.find(
+        odItem => odItem.Item.trim().toLowerCase() === Item.trim().toLowerCase()
       );
 
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
-        }
+      if (matchingODItem) {
+        selectedData = matchingODItem;
+        createODTable(matchingODItem);
+        pushHistory(matchingODItem.Item);
       }
     }
+  } else {
+    const matchingODItem = odData.find(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingODItem) {
+      selectedData = matchingODItem;
+      createODTable(matchingODItem);
+      pushHistory(matchingODItem.Item);
+    }
+  }
+}
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
@@ -195,24 +208,24 @@
       }
     }
 
-// Function to handle the go back button click event
-function goBack() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    let previousItem = history.pop(); // Get the previous item
+    // Function to handle the go back button click event
+    function goBack() {
+      if (history.length > 1) {
+        history.pop(); // Remove the current item from history
+        const previousItem = history.pop(); // Get the previous item
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
+      } else if (history.length === 1) {
+        history.pop(); // Remove the last item from history
 
-    // Keep going back until we find a valid previous item that is not the initial selection
-    while (previousItem === currentSelection && history.length > 0) {
-      previousItem = history.pop();
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.selectedIndex = -1;
+
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.innerHTML = '';
+      }
     }
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  }
-}
-
-
 
     // Function to push the selected item to the history
     function pushHistory(item) {
