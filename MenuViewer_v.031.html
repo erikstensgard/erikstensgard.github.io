@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Test</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 8px;
+    }
+
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="goBackButton">&larr; Go Back</button>
+
+  <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
+
+  <select id="filterDropdown">
+    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
+  </select>
+
+  <div id="resultContainer"></div>
+
+  <script>
+// Fetch OMJSON Data
+async function fetchOMData() {
+  const response = await fetch('OMJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Fetch ODJSON Data
+async function fetchODData() {
+  const response = await fetch('ODJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
+
+// Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
+
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.Name;
+    if (item.Name === "ORZID2 GMENU ABX INPT MAIN") {
+      option.selected = true;
+    }
+    dropdown.appendChild(option);
+  });
+}
+
+// Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingData.Name);
+  } else {
+    matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      createODTable(selectedData);
+      pushHistory(selectedData.Item);
+    }
+  }
+}
+
+// Function to create the table with OMJSON data
+function createOMTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
+
+  const tbody = document.createElement('tbody');
+
+  for (const [key, value] of Object.entries(selectedData)) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.textContent = `${key}: ${value}`;
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
+
+// Function to create the table with ODJSON data
+function createODTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
+
+  const tbody = document.createElement('tbody');
+
+  for (const [key, value] of Object.entries(selectedData)) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.textContent = `${key}: ${value}`;
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  resultContainer.appendChild(table);
+}
+
+// Initialize the application
+async function initialize() {
+  omData = await fetchOMData();
+  odData = await fetchODData();
+  populateDropdown(omData);
+
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.addEventListener('change', filterData);
+
+  const goBackButton = document.getElementById('goBackButton');
+  goBackButton.addEventListener('click', goBack);
+}
+
+// Call the initialize function
+initialize();
+
+  </script>
+</body>
+
+</html>
