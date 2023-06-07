@@ -195,29 +195,26 @@
       }
     }
 
-   // Function to handle the go back button click event
+// Function to handle the go back button click event
 function goBack() {
   if (history.length > 1) {
     history.pop(); // Remove the current item from history
-    const previousItem = history.pop(); // Get the previous item
+    const previousItem = history[history.length - 1]; // Get the previous item
 
     if (previousItem !== 'ORZID2 GMENU ABX INPT MAIN') {
       const dropdown = document.getElementById('filterDropdown');
       dropdown.value = previousItem;
       filterData({ target: dropdown });
-    } else {
-      history.push(previousItem); // Push the item back to the history
     }
   } else if (history.length === 1) {
     history.pop(); // Remove the last item from history
 
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.selectedIndex = -1;
-
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = '';
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    filterData({ target: dropdown });
   }
 }
+
 
 
     // Function to push the selected item to the history
