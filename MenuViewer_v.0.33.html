@@ -200,19 +200,11 @@ function goBack() {
   if (history.length > 1) {
     history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
-
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
-  } else if (history.length === 1) {
-    history.pop(); // Remove the last item from history
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    filterData({ target: dropdown });
   }
 }
-
 
 
     // Function to push the selected item to the history
@@ -223,7 +215,7 @@ function goBack() {
     // Function to load the main menu by default
     function loadMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
       filterData({ target: dropdown });
     }
 
@@ -242,9 +234,10 @@ function goBack() {
       const mainMenuButton = document.getElementById('mainMenuButton');
       mainMenuButton.addEventListener('click', loadMainMenu);
 
-      loadMainMenu();
+      loadMainMenu(); // Load the main menu by default
     }
 
+    // Call the initialize function
     initialize();
   </script>
 </body>
