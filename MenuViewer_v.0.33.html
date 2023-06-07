@@ -198,13 +198,20 @@
 // Function to handle the go back button click event
 function goBack() {
   if (history.length > 1) {
-    history.pop(); // Remove the current item from history
-    const previousItem = history[history.length - 1]; // Get the previous item
+    const currentSelection = history.pop(); // Remove the current item from history
+    let previousItem = history.pop(); // Get the previous item
+
+    // Keep going back until we find a valid previous item that is not the initial selection
+    while (previousItem === currentSelection && history.length > 0) {
+      previousItem = history.pop();
+    }
+
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
   }
 }
+
 
 
     // Function to push the selected item to the history
