@@ -222,21 +222,27 @@ function populateDropdown(data) {
       history.push(item);
     }
 
-    // Initialize the application
-    async function initialize() {
-      omData = await fetchOMData();
-      odData = await fetchODData();
-      populateDropdown(omData);
+   // Initialize the application
+async function initialize() {
+  omData = await fetchOMData();
+  odData = await fetchODData();
+  populateDropdown(omData);
 
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.addEventListener('change', filterData);
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.addEventListener('change', filterData);
 
-      const goBackButton = document.getElementById('goBackButton');
-      goBackButton.addEventListener('click', goBack);
-    }
+  const goBackButton = document.getElementById('goBackButton');
+  goBackButton.addEventListener('click', goBack);
 
-    // Call the initialize function
-    initialize();
+  // Call filterData with the initial value
+  const initialValue = 'ORZID2 GMENU ABX INPT MAIN';
+  dropdown.value = initialValue;
+  filterData({ target: dropdown });
+}
+
+// Call the initialize function
+initialize();
+
   </script>
 </body>
 
