@@ -84,7 +84,7 @@
         selectedData = matchingItem;
         createOMTable(matchingItem);
         pushHistory(matchingItem.Name);
-      } else {
+      } else if (!item.Item) {
         matchingItemIndex = odData.findIndex(
           odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
@@ -97,74 +97,73 @@
       }
     }
 
- // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
+    // Function to create the table with OMJSON data
+    function createOMTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
 
-  for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
 
-    for (let column = 1; column <= columns; column++) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
 
-      const displayCell = document.createElement('td');
+          const displayCell = document.createElement('td');
 
-      if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header } = matchingItem;
-          const cellContent = Text || Item || '';
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header } = matchingItem;
+              const cellContent = Text || Item || '';
 
-          const cellContentElement = document.createElement('div');
-          cellContentElement.textContent = cellContent;
+              const cellContentElement = document.createElement('div');
+              cellContentElement.textContent = cellContent;
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-          }
+              if (Header === 1) {
+                cellContentElement.classList.add('bold');
+              }
 
-          if (Item) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem);
+              if (Item) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              } else if (!Text && matchingItem.Item) {
+                const odMatchingItem = odData.find(
+                  odItem => odItem.Name.trim().toLowerCase() === matchingItem.Item.trim().toLowerCase()
+                );
+
+                if (odMatchingItem && odMatchingItem['Display Text']) {
+                  const odDisplayText = odMatchingItem['Display Text'];
+                  cellContentElement.textContent = odDisplayText;
+                }
+              }
+
+              displayCell.appendChild(cellContentElement);
             });
-          } else if (!Text) {
-            const odMatchingItem = odData.find(
-              odItem => odItem.Name.trim().toLowerCase() === matchingItem.Item.trim().toLowerCase()
-            );
-
-            if (odMatchingItem && odMatchingItem['Display Text']) {
-              const odDisplayText = odMatchingItem['Display Text'];
-              cellContentElement.textContent = odDisplayText;
-            }
           }
 
-          displayCell.appendChild(cellContentElement);
-        });
+          bodyRow.appendChild(displayCell);
+        }
+
+        tbody.appendChild(bodyRow);
       }
 
-      bodyRow.appendChild(displayCell);
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
+      }
     }
-
-    tbody.appendChild(bodyRow);
-  }
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
@@ -205,24 +204,22 @@ function createOMTable(selectedData) {
       }
     }
 
-// Function to handle the go back button click event
-function goBack() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    let previousItem = history.pop(); // Get the previous item
+    // Function to handle the go back button click event
+    function goBack() {
+      if (history.length > 1) {
+        const currentSelection = history.pop(); // Remove the current item from history
+        let previousItem = history.pop(); // Get the previous item
 
-    // Keep going back until we find a valid previous item that is not the initial selection
-    while (previousItem === currentSelection && history.length > 0) {
-      previousItem = history.pop();
+        // Keep going back until we find a valid previous item that is not the initial selection
+        while (previousItem === currentSelection && history.length > 0) {
+          previousItem = history.pop();
+        }
+
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
+      }
     }
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  }
-}
-
-
 
     // Function to push the selected item to the history
     function pushHistory(item) {
@@ -241,20 +238,15 @@ function goBack() {
       omData = await fetchOMData();
       odData = await fetchODData();
       populateDropdown(omData);
-
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.addEventListener('change', filterData);
-
-      const goBackButton = document.getElementById('goBackButton');
-      goBackButton.addEventListener('click', goBack);
-
-      const mainMenuButton = document.getElementById('mainMenuButton');
-      mainMenuButton.addEventListener('click', loadMainMenu);
-
-      loadMainMenu(); // Load the main menu by default
+      loadMainMenu();
     }
 
-    // Call the initialize function
+    // Event listeners
+    document.getElementById('goBackButton').addEventListener('click', goBack);
+    document.getElementById('mainMenuButton').addEventListener('click', loadMainMenu);
+    document.getElementById('filterDropdown').addEventListener('change', filterData);
+
+    // Initialize the application
     initialize();
   </script>
 </body>
