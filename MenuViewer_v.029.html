@@ -139,28 +139,26 @@
 
       const tbody = document.createElement('tbody');
 
-      const { Details } = selectedData;
+      const { Item, Type, Length, Description } = selectedData;
 
-      Details.forEach(item => {
-        const bodyRow = document.createElement('tr');
+      const bodyRow = document.createElement('tr');
 
-        const cell1 = document.createElement('td');
-        const cell2 = document.createElement('td');
-        const cell3 = document.createElement('td');
-        const cell4 = document.createElement('td');
+      const cell1 = document.createElement('td');
+      const cell2 = document.createElement('td');
+      const cell3 = document.createElement('td');
+      const cell4 = document.createElement('td');
 
-        cell1.textContent = item.Item;
-        cell2.textContent = item.Type;
-        cell3.textContent = item.Length;
-        cell4.textContent = item.Description;
+      cell1.textContent = Item;
+      cell2.textContent = Type;
+      cell3.textContent = Length;
+      cell4.textContent = Description;
 
-        bodyRow.appendChild(cell1);
-        bodyRow.appendChild(cell2);
-        bodyRow.appendChild(cell3);
-        bodyRow.appendChild(cell4);
+      bodyRow.appendChild(cell1);
+      bodyRow.appendChild(cell2);
+      bodyRow.appendChild(cell3);
+      bodyRow.appendChild(cell4);
 
-        tbody.appendChild(bodyRow);
-      });
+      tbody.appendChild(bodyRow);
 
       table.appendChild(tbody);
 
