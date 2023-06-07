@@ -34,7 +34,7 @@
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
   <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN" selected>ORZID2 GMENU ABX INPT MAIN</option>
+    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
   </select>
 
   <div id="resultContainer"></div>
@@ -84,9 +84,15 @@
         createOMTable(matchingItem);
         pushHistory(matchingItem.Name);
       } else {
-        selectedData = item;
-        createODTable(item);
-        pushHistory(item.Item);
+        let matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
+
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+          pushHistory(selectedData.Item);
+        }
       }
     }
 
