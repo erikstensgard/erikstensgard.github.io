@@ -68,8 +68,8 @@ function populateDropdown(data) {
 
   data.forEach(item => {
     const option = document.createElement('option');
-    option.value = item['Name'];
-    option.textContent = item['Display Text'] !== '' ? item['Display Text'] : item['Name'];
+    option.value = item.Name;
+    option.textContent = item['Display Text'] !== '' ? item['Display Text'] : item.Name;
     dropdown.appendChild(option);
   });
 }
