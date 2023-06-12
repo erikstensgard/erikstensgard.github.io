@@ -184,7 +184,7 @@ function createOMTable(selectedData) {
       resultContainer.appendChild(table);
     }
 
-   // Function to filter data based on the selected option
+ // Function to filter data based on the selected option
 async function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
@@ -200,13 +200,11 @@ async function filterData(event) {
     pushHistory(odMatchingData.Item);
   }
 
-  // Scroll to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 }
-    
+
 // Function to handle the go back button click event
 function goBack() {
   if (history.length > 1) {
