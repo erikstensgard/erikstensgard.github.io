@@ -62,17 +62,18 @@
     let history = []; // History of selected items
 
     // Function to populate dropdown with OMJSON data
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
 
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.Name;
-        dropdown.appendChild(option);
-      });
-    }
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item['Name'];
+    option.textContent = item['Display Text'] !== '' ? item['Display Text'] : item['Name'];
+    dropdown.appendChild(option);
+  });
+}
+
 
 // Function to handle row click event
 function handleRowClick(item) {
