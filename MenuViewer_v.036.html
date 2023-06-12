@@ -61,18 +61,19 @@
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
 
-    // Function to populate dropdown with OMJSON data
+   // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
   data.forEach(item => {
     const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item['DisplayText'] !== '' ? item['Display Text'] : item.Name;
+    option.value = item['Name'];
+    option.textContent = item['DisplayText'] || item['Name'];
     dropdown.appendChild(option);
   });
 }
+
 
 
 // Function to handle row click event
