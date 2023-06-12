@@ -43,51 +43,6 @@
   <script>
     // Fetch OMJSON Data
     async function fetchOMData() {
-      const response = await fetch('<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Test</title>
-  <style>
-    table {
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      border: none;
-      padding: 8px;
-    }
-
-    .clickable {
-      color: blue;
-      cursor: pointer;
-    }
-
-    .bold {
-      font-weight: bold;
-      background-color: lightblue;
-    }
-  </style>
-</head>
-
-<body>
-  <button id="goBackButton">&larr; Go Back</button>
-  <button id="mainMenuButton">Main Menu</button>
-
-  <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
-
-  <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
-  </select>
-
-  <div id="resultContainer"></div>
-
-  <script>
-    // Fetch OMJSON Data
-    async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
       const data = await response.json();
       return data;
@@ -95,7 +50,7 @@
 
     // Fetch ODJSON Data
     async function fetchODData() {
-      const response = await fetch('MinneapolisODJSON.json');
+      const response = await fetch('ODJSON.json');
       const data = await response.json();
       return data;
     }
