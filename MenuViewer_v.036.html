@@ -68,7 +68,7 @@
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
 
-   // Function to populate dropdown with OMJSON data
+// Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -80,6 +80,7 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
+
 
     // Function to handle row click event
     function handleRowClick(item) {
