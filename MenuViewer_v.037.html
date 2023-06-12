@@ -26,48 +26,24 @@
       background-color: lightblue;
     }
 
-    .header {
+    /* Sticky header styles */
+    .sticky-header {
       position: sticky;
       top: 0;
-      background-color: #f5f5f5;
-    }
-
-    #container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 16px;
-    }
-
-    #buttons {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    #filterDropdown {
-      margin-right: 16px;
-    }
-
-    #resultContainer {
-      overflow-y: auto;
-      max-height: calc(100vh - 140px);
-      width: 100%;
+      z-index: 1;
+      background-color: white;
     }
   </style>
 </head>
 
 <body>
-  <div id="container">
-    <div id="buttons">
-      <button id="goBackButton">&larr; Go Back</button>
-      <button id="mainMenuButton">Main Menu</button>
-      <select id="filterDropdown"></select>
-    </div>
-
-    <div id="resultContainer"></div>
+  <div id="headerContainer" class="sticky-header">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <select id="filterDropdown"></select>
   </div>
+
+  <div id="resultContainer"></div>
 
   <script>
     // Fetch OMJSON Data
@@ -98,7 +74,7 @@
       data.forEach(item => {
         const option = document.createElement('option');
         option.value = item['Name'];
-        option.textContent = item['Display Text'] || item['Name'];
+        option.textContent = item['DisplayText'] || item['Name'];
         dropdown.appendChild(option);
       });
     }
@@ -106,8 +82,7 @@
     // Function to handle row click event
     function handleRowClick(item) {
       const matchingItem = omData.find(
-        omItem =>
-          omItem['Name'].trim().toLowerCase() === item.Item.trim().toLowerCase()
+        omItem => omItem['Name'].trim().toLowerCase() === item.Item.trim().toLowerCase()
       );
 
       if (matchingItem) {
@@ -115,9 +90,8 @@
         createOMTable(matchingItem);
         pushHistory(matchingItem['Name']);
       } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem =>
-            odItem['Name'].trim().toLowerCase() === item.Item.trim().toLowerCase()
+        matchingItemIndex = odData.findIndex(
+          odItem => odItem['Name'].trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
 
         if (matchingItemIndex !== -1) {
@@ -134,7 +108,7 @@
       // Scroll the page to the top
       window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: 'smooth'
       });
     }
 
@@ -187,10 +161,6 @@
 
               displayCell.appendChild(cellContentElement);
             });
-          }
-
-          if (row === 1) {
-            displayCell.classList.add('header');
           }
 
           bodyRow.appendChild(displayCell);
@@ -250,9 +220,13 @@
         createODTable(odMatchingData);
         pushHistory(odMatchingData.Item);
       }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
     }
 
-    // Function to handle Go Back button click event
+    // Function to handle the Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
         history.pop();
@@ -271,17 +245,28 @@
 
           if (matchingItemIndex !== -1) {
             selectedData = odData[matchingItemIndex];
-            createODTable(odData[matchingItemIndex]);
+            createODTable(selectedData);
           }
         }
+
+        // Scroll to the top of the table
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.scrollTop = 0;
+
+        // Scroll the page to the top
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
     }
 
-    // Function to handle Main Menu button click event
+    // Function to handle the Main Menu button click event
     function handleMainMenu() {
       selectedData = null;
-      createOMTable(null);
       history = [];
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
     }
 
     // Function to push the selected item to history
@@ -290,29 +275,24 @@
     }
 
     // Initialize the application
-    async function initializeApp() {
-      // Fetch OMJSON and ODJSON data
+    async function initialize() {
       omData = await fetchOMData();
       odData = await fetchODData();
 
-      // Populate the dropdown with OMJSON data
       populateDropdown(omData);
 
-      // Add event listener for the filter dropdown
-      const filterDropdown = document.getElementById('filterDropdown');
-      filterDropdown.addEventListener('change', filterData);
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.addEventListener('change', filterData);
 
-      // Add event listener for the Go Back button
       const goBackButton = document.getElementById('goBackButton');
       goBackButton.addEventListener('click', handleGoBack);
 
-      // Add event listener for the Main Menu button
       const mainMenuButton = document.getElementById('mainMenuButton');
       mainMenuButton.addEventListener('click', handleMainMenu);
     }
 
-    // Initialize the application
-    initializeApp();
+    // Initialize the application when the DOM is ready
+    document.addEventListener('DOMContentLoaded', initialize);
   </script>
 </body>
 
