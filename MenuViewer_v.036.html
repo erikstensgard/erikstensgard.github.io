@@ -26,26 +26,24 @@
       background-color: lightblue;
     }
 
-    /* Position fixed for buttons */
-    .fixed-buttons {
+    .top-left {
       position: fixed;
-      top: 10px;
-      right: 10px;
+      top: 0;
+      left: 0;
+      margin: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="fixed-buttons">
+  <div class="top-left">
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
   </div>
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
-  <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
-  </select>
+  <select id="filterDropdown"></select>
 
   <div id="resultContainer"></div>
 
@@ -78,7 +76,7 @@
       data.forEach(item => {
         const option = document.createElement('option');
         option.value = item.Name;
-        option.textContent = item.Name;
+        option.textContent = item['Display Text'] || item.Name;
         dropdown.appendChild(option);
       });
     }
@@ -104,16 +102,6 @@
           pushHistory(selectedData.Item);
         }
       }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
     }
 
     // Function to create the table with OMJSON data
@@ -213,11 +201,8 @@
         pushHistory(odMatchingData.Item);
       }
 
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      // Scroll to the top of the table
+      window.scrollTo(0, 0);
     }
 
     // Function to handle the go back button click event
@@ -249,30 +234,32 @@
       filterData({ target: dropdown });
     }
 
-    // Event listener for filter dropdown change
-    const filterDropdown = document.getElementById('filterDropdown');
-    filterDropdown.addEventListener('change', filterData);
-
-    // Event listener for go back button click
-    const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', goBack);
-
-    // Event listener for main menu button click
-    const mainMenuButton = document.getElementById('mainMenuButton');
-    mainMenuButton.addEventListener('click', loadMainMenu);
-
-    // Fetch OMJSON and ODJSON data
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omJson, odJson]) => {
-        omData = omJson;
-        odData = odJson;
-
+    // Initialize the application
+    async function initialize() {
+      try {
+        omData = await fetchOMData();
+        odData = await fetchODData();
         populateDropdown(omData);
+
+        // Event listeners
+        const filterDropdown = document.getElementById('filterDropdown');
+        filterDropdown.addEventListener('change', filterData);
+
+        const goBackButton = document.getElementById('goBackButton');
+        goBackButton.addEventListener('click', goBack);
+
+        const mainMenuButton = document.getElementById('mainMenuButton');
+        mainMenuButton.addEventListener('click', loadMainMenu);
 
         // Load the main menu by default
         loadMainMenu();
-      })
-      .catch(error => console.error(error));
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Initialize the application
+    initialize();
   </script>
 </body>
 
