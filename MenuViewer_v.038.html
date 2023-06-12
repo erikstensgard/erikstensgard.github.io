@@ -1,71 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Test</title>
   <style>
-    /* Styles for table */
+    /* Styles for the table */
     .table {
       border-collapse: collapse;
+      width: 100%;
     }
 
-    .table th,
     .table td {
-      border: none;
+      border: 1px solid #ddd;
       padding: 8px;
+      text-align: left;
     }
 
-    .bold {
+    .table .bold {
       font-weight: bold;
-      background-color: lightblue;
     }
 
-    /* Styles for dropdown and buttons */
-    .menu-container {
-      position: sticky;
+    .table .clickable {
+      cursor: pointer;
+      text-decoration: underline;
+      color: blue;
+    }
+
+    /* Styles for the result container */
+    #resultContainer {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* Styles for the buttons */
+    #buttonContainer {
+      position: fixed;
       top: 0;
-      background-color: #f0f0f0;
-      padding: 10px;
-      z-index: 1;
+      left: 0;
+      background-color: #f9f9f9;
+      padding: 8px;
+      z-index: 999;
     }
 
-    .menu-container select,
-    .menu-container button {
-      margin-right: 10px;
-    }
-
-    /* Media queries for different screen sizes */
-    @media only screen and (max-width: 768px) {
-      .table td,
-      .table th {
-        font-size: 14px;
-      }
-    }
-
-    @media only screen and (max-width: 480px) {
-      .table td,
-      .table th {
-        font-size: 12px;
-      }
+    #filterDropdown {
+      margin-right: 16px;
     }
   </style>
 </head>
 
 <body>
-  <div class="menu-container">
-    <button id="goBackButton">&larr; Go Back</button>
+  <div id="buttonContainer">
+    <button id="goBackButton">Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
-
     <select id="filterDropdown">
       <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
+      <option value="ORZID2 GMENU ABX INPT MNU">ORZID2 GMENU ABX INPT MNU</option>
+      <option value="ORZID2 GMENU ABX INPT PF2">ORZID2 GMENU ABX INPT PF2</option>
+      <option value="ORZID2 GMENU ABX INPT PF3">ORZID2 GMENU ABX INPT PF3</option>
+      <option value="ORZID2 GMENU ABX INPT PF4">ORZID2 GMENU ABX INPT PF4</option>
     </select>
   </div>
 
   <div id="resultContainer"></div>
 
   <script>
+    let omData = [];
+    let odData = [];
+    let selectedData = null;
+    let history = [];
+
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
@@ -80,193 +81,160 @@
       return data;
     }
 
-    // Global variables
-    let omData = []; // OMJSON data
-    let odData = []; // ODJSON data
-    let selectedData = null; // Currently selected data
-    let history = []; // History of selected items
-
-    // Function to populate dropdown with OMJSON data
+    // Populate the dropdown with options
     function populateDropdown(data) {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
 
       data.forEach(item => {
         const option = document.createElement('option');
         option.value = item.Name;
-        option.textContent = item.DisplayText || item.Name;
+        option.textContent = item.DisplayText;
         dropdown.appendChild(option);
       });
     }
 
-    // Function to handle row click event
+    // Handle row click event
     function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+      if (item.Item) {
+        const matchingData = omData.find(data => data.Name === item.Item);
 
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
+        if (matchingData) {
+          selectedData = matchingData;
+          createOMTable(matchingData);
+          pushHistory(matchingData.Name);
+        } else {
+          const odMatchingData = odData.find(data => data.Name === item.Item);
 
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
+          if (odMatchingData) {
+            selectedData = odMatchingData;
+            createODTable(odMatchingData);
+            pushHistory(odMatchingData.Item);
+          }
         }
       }
+    }
 
-      // Scroll to the top of the table
+    // Scroll to the top of the table
+    function scrollToTop() {
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
     }
 
-    // Function to create the table with OMJSON data
-    function createOMTable(selectedData) {
+    // Function to create the OM table
+    function createOMTable(data) {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
       const table = document.createElement('table');
       table.classList.add('table');
 
-      const tbody = document.createElement('tbody');
+      const headerRow = document.createElement('tr');
+      const headerNameCell = document.createElement('td');
+      headerNameCell.classList.add('bold');
+      headerNameCell.textContent = 'Name';
+      const headerDisplayTextCell = document.createElement('td');
+      headerDisplayTextCell.classList.add('bold');
+      headerDisplayTextCell.textContent = 'Display Text';
 
-      const { Contents } = selectedData;
-      const maxRow = Math.max(...Contents.map(item => item.Row));
-      const columns = Math.max(...Contents.map(item => item.Column));
+      headerRow.appendChild(headerNameCell);
+      headerRow.appendChild(headerDisplayTextCell);
+      table.appendChild(headerRow);
 
-      for (let row = 1; row <= maxRow; row++) {
-        const bodyRow = document.createElement('tr');
+      const row = document.createElement('tr');
+      const nameCell = document.createElement('td');
+      nameCell.textContent = data.Name;
+      const displayTextCell = document.createElement('td');
+      displayTextCell.textContent = data.DisplayText;
 
-        for (let column = 1; column <= columns; column++) {
-          const matchingItems = Contents.filter(
-            item => item.Row === row && item.Column === column
-          );
+      row.appendChild(nameCell);
+      row.appendChild(displayTextCell);
+      table.appendChild(row);
 
-          const displayCell = document.createElement('td');
-
-          if (matchingItems.length > 0) {
-            matchingItems.forEach(matchingItem => {
-              const { Text, Item, Header, DisplayText } = matchingItem;
-              let cellContent = Text || '';
-
-              if (cellContent === '' && DisplayText) {
-                cellContent = DisplayText;
-              } else if (cellContent === '' && Item) {
-                cellContent = Item;
-              }
-
-              const cellContentElement = document.createElement('div');
-              cellContentElement.textContent = cellContent;
-
-              if (Header === 1) {
-                cellContentElement.classList.add('bold');
-              }
-
-              if (Item) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-              }
-
-              displayCell.appendChild(cellContentElement);
-            });
-          }
-
-          bodyRow.appendChild(displayCell);
-        }
-
-        tbody.appendChild(bodyRow);
-      }
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      if (selectedData) {
-        resultContainer.appendChild(table);
-      }
-    }
-
-    // Function to create the table with ODJSON data
-    function createODTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
-
-      const tbody = document.createElement('tbody');
-
-      for (const [key, value] of Object.entries(selectedData)) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.textContent = `${key}: ${value}`;
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-      }
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
       resultContainer.appendChild(table);
     }
 
-    // Function to filter data based on the selected option
-    async function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
+    // Function to create the OD table
+    function createODTable(data) {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
+      const table = document.createElement('table');
+      table.classList.add('table');
+
+      const headerRow = document.createElement('tr');
+      const headerItemCell = document.createElement('td');
+      headerItemCell.classList.add('bold');
+      headerItemCell.textContent = 'Item';
+
+      headerRow.appendChild(headerItemCell);
+      table.appendChild(headerRow);
+
+      data.Items.forEach(item => {
+        const row = document.createElement('tr');
+        const itemCell = document.createElement('td');
+        itemCell.classList.add('clickable');
+        itemCell.textContent = item;
+
+        itemCell.addEventListener('click', () => handleRowClick(item));
+        row.appendChild(itemCell);
+        table.appendChild(row);
+      });
+
+      resultContainer.appendChild(table);
+    }
+
+    // Function to handle the filter dropdown change event
+    function filterData() {
+      const dropdown = document.getElementById('filterDropdown');
+      const selectedOption = dropdown.options[dropdown.selectedIndex];
+      const selectedValue = selectedOption.value;
+
+      const matchingData = omData.find(item => item.Name === selectedValue);
 
       if (matchingData) {
         selectedData = matchingData;
         createOMTable(matchingData);
         pushHistory(matchingData.Name);
       } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
+        const odMatchingData = odData.find(item => item.Name === selectedValue);
+
+        if (odMatchingData) {
+          selectedData = odMatchingData;
+          createODTable(odMatchingData);
+          pushHistory(odMatchingData.Name);
+        }
       }
 
       // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
+      scrollToTop();
     }
 
     // Function to handle the go back button click event
     function handleGoBack() {
-      if (history.length > 1) {
-        const currentSelection = history.pop();
-        const previousSelection = history.pop();
+      const previousSelection = history.pop();
+      const resultContainer = document.getElementById('resultContainer');
 
-        if (previousSelection) {
-          const matchingData = omData.find(item => item.Name === previousSelection);
+      if (previousSelection) {
+        const matchingData = omData.find(item => item.Name === previousSelection);
 
-          if (matchingData) {
-            selectedData = matchingData;
-            createOMTable(matchingData);
-          } else {
-            const odMatchingData = odData.find(item => item.Name === previousSelection);
+        if (matchingData) {
+          selectedData = matchingData;
+          createOMTable(matchingData);
+        } else {
+          const odMatchingData = odData.find(item => item.Name === previousSelection);
+
+          if (odMatchingData) {
             selectedData = odMatchingData;
             createODTable(odMatchingData);
           }
-        } else {
-          selectedData = null;
-          const resultContainer = document.getElementById('resultContainer');
-          resultContainer.innerHTML = '';
         }
-
-        // Scroll to the top of the table
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.scrollTop = 0;
+      } else {
+        selectedData = null;
+        resultContainer.innerHTML = '';
       }
+
+      // Scroll to the top of the table
+      scrollToTop();
     }
 
     // Function to handle the main menu button click event
@@ -275,48 +243,55 @@
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
 
-      // Reset dropdown to default value
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.selectedIndex = 0;
-
-      // Clear history
-      history = [];
-
-      // Scroll to the top of the page
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      // Scroll to the top of the table
+      scrollToTop();
     }
 
-    // Function to push the selected item to the history array
-    function pushHistory(item) {
-      history.push(item);
+    // Function to push selection to history
+    function pushHistory(selection) {
+      history.push(selection);
     }
 
-    // Add event listeners
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-
-    // Initialize the app
-    async function initializeApp() {
+    // Initialize the application
+    async function initialize() {
       omData = await fetchOMData();
       odData = await fetchODData();
       populateDropdown(omData);
 
-      // Set default selection
+      // Set the default selection
       const defaultSelection = 'ORZID2 GMENU ABX INPT MAIN';
-      const matchingDefaultData = omData.find(item => item.Name === defaultSelection);
+      const defaultMatchingData = omData.find(item => item.Name === defaultSelection);
 
-      if (matchingDefaultData) {
-        selectedData = matchingDefaultData;
-        createOMTable(matchingDefaultData);
-        pushHistory(matchingDefaultData.Name);
+      if (defaultMatchingData) {
+        selectedData = defaultMatchingData;
+        createOMTable(defaultMatchingData);
+        pushHistory(defaultMatchingData.Name);
+      } else {
+        const defaultODMatchingData = odData.find(item => item.Name === defaultSelection);
+
+        if (defaultODMatchingData) {
+          selectedData = defaultODMatchingData;
+          createODTable(defaultODMatchingData);
+          pushHistory(defaultODMatchingData.Name);
+        }
       }
+
+      // Scroll to the top of the table
+      scrollToTop();
+
+      // Add event listeners
+      const filterDropdown = document.getElementById('filterDropdown');
+      filterDropdown.addEventListener('change', filterData);
+
+      const goBackButton = document.getElementById('goBackButton');
+      goBackButton.addEventListener('click', handleGoBack);
+
+      const mainMenuButton = document.getElementById('mainMenuButton');
+      mainMenuButton.addEventListener('click', handleMainMenu);
     }
 
-    initializeApp();
+    // Initialize the application
+    initialize();
   </script>
 </body>
 
