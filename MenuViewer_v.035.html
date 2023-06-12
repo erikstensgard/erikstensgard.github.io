@@ -184,23 +184,29 @@ function createOMTable(selectedData) {
       resultContainer.appendChild(table);
     }
 
-    // Function to filter data based on the selected option
-    async function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
+   // Function to filter data based on the selected option
+async function filterData(event) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
-      }
-    }
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
 
+  // Scroll to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+    
 // Function to handle the go back button click event
 function goBack() {
   if (history.length > 1) {
