@@ -75,8 +75,8 @@ function populateDropdown(data) {
 
   data.forEach(item => {
     const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item['Display Text'] || item.Name; // Use "Display Text" if available, otherwise fallback to "Name"
+    option.value = item['Display Text'];
+    option.textContent = item['Display Text'] || item.Name;
     dropdown.appendChild(option);
   });
 }
