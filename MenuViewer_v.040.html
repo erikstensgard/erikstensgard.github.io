@@ -6,16 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
   <style>
-    /* Common styles */
-    table {
-      border-collapse: collapse;
-    }
+   /* Common styles */
+table {
+  border-collapse: collapse;
+  padding: 0; /* Reduce table padding */
+}
 
-    th,
-    td {
-      border: none;
-      padding: 8px;
-    }
+th,
+td {
+  border: none;
+  padding: 4px; /* Reduce cell padding */
+}
 
     .clickable {
       color: blue;
@@ -65,12 +66,12 @@
 </head>
 
 <body>
-  <div id="header">
-    <button type="button" class="download-button">Download JSON</button>
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <select id="filterDropdown"></select>
-  </div>
+<div id="header">
+  <button id="goBackButton">&larr; Go Back</button>
+  <button id="mainMenuButton">Main Menu</button>
+  <select id="filterDropdown"></select>
+  <button id="downloadJSONButton">Download JSON</button>
+</div>
 
   <div id="resultContainer"></div>
 
@@ -277,29 +278,26 @@
     function pushHistory(item) {
       history.push(item);
     }
-function handleDownloadButtonClick() {
-  // Get the selected data
-  const selectedData = omData.find(item => item.Name === document.getElementById('filterDropdown').value);
+    
+// Function to handle the Download JSON button click event
+function handleDownloadJSON() {
+  const displayText = selectedData.DisplayText || selectedData.Name;
+  const data = JSON.stringify(selectedData, null, 2);
+  const filename = `${displayText}.json`;
 
-  // Create a JSON string from the selected data
-  const jsonString = JSON.stringify(selectedData, null, 2);
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+  document.body.appendChild(element);
 
-  // Create a new anchor element with the download attribute set to the name of the JSON file
-  const anchorElement = document.createElement('a');
-  anchorElement.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonString);
-  anchorElement.download = selectedData.Name + '.json';
+  element.click();
 
-  // Append the anchor element to the document body
-  document.body.appendChild(anchorElement);
-
-  // Click the anchor element to download the JSON file
-  anchorElement.click();
+  document.body.removeChild(element);
 }
 
-// Attach the click event listener to the download button
-document.getElementById('download-button').addEventListener('click', handleDownloadButtonClick);
-
     // Attach event listeners
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
@@ -323,3 +321,4 @@ document.getElementById('download-button').addEventListener('click', handleDownl
 </body>
 
 </html>
+
