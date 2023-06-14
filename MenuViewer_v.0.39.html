@@ -200,10 +200,13 @@ function createOMTable(selectedData) {
     }
 
     if (!rowHasContent) {
-      const emptyCell = document.createElement('td');
-      emptyCell.textContent = ''; // Add empty content to create spacing
-      emptyCell.style.visibility = 'hidden'; // Hide the empty cell
-      bodyRow.appendChild(emptyCell);
+      // Add empty cells for the empty row
+      for (let column = 1; column <= columns; column++) {
+        const emptyCell = document.createElement('td');
+        emptyCell.textContent = ''; // Add empty content to create spacing
+        emptyCell.style.visibility = 'hidden'; // Hide the empty cell
+        bodyRow.appendChild(emptyCell);
+      }
     }
 
     tbody.appendChild(bodyRow);
@@ -222,7 +225,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(noDataMessage);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
