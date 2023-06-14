@@ -65,12 +65,12 @@
 </head>
 
 <body>
-  <div id="header">
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <select id="filterDropdown"></select>
-    <button id="rawDataButton">Raw Data</button>
-  </div>
+<div id="header">
+  <button id="goBackButton">&larr; Go Back</button>
+  <button id="mainMenuButton">Main Menu</button>
+  <select id="filterDropdown"></select>
+  <button id="rawDataButton">Raw Data</button>
+</div>
 
   <div id="resultContainer"></div>
 
@@ -277,8 +277,15 @@
     function pushHistory(item) {
       history.push(item);
     }
+    
+// Function to handle the Raw Data button click event
+function handleRawData() {
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = JSON.stringify(selectedData, null, 2);
+}
 
     // Attach event listeners
+    document.getElementById('rawDataButton').addEventListener('click', handleRawData);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
