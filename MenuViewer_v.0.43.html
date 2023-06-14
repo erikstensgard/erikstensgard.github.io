@@ -138,7 +138,7 @@ function handleRowClick(item) {
   resultContainer.scrollTop = 0;
 
   // Reset the zoom level of the entire page to default
-  document.body.style.zoom = "1";
+  document.body.style.transform = "scale(1)";
 
   // Scroll the page to the top
   window.scrollTo({
@@ -146,6 +146,7 @@ function handleRowClick(item) {
     behavior: 'smooth'
   });
 }
+
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
