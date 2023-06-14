@@ -5,52 +5,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
- <style>
-  /* Common styles */
-  table {
-    border-collapse: collapse;
-    padding: 0; /* Reduce table padding */
-  }
+  <style>
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
 
-  th,
-  td {
-    border: none;
-    padding: 4px; /* Reduce cell padding */
-  }
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
 
-  .clickable {
-    color: blue;
-    cursor: pointer;
-  }
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
 
-  .bold {
-    font-weight: bold;
-    background-color: lightblue; /* Set your desired background color here */
-  }
+    .bold {
+      font-weight: bold;
+      background-color: lightblue; /* Set your desired background color here */
+    }
 
-  /* Header styles */
-  #header {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 1;
-  }
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+    }
 
-  /* Table styles */
-  .table {
-    table-layout: fixed;
-    width: 100%;
-  }
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
 
-  .table td {
-    white-space: nowrap; /* Disable text wrapping within a cell */
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+    .table td {
+      white-space: nowrap; /* Disable text wrapping within a cell */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-  /* Remove media queries to maintain fixed layout */
+    /* Media queries for responsive design */
+    @media screen and (max-width: 768px) {
+      /* Adjust table font size for smaller screens */
+      .table td {
+        font-size: 12px;
+      }
+    }
 
-</style>
+    @media screen and (max-width: 480px) {
+      /* Further adjust table font size for even smaller screens */
+      .table td {
+        font-size: 10px;
+      }
+    }
+
+  </style>
 
 </head>
 
