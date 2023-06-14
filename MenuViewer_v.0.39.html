@@ -216,6 +216,19 @@ function createOMTable(selectedData) {
     noDataMessage.textContent = 'No data available.';
     resultContainer.appendChild(noDataMessage);
   }
+
+  // Add empty rows for missing values
+  for (let row = 1; row <= maxRow; row++) {
+    const matchingItems = Contents.filter(item => item.Row === row);
+    if (matchingItems.length === 0) {
+      const emptyRow = document.createElement('tr');
+      for (let column = 1; column <= columns; column++) {
+        const emptyCell = document.createElement('td');
+        emptyRow.appendChild(emptyCell);
+      }
+      tbody.appendChild(emptyRow);
+    }
+  }
 }
 
     // Function to create the table with ODJSON data
