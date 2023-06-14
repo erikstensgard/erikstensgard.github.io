@@ -69,7 +69,7 @@
   <button id="goBackButton">&larr; Go Back</button>
   <button id="mainMenuButton">Main Menu</button>
   <select id="filterDropdown"></select>
-  <button id="rawDataButton">Raw Data</button>
+  <button id="downloadJSONButton">Download JSON</button>
 </div>
 
   <div id="resultContainer"></div>
@@ -278,10 +278,11 @@
       history.push(item);
     }
     
-// Function to handle the Raw Data button click event
-function handleRawData() {
+// Function to handle the Download JSON button click event
+function handleDownloadJSON() {
+  const displayText = selectedData.DisplayText || selectedData.Name;
   const data = JSON.stringify(selectedData, null, 2);
-  const filename = 'selected_data.json';
+  const filename = `${displayText}.json`;
 
   const element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
@@ -294,9 +295,8 @@ function handleRawData() {
   document.body.removeChild(element);
 }
 
-
     // Attach event listeners
-    document.getElementById('rawDataButton').addEventListener('click', handleRawData);
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
