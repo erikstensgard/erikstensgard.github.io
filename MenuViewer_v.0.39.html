@@ -65,12 +65,12 @@
 </head>
 
 <body>
-  <div id="header">
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <select id="filterDropdown"></select>
-    <button id="rawDataButton">Raw Data</button>
-  </div>
+<div id="header">
+  <button id="goBackButton">&larr; Go Back</button>
+  <button id="mainMenuButton">Main Menu</button>
+  <select id="filterDropdown"></select>
+  <button id="rawDataButton">Raw Data</button>
+</div>
 
   <div id="resultContainer"></div>
 
@@ -252,74 +252,73 @@
     // Function to handle the Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove current selection
-        const previousSelection = history.pop(); // Get previous selection
+        const currentSelection = history.pop(); // Remove the current item from history
+        let previousItem = history.pop(); // Get the previous item
 
-        const matchingItem = omData.find(
-          omItem => omItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
-        );
-
-        if (matchingItem) {
-          selectedData = matchingItem;
-          createOMTable(matchingItem);
-        } else {
-          const matchingItemIndex = odData.findIndex(
-            odItem => odItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
-          );
-
-          if (matchingItemIndex !== -1) {
-            selectedData = odData[matchingItemIndex];
-            createODTable(selectedData);
-          }
+        // Keep going back until we find a valid previous item that is not the initial selection
+        while (previousItem === currentSelection && history.length > 0) {
+          previousItem = history.pop();
         }
-      } else if (history.length === 1) {
-        // Clear the table and reset selectedData
-        selectedData = null;
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = '';
-        history.pop(); // Remove the last item from history
+
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
       }
+    }
+
+    // Function to handle the Main Menu button click event
+    function handleMainMenu() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      filterData({ target: dropdown });
     }
 
     // Function to push the selected item to the history
     function pushHistory(item) {
-      const existingIndex = history.findIndex(
-        historyItem => historyItem.trim().toLowerCase() === item.trim().toLowerCase()
-      );
-
-      if (existingIndex !== -1) {
-        // If the item already exists in the history, remove it
-        history.splice(existingIndex, 1);
-      }
-
-      history.push(item); // Push the new item to the history
+      history.push(item);
     }
+    
+// Function to handle the Raw Data button click event
+function handleRawData() {
+  const data = JSON.stringify(selectedData, null, 2);
+  const filename = 'selected_data.json';
 
-    // Function to handle the Raw Data button click event
-    function handleRawDataClick() {
-      const rawData = JSON.stringify(selectedData, null, 2);
-      const blob = new Blob([rawData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'selected_data.json';
-      link.click();
-      URL.revokeObjectURL(url);
-    }
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+  document.body.appendChild(element);
 
-    // Event listeners
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+    // Attach event listeners
+    document.getElementById('rawDataButton').addEventListener('click', handleRawData);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
-    document.getElementById('rawDataButton').addEventListener('click', handleRawDataClick);
 
-    // Initialization
-    (async function () {
-      omData = await fetchOMData();
-      odData = await fetchODData();
-      populateDropdown(omData);
-    })();
+    // Fetch data and initialize the dropdown
+    Promise.all([fetchOMData(), fetchODData()])
+      .then(([omjsonData, odjsonData]) => {
+        omData = omjsonData;
+        odData = odjsonData;
+
+        populateDropdown(omData);
+
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+        filterData({ target: dropdown });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   </script>
 </body>
 
 </html>
+
 
