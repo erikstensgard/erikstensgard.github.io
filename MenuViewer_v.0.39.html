@@ -252,73 +252,83 @@
     // Function to handle "Go Back" button click
     function handleGoBack() {
       if (history.length > 1) {
-        history.pop(); // Remove the current selection
-        const previousSelection = history.pop(); // Get the previous selection
+        history.pop();
+        const previousItem = history[history.length - 1];
 
-        if (previousSelection) {
-          const matchingItem = omData.find(
-            omItem => omItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
+        const matchingItem = omData.find(
+          omItem => omItem.Name.trim().toLowerCase() === previousItem.trim().toLowerCase()
+        );
+
+        if (matchingItem) {
+          selectedData = matchingItem;
+          createOMTable(matchingItem);
+        } else {
+          const matchingItemIndex = odData.findIndex(
+            odItem => odItem.Name.trim().toLowerCase() === previousItem.trim().toLowerCase()
           );
 
-          if (matchingItem) {
-            selectedData = matchingItem;
-            createOMTable(matchingItem);
-          } else {
-            const matchingItemIndex = odData.findIndex(
-              odItem => odItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
-            );
-
-            if (matchingItemIndex !== -1) {
-              selectedData = odData[matchingItemIndex];
-              createODTable(selectedData);
-            }
+          if (matchingItemIndex !== -1) {
+            selectedData = odData[matchingItemIndex];
+            createODTable(selectedData);
           }
         }
-      }
 
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
+        // Scroll to the top of the table
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.scrollTop = 0;
+
+        // Scroll the page to the top
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
     }
 
     // Function to handle "Main Menu" button click
     function handleMainMenu() {
       selectedData = null;
       history = [];
+
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
     }
 
-    // Function to push the current selection to history
+    // Function to handle "Raw Data" button click
+    function handleRawData() {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(selectedData, null, 2);
+
+      resultContainer.appendChild(pre);
+    }
+
+    // Function to push an item to history
     function pushHistory(item) {
       history.push(item);
     }
 
-    // Function to handle "Raw Data" button click
-    function handleRawData() {
-      if (selectedData) {
-        const rawData = JSON.stringify(selectedData, null, 2);
-        const rawCodeElement = document.createElement('pre');
-        rawCodeElement.textContent = rawData;
-
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = '';
-        resultContainer.appendChild(rawCodeElement);
-      }
-    }
-
     // Event listeners
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
-    document.getElementById('rawDataButton').addEventListener('click', handleRawData);
-
-    // Fetch OMJSON and ODJSON data on page load
-    (async () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       omData = await fetchOMData();
       odData = await fetchODData();
+
       populateDropdown(omData);
-    })();
+
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.addEventListener('change', filterData);
+
+      const goBackButton = document.getElementById('goBackButton');
+      goBackButton.addEventListener('click', handleGoBack);
+
+      const mainMenuButton = document.getElementById('mainMenuButton');
+      mainMenuButton.addEventListener('click', handleMainMenu);
+
+      const rawDataButton = document.getElementById('rawDataButton');
+      rawDataButton.addEventListener('click', handleRawData);
+    });
   </script>
 </body>
 
