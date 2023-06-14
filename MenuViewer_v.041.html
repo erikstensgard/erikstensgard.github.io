@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
   <style>
-  /* Common styles */
+ /* Common styles */
 table {
   border-collapse: collapse;
 }
@@ -24,6 +24,9 @@ td {
 
 .bold {
   font-weight: bold;
+}
+
+.bold + .bold {
   background-color: lightblue;
 }
 
@@ -62,12 +65,9 @@ td {
   }
 }
 
-.joined-row td {
+/* Remove top border of cells in consecutive bold rows */
+.bold + .bold td {
   border-top: none;
-}
-
-.bold + .bold {
-  background-color: lightblue;
 }
 
   </style>
