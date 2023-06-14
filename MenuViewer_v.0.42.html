@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
-  <style>
+ <style>
   /* Common styles */
   table {
     border-collapse: collapse;
@@ -53,6 +53,17 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* Apply background color to the first bolded cell within the first 5 rows */
+  .table tr:nth-child(-n+5) .bold:first-child {
+    background-color: lightpurple;
+  }
+
+  /* Do not apply background color to cells with only underscores */
+  .table .bold:only-child::before {
+    content: "_";
+    display: none;
   }
 
   /* Media queries for resizing */
