@@ -6,64 +6,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
   <style>
-    /* Common styles */
-    table {
-      border-collapse: collapse;
-    }
+  /* Common styles */
+  table {
+    border-collapse: collapse;
+  }
 
-    th,
-    td {
-      border: none;
-      padding: 8px;
-    }
+  th,
+  td {
+    border: none;
+    padding: 8px;
+  }
 
-    .clickable {
-      color: blue;
-      cursor: pointer;
-    }
+  .clickable {
+    color: blue;
+    cursor: pointer;
+  }
 
-    .bold {
-      font-weight: bold;
-      background-color: lightblue;
-    }
+  .bold {
+    font-weight: bold;
+    background-color: lightblue;
+  }
 
-    /* Header styles */
-    #header {
-      position: sticky;
-      top: 0;
-      background-color: white;
-      z-index: 1;
-    }
+  /* Header styles */
+  #header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
 
-    /* Table styles */
-    .table {
-      table-layout: fixed;
-      width: 100%;
-    }
+  /* Table styles */
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
 
+  .table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table tr {
+    margin-bottom: 4px; /* Adjust the value as needed */
+  }
+
+  /* Media queries for resizing */
+  @media only screen and (max-width: 600px) {
     .table td {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      border-spacing: 0; /* Add this rule to eliminate spacing between cells */
-      padding: 0; /* Add this rule to eliminate padding between cells */
+      white-space: normal;
+      overflow: auto;
+      text-overflow: clip;
     }
+  }
 
-    /* Media queries for resizing */
-    @media only screen and (max-width: 600px) {
-      .table td {
-        white-space: normal;
-        overflow: auto;
-        text-overflow: clip;
-      }
+  @media only screen and (max-width: 400px) {
+    .table td {
+      font-size: 12px;
     }
+  }
+</style>
 
-    @media only screen and (max-width: 400px) {
-      .table td {
-        font-size: 12px;
-      }
-    }
-  </style>
 </head>
 
 <body>
