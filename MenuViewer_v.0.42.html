@@ -43,25 +43,13 @@
   }
 
   .table td {
-    white-space: normal; /* Disable text wrapping within a cell */
+    white-space: nowrap; /* Disable text wrapping within a cell */
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  /* Media queries for resizing */
-  @media only screen and (max-width: 600px) {
-    .table td {
-      white-space: normal;
-      overflow: auto;
-      text-overflow: clip;
-    }
-  }
+  /* Remove media queries to maintain fixed layout */
 
-  @media only screen and (max-width: 400px) {
-    .table td {
-      font-size: 12px;
-    }
-  }
 </style>
 
 </head>
