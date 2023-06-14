@@ -69,6 +69,7 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <select id="filterDropdown"></select>
+    <button id="rawDataButton">Raw Data</button>
   </div>
 
   <div id="resultContainer"></div>
@@ -251,53 +252,74 @@
     // Function to handle the Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+        const currentSelection = history.pop(); // Remove current selection
+        const previousSelection = history.pop(); // Get previous selection
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
+        const matchingItem = omData.find(
+          omItem => omItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
+        );
+
+        if (matchingItem) {
+          selectedData = matchingItem;
+          createOMTable(matchingItem);
+        } else {
+          const matchingItemIndex = odData.findIndex(
+            odItem => odItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
+          );
+
+          if (matchingItemIndex !== -1) {
+            selectedData = odData[matchingItemIndex];
+            createODTable(selectedData);
+          }
         }
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
+      } else if (history.length === 1) {
+        // Clear the table and reset selectedData
+        selectedData = null;
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.innerHTML = '';
+        history.pop(); // Remove the last item from history
       }
-    }
-
-    // Function to handle the Main Menu button click event
-    function handleMainMenu() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      filterData({ target: dropdown });
     }
 
     // Function to push the selected item to the history
     function pushHistory(item) {
-      history.push(item);
+      const existingIndex = history.findIndex(
+        historyItem => historyItem.trim().toLowerCase() === item.trim().toLowerCase()
+      );
+
+      if (existingIndex !== -1) {
+        // If the item already exists in the history, remove it
+        history.splice(existingIndex, 1);
+      }
+
+      history.push(item); // Push the new item to the history
     }
 
-    // Attach event listeners
+    // Function to handle the Raw Data button click event
+    function handleRawDataClick() {
+      const rawData = JSON.stringify(selectedData, null, 2);
+      const blob = new Blob([rawData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'selected_data.json';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Event listeners
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
+    document.getElementById('rawDataButton').addEventListener('click', handleRawDataClick);
 
-    // Fetch data and initialize the dropdown
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omjsonData, odjsonData]) => {
-        omData = omjsonData;
-        odData = odjsonData;
-
-        populateDropdown(omData);
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-        filterData({ target: dropdown });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    // Initialization
+    (async function () {
+      omData = await fetchOMData();
+      odData = await fetchODData();
+      populateDropdown(omData);
+    })();
   </script>
 </body>
 
 </html>
+
