@@ -22,6 +22,10 @@
       background-color: white;
       z-index: 1;
     }
+
+    .result-columns {
+      column-count: 2;
+    }
   </style>
 </head>
 
@@ -104,6 +108,9 @@
 
       const { Contents } = selectedData;
 
+      const paragraphElement = document.createElement('p');
+      paragraphElement.classList.add('result-columns');
+
       Contents.forEach(item => {
         const { Text, Item, Header, DisplayText } = item;
         let paragraphContent = Text || '';
@@ -114,22 +121,24 @@
           paragraphContent = Item;
         }
 
-        const paragraphElement = document.createElement('p');
-        paragraphElement.textContent = paragraphContent;
+        const contentElement = document.createElement('span');
+        contentElement.textContent = paragraphContent;
 
         if (Header === 1) {
-          paragraphElement.classList.add('bold');
+          contentElement.classList.add('bold');
         }
 
         if (Item) {
-          paragraphElement.classList.add('clickable');
-          paragraphElement.addEventListener('click', () => {
+          contentElement.classList.add('clickable');
+          contentElement.addEventListener('click', () => {
             handleRowClick(item);
           });
         }
 
-        resultContainer.appendChild(paragraphElement);
+        paragraphElement.appendChild(contentElement);
       });
+
+      resultContainer.appendChild(paragraphElement);
     }
 
     // Function to create the result container with ODJSON data
@@ -137,11 +146,16 @@
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
 
+      const paragraphElement = document.createElement('p');
+      paragraphElement.classList.add('result-columns');
+
       for (const [key, value] of Object.entries(selectedData)) {
-        const paragraphElement = document.createElement('p');
-        paragraphElement.textContent = `${key}: ${value}`;
-        resultContainer.appendChild(paragraphElement);
+        const contentElement = document.createElement('span');
+        contentElement.textContent = `${key}: ${value}`;
+        paragraphElement.appendChild(contentElement);
       }
+
+      resultContainer.appendChild(paragraphElement);
     }
 
     // Function to filter data based on the selected option
