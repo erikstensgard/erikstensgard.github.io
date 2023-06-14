@@ -7,7 +7,6 @@
   <title>JSON Test</title>
   <style>
 /* Common styles */
-/* Common styles */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -64,8 +63,12 @@ td {
 }
 
 /* Join background color between consecutive bold rows */
-.bold + .bold {
+.bold {
   background-color: lightblue;
+}
+
+.bold + .bold {
+  background-color: inherit;
 }
 
   </style>
