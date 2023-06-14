@@ -6,86 +6,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
   <style>
-/* Common styles */
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
 
-th,
-td {
-  padding: 8px; /* Adjust the padding as desired */
-  border: 1px solid black;
-}
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
 
-.clickable {
-  color: blue;
-  cursor: pointer;
-}
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
 
-/* Join background color between consecutive bold rows */
-.bold {
-  background-color: lightblue;
-}
+    .bold {
+      font-weight: bold;
+    }
 
-.bold + .bold {
-  background-color: lightblue;
-}
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+    }
 
-/* Header styles */
-#header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1;
-}
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
 
-/* Table styles */
-.table {
-  table-layout: fixed;
-  width: 100%;
-}
+    .table td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.table td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    /* Media queries for resizing */
+    @media only screen and (max-width: 600px) {
+      .table td {
+        white-space: normal;
+        overflow: auto;
+        text-overflow: clip;
+      }
+    }
 
-/* Media queries for resizing */
-@media only screen and (max-width: 600px) {
-  .table td {
-    white-space: normal;
-    overflow: auto;
-    text-overflow: clip;
-  }
-}
-
-@media only screen and (max-width: 400px) {
-  .table td {
-    font-size: 12px;
-  }
-}
-
-/* Join background color between consecutive bold rows */
-.bold {
-  background-color: lightblue;
-}
-
-.bold + .bold {
-  background-color: inherit;
-}
-
+    @media only screen and (max-width: 400px) {
+      .table td {
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 
 <body>
-<div id="header">
-  <button id="goBackButton">&larr; Go Back</button>
-  <button id="mainMenuButton">Main Menu</button>
-  <select id="filterDropdown"></select>
-  <button id="downloadJSONButton">Download JSON</button>
-</div>
+  <div id="header">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <select id="filterDropdown"></select>
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
 
   <div id="resultContainer"></div>
 
@@ -157,79 +142,69 @@ td {
     }
 
     // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
+    function createOMTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
-  let previousRowBold = false; // Track if the previous row was bold
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
 
-  for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
-    let rowBold = false; // Track if the current row is bold
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
 
-    for (let column = 1; column <= columns; column++) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
 
-      const displayCell = document.createElement('td');
+          const displayCell = document.createElement('td');
 
-      if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
-          let cellContent = Text || '';
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header, DisplayText } = matchingItem;
+              let cellContent = Text || '';
 
-          if (cellContent === '' && DisplayText) {
-            cellContent = DisplayText;
-          } else if (cellContent === '' && Item) {
-            cellContent = Item;
-          }
+              if (cellContent === '' && DisplayText) {
+                cellContent = DisplayText;
+              } else if (cellContent === '' && Item) {
+                cellContent = Item;
+              }
 
-          const cellContentElement = document.createElement('div');
-          cellContentElement.textContent = cellContent;
+              const cellContentElement = document.createElement('div');
+              cellContentElement.textContent = cellContent;
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-            rowBold = true; // Set the current row as bold
-          }
+              if (Header === 1) {
+                cellContentElement.classList.add('bold');
+              }
 
-          if (Item) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem);
+              if (Item) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
+
+              displayCell.appendChild(cellContentElement);
             });
           }
 
-          displayCell.appendChild(cellContentElement);
-        });
+          bodyRow.appendChild(displayCell);
+        }
+
+        tbody.appendChild(bodyRow);
       }
 
-      bodyRow.appendChild(displayCell);
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
+      }
     }
-
-    tbody.appendChild(bodyRow);
-
-    // Join background color between consecutive bold rows
-    if (previousRowBold && rowBold) {
-      bodyRow.classList.add('joined-row');
-    }
-
-    previousRowBold = rowBold;
-  }
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
@@ -303,22 +278,22 @@ function createOMTable(selectedData) {
       history.push(item);
     }
     
-// Function to handle the Download JSON button click event
-function handleDownloadJSON() {
-  const displayText = selectedData.DisplayText || selectedData.Name;
-  const data = JSON.stringify(selectedData, null, 2);
-  const filename = `${displayText}.json`;
+    // Function to handle the Download JSON button click event
+    function handleDownloadJSON() {
+      const displayText = selectedData.DisplayText || selectedData.Name;
+      const data = JSON.stringify(selectedData, null, 2);
+      const filename = `${displayText}.json`;
 
-  const element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
-  element.setAttribute('download', filename);
-  element.style.display = 'none';
-  document.body.appendChild(element);
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
 
-  element.click();
+      element.click();
 
-  document.body.removeChild(element);
-}
+      document.body.removeChild(element);
+    }
 
     // Attach event listeners
     document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
