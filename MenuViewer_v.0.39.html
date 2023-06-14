@@ -5,81 +5,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
-<style>
-  /* Common styles */
-  table {
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    border: none;
-    padding: 8px;
-  }
-
-  .clickable {
-    color: blue;
-    cursor: pointer;
-  }
-
-  .bold {
-    font-weight: bold;
-    background-color: lightblue;
-  }
-
-  /* Header styles */
-  #header {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 1;
-  }
-
-  /* Table styles */
-  .table {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  .table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 0; /* Adjust the value as needed */
-    padding: 0; /* Add this line */
-  }
-
-  .table tr {
-    margin-bottom: 0; /* Adjust the value as needed */
-  }
-
-  /* Media queries for resizing */
-  @media only screen and (max-width: 600px) {
-    .table td {
-      white-space: normal;
-      overflow: auto;
-      text-overflow: clip;
+  <style>
+    /* Common styles */
+    table {
+      border-collapse: collapse;
     }
-  }
 
-  @media only screen and (max-width: 400px) {
-    .table td {
-      font-size: 12px;
+    th,
+    td {
+      border: none;
+      padding: 8px;
     }
-  }
-</style>
 
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue;
+    }
+
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+    }
+
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .table td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Media queries for resizing */
+    @media only screen and (max-width: 600px) {
+      .table td {
+        white-space: normal;
+        overflow: auto;
+        text-overflow: clip;
+      }
+    }
+
+    @media only screen and (max-width: 400px) {
+      .table td {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
   <div id="header">
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <select id="filterDropdown"></select>
+    <button id="displayJSONButton">Display JSON Data</button> <!-- New button -->
   </div>
 
   <div id="resultContainer"></div>
+  <pre id="jsonDataContainer"></pre> <!-- Container for displaying JSON data -->
 
   <script>
     // Fetch OMJSON Data
@@ -149,82 +143,69 @@
     }
 
     // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
+    function createOMTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
 
-  for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
-    let rowHasContent = false;
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
 
-    for (let column = 1; column <= columns; column++) {
-      const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
 
-      const displayCell = document.createElement('td');
+          const displayCell = document.createElement('td');
 
-      if (matchingItem) {
-        const { Text, Item, Header, DisplayText } = matchingItem;
-        let cellContent = Text || '';
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header, DisplayText } = matchingItem;
+              let cellContent = Text || '';
 
-        if (cellContent === '' && DisplayText) {
-          cellContent = DisplayText;
-        } else if (cellContent === '' && Item) {
-          cellContent = Item;
+              if (cellContent === '' && DisplayText) {
+                cellContent = DisplayText;
+              } else if (cellContent === '' && Item) {
+                cellContent = Item;
+              }
+
+              const cellContentElement = document.createElement('div');
+              cellContentElement.textContent = cellContent;
+
+              if (Header === 1) {
+                cellContentElement.classList.add('bold');
+              }
+
+              if (Item) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
+
+              displayCell.appendChild(cellContentElement);
+            });
+          }
+
+          bodyRow.appendChild(displayCell);
         }
 
-        const cellContentElement = document.createElement('div');
-        cellContentElement.textContent = cellContent;
-
-        if (Header === 1) {
-          cellContentElement.classList.add('bold');
-        }
-
-        if (Item) {
-          cellContentElement.classList.add('clickable');
-          cellContentElement.addEventListener('click', () => {
-            handleRowClick(matchingItem);
-          });
-        }
-
-        displayCell.appendChild(cellContentElement);
-        rowHasContent = true;
+        tbody.appendChild(bodyRow);
       }
 
-      bodyRow.appendChild(displayCell);
-    }
+      table.appendChild(tbody);
 
-    if (!rowHasContent) {
-      // Add empty cells for the empty row
-      for (let column = 1; column <= columns; column++) {
-        const emptyCell = document.createElement('td');
-        emptyCell.textContent = ''; // Add empty content to create spacing
-        emptyCell.style.visibility = 'hidden'; // Hide the empty cell
-        bodyRow.appendChild(emptyCell);
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
       }
     }
-
-    tbody.appendChild(bodyRow);
-  }
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  } else {
-    // If selectedData is null (no matching item), display a message
-    const noDataMessage = document.createElement('p');
-    noDataMessage.textContent = 'No data available.';
-    resultContainer.appendChild(noDataMessage);
-  }
-}
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
@@ -298,10 +279,25 @@ function createOMTable(selectedData) {
       history.push(item);
     }
 
+    // Function to display the JSON data
+    function displayJsonData() {
+      const jsonData = JSON.stringify(omData, null, 2);
+      alert(jsonData);
+    }
+
     // Attach event listeners
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
+
+    // Create the JSON data button
+    const jsonDataButton = document.createElement('button');
+    jsonDataButton.textContent = 'Display JSON Data';
+    jsonDataButton.addEventListener('click', displayJsonData);
+
+    // Add the JSON data button to the header
+    const header = document.getElementById('header');
+    header.appendChild(jsonDataButton);
 
     // Fetch data and initialize the dropdown
     Promise.all([fetchOMData(), fetchODData()])
