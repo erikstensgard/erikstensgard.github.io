@@ -14,7 +14,7 @@
     th,
     td {
       border: none;
-      padding: 8px;
+      padding: 0; /* Remove padding from table cells */
     }
 
     .clickable {
@@ -25,7 +25,12 @@
     .bold {
       font-weight: bold;
       background-color: lightblue;
-      margin: -8px; /* Add this rule to counteract the padding for the bold cells */
+      margin: -8px;
+    }
+
+    /* Add padding to the content within bold cells */
+    .bold div {
+      padding: 8px;
     }
 
     /* Header styles */
@@ -46,8 +51,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      border-spacing: 0; /* Add this rule to eliminate spacing between cells */
-      padding: 8px; /* Add this rule to add padding between cells */
+      border-spacing: 0;
     }
 
     /* Media queries for resizing */
