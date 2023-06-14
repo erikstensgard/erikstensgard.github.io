@@ -22,6 +22,11 @@
       cursor: pointer;
     }
 
+    .bold {
+      font-weight: bold;
+      background-color: lightblue;
+    }
+
     /* Header styles */
     #header {
       position: sticky;
@@ -40,19 +45,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    /* Bolded cell styles */
-    .bold {
-      font-weight: bold;
-    }
-
-    .bold:first-child {
-      border-top: 2px solid black;
-    }
-
-    .bold:last-child {
-      border-bottom: 2px solid black;
     }
 
     /* Media queries for resizing */
@@ -82,7 +74,6 @@
   <div id="resultContainer"></div>
 
   <script>
-
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
