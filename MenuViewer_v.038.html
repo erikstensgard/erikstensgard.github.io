@@ -111,55 +111,71 @@
       });
     }
 
-   // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
+    function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
   const tbody = document.createElement('tbody');
 
   const { Contents } = selectedData;
+  const maxRow = Math.max(...Contents.map(item => item.Row));
+  const columns = Math.max(...Contents.map(item => item.Column));
 
-  let currentRow = null;
-  let currentRowElement = null;
+  let currentRow = 1;
+  let mergedCells = [];
 
-  Contents.forEach(item => {
-    const { Text, Item, Header, DisplayText, Row } = item;
+  for (let row = 1; row <= maxRow; row++) {
+    const bodyRow = document.createElement('tr');
 
-    // Skip clickable rows
-    if (Item && Item.startsWith('https://')) {
-      const rowElement = document.createElement('tr');
-      const cellElement = document.createElement('td');
-      const clickableElement = document.createElement('div');
-      clickableElement.classList.add('clickable');
-      clickableElement.textContent = DisplayText || Item;
-      clickableElement.addEventListener('click', () => {
-        handleRowClick(item);
+    for (let column = 1; column <= columns; column++) {
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
+
+      const displayCell = document.createElement('td');
+
+      if (matchingItems.length > 0) {
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header, DisplayText } = matchingItem;
+          let cellContent = Text || '';
+
+          if (cellContent === '' && DisplayText) {
+            cellContent = DisplayText;
+          } else if (cellContent === '' && Item) {
+            cellContent = Item;
+          }
+
+          const cellContentElement = document.createElement('div');
+          cellContentElement.textContent = cellContent;
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
+
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+          }
+
+          displayCell.appendChild(cellContentElement);
+        });
+      }
+
+      bodyRow.appendChild(displayCell);
+    }
+
+    if (currentRow !== row) {
+      mergedCells.forEach(mergedCell => {
+        mergedCell.rowSpan++;
       });
-      cellElement.appendChild(clickableElement);
-      rowElement.appendChild(cellElement);
-      tbody.appendChild(rowElement);
-      return;
+    } else {
+      tbody.appendChild(bodyRow);
+      mergedCells = bodyRow.querySelectorAll('td:not(.clickable)');
+      currentRow++;
     }
-
-    if (Row !== currentRow) {
-      // Start a new row
-      currentRow = Row;
-      currentRowElement = document.createElement('tr');
-      tbody.appendChild(currentRowElement);
-    }
-
-    const cellElement = document.createElement('td');
-    const cellContentElement = document.createElement('div');
-    cellContentElement.textContent = Text || DisplayText || Item;
-
-    if (Header === 1) {
-      cellContentElement.classList.add('bold');
-    }
-
-    cellElement.appendChild(cellContentElement);
-    currentRowElement.appendChild(cellElement);
-  });
+  }
 
   table.appendChild(tbody);
 
