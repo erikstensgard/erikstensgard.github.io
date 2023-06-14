@@ -5,68 +5,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
-  <style>
-    /* Common styles */
-    table {
-      border-collapse: collapse;
-      padding: 0; /* Reduce table padding */
-    }
+ <style>
+  /* Common styles */
+  table {
+    border-collapse: collapse;
+    padding: 0; /* Reduce table padding */
+  }
 
-    th,
-    td {
-      border: none;
-      padding: 4px; /* Reduce cell padding */
-    }
+  th,
+  td {
+    border: none;
+    padding: 4px; /* Reduce cell padding */
+  }
 
-    .clickable {
-      color: blue;
-      cursor: pointer;
-    }
+  .clickable {
+    color: blue;
+    cursor: pointer;
+  }
 
-    .bold {
-      font-weight: bold;
-    }
+  .bold {
+    font-weight: bold;
+    background-color: lightblue; /* Set your desired background color here */
+  }
 
-    /* Header styles */
-    #header {
-      position: sticky;
-      top: 0;
-      background-color: white;
-      z-index: 1;
-    }
+  /* Header styles */
+  #header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
 
-    /* Table styles */
-    .table {
-      table-layout: fixed;
-      width: 100%;
-    }
+  /* Table styles */
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
 
+  .table td {
+    white-space: normal; /* Disable text wrapping within a cell */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Media queries for resizing */
+  @media only screen and (max-width: 600px) {
     .table td {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      overflow: auto;
+      text-overflow: clip;
     }
+  }
 
-    /* Apply background color to the first cell within the first 5 rows that contains bolded text */
-    .table tr:nth-child(-n+5) .bold:first-child {
-      background-color: lightpurple;
+  @media only screen and (max-width: 400px) {
+    .table td {
+      font-size: 12px;
     }
+  }
+</style>
 
-    /* Media queries for resizing */
-    @media only screen and (max-width: 600px) {
-      .table td {
-        white-space: normal;
-        overflow: auto;
-        text-overflow: clip;
-      }
-    }
-
-    @media only screen and (max-width: 400px) {
-      .table td {
-        font-size: 12px;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -146,7 +143,7 @@
       });
     }
 
-   // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -169,7 +166,7 @@ function createOMTable(selectedData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText, Color } = matchingItem;
+          const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -197,11 +194,6 @@ function createOMTable(selectedData) {
             });
           }
 
-          // Set the background color of the cell
-          if (Color) {
-            displayCell.style.backgroundColor = Color;
-          }
-
           displayCell.appendChild(cellContentElement);
         });
       }
@@ -220,6 +212,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
@@ -292,7 +285,7 @@ function createOMTable(selectedData) {
     function pushHistory(item) {
       history.push(item);
     }
-
+    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
