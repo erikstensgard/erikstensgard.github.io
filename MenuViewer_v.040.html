@@ -48,11 +48,24 @@
     }
 
     .table td {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      border-spacing: 0;
-    }
+  border-spacing: 0;
+  padding: 0;
+  vertical-align: top; /* Add this line to adjust vertical alignment */
+}
+
+.bold {
+  margin: -8px;
+}
+
+.bold div {
+  padding: 8px;
+}
+
+/* Add a minimum width to the cells */
+.table td div {
+  min-width: 100px; /* Adjust the value as needed */
+}
+
 
     /* Add a minimum width to the cells */
     .table td div {
