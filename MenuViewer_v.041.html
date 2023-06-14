@@ -23,8 +23,13 @@ td {
   cursor: pointer;
 }
 
+/* Join background color between consecutive bold rows */
 .bold {
-  font-weight: bold;
+  background-color: lightblue;
+}
+
+.bold + .bold {
+  background-color: lightblue;
 }
 
 /* Header styles */
