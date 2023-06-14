@@ -163,42 +163,46 @@ function createOMTable(selectedData) {
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
+      const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
 
       const displayCell = document.createElement('td');
 
-      if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
-          let cellContent = Text || '';
+      if (matchingItem) {
+        const { Text, Item, Header, DisplayText } = matchingItem;
+        let cellContent = Text || '';
 
-          if (cellContent === '' && DisplayText) {
-            cellContent = DisplayText;
-          } else if (cellContent === '' && Item) {
-            cellContent = Item;
-          }
+        if (cellContent === '' && DisplayText) {
+          cellContent = DisplayText;
+        } else if (cellContent === '' && Item) {
+          cellContent = Item;
+        }
 
-          const cellContentElement = document.createElement('div');
-          cellContentElement.textContent = cellContent;
+        const cellContentElement = document.createElement('div');
+        cellContentElement.textContent = cellContent;
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-          }
+        if (Header === 1) {
+          cellContentElement.classList.add('bold');
+        }
 
-          if (Item) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem);
-            });
-          }
+        if (Item) {
+          cellContentElement.classList.add('clickable');
+          cellContentElement.addEventListener('click', () => {
+            handleRowClick(matchingItem);
+          });
+        }
 
-          displayCell.appendChild(cellContentElement);
-        });
+        displayCell.appendChild(cellContentElement);
       }
 
       bodyRow.appendChild(displayCell);
+    }
+
+    // If the row is missing, add empty cells
+    if (bodyRow.children.length === 0) {
+      for (let column = 1; column <= columns; column++) {
+        const emptyCell = document.createElement('td');
+        bodyRow.appendChild(emptyCell);
+      }
     }
 
     tbody.appendChild(bodyRow);
@@ -216,6 +220,7 @@ function createOMTable(selectedData) {
     noDataMessage.textContent = 'No data available.';
     resultContainer.appendChild(noDataMessage);
   }
+}
 
   // Add empty rows for missing values
   for (let row = 1; row <= maxRow; row++) {
