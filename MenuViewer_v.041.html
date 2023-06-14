@@ -65,9 +65,14 @@ td {
   }
 }
 
-/* Remove top border of cells in consecutive bold rows */
+/* Join background color between consecutive bold rows */
 .bold + .bold td {
   border-top: none;
+}
+
+/* Apply background color to entire row */
+.bold + .bold {
+  display: table-row-group;
 }
 
   </style>
