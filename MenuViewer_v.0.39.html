@@ -69,7 +69,6 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <select id="filterDropdown"></select>
-    <button id="rawDataButton">Raw Data</button>
   </div>
 
   <div id="resultContainer"></div>
@@ -249,86 +248,55 @@
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle "Go Back" button click
+    // Function to handle the Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
-        history.pop();
-        const previousItem = history[history.length - 1];
+        const currentSelection = history.pop(); // Remove the current item from history
+        let previousItem = history.pop(); // Get the previous item
 
-        const matchingItem = omData.find(
-          omItem => omItem.Name.trim().toLowerCase() === previousItem.trim().toLowerCase()
-        );
-
-        if (matchingItem) {
-          selectedData = matchingItem;
-          createOMTable(matchingItem);
-        } else {
-          const matchingItemIndex = odData.findIndex(
-            odItem => odItem.Name.trim().toLowerCase() === previousItem.trim().toLowerCase()
-          );
-
-          if (matchingItemIndex !== -1) {
-            selectedData = odData[matchingItemIndex];
-            createODTable(selectedData);
-          }
+        // Keep going back until we find a valid previous item that is not the initial selection
+        while (previousItem === currentSelection && history.length > 0) {
+          previousItem = history.pop();
         }
 
-        // Scroll to the top of the table
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.scrollTop = 0;
-
-        // Scroll the page to the top
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
       }
     }
 
-    // Function to handle "Main Menu" button click
+    // Function to handle the Main Menu button click event
     function handleMainMenu() {
-      selectedData = null;
-      history = [];
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      filterData({ target: dropdown });
     }
 
-    // Function to handle "Raw Data" button click
-    function handleRawData() {
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-
-      const pre = document.createElement('pre');
-      pre.textContent = JSON.stringify(selectedData, null, 2);
-
-      resultContainer.appendChild(pre);
-    }
-
-    // Function to push an item to history
+    // Function to push the selected item to the history
     function pushHistory(item) {
       history.push(item);
     }
 
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', async () => {
-      omData = await fetchOMData();
-      odData = await fetchODData();
+    // Attach event listeners
+    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+    document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-      populateDropdown(omData);
+    // Fetch data and initialize the dropdown
+    Promise.all([fetchOMData(), fetchODData()])
+      .then(([omjsonData, odjsonData]) => {
+        omData = omjsonData;
+        odData = odjsonData;
 
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.addEventListener('change', filterData);
+        populateDropdown(omData);
 
-      const goBackButton = document.getElementById('goBackButton');
-      goBackButton.addEventListener('click', handleGoBack);
-
-      const mainMenuButton = document.getElementById('mainMenuButton');
-      mainMenuButton.addEventListener('click', handleMainMenu);
-
-      const rawDataButton = document.getElementById('rawDataButton');
-      rawDataButton.addEventListener('click', handleRawData);
-    });
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+        filterData({ target: dropdown });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   </script>
 </body>
 
