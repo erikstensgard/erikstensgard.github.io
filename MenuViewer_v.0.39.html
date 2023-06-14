@@ -249,68 +249,77 @@
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
+    // Function to handle "Go Back" button click
     function handleGoBack() {
       if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+        history.pop(); // Remove the current selection
+        const previousSelection = history.pop(); // Get the previous selection
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
+        if (previousSelection) {
+          const matchingItem = omData.find(
+            omItem => omItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
+          );
+
+          if (matchingItem) {
+            selectedData = matchingItem;
+            createOMTable(matchingItem);
+          } else {
+            const matchingItemIndex = odData.findIndex(
+              odItem => odItem.Name.trim().toLowerCase() === previousSelection.trim().toLowerCase()
+            );
+
+            if (matchingItemIndex !== -1) {
+              selectedData = odData[matchingItemIndex];
+              createODTable(selectedData);
+            }
+          }
         }
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
       }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Main Menu button click event
+    // Function to handle "Main Menu" button click
     function handleMainMenu() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      filterData({ target: dropdown });
+      selectedData = null;
+      history = [];
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
     }
 
-    // Function to push the selected item to the history
+    // Function to push the current selection to history
     function pushHistory(item) {
       history.push(item);
     }
 
-    // Function to display raw JSON data
-    function displayRawData() {
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
+    // Function to handle "Raw Data" button click
+    function handleRawData() {
+      if (selectedData) {
+        const rawData = JSON.stringify(selectedData, null, 2);
+        const rawCodeElement = document.createElement('pre');
+        rawCodeElement.textContent = rawData;
 
-      const preElement = document.createElement('pre');
-      preElement.textContent = JSON.stringify(selectedData, null, 2);
-
-      resultContainer.appendChild(preElement);
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.innerHTML = '';
+        resultContainer.appendChild(rawCodeElement);
+      }
     }
 
-    // Attach event listeners
+    // Event listeners
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
+    document.getElementById('rawDataButton').addEventListener('click', handleRawData);
 
-    // Fetch data and initialize the dropdown
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omjsonData, odjsonData]) => {
-        omData = omjsonData;
-        odData = odjsonData;
-
-        populateDropdown(omData);
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-        filterData({ target: dropdown });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    // Fetch OMJSON and ODJSON data on page load
+    (async () => {
+      omData = await fetchOMData();
+      odData = await fetchODData();
+      populateDropdown(omData);
+    })();
   </script>
 </body>
 
 </html>
-
