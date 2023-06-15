@@ -78,71 +78,73 @@
   <div id="resultContainer"></div>
 
   <script>
-    // Fetch OMJSON Data
-    async function fetchOMData() {
-      const response = await fetch('MinneapolisOMJSON.json');
-      const data = await response.json();
-      return data;
+   // Fetch OMJSON Data
+async function fetchOMData() {
+  const response = await fetch('MinneapolisOMJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Fetch ODJSON Data
+async function fetchODData() {
+  const response = await fetch('MinneapolisODJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
+
+// Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
+
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    dropdown.appendChild(option);
+  });
+}
+
+// Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      createODTable(selectedData);
+      pushHistory(selectedData.Item);
     }
+  }
 
-    // Fetch ODJSON Data
-    async function fetchODData() {
-      const response = await fetch('MinneapolisODJSON.json');
-      const data = await response.json();
-      return data;
-    }
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 
-    // Global variables
-    let omData = []; // OMJSON data
-    let odData = []; // ODJSON data
-    let selectedData = null; // Currently selected data
-    let history = []; // History of selected items
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
 
-    // Function to populate dropdown with OMJSON data
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
-
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.DisplayText || item.Name;
-        dropdown.appendChild(option);
-      });
-    }
-
-    // Function to handle row click event
-    function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
-
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
-        }
-      }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -153,56 +155,60 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  let combinedRows = []; // Array to store combined rows
-
   for (let row = 1; row <= maxRow; row++) {
-    const matchingItems = Contents.filter(item => item.Row === row);
-    const hasFormatting = matchingItems.some(item => item.Header === 1);
-
-    if (matchingItems.length > 0 && hasFormatting) {
-      // Add each cell as a separate row if it has formatting
-      matchingItems.forEach(item => {
-        const bodyRow = document.createElement('tr');
-        const displayCell = createDisplayCell(item);
-        bodyRow.appendChild(displayCell);
-        tbody.appendChild(bodyRow);
-      });
-      combinedRows = []; // Reset combinedRows array
-    } else if (matchingItems.length > 0) {
-      // Combine cells into a single row if they have no formatting
-      combinedRows.push(matchingItems);
-    } else {
-      // Add a blank row for empty cells
-      const blankRow = document.createElement('tr');
-      tbody.appendChild(blankRow);
-    }
-  }
-
-  // Append combined rows to the table body
-  combinedRows.forEach(rowItems => {
     const bodyRow = document.createElement('tr');
-    const combinedCell = document.createElement('td');
-    let combinedCellContent = '';
-    rowItems.forEach(item => {
-      const { Text } = item;
-      if (Text) {
-        combinedCellContent += Text + ' ';
+
+    for (let column = 1; column <= columns; column++) {
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
+
+      const displayCell = document.createElement('td');
+
+      if (matchingItems.length > 0) {
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header, DisplayText } = matchingItem;
+          let cellContent = Text || '';
+
+          if (cellContent === '' && DisplayText) {
+            cellContent = DisplayText;
+          } else if (cellContent === '' && Item) {
+            cellContent = Item;
+          }
+
+          const cellContentElement = document.createElement('div');
+
+          // Check if cellContent consists only of underscore characters
+          if (cellContent.match(/^_+$/)) {
+            continue;
+          }
+
+          cellContentElement.textContent = cellContent;
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
+
+          // Add the CSS class for bolded items
+          if (Header === 1) {
+            displayCell.classList.add('bold');
+          }
+
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+          }
+
+          displayCell.appendChild(cellContentElement);
+        });
       }
-    });
-    combinedCell.textContent = combinedCellContent;
-    bodyRow.appendChild(combinedCell);
-    tbody.appendChild(bodyRow);
-  });
 
-  table.appendChild(tbody);
+      bodyRow.appendChild(displayCell);
+    }
 
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
-
+    tbody.appendChild
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
