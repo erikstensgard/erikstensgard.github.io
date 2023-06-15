@@ -160,6 +160,8 @@ function createOMTable(selectedData) {
     const bodyRow = document.createElement('tr');
 
     let column = 1;
+    let currentColspan = 1;
+
     while (column <= columns) {
       const matchingItems = Contents.filter(
         item => item.Row === row && item.Column === column
@@ -211,15 +213,30 @@ function createOMTable(selectedData) {
         !displayCell.classList.contains('clickable')
       ) {
         const previousCell = bodyRow.lastChild;
-        const previousContent = previousCell.firstChild.textContent;
-        const mergedContent = `${previousContent} ${cellContent}`;
-        previousCell.firstChild.textContent = mergedContent;
+       
+        // Merge the current cell with the previous cell
+        previousCell.colSpan = previousCell.colSpan + 1;
+        currentColspan = previousCell.colSpan;
         mergedCells.push(column);
-      } else {
-        bodyRow.appendChild(displayCell);
-        if (matchingItems.length === 1 && column !== columns) {
-          mergedCells.push(column);
+
+        // Check if the merged cell exceeds the column count
+        if (column + currentColspan > columns) {
+          break;
         }
+      } else {
+        // Add the CSS class for bolded items
+        if (Header === 1) {
+          displayCell.classList.add('bold');
+        }
+
+        if (Item) {
+          displayCell.classList.add('clickable');
+          displayCell.addEventListener('click', () => {
+            handleRowClick(matchingItems[0]);
+          });
+        }
+
+        bodyRow.appendChild(displayCell);
       }
 
       column++;
@@ -236,6 +253,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
