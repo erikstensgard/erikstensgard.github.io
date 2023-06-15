@@ -154,7 +154,7 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  let combinedRow = null; // Variable to store the combined row
+  const combinedRows = []; // Array to store the combined rows
 
   for (let row = 1; row <= maxRow; row++) {
     let shouldCombine = true; // Flag to indicate if the row should be combined
@@ -213,37 +213,36 @@ function createOMTable(selectedData) {
         }
       }
 
-      if (!shouldCombine) {
-        if (combinedRow) {
-          // Append the combined row to the tbody before starting a new row
-          tbody.appendChild(combinedRow);
-          combinedRow = null;
-        }
-
-        // Append the current cell directly to the tbody
-        bodyRow.appendChild(displayCell);
-      } else {
-        // Combine the current cell with the previous combined row
-        if (combinedRow) {
-          combinedRow.appendChild(displayCell);
-        } else {
-          // Start a new combined row
-          combinedRow = document.createElement('tr');
-          combinedRow.appendChild(displayCell);
-        }
-      }
-    }
-
-    if (combinedRow) {
-      // Append the last combined row to the tbody
-      tbody.appendChild(combinedRow);
+      bodyRow.appendChild(displayCell);
     }
 
     if (shouldCombine) {
-      // Append the current row to the tbody if it was not combined
+      // Combine the current row with the last combined row
+      if (combinedRows.length > 0) {
+        const lastCombinedRow = combinedRows[combinedRows.length - 1];
+        lastCombinedRow.push(bodyRow);
+      } else {
+        // Start a new combined row
+        combinedRows.push([bodyRow]);
+      }
+    } else {
+      // Append the current row directly to the tbody
       tbody.appendChild(bodyRow);
     }
   }
+
+  combinedRows.forEach(combinedRow => {
+    const mergedRow = document.createElement('tr');
+    combinedRow.forEach(row => {
+      const cell = document.createElement('td');
+      cell.colSpan = columns;
+      while (row.firstChild) {
+        cell.appendChild(row.firstChild);
+      }
+      mergedRow.appendChild(cell);
+    });
+    tbody.appendChild(mergedRow);
+  });
 
   table.appendChild(tbody);
 
@@ -253,7 +252,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
