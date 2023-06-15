@@ -82,6 +82,7 @@
 <body>
   <div id="header">
     <button id="goBackButton">&larr; Go Back</button>
+    <button id="goForwardButton">Go Forward &rarr;</button>
     <button id="mainMenuButton">Main Menu</button>
     <select id="filterDropdown"></select>
   </div>
@@ -281,7 +282,7 @@ function createOMTable(selectedData) {
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
+  // Function to handle the Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
         const currentSelection = history.pop(); // Remove the current item from history
@@ -298,6 +299,16 @@ function createOMTable(selectedData) {
       }
     }
 
+    // Function to handle the Go Forward button click event
+    function handleGoForward() {
+      const nextItem = history[history.length - 1];
+
+      if (nextItem) {
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = nextItem;
+        filterData({ target: dropdown });
+      }
+    }
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
@@ -330,24 +341,37 @@ function createOMTable(selectedData) {
     // Attach event listeners
     document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+    document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-    // Fetch data and initialize the dropdown
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omjsonData, odjsonData]) => {
-        omData = omjsonData;
-        odData = odjsonData;
+    // Function to handle the Go Back button click event
+    function handleGoBack() {
+      if (history.length > 1) {
+        const currentSelection = history.pop(); // Remove the current item from history
+        let previousItem = history.pop(); // Get the previous item
 
-        populateDropdown(omData);
+        // Keep going back until we find a valid previous item that is not the initial selection
+        while (previousItem === currentSelection && history.length > 0) {
+          previousItem = history.pop();
+        }
 
         const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+        dropdown.value = previousItem;
         filterData({ target: dropdown });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      }
+    }
+
+    // Function to handle the Go Forward button click event
+    function handleGoForward() {
+      const nextItem = history[history.length - 1];
+
+      if (nextItem) {
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = nextItem;
+        filterData({ target: dropdown });
+      }
+    }
   </script>
 </body>
 
