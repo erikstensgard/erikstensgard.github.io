@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Test</title>
+  <style>
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
+
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue; /* Set your desired background color here */
+    }
+
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+    }
+
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .table td {
+      white-space: nowrap; /* Disable text wrapping within a cell */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Media queries for responsive design */
+    @media screen and (max-width: 768px) {
+      /* Adjust table font size for smaller screens */
+      .table td {
+        font-size: 11px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      /* Further adjust table font size for even smaller screens */
+      .table td {
+        font-size: 8px;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <div id="header">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <select id="filterDropdown"></select>
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
+
+  <div id="resultContainer"></div>
+
+  <script>
+    // Fetch OMJSON Data
+    async function fetchOMData() {
+      const response = await fetch('MinneapolisOMJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Fetch ODJSON Data
+    async function fetchODData() {
+      const response = await fetch('MinneapolisODJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Global variables
+    let omData = []; // OMJSON data
+    let odData = []; // ODJSON data
+    let selectedData = null; // Currently selected data
+    let history = []; // History of selected items
+
+    // Function to populate dropdown with OMJSON data
+    function populateDropdown(data) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.innerHTML = '';
+
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = item.DisplayText || item.Name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Function to handle row click event
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
+      } else {
+        const matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
+
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+          pushHistory(selectedData.Item);
+        }
+      }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
+function createOMTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
+
+  const tbody = document.createElement('tbody');
+
+  const { Contents } = selectedData;
+  const maxRow = Math.max(...Contents.map(item => item.Row));
+  const columns = Math.max(...Contents.map(item => item.Column));
+
+  for (let row = 1; row <= maxRow; row++) {
+    const bodyRow = document.createElement('tr');
+
+    for (let column = 1; column <= columns; column++) {
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
+
+      const displayCell = document.createElement('td');
+
+      if (matchingItems.length > 0) {
+        const cellContents = [];
+        let formatting = '';
+
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header, DisplayText } = matchingItem;
+          let cellContent = Text || '';
+
+          if (cellContent === '' && DisplayText) {
+            cellContent = DisplayText;
+          } else if (cellContent === '' && Item) {
+            cellContent = Item;
+          }
+
+          if (cellContent.trim() !== '') {
+            if (formatting === '') {
+              formatting = Header === 1 ? 'bold' : 'normal';
+            }
+
+            if (formatting === (Header === 1 ? 'bold' : 'normal')) {
+              cellContents.push(cellContent);
+            } else {
+              const cellContentElement = document.createElement('div');
+              cellContentElement.textContent = cellContents.join(' ');
+
+              if (formatting === 'bold') {
+                cellContentElement.classList.add('bold');
+              }
+
+              if (Item) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItems[0]);
+                });
+              }
+
+              displayCell.appendChild(cellContentElement);
+
+              // Reset cellContents and formatting for the next group of consecutive cells
+              cellContents.length = 0;
+              formatting = Header === 1 ? 'bold' : 'normal';
+
+              cellContents.push(cellContent);
+            }
+          }
+        });
+
+        // Create the final cell for the remaining consecutive cells
+        if (cellContents.length > 0) {
+          const cellContentElement = document.createElement('div');
+          cellContentElement.textContent = cellContents.join(' ');
+
+          if (formatting === 'bold') {
+            cellContentElement.classList.add('bold');
+          }
+
+          if (matchingItems[0].Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItems[0]);
+            });
+          }
+
+          displayCell.appendChild(cellContentElement);
+        }
+      }
+
+      bodyRow.appendChild(displayCell);
+    }
+
+    tbody.appendChild(bodyRow);
+  }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  if (selectedData) {
+    resultContainer.appendChild(table);
+  }
+}
+
+    // Function to create the table with ODJSON data
+    function createODTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
+
+      const tbody = document.createElement('tbody');
+
+      for (const [key, value] of Object.entries(selectedData)) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(table);
+    }
+
+    // Function to filter data based on the selected option
+    function filterData(event) {
+      const selectedOption = event.target.value;
+      const matchingData = omData.find(item => item.Name === selectedOption);
+
+      if (matchingData) {
+        selectedData = matchingData;
+        createOMTable(matchingData);
+        pushHistory(matchingData.Name);
+      } else {
+        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        selectedData = odMatchingData;
+        createODTable(odMatchingData);
+        pushHistory(odMatchingData.Item);
+      }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+    }
+
+    // Function to handle the Go Back button click event
+    function handleGoBack() {
+      if (history.length > 1) {
+        const currentSelection = history.pop(); // Remove the current item from history
+        let previousItem = history.pop(); // Get the previous item
+
+        // Keep going back until we find a valid previous item that is not the initial selection
+        while (previousItem === currentSelection && history.length > 0) {
+          previousItem = history.pop();
+        }
+
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
+      }
+    }
+
+    // Function to handle the Main Menu button click event
+    function handleMainMenu() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      filterData({ target: dropdown });
+    }
+
+    // Function to push the selected item to the history
+    function pushHistory(item) {
+      history.push(item);
+    }
+
+    // Function to handle the Download JSON button click event
+    function handleDownloadJSON() {
+      const displayText = selectedData.DisplayText || selectedData.Name;
+      const data = JSON.stringify(selectedData, null, 2);
+      const filename = `${displayText}.json`;
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+    // Attach event listeners
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
+    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+    document.getElementById('filterDropdown').addEventListener('change', filterData);
+
+    // Fetch data and initialize the dropdown
+    Promise.all([fetchOMData(), fetchODData()])
+      .then(([omjsonData, odjsonData]) => {
+        omData = omjsonData;
+        odData = odjsonData;
+
+        populateDropdown(omData);
+
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+        filterData({ target: dropdown });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+</body>
+
+</html>
