@@ -54,12 +54,24 @@
       .table td {
         font-size: 11px;
       }
+
+      /* Adjust button and dropdown font size for smaller screens */
+      button,
+      select {
+        font-size: 14px;
+      }
     }
 
     @media screen and (max-width: 480px) {
       /* Further adjust table font size for even smaller screens */
       .table td {
         font-size: 8px;
+      }
+
+      /* Further adjust button and dropdown font size for even smaller screens */
+      button,
+      select {
+        font-size: 12px;
       }
     }
 
@@ -78,6 +90,7 @@
   <div id="resultContainer"></div>
 
   <script>
+
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
