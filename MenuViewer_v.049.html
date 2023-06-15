@@ -283,7 +283,7 @@
 // Function to push the current selection to the history
 function pushHistory(item) {
   history.push(item);
-  forwardHistory = [item];
+  forwardHistory.push(item);
 }
 
 // Function to handle the Go Back button click event
@@ -292,7 +292,7 @@ function handleGoBack() {
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
-    forwardHistory = [previousItem]; // Clear the forwardHistory array
+    forwardHistory.pop(); // Remove the current item from forwardHistory
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
@@ -312,7 +312,6 @@ function handleGoForward() {
     alert("There is no previous item to go forward to.");
   }
 }
-
 
 
     // Function to handle the Main Menu button click event
