@@ -293,7 +293,6 @@
         filterData({ target: dropdown });
       }
     }
-
 // Function to handle the Go Forward button click event
 function handleGoForward() {
   if (forwardHistory.length > 0) {
@@ -302,9 +301,10 @@ function handleGoForward() {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
     filterData({ target: dropdown });
+  } else {
+    alert("There is no previous item to go forward to.");
   }
 }
-
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
