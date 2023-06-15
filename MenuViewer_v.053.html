@@ -74,7 +74,9 @@
         font-size: 8px;
       }
     }
+
   </style>
+
 </head>
 
 <body>
@@ -111,7 +113,7 @@
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
-    let selectedHistoryIndex = -1; // Index of the currently selected item in history
+    let forwardHistory = []; // History of forward selections
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -127,139 +129,243 @@
     }
 
     // Function to handle row click event
-    function handleRowClick(event) {
-      const target = event.target;
-      const row = target.closest('tr');
-      const id = row.dataset.id;
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
 
-      if (selectedData && selectedData.id === id) {
-        selectedData = null;
-        row.classList.remove('bold');
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
       } else {
-        selectedData = omData.find(item => item.id === id);
-        row.classList.add('bold');
+        const matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
+
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+          pushHistory(selectedData.Item);
+        }
       }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
 
-    // Function to render data in table format
-    function renderTable(data) {
-      const container = document.getElementById('resultContainer');
-      container.innerHTML = '';
-
+    // Function to create the table with OMJSON data
+    function createOMTable(selectedData) {
       const table = document.createElement('table');
       table.classList.add('table');
 
-      // Create table header
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      Object.keys(data[0]).forEach(key => {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      // Create table body
       const tbody = document.createElement('tbody');
-      data.forEach(item => {
-        const row = document.createElement('tr');
-        row.dataset.id = item.id;
 
-        Object.values(item).forEach(value => {
-          const td = document.createElement('td');
-          td.textContent = value;
-          row.appendChild(td);
-        });
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
 
-        row.addEventListener('click', handleRowClick);
-        tbody.appendChild(row);
-      });
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
+
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
+
+          const displayCell = document.createElement('td');
+
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header, DisplayText } = matchingItem;
+              let cellContent = Text || '';
+
+              if (cellContent === '' && DisplayText) {
+                cellContent = DisplayText;
+              } else if (cellContent === '' && Item) {
+                cellContent = Item;
+              }
+
+              const cellContentElement = document.createElement('div');
+
+              // Check if cellContent consists only of underscore characters
+              if (/^_+$/.test(cellContent)) {
+                cellContentElement.textContent = cellContent;
+              } else {
+                cellContentElement.textContent = cellContent;
+
+                if (Header === 1) {
+                  cellContentElement.classList.add('bold');
+                }
+
+                // Add the CSS class for bolded items
+                if (Header === 1) {
+                  displayCell.classList.add('bold');
+                }
+
+                if (Item) {
+                  cellContentElement.classList.add('clickable');
+                  cellContentElement.addEventListener('click', () => {
+                    handleRowClick(matchingItem);
+                  });
+                }
+              }
+
+              displayCell.appendChild(cellContentElement);
+            });
+          }
+
+          bodyRow.appendChild(displayCell);
+        }
+
+        tbody.appendChild(bodyRow);
+      }
+
       table.appendChild(tbody);
 
-      container.appendChild(table);
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
+      }
     }
 
-    // Function to filter data based on dropdown selection
+    // Function to create the table with ODJSON data
+    function createODTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
+
+      const tbody = document.createElement('tbody');
+
+      for (const [key, value] of Object.entries(selectedData)) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(table);
+    }
+
+    // Function to filter data based on the selected option
     function filterData(event) {
-      const selectedValue = event.target.value;
+      const selectedOption = event.target.value;
+      const matchingData = omData.find(item => item.Name === selectedOption);
 
-      if (selectedValue) {
-        const filteredData = omData.filter(item => item.Name === selectedValue);
-        renderTable(filteredData);
-        selectedData = null;
+      if (matchingData) {
+        selectedData = matchingData;
+        createOMTable(matchingData);
+        pushHistory(matchingData.Name);
       } else {
-        renderTable(omData);
-        selectedData = null;
+        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        selectedData = odMatchingData;
+        createODTable(odMatchingData);
+        pushHistory(odMatchingData.Item);
       }
 
-      pushHistory(selectedValue); // Push the current selection to history
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
     }
 
-    // Function to push the current selection to the history and update the selected index
-    function pushHistory(item) {
-      history.push(item);
-      selectedHistoryIndex = history.length - 1; // Update the selected index
-    }
+// Function to push the current selection to the history and clear forward history
+function pushHistory(item) {
+  history.push(item);
+  forwardHistory = []; // Clear forward history
+}
 
-    // Function to handle the Go Back button click event
-    function handleGoBack() {
-      if (selectedHistoryIndex > 0) {
-        selectedHistoryIndex--; // Decrement the selected index
-        const previousItem = history[selectedHistoryIndex];
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
-      }
-    }
+// Function to handle the Go Back button click event
+function handleGoBack() {
+  if (history.length > 1) {
+    const currentSelection = history.pop(); // Remove the current item from history
+    const previousItem = history[history.length - 1]; // Get the previous item
 
-    // Function to handle the Go Forward button click event
-    function handleGoForward() {
-      if (selectedHistoryIndex < history.length - 1) {
-        selectedHistoryIndex++; // Increment the selected index
-        const nextItem = history[selectedHistoryIndex];
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = nextItem;
-        filterData({ target: dropdown });
-      } else {
-        alert("There is no next item to go forward to.");
-      }
-    }
+    forwardHistory.pop(); // Remove the current item from forwardHistory
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  }
+}
+
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.shift(); // Remove the first item from forwardHistory
+    history.push(nextItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = nextItem;
+    filterData({ target: dropdown });
+  } else {
+    alert("There is no previous item to go forward to.");
+  }
+}
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = '';
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
       filterData({ target: dropdown });
     }
 
-    // Function to download JSON data
-    function downloadJSON() {
-      const json = JSON.stringify(omData, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'OMJSON.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    // Function to handle the Download JSON button click event
+    function handleDownloadJSON() {
+      const displayText = selectedData.DisplayText || selectedData.Name;
+      const data = JSON.stringify(selectedData, null, 2);
+      const filename = `${displayText}.json`;
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
     }
 
-    // Event listeners
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
+    // Attach event listeners
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('downloadJSONButton').addEventListener('click', downloadJSON);
+    document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-    // Initialization
-    (async function () {
-      omData = await fetchOMData();
-      odData = await fetchODData();
-      renderTable(omData);
-      populateDropdown(omData);
-    })();
+    function clearForwardHistory() {
+      forwardHistory = [];
+    }
+
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData()])
+  .then(([omjsonData, odjsonData]) => {
+    omData = omjsonData;
+    odData = odjsonData;
+
+    populateDropdown(omData);
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    filterData({ target: dropdown });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+
   </script>
 </body>
 
