@@ -164,52 +164,54 @@ function createOMTable(selectedData) {
         item => item.Row === row && item.Column === column
       );
 
-      const displayCell = document.createElement('td');
-
-      if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
-          let cellContent = Text || '';
-
-          if (cellContent === '' && DisplayText) {
-            cellContent = DisplayText;
-          } else if (cellContent === '' && Item) {
-            cellContent = Item;
-          }
-
-          const cellContentElement = document.createElement('div');
-
-          // Check if cellContent consists only of underscore characters, or it's a blank row click item
-          if (/^_+$/.test(cellContent) || (cellContent === '' && Header === 1)) {
-            cellContentElement.textContent = cellContent;
-          } else {
-            cellContentElement.textContent = cellContent;
-
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-            }
-
-            // Add the CSS class for bolded items
-            if (Header === 1) {
-              displayCell.classList.add('bold');
-            }
-
-            if (Item) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
-            }
-          }
-
-          displayCell.appendChild(cellContentElement);
-        });
+      if (matchingItems.length === 0) {
+        continue;
       }
+
+      let displayCell = document.createElement('td');
+
+      matchingItems.forEach(matchingItem => {
+        const { Text, Item, Header, DisplayText } = matchingItem;
+        let cellContent = Text || '';
+
+        if (cellContent === '' && DisplayText) {
+          cellContent = DisplayText;
+        } else if (cellContent === '' && Item) {
+          cellContent = Item;
+        }
+
+        const cellContentElement = document.createElement('div');
+
+        // Check if cellContent consists only of underscore characters, or it's a blank row click item
+        if (/^_+$/.test(cellContent) || (cellContent === '' && Header === 1)) {
+          cellContentElement.textContent = cellContent;
+        } else {
+          cellContentElement.textContent = cellContent;
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
+
+          // Add the CSS class for bolded items
+          if (Header === 1) {
+            displayCell.classList.add('bold');
+          }
+
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+          }
+        }
+
+        displayCell.appendChild(cellContentElement);
+      });
 
       // Check if the current cell can be merged with the previous cell
       const mergeKey = `${row}-${column}`;
       if (mergedCells.includes(mergeKey)) {
-        displayCell.remove();
+        displayCell = null;
         continue;
       }
 
@@ -228,11 +230,15 @@ function createOMTable(selectedData) {
         }
       }
 
-      displayCell.colSpan = colSpan;
-      bodyRow.appendChild(displayCell);
+      if (displayCell) {
+        displayCell.colSpan = colSpan;
+        bodyRow.appendChild(displayCell);
+      }
     }
 
-    tbody.appendChild(bodyRow);
+    if (bodyRow.childElementCount > 0) {
+      tbody.appendChild(bodyRow);
+    }
   }
 
   table.appendChild(tbody);
@@ -243,7 +249,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
