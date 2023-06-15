@@ -312,15 +312,6 @@ function handleGoBack() {
       filterData({ target: dropdown });
     }
 
-    function pushHistory(item) {
-      history.push(item);
-      clearForwardHistory();
-    }
-
-    function clearForwardHistory() {
-      forwardHistory = [];
-    }
-
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
@@ -345,21 +336,32 @@ function handleGoBack() {
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-    // Fetch data and initialize the dropdown
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omjsonData, odjsonData]) => {
-        omData = omjsonData;
-        odData = odjsonData;
+function pushHistory(item) {
+  history.push(item);
+  clearForwardHistory();
+}
 
-        populateDropdown(omData);
+function clearForwardHistory() {
+  forwardHistory = [];
+}
 
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-        filterData({ target: dropdown });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData()])
+  .then(([omjsonData, odjsonData]) => {
+    omData = omjsonData;
+    odData = odjsonData;
+
+    populateDropdown(omData);
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    filterData({ target: dropdown });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
   </script>
 </body>
 
