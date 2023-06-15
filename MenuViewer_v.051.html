@@ -300,6 +300,7 @@ function handleGoForward() {
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
+    forwardHistory = []; // Initialize forwardHistory to an empty array
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
