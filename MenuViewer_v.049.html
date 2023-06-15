@@ -338,15 +338,15 @@ function handleGoForward() {
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-    function pushHistory(item) {
-      history.push(item);
-      clearForwardHistory();
-    }
+// Function to push the current selection to the history
+function pushHistory(item) {
+  history.push(item);
+  forwardHistory = [];
+}
 
     function clearForwardHistory() {
       forwardHistory = [];
     }
-
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
@@ -364,6 +364,7 @@ Promise.all([fetchOMData(), fetchODData()])
   .catch(error => {
     console.error('Error:', error);
   });
+
 
   </script>
 </body>
