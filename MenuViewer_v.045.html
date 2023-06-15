@@ -205,7 +205,9 @@ function createOMTable(selectedData) {
       if (
         matchingItems.length === 1 &&
         mergedCells.includes(column - 1) &&
-        !mergedCells.includes(column)
+        !mergedCells.includes(column) &&
+        !displayCell.classList.contains('bold') &&
+        !displayCell.classList.contains('clickable')
       ) {
         const previousCell = bodyRow.lastChild;
         previousCell.colSpan += 1;
@@ -229,7 +231,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
