@@ -143,7 +143,6 @@
         behavior: 'smooth'
       });
     }
-
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -214,16 +213,22 @@ function createOMTable(selectedData) {
         continue;
       }
 
-      // Check if the current cell can be merged with the next cell
-      const nextMergeKey = `${row}-${column + 1}`;
-      const nextMatchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column + 1
-      );
-      if (nextMatchingItems.length > 0 && !mergedCells.includes(nextMergeKey)) {
-        displayCell.colSpan = nextMatchingItems.length + 1;
-        mergedCells.push(nextMergeKey);
+      // Check if the current cell can be merged with the next cells
+      let colSpan = 1;
+      for (let nextColumn = column + 1; nextColumn <= columns; nextColumn++) {
+        const nextMergeKey = `${row}-${nextColumn}`;
+        const nextMatchingItems = Contents.filter(
+          item => item.Row === row && item.Column === nextColumn
+        );
+        if (nextMatchingItems.length > 0 && !mergedCells.includes(nextMergeKey)) {
+          colSpan += nextMatchingItems.length;
+          mergedCells.push(nextMergeKey);
+        } else {
+          break;
+        }
       }
 
+      displayCell.colSpan = colSpan;
       bodyRow.appendChild(displayCell);
     }
 
@@ -238,6 +243,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
