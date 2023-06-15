@@ -280,10 +280,10 @@
       resultContainer.scrollTop = 0;
     }
 
-// Function to push the current selection to the history
+// Function to push the current selection to the history and clear forward history
 function pushHistory(item) {
   history.push(item);
-  forwardHistory.push(item);
+  forwardHistory = []; // Clear forward history
 }
 
 // Function to handle the Go Back button click event
@@ -302,9 +302,9 @@ function handleGoBack() {
 
 // Function to handle the Go Forward button click event
 function handleGoForward() {
-  if (history.length > 0) {
-    const nextItem = history.shift(); // Remove the first item from history
-    forwardHistory.push(nextItem);
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.shift(); // Remove the first item from forwardHistory
+    history.push(nextItem);
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
     filterData({ target: dropdown });
@@ -312,6 +312,7 @@ function handleGoForward() {
     alert("There is no previous item to go forward to.");
   }
 }
+
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
