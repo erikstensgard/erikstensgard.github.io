@@ -288,8 +288,8 @@ function pushHistory(item) {
 
 // Function to handle the Go Forward button click event
 function handleGoForward() {
-  if (history.length > 1 && goBackButtonPressed) {
-    const previousItem = history[history.length - 2]; // Get the previous item
+  if (history.length > 1 && forwardHistory.length > 0) {
+    const previousItem = forwardHistory.pop(); // Remove the first item from forwardHistory
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
@@ -300,17 +300,17 @@ function handleGoForward() {
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
-    goBackButtonPressed = true;
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
-    forwardHistory.pop(); // Remove the current item from forwardHistory
+    forwardHistory.push(currentSelection); // Add the current item to forwardHistory
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
   }
 }
+
 
 
     // Function to handle the Main Menu button click event
