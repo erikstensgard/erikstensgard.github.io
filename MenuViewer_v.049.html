@@ -297,14 +297,18 @@
 function handleGoForward() {
   if (forwardHistory.length > 0) {
     const nextItem = forwardHistory.pop();
-    history.push(nextItem);
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
     filterData({ target: dropdown });
   } else {
+    const currentItem = history[history.length - 1];
+    if (currentItem) {
+      forwardHistory.push(currentItem);
+    }
     alert("There is no previous item to go forward to.");
   }
 }
+
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
