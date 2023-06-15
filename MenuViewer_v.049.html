@@ -286,13 +286,14 @@ function handleGoBack() {
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
-    forwardHistory.push(currentSelection); // Store the current selection in forwardHistory
+    forwardHistory = []; // Clear the forwardHistory array
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
   }
 }
+
 
 // Function to handle the Go Forward button click event
 function handleGoForward() {
