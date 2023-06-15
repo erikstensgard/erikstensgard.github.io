@@ -181,6 +181,7 @@ function createOMTable(selectedData) {
   // Append combined rows to the table body
   combinedRows.forEach(rowItems => {
     const bodyRow = document.createElement('tr');
+    const combinedCell = document.createElement('td');
     let combinedCellContent = '';
     rowItems.forEach(item => {
       const { Text } = item;
@@ -188,9 +189,8 @@ function createOMTable(selectedData) {
         combinedCellContent += Text + ' ';
       }
     });
-
-    const displayCell = createDisplayCell({ Text: combinedCellContent });
-    bodyRow.appendChild(displayCell);
+    combinedCell.textContent = combinedCellContent;
+    bodyRow.appendChild(combinedCell);
     tbody.appendChild(bodyRow);
   });
 
@@ -202,6 +202,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
