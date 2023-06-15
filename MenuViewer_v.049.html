@@ -302,7 +302,6 @@ function handleGoBack() {
   }
 }
 
-// Function to handle the Go Forward button click event
 function handleGoForward() {
   if (forwardHistory.length > 0) {
     const nextItem = forwardHistory.pop();
@@ -314,6 +313,7 @@ function handleGoForward() {
 }
 
 
+
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
@@ -321,10 +321,11 @@ function handleGoForward() {
       filterData({ target: dropdown });
     }
 
-    function pushHistory(item) {
-      history.push(item);
-      clearForwardHistory();
-    }
+function pushHistory(item) {
+  history.push(item);
+  forwardHistory = []; // Clear forward history when a new selection is made
+}
+
 
     function clearForwardHistory() {
       forwardHistory = [];
