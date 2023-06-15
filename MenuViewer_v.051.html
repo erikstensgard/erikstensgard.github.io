@@ -286,9 +286,21 @@ function pushHistory(item) {
   forwardHistory.push(item);
 }
 
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (history.length > 1 && goBackButtonPressed) {
+    const previousItem = history[history.length - 2]; // Get the previous item
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  }
+}
+
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
+    goBackButtonPressed = true;
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
@@ -297,19 +309,6 @@ function handleGoBack() {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
     filterData({ target: dropdown });
-  }
-}
-
-// Function to handle the Go Forward button click event
-function handleGoForward() {
-  if (history.length > 1) {
-    const previousItem = history[history.length - 2]; // Get the previous item
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  } else {
-    alert("There is no previous item to go forward to.");
   }
 }
 
