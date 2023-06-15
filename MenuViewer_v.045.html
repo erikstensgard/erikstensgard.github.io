@@ -152,14 +152,14 @@ function createOMTable(selectedData) {
 
   const { Contents } = selectedData;
   const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+  const maxColumn = Math.max(...Contents.map(item => item.Column));
 
   let mergedCells = [];
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
 
-    for (let column = 1; column <= columns; column++) {
+    for (let column = 1; column <= maxColumn; column++) {
       const matchingItems = Contents.filter(
         item => item.Row === row && item.Column === column
       );
@@ -217,7 +217,7 @@ function createOMTable(selectedData) {
 
       // Check if the current cell can be merged with the next cells
       let colSpan = 1;
-      for (let nextColumn = column + 1; nextColumn <= columns; nextColumn++) {
+      for (let nextColumn = column + 1; nextColumn <= maxColumn; nextColumn++) {
         const nextMergeKey = `${row}-${nextColumn}`;
         const nextMatchingItems = Contents.filter(
           item => item.Row === row && item.Column === nextColumn
@@ -249,6 +249,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
