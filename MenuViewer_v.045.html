@@ -221,10 +221,7 @@ function createOMTable(selectedData) {
       // Create a new table row with the combined cells and add it to the tbody
       const bodyRow = document.createElement('tr');
       combinedRow.forEach(cell => {
-        const cellWrapper = document.createElement('div');
-        cellWrapper.style.whiteSpace = 'normal'; // Set white-space to normal for line breaks
-        cellWrapper.appendChild(cell);
-        bodyRow.appendChild(cellWrapper);
+        bodyRow.appendChild(cell);
       });
       tbody.appendChild(bodyRow);
 
@@ -241,7 +238,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
