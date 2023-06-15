@@ -82,19 +82,18 @@
 <body>
   <div id="header">
     <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
+    <button id="mainMenuButton">Main Menu</button>
     <select id="filterDropdown"></select>
   </div>
 
   <div id="resultContainer"></div>
-  
-  <div id="footer">
-  <button id="downloadJSONButton">Download JSON</button>
-  </div>
-  
-  <script>
 
+  <div id="footer">
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
+
+  <script>
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
@@ -114,8 +113,6 @@
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
-    let forwardHistory = []; // History of forward selections
-
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -133,237 +130,128 @@
     // Function to handle row click event
     function handleRowClick(item) {
       const matchingItem = omData.find(
-        data => data.Name.trim().toLowerCase() === item.trim().toLowerCase()
+        omItem => omItem.Name === item.Name && omItem.DisplayText === item.DisplayText
       );
 
       if (matchingItem) {
         selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name, 'OMJSON');
+        history.push(selectedData);
+        renderData(matchingItem);
       }
     }
 
-    // Function to create OMJSON table
-    function createOMTable(data) {
-      const container = document.getElementById('resultContainer');
-      container.innerHTML = '';
-
-      if (data) {
-        const table = document.createElement('table');
-        table.className = 'table';
-
-        const headerRow = document.createElement('tr');
-        const columns = Object.keys(data);
-
-        columns.forEach(column => {
-          const headerCell = document.createElement('th');
-          headerCell.textContent = column;
-          headerRow.appendChild(headerCell);
-        });
-
-        table.appendChild(headerRow);
-
-        data.Values.forEach(value => {
-          const row = document.createElement('tr');
-          columns.forEach(column => {
-            const cell = document.createElement('td');
-            cell.textContent = value[column];
-            row.appendChild(cell);
-          });
-          row.addEventListener('click', () => handleRowClick(value.Name));
-          table.appendChild(row);
-        });
-
-        container.appendChild(table);
-      } else {
-        const message = document.createElement('p');
-        message.textContent = 'No data available.';
-        container.appendChild(message);
-      }
-    }
-
-    // Function to handle go back button click
+    // Function to handle Go Back button click event
     function handleGoBack() {
       if (history.length > 1) {
-        const previousItem = history.pop();
-        const selectedItem = history[history.length - 1];
-        const dataType = selectedItem.type;
+        history.pop(); // Remove the current item from history
+        const previousItem = history[history.length - 1]; // Get the previous item
 
-        if (dataType === 'OMJSON') {
-          selectedData = omData.find(item => item.Name === selectedItem.item);
-          createOMTable(selectedData);
-          const filterDropdown = document.getElementById('filterDropdown');
-          filterDropdown.value = selectedData.Name;
-        } else if (dataType === 'ODJSON') {
-          selectedData = odData.find(item => item.Name === selectedItem.item);
-          createODTable(selectedData);
-          const filterDropdown = document.getElementById('filterDropdown');
-          filterDropdown.value = selectedData.Name;
-        }
-
-        forwardHistory.push(previousItem);
-
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.scrollTop = 0;
-
-        // Scroll the page to the top
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem.Name;
+        filterData({ target: dropdown });
       }
     }
 
-    // Function to handle go forward button click
+    // Function to handle Go Forward button click event
     function handleGoForward() {
-      if (forwardHistory.length > 0) {
-        const forwardItem = forwardHistory.pop();
-        const selectedItem = forwardItem.data;
-        const dataType = forwardItem.type;
+      if (history.length > 1) {
+        const currentItem = history.pop(); // Remove the current item from history
+        const nextItem = history[history.length - 1]; // Get the next item
 
-        if (dataType === 'OMJSON') {
-          selectedData = omData.find(item => item.Name === selectedItem);
-          createOMTable(selectedData);
-          const filterDropdown = document.getElementById('filterDropdown');
-          filterDropdown.value = selectedData.Name;
-        } else if (dataType === 'ODJSON') {
-          selectedData = odData.find(item => item.Name === selectedItem);
-          createODTable(selectedData);
-          const filterDropdown = document.getElementById('filterDropdown');
-          filterDropdown.value = selectedData.Name;
+        // Keep going forward until we find a valid next item
+        while (nextItem === currentItem && history.length > 1) {
+          history.pop();
         }
 
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.scrollTop = 0;
-
-        // Scroll the page to the top
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = nextItem.Name;
+        filterData({ target: dropdown });
       }
     }
 
-    // Function to handle main menu button click
+    // Function to handle Main Menu button click event
     function handleMainMenu() {
       selectedData = null;
-      createOMTable(null);
-
-      const filterDropdown = document.getElementById('filterDropdown');
-      filterDropdown.value = '';
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-
       history = [];
-      forwardHistory = [];
+      renderData(null);
     }
 
-    // Function to push a new item to the history
-    function pushHistory(item, dataType) {
-      const lastItem = history[history.length - 1];
-      if (lastItem && lastItem.item === item && lastItem.type === dataType) {
-        return;
-      }
-      history.push({ item, type: dataType });
-      forwardHistory = [];
-    }
-
-    // Function to handle filter dropdown change event
-    function handleFilterDropdownChange(event) {
-      const selectedValue = event.target.value;
-      const matchingItem = omData.find(
-        item => item.Name.trim().toLowerCase() === selectedValue.trim().toLowerCase()
-      );
+    // Function to filter data based on dropdown selection
+    function filterData(event) {
+      const selectedItem = event.target.value;
+      const matchingItem = omData.find(item => item.Name === selectedItem);
 
       if (matchingItem) {
         selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name, 'OMJSON');
+        history.push(selectedData);
+        renderData(matchingItem);
       }
     }
 
-    // Function to create ODJSON table
-    function createODTable(data) {
-      const container = document.getElementById('resultContainer');
-      container.innerHTML = '';
+    // Function to render data in the result container
+    function renderData(data) {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
 
       if (data) {
         const table = document.createElement('table');
-        table.className = 'table';
+        table.classList.add('table');
 
-        const headerRow = document.createElement('tr');
-        const columns = Object.keys(data);
+        const tbody = document.createElement('tbody');
 
-        columns.forEach(column => {
-          const headerCell = document.createElement('th');
-          headerCell.textContent = column;
-          headerRow.appendChild(headerCell);
-        });
-
-        table.appendChild(headerRow);
-
-        data.Values.forEach(value => {
+        Object.entries(data).forEach(([key, value]) => {
           const row = document.createElement('tr');
-          columns.forEach(column => {
-            const cell = document.createElement('td');
-            cell.textContent = value[column];
-            row.appendChild(cell);
-          });
-          row.addEventListener('click', () => handleRowClick(value.Name));
-          table.appendChild(row);
+
+          const keyCell = document.createElement('td');
+          keyCell.textContent = key;
+          row.appendChild(keyCell);
+
+          const valueCell = document.createElement('td');
+          valueCell.textContent = value;
+          row.appendChild(valueCell);
+
+          tbody.appendChild(row);
         });
 
-        container.appendChild(table);
+        table.appendChild(tbody);
+        resultContainer.appendChild(table);
       } else {
-        const message = document.createElement('p');
-        message.textContent = 'No data available.';
-        container.appendChild(message);
+        resultContainer.textContent = 'No data selected';
       }
     }
 
-    // Function to initialize the application
-    async function main() {
-      // Fetch OMJSON and ODJSON data
-      omData = await fetchOMData();
-      odData = await fetchODData();
+    // Function to download JSON data
+    function downloadJSON() {
+      const json = JSON.stringify(selectedData, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
 
-      // Populate the dropdown with OMJSON data
-      populateDropdown(omData);
-
-      // Set the default selected item
-      const defaultSelectedItem = 'ORZID2 GMENU ABX INPT MAIN';
-
-      const matchingOMItem = omData.find(
-        item => item.Name.trim().toLowerCase() === defaultSelectedItem.trim().toLowerCase()
-      );
-
-      if (matchingOMItem) {
-        selectedData = matchingOMItem;
-        createOMTable(matchingOMItem);
-        pushHistory(matchingOMItem.Name, 'OMJSON');
-      }
-
-      // Attach event handlers
-      const goBackButton = document.getElementById('goBackButton');
-      const goForwardButton = document.getElementById('goForwardButton');
-      const mainMenuButton = document.getElementById('mainMenuButton');
-      const filterDropdown = document.getElementById('filterDropdown');
-
-      goBackButton.addEventListener('click', handleGoBack);
-      goForwardButton.addEventListener('click', handleGoForward);
-      mainMenuButton.addEventListener('click', handleMainMenu);
-      filterDropdown.addEventListener('change', handleFilterDropdownChange);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = 'selectedData.json';
+      downloadLink.click();
     }
 
-    main();
+    // Entry point
+    Promise.all([fetchOMData(), fetchODData()])
+      .then(([omjsonData, odjsonData]) => {
+        omData = omjsonData;
+        odData = odjsonData;
 
+        const dropdown = document.getElementById('filterDropdown');
+        populateDropdown(omData);
+
+        // Attach event listeners
+        document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+        document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+        document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+        dropdown.addEventListener('change', filterData);
+        document.getElementById('downloadJSONButton').addEventListener('click', downloadJSON);
+
+        // Initial render
+        renderData(null);
+      })
+      .catch(error => console.error('Error:', error));
   </script>
 </body>
 
