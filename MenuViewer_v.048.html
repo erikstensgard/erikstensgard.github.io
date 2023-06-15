@@ -305,26 +305,21 @@ function handleGoBack() {
 // Function to handle the Go Forward button click event
 function handleGoForward() {
   if (forwardHistory.length > 0) {
-    // Push the current item onto the forward history
-    forwardHistory.push(selectedData);
+    // Pop the next item from the forward history
+    const nextItem = forwardHistory.pop();
 
-    // Check if the forward history is empty
-    if (forwardHistory.length > 0) {
-      // Pop the next item from the forward history
-      const nextItem = forwardHistory.pop();
+    // Update the `selectedData` variable with the next item
+    selectedData = nextItem;
 
-      // Update the `selectedData` variable with the next item
-      selectedData = nextItem;
+    // Update the `dropdown` variable with the `selectedData` variable
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedData.Name;
 
-      // Update the `dropdown` variable with the `selectedData` variable
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = selectedData.Name;
-
-      // Filter the data
-      filterData({ target: dropdown });
-    }
+    // Filter the data
+    filterData({ target: dropdown });
   }
 }
+
 
 
     // Function to handle the Main Menu button click event
