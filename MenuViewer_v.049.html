@@ -301,16 +301,17 @@
       }
     }
 
-    // Function to handle the Go Forward button click event
-    function handleGoForward() {
-      if (forwardHistory.length > 0) {
-        const nextItem = forwardHistory.pop();
-        history.push(nextItem);
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = nextItem;
-        filterData({ target: dropdown });
-      }
-    }
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.pop();
+    history.push(nextItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = nextItem;
+    filterData({ target: dropdown });
+  }
+}
+
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
