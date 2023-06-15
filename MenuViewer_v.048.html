@@ -302,22 +302,28 @@ function handleGoBack() {
   }
 }
 
-// Function to handle the Go Forward button click event
-function handleGoForward() {
-  if (forwardHistory.length > 0) {
-    // Pop the next item from the forward history
-    const nextItem = forwardHistory.pop();
+// Function to handle the Go Back button click event
+function handleGoBack() {
+  if (history.length > 1) {
+    // Remove the current item from history
+    history.pop();
 
-    // Update the `selectedData` variable with the next item
-    selectedData = nextItem;
+    // Get the previous item
+    const previousItem = history.pop();
 
-    // Update the `dropdown` variable with the `selectedData` variable
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedData.Name;
+    // Check if the previous item is the initial selection
+    if (previousItem !== history[history.length - 1]) {
+      // Update the dropdown with the previous item
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = previousItem;
 
-    // Filter the data
-    filterData({ target: dropdown });
+      // Filter the data
+      filterData({ target: dropdown });
+    }
   }
+
+  // Clear the forward history
+  forwardHistory = [];
 }
 
 
