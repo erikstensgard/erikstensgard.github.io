@@ -279,20 +279,20 @@
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.scrollTop = 0;
     }
-// Function to handle the Go Back button click event
-function handleGoBack() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    const previousItem = history[history.length - 1]; // Get the previous item
 
-    forwardHistory.push(currentSelection); // Store the current selection in forwardHistory
+    // Function to handle the Go Back button click event
+    function handleGoBack() {
+      if (history.length > 1) {
+        const currentSelection = history.pop(); // Remove the current item from history
+        const previousItem = history[history.length - 1]; // Get the previous item
 
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  }
-}
+        forwardHistory.push(currentSelection); // Store the current selection in forwardHistory
 
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = previousItem;
+        filterData({ target: dropdown });
+      }
+    }
 
     // Function to handle the Go Forward button click event
     function handleGoForward() {
@@ -336,14 +336,15 @@ function handleGoBack() {
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
 
-function pushHistory(item) {
-  history.push(item);
-  clearForwardHistory();
-}
+    function pushHistory(item) {
+      history.push(item);
+      clearForwardHistory();
+    }
 
-function clearForwardHistory() {
-  forwardHistory = [];
-}
+    function clearForwardHistory() {
+      forwardHistory = [];
+    }
+
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
