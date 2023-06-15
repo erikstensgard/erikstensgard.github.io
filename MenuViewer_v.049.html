@@ -302,18 +302,6 @@ function handleGoBack() {
   }
 }
 
-function handleGoForward() {
-  if (forwardHistory.length > 0) {
-    const nextItem = forwardHistory.pop();
-    history.push(nextItem);
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = nextItem;
-    filterData({ target: dropdown });
-  }
-}
-
-
-
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
@@ -348,13 +336,23 @@ function pushHistory(item) {
       document.body.removeChild(element);
     }
 
-    // Attach event listeners
-    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-   document.getElementById('goForwardButton').addEventListener('click', () => handleGoForward());
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.pop();
+    history.push(nextItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = nextItem;
+    filterData({ target: dropdown });
+  }
+}
 
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
+// Attach event listeners
+document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
+document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('filterDropdown').addEventListener('change', filterData);
 
     // Fetch data and initialize the dropdown
     Promise.all([fetchOMData(), fetchODData()])
