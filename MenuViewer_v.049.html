@@ -351,7 +351,8 @@ function pushHistory(item) {
     // Attach event listeners
     document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-   document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+   document.getElementById('goForwardButton').addEventListener('click', () => handleGoForward());
+
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
     document.getElementById('filterDropdown').addEventListener('change', filterData);
 
