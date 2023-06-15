@@ -6,62 +6,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
   <style>
-   /* Common styles */
-table {
-  border-collapse: collapse;
-  padding: 0; /* Reduce table padding */
-}
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
 
-th,
-td {
-  border: none;
-  padding: 4px; /* Reduce cell padding */
-}
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
 
-.clickable {
-  color: blue;
-  cursor: pointer;
-}
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
 
-.bold {
-  font-weight: bold;
-  background-color: lightblue; /* Set your desired background color here */
-}
+    .bold {
+      font-weight: bold;
+      background-color: lightblue; /* Set your desired background color here */
+    }
 
-/* Header styles */
-#header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1;
-}
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between; /* Add space between buttons */
+      align-items: center; /* Center align items vertically */
+      padding: 8px; /* Add some padding to the header */
+    }
 
-/* Table styles */
-.table {
-  table-layout: fixed;
-  width: 100%;
-}
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
 
-.table td {
-  white-space: pre-wrap; /* Enable line breaks within a cell */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    .table td {
+      white-space: nowrap; /* Disable text wrapping within a cell */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-/* Media queries for responsive design */
-@media screen and (max-width: 768px) {
-  /* Adjust table font size for smaller screens */
-  .table td {
-    font-size: 11px;
-  }
-}
+    /* Media queries for responsive design */
+    @media screen and (max-width: 768px) {
+      /* Adjust table font size for smaller screens */
+      .table td {
+        font-size: 11px;
+      }
 
-@media screen and (max-width: 480px) {
-  /* Further adjust table font size for even smaller screens */
-  .table td {
-    font-size: 8px;
-  }
-}
+      /* Adjust button and dropdown font size for smaller screens */
+      button,
+      select {
+        font-size: 14px;
+      }
+
+      /* Hide the Go Forward button on smaller screens */
+      #goForwardButton {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      /* Further adjust table font size for even smaller screens */
+      .table td {
+        font-size: 8px;
+      }
+
+      /* Further adjust button and dropdown font size for even smaller screens */
+      button,
+      select {
+        font-size: 12px;
+      }
+    }
 
   </style>
 
@@ -69,15 +90,20 @@ td {
 
 <body>
   <div id="header">
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <select id="filterDropdown"></select>
-    <button id="downloadJSONButton">Download JSON</button>
+    <div>
+      <button id="goBackButton">&larr; Go Back</button>
+      <button id="goForwardButton">Go Forward &rarr;</button>
+    </div>
+    <div>
+      <select id="filterDropdown"></select>
+      <button id="downloadJSONButton">Download JSON</button>
+    </div>
   </div>
 
   <div id="resultContainer"></div>
 
   <script>
+
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
@@ -143,7 +169,8 @@ td {
         behavior: 'smooth'
       });
     }
-// Function to create the table with OMJSON data
+
+    // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -154,11 +181,7 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  const combinedRows = []; // Array to store the combined rows
-
   for (let row = 1; row <= maxRow; row++) {
-    let shouldCombine = true; // Flag to indicate if the row should be combined
-
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
@@ -206,43 +229,13 @@ function createOMTable(selectedData) {
 
           displayCell.appendChild(cellContentElement);
         });
-
-        // Check if the row should be combined based on cell content
-        if (matchingItems.some(item => item.Text === '' || item.Header === 1 || item.Item)) {
-          shouldCombine = false;
-        }
       }
 
       bodyRow.appendChild(displayCell);
     }
 
-    if (shouldCombine) {
-      // Combine the current row with the last combined row
-      if (combinedRows.length > 0) {
-        const lastCombinedRow = combinedRows[combinedRows.length - 1];
-        lastCombinedRow.push(bodyRow);
-      } else {
-        // Start a new combined row
-        combinedRows.push([bodyRow]);
-      }
-    } else {
-      // Append the current row directly to the tbody
-      tbody.appendChild(bodyRow);
-    }
+    tbody.appendChild(bodyRow);
   }
-
-  combinedRows.forEach(combinedRow => {
-    const mergedRow = document.createElement('tr');
-    combinedRow.forEach(row => {
-      const cell = document.createElement('td');
-      cell.colSpan = columns;
-      while (row.firstChild) {
-        cell.appendChild(row.firstChild);
-      }
-      mergedRow.appendChild(cell);
-    });
-    tbody.appendChild(mergedRow);
-  });
 
   table.appendChild(tbody);
 
@@ -252,6 +245,8 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
+
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
