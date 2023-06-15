@@ -284,24 +284,6 @@
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
-function handleGoBack() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    const previousItem = history.pop(); // Get the previous item
-
-    // Check if the previous item is the initial selection
-    if (previousItem !== currentSelection) {
-      // Update the dropdown with the previous item
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = previousItem;
-
-      // Filter the data
-      filterData({ target: dropdown });
-    }
-  }
-}
-
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
