@@ -280,22 +280,25 @@
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
-    function handleGoBack() {
-      if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+// Function to handle the Go Back button click event
+function handleGoBack() {
+  if (history.length > 1) {
+    const currentSelection = history.pop(); // Remove the current item from history
+    let previousItem = history.pop(); // Get the previous item
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
-        }
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
-      }
+    // Keep going back until we find a valid previous item that is not the initial selection
+    while (previousItem === currentSelection && history.length > 0) {
+      previousItem = history.pop();
     }
+
+    forwardHistory.push(currentSelection); // Store the current selection in forwardHistory
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  }
+}
+
 
     // Function to handle the Go Forward button click event
     function handleGoForward() {
