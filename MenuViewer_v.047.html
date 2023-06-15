@@ -114,6 +114,8 @@
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
+    let forwardHistory = []; // History of forward selections
+
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -129,6 +131,11 @@
     }
 
     // Function to handle row click event
+
+function handleRowClick(item) {
+  // Clear forwardHistory when a new item is selected
+  forwardHistory = [];
+    
     function handleRowClick(item) {
       const matchingItem = omData.find(
         omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -282,22 +289,24 @@ function createOMTable(selectedData) {
       resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
-    function handleGoBack() {
-      if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+ // Function to handle the Go Back button click event
+function handleGoBack() {
+  if (history.length > 1) {
+    forwardHistory.push(history.pop()); // Push the current item to forwardHistory
+    let previousItem = history[history.length - 1]; // Get the previous item
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
-        }
-
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
-      }
+    // Keep going back until we find a valid previous item that is not the initial selection
+    while (previousItem === selectedData.Name && history.length > 1) {
+      forwardHistory.push(history.pop()); // Push the current item to forwardHistory
+      previousItem = history[history.length - 1];
     }
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = previousItem;
+    filterData({ target: dropdown });
+  }
+}
+
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
@@ -333,23 +342,20 @@ function pushHistory(item) {
       document.body.removeChild(element);
     }
 
-    // Function to handle the Go Forward button click event
+// Function to handle the Go Forward button click event
 function handleGoForward() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    let nextItem = history[history.length - 1]; // Get the next item
-
-    // Keep going forward until we find a valid next item
-    while (nextItem === currentSelection && history.length > 1) {
-      nextItem = history[history.length - 1];
-      history.pop();
-    }
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.pop(); // Get the next item from forwardHistory
+    history.push(nextItem); // Push the next item to history
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
     filterData({ target: dropdown });
   }
 }
+
+// Attach event listener for the Go Forward button
+document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 
 
     // Attach event listeners
