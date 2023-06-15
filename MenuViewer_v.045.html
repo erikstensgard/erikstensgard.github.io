@@ -181,10 +181,16 @@ function createOMTable(selectedData) {
   // Append combined rows to the table body
   combinedRows.forEach(rowItems => {
     const bodyRow = document.createElement('tr');
+    let combinedCellContent = '';
     rowItems.forEach(item => {
-      const displayCell = createDisplayCell(item);
-      bodyRow.appendChild(displayCell);
+      const { Text } = item;
+      if (Text) {
+        combinedCellContent += Text + ' ';
+      }
     });
+
+    const displayCell = createDisplayCell({ Text: combinedCellContent });
+    bodyRow.appendChild(displayCell);
     tbody.appendChild(bodyRow);
   });
 
@@ -196,43 +202,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-// Helper function to create a display cell
-function createDisplayCell(item) {
-  const { Text, Item, Header, DisplayText } = item;
-  const displayCell = document.createElement('td');
-  const cellContentElement = document.createElement('div');
-
-  let cellContent = Text || '';
-
-  if (cellContent === '' && DisplayText) {
-    cellContent = DisplayText;
-  } else if (cellContent === '' && Item) {
-    cellContent = Item;
-  }
-
-  // Check if cellContent consists only of underscore characters
-  if (/^_+$/.test(cellContent)) {
-    cellContentElement.textContent = cellContent;
-  } else {
-    cellContentElement.textContent = cellContent;
-
-    if (Header === 1) {
-      cellContentElement.classList.add('bold');
-    }
-
-    if (Item) {
-      cellContentElement.classList.add('clickable');
-      cellContentElement.addEventListener('click', () => {
-        handleRowClick(item);
-      });
-    }
-  }
-
-  displayCell.appendChild(cellContentElement);
-  return displayCell;
-}
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
