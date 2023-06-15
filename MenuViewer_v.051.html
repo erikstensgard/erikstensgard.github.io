@@ -302,16 +302,17 @@ function handleGoBack() {
 
 // Function to handle the Go Forward button click event
 function handleGoForward() {
-  if (history.length > 0) {
-    const nextItem = history.shift(); // Remove the first item from history
-    forwardHistory.push(nextItem);
+  if (history.length > 1) {
+    const previousItem = history[history.length - 2]; // Get the previous item
+
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = nextItem;
+    dropdown.value = previousItem;
     filterData({ target: dropdown });
   } else {
     alert("There is no previous item to go forward to.");
   }
 }
+
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
