@@ -295,6 +295,9 @@
     }
 // Function to handle the Go Forward button click event
 function handleGoForward() {
+  // Initialize forwardHistory array
+  forwardHistory = [];
+
   if (forwardHistory.length > 0) {
     const nextItem = forwardHistory.pop();
     const dropdown = document.getElementById('filterDropdown');
@@ -308,7 +311,6 @@ function handleGoForward() {
     alert("There is no previous item to go forward to.");
   }
 }
-
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
