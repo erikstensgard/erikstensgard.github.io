@@ -144,8 +144,6 @@
       });
     }
 
-    // Function to create the table with OMJSON data
-// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -155,6 +153,9 @@ function createOMTable(selectedData) {
   const { Contents } = selectedData;
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
+
+  let combinedCellContent = '';
+  let combinedCellFormatting = '';
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
@@ -167,76 +168,59 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
-        const cellContents = [];
-        let formatting = '';
+        const { Text, Header } = matchingItems[0];
+        const cellContent = Text || '';
 
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
-          let cellContent = Text || '';
+        if (cellContent.trim() !== '') {
+          const formatting = Header === 1 ? 'bold' : 'normal';
 
-          if (cellContent === '' && DisplayText) {
-            cellContent = DisplayText;
-          } else if (cellContent === '' && Item) {
-            cellContent = Item;
-          }
-
-          if (cellContent.trim() !== '') {
-            if (formatting === '') {
-              formatting = Header === 1 ? 'bold' : 'normal';
-            }
-
-            if (formatting === (Header === 1 ? 'bold' : 'normal')) {
-              cellContents.push(cellContent);
-            } else {
+          if (
+            formatting === combinedCellFormatting &&
+            formatting !== 'normal'
+          ) {
+            combinedCellContent += ' ' + cellContent;
+          } else {
+            if (combinedCellContent.trim() !== '') {
               const cellContentElement = document.createElement('div');
-              cellContentElement.textContent = cellContents.join(' ');
+              cellContentElement.textContent = combinedCellContent;
 
-              if (formatting === 'bold') {
+              if (combinedCellFormatting === 'bold') {
                 cellContentElement.classList.add('bold');
               }
 
-              if (Item) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItems[0]);
-                });
-              }
-
               displayCell.appendChild(cellContentElement);
-
-              // Reset cellContents and formatting for the next group of consecutive cells
-              cellContents.length = 0;
-              formatting = Header === 1 ? 'bold' : 'normal';
-
-              cellContents.push(cellContent);
             }
+
+            combinedCellContent = cellContent;
+            combinedCellFormatting = formatting;
           }
-        });
-
-        // Create the final cell for the remaining consecutive cells
-        if (cellContents.length > 0) {
-          const cellContentElement = document.createElement('div');
-          cellContentElement.textContent = cellContents.join(' ');
-
-          if (formatting === 'bold') {
-            cellContentElement.classList.add('bold');
-          }
-
-          if (matchingItems[0].Item) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItems[0]);
-            });
-          }
-
-          displayCell.appendChild(cellContentElement);
         }
+      } else {
+        combinedCellContent = '';
+        combinedCellFormatting = '';
       }
 
       bodyRow.appendChild(displayCell);
     }
 
     tbody.appendChild(bodyRow);
+  }
+
+  if (combinedCellContent.trim() !== '') {
+    const lastCellContentElement = document.createElement('div');
+    lastCellContentElement.textContent = combinedCellContent;
+
+    if (combinedCellFormatting === 'bold') {
+      lastCellContentElement.classList.add('bold');
+    }
+
+    const lastDisplayCell = document.createElement('td');
+    lastDisplayCell.appendChild(lastCellContentElement);
+
+    const lastBodyRow = document.createElement('tr');
+    lastBodyRow.appendChild(lastDisplayCell);
+
+    tbody.appendChild(lastBodyRow);
   }
 
   table.appendChild(tbody);
