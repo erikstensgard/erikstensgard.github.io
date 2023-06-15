@@ -303,7 +303,7 @@ function handleGoBack() {
 // Function to handle the Go Forward button click event
 function handleGoForward() {
   if (forwardHistory.length > 0) {
-    const nextItem = forwardHistory.pop(); // Remove the current item from history
+    const nextItem = forwardHistory.shift(); // Remove the first item from history
     history.push(nextItem);
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
