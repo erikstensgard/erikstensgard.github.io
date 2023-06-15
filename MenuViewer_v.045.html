@@ -223,7 +223,7 @@ function createOMTable(selectedData) {
           item => item.Row === row && item.Column === nextColumn
         );
         if (nextMatchingItems.length > 0 && !mergedCells.includes(nextMergeKey)) {
-          colSpan += nextMatchingItems.length;
+          colSpan += 1;
           mergedCells.push(nextMergeKey);
         } else {
           break;
