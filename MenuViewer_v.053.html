@@ -108,12 +108,13 @@
       return data;
     }
 
-    // Global variables
-    let omData = []; // OMJSON data
-    let odData = []; // ODJSON data
-    let selectedData = null; // Currently selected data
-    let history = []; // History of selected items
-    let forwardHistory = []; // History of forward selections
+// Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
+let forwardHistory = []; // History of forward selections
+
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -285,14 +286,14 @@ function pushHistory(item) {
   history.push(item);
   forwardHistory = []; // Clear forward history
 }
-
+    
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
     const currentSelection = history.pop(); // Remove the current item from history
     const previousItem = history[history.length - 1]; // Get the previous item
 
-    forwardHistory.pop(); // Remove the current item from forwardHistory
+    forwardHistory.push(currentSelection); // Add the current item to forwardHistory
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = previousItem;
@@ -303,7 +304,7 @@ function handleGoBack() {
 // Function to handle the Go Forward button click event
 function handleGoForward() {
   if (forwardHistory.length > 0) {
-    const nextItem = forwardHistory.shift(); // Remove the first item from forwardHistory
+    const nextItem = forwardHistory.pop(); // Remove the last item from forwardHistory
     history.push(nextItem);
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
@@ -312,7 +313,6 @@ function handleGoForward() {
     alert("There is no previous item to go forward to.");
   }
 }
-
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
@@ -337,12 +337,11 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-    // Attach event listeners
-    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
+document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
+document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('filterDropdown').addEventListener('change', filterData);
 
     function clearForwardHistory() {
       forwardHistory = [];
