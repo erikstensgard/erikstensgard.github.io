@@ -34,10 +34,6 @@
       top: 0;
       background-color: white;
       z-index: 1;
-      display: flex;
-      justify-content: space-between; /* Add space between buttons */
-      align-items: center; /* Center align items vertically */
-      padding: 8px; /* Add some padding to the header */
     }
 
     /* Table styles */
@@ -62,12 +58,7 @@
       /* Adjust button and dropdown font size for smaller screens */
       button,
       select {
-        font-size: 14px;
-      }
-
-      /* Hide the Go Forward button on smaller screens */
-      #goForwardButton {
-        display: none;
+        font-size: 11px;
       }
     }
 
@@ -80,27 +71,25 @@
       /* Further adjust button and dropdown font size for even smaller screens */
       button,
       select {
-        font-size: 12px;
+        font-size: 8px;
       }
     }
-
   </style>
-
 </head>
 
 <body>
   <div id="header">
-    <div>
-      <button id="goBackButton">&larr; Go Back</button>
-      <button id="goForwardButton">Go Forward &rarr;</button>
-    </div>
-    <div>
-      <select id="filterDropdown"></select>
-      <button id="downloadJSONButton">Download JSON</button>
-    </div>
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="goForwardButton">Go Forward &rarr;</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <select id="filterDropdown"></select>
   </div>
 
   <div id="resultContainer"></div>
+
+  <div id="footer">
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
 
   <script>
     // Fetch OMJSON Data
@@ -122,13 +111,14 @@
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
+    let forwardHistory = []; // Forward history of selected items
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
       const dropdown = document.getElementById('filterDropdown');
       dropdown.innerHTML = '';
 
-      data.forEach(item => {
+      data.forEach((item) => {
         const option = document.createElement('option');
         option.value = item.Name;
         option.textContent = item.DisplayText || item.Name;
@@ -139,22 +129,26 @@
     // Function to handle row click event
     function handleRowClick(item) {
       const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        (omItem) =>
+          omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
       );
 
       if (matchingItem) {
         selectedData = matchingItem;
         createOMTable(matchingItem);
         pushHistory(matchingItem.Name);
+        forwardHistory = [];
       } else {
         const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+          (odItem) =>
+            odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
 
         if (matchingItemIndex !== -1) {
           selectedData = odData[matchingItemIndex];
           createODTable(selectedData);
           pushHistory(selectedData.Item);
+          forwardHistory = [];
         }
       }
 
@@ -165,7 +159,7 @@
       // Scroll the page to the top
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
 
@@ -177,21 +171,21 @@
       const tbody = document.createElement('tbody');
 
       const { Contents } = selectedData;
-      const maxRow = Math.max(...Contents.map(item => item.Row));
-      const columns = Math.max(...Contents.map(item => item.Column));
+      const maxRow = Math.max(...Contents.map((item) => item.Row));
+      const columns = Math.max(...Contents.map((item) => item.Column));
 
       for (let row = 1; row <= maxRow; row++) {
         const bodyRow = document.createElement('tr');
 
         for (let column = 1; column <= columns; column++) {
           const matchingItems = Contents.filter(
-            item => item.Row === row && item.Column === column
+            (item) => item.Row === row && item.Column === column
           );
 
           const displayCell = document.createElement('td');
 
           if (matchingItems.length > 0) {
-            matchingItems.forEach(matchingItem => {
+            matchingItems.forEach((matchingItem) => {
               const { Text, Item, Header, DisplayText } = matchingItem;
               let cellContent = Text || '';
 
@@ -254,15 +248,9 @@
 
       for (const [key, value] of Object.entries(selectedData)) {
         const tr = document.createElement('tr');
-        const tdKey = document.createElement('td');
-        const tdValue = document.createElement('td');
-
-        tdKey.textContent = key;
-        tdValue.textContent = value;
-
-        tr.appendChild(tdKey);
-        tr.appendChild(tdValue);
-
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
         tbody.appendChild(tr);
       }
 
@@ -275,151 +263,110 @@
       }
     }
 
-    // Function to handle the Go Back button click event
+    // Function to handle the "Go Back" button click event
     function handleGoBack() {
       if (history.length > 1) {
-        history.pop();
-        const itemName = history[history.length - 1];
-        const matchingItem = omData.find(
-          item => item.Name.trim().toLowerCase() === itemName.trim().toLowerCase()
+        const previousItem = history.pop();
+        forwardHistory.push(previousItem);
+        const prevItemIndex = history.length - 1;
+        const prevItem = omData.find(
+          (item) => item.Name === history[prevItemIndex]
         );
+        selectedData = prevItem;
+        createOMTable(prevItem);
+        scrollToTop();
+      }
+    }
 
-        if (matchingItem) {
+    // Function to handle the "Go Forward" button click event
+    function handleGoForward() {
+      if (forwardHistory.length > 0) {
+        const nextItem = forwardHistory.pop();
+        history.push(nextItem);
+        const nextItemIndex = history.length - 1;
+        const nextItemData = omData.find(
+          (item) => item.Name === history[nextItemIndex]
+        );
+        selectedData = nextItemData;
+        createOMTable(nextItemData);
+        scrollToTop();
+      }
+    }
+
+    // Function to handle the "Main Menu" button click event
+    function handleMainMenu() {
+      selectedData = null;
+      history = [];
+      forwardHistory = [];
+      createOMTable(null);
+      scrollToTop();
+    }
+
+    // Function to scroll to the top of the table
+    function scrollToTop() {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+
+    // Function to push item to history
+    function pushHistory(item) {
+      if (history.length === 0 || item !== history[history.length - 1]) {
+        history.push(item);
+      }
+    }
+
+    // Function to handle the "Download JSON" button click event
+    function handleDownloadJSON() {
+      const data = JSON.stringify(selectedData, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'selectedData.json';
+      link.click();
+    }
+
+    // Function to initialize the application
+    async function initializeApp() {
+      try {
+        omData = await fetchOMData();
+        odData = await fetchODData();
+        populateDropdown(omData);
+
+        const filterDropdown = document.getElementById('filterDropdown');
+        filterDropdown.addEventListener('change', (event) => {
+          const selectedItem = event.target.value;
+          const matchingItem = omData.find(
+            (item) => item.Name === selectedItem
+          );
           selectedData = matchingItem;
           createOMTable(matchingItem);
-        } else {
-          const matchingItemIndex = odData.findIndex(
-            item => item.Name.trim().toLowerCase() === itemName.trim().toLowerCase()
-          );
-
-          if (matchingItemIndex !== -1) {
-            selectedData = odData[matchingItemIndex];
-            createODTable(selectedData);
-          }
-        }
-
-        // Scroll to the top of the table
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.scrollTop = 0;
-
-        // Scroll the page to the top
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
+          pushHistory(matchingItem.Name);
+          forwardHistory = [];
         });
+
+        const goBackButton = document.getElementById('goBackButton');
+        goBackButton.addEventListener('click', handleGoBack);
+
+        const goForwardButton = document.getElementById('goForwardButton');
+        goForwardButton.addEventListener('click', handleGoForward);
+
+        const mainMenuButton = document.getElementById('mainMenuButton');
+        mainMenuButton.addEventListener('click', handleMainMenu);
+
+        const downloadJSONButton = document.getElementById('downloadJSONButton');
+        downloadJSONButton.addEventListener('click', handleDownloadJSON);
+      } catch (error) {
+        console.error('Error initializing the application:', error);
       }
     }
 
-    // Function to handle the Go Forward button click event
-    function handleGoForward() {
-      if (history.length < 2) return;
-
-      const itemName = history[history.length - 2];
-      const matchingItem = omData.find(
-        item => item.Name.trim().toLowerCase() === itemName.trim().toLowerCase()
-      );
-
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          item => item.Name.trim().toLowerCase() === itemName.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-        }
-      }
-
-      pushHistory(itemName);
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-      // Function to push an item to the history array
-    function pushHistory(item) {
-      const itemIndex = history.findIndex(
-        historyItem => historyItem.trim().toLowerCase() === item.trim().toLowerCase()
-      );
-
-      if (itemIndex !== -1) {
-        // If the item already exists in the history, remove it and push it to the end
-        history.splice(itemIndex, 1);
-      }
-
-      history.push(item);
-    }
-
-    // Function to handle the Download JSON button click event
-    function handleDownloadJSON() {
-      const json = JSON.stringify(selectedData, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'selectedData.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Function to handle the Filter dropdown change event
-    function handleFilterChange() {
-      const selectedItemName = document.getElementById('filterDropdown').value;
-      const matchingItem = omData.find(
-        item => item.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
-      );
-
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          item => item.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
-        }
-      }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-
-    // Event listeners
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
-    document.getElementById('filterDropdown').addEventListener('change', handleFilterChange);
-    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
-
-    // Fetch OMJSON and ODJSON data
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omJSON, odJSON]) => {
-        omData = omJSON;
-        odData = odJSON;
-
-        populateDropdown(omData);
-      })
-      .catch(error => console.log(error));
+    // Call initializeApp to start the application
+    initializeApp();
   </script>
 </body>
 
