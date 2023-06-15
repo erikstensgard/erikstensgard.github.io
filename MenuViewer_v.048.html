@@ -285,64 +285,38 @@
     }
 
     // Function to handle the Go Back button click event
-    function handleGoBack() {
-      if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+function handleGoBack() {
+  if (history.length > 1) {
+    const currentSelection = history.pop(); // Remove the current item from history
+    const previousItem = history.pop(); // Get the previous item
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
-        }
+    // Check if the previous item is the initial selection
+    if (previousItem !== currentSelection) {
+      // Update the dropdown with the previous item
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = previousItem;
 
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
-      }
-      // Check if there is a forward history
-if (forwardHistory.length > 0) {
-  // Remove the first item from the forward history
-  const previousItem = forwardHistory.shift();
-
-  // Push the previous item onto the history stack
-  history.push(previousItem);
-
-  // Update the dropdown with the previous item
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.value = previousItem;
-
-  // Filter the data
-  filterData({ target: dropdown });
+      // Filter the data
+      filterData({ target: dropdown });
+    }
+  }
 }
 
-    }
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.pop();
+    history.push(nextItem);
 
-    // Function to handle the Go Forward button click event
-    function handleGoForward() {
-      if (forwardHistory.length > 0) {
-        const nextItem = forwardHistory.pop();
-        history.push(nextItem);
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = nextItem;
-        filterData({ target: dropdown });
-      }
-      // Check if there is a history
-if (history.length > 0) {
-  // Remove the first item from the history stack
-  const nextItem = history.shift();
+    // Update the dropdown with the next item
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = nextItem;
 
-  // Push the next item onto the forward history
-  forwardHistory.push(nextItem);
-
-  // Update the dropdown with the next item
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.value = nextItem;
-
-  // Filter the data
-  filterData({ target: dropdown });
+    // Filter the data
+    filterData({ target: dropdown });
+  }
 }
 
-    }
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
