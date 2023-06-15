@@ -29,35 +29,36 @@
     }
 
     /* Header styles */
-  #header {
+ #header {
   position: sticky;
   top: 0;
   background-color: white;
   z-index: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 #header button,
 #header select {
-  position: fixed;
+  margin: 5px;
 }
 
 #goBackButton {
-  left: 20px;
+  margin-left: 20px;
 }
 
 #mainMenuButton {
-  left: 50%;
-  transform: translateX(-50%);
+  margin-right: auto;
 }
 
 #goForwardButton {
-  right: 20px;
+  margin-right: 20px;
 }
 
 #filterDropdown {
-  right: 120px;
+  margin-right: 20px;
 }
-
 
     /* Table styles */
     .table {
