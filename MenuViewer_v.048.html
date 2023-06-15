@@ -311,16 +311,17 @@ function handleGoForward() {
     // Pop the next item from the forward history
     const nextItem = forwardHistory.pop();
 
-    // Update the dropdown with the next item
+    // Update the `selectedData` variable with the next item
+    selectedData = nextItem;
+
+    // Update the `dropdown` variable with the `selectedData` variable
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = nextItem;
+    dropdown.value = selectedData.Name;
 
     // Filter the data
     filterData({ target: dropdown });
   }
 }
-
-
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
