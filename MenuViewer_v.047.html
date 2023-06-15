@@ -88,11 +88,11 @@
   </div>
 
   <div id="resultContainer"></div>
-  
+
   <div id="footer">
-  <button id="downloadJSONButton">Download JSON</button>
+    <button id="downloadJSONButton">Download JSON</button>
   </div>
-  
+
   <script>
 
     // Fetch OMJSON Data
@@ -113,8 +113,8 @@
     let omData = []; // OMJSON data
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
-   let history = []; // History of selected items
-let forwardHistory = []; // History of forward selections
+    let history = []; // History of selected items
+    let forwardHistory = []; // History of forward selections
 
 
     // Function to populate dropdown with OMJSON data
@@ -164,80 +164,80 @@ let forwardHistory = []; // History of forward selections
     }
 
     // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
+    function createOMTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
 
-  for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
 
-    for (let column = 1; column <= columns; column++) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
 
-      const displayCell = document.createElement('td');
+          const displayCell = document.createElement('td');
 
-      if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
-          let cellContent = Text || '';
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header, DisplayText } = matchingItem;
+              let cellContent = Text || '';
 
-          if (cellContent === '' && DisplayText) {
-            cellContent = DisplayText;
-          } else if (cellContent === '' && Item) {
-            cellContent = Item;
+              if (cellContent === '' && DisplayText) {
+                cellContent = DisplayText;
+              } else if (cellContent === '' && Item) {
+                cellContent = Item;
+              }
+
+              const cellContentElement = document.createElement('div');
+
+              // Check if cellContent consists only of underscore characters
+              if (/^_+$/.test(cellContent)) {
+                cellContentElement.textContent = cellContent;
+              } else {
+                cellContentElement.textContent = cellContent;
+
+                if (Header === 1) {
+                  cellContentElement.classList.add('bold');
+                }
+
+                // Add the CSS class for bolded items
+                if (Header === 1) {
+                  displayCell.classList.add('bold');
+                }
+
+                if (Item) {
+                  cellContentElement.classList.add('clickable');
+                  cellContentElement.addEventListener('click', () => {
+                    handleRowClick(matchingItem);
+                  });
+                }
+              }
+
+              displayCell.appendChild(cellContentElement);
+            });
           }
 
-          const cellContentElement = document.createElement('div');
+          bodyRow.appendChild(displayCell);
+        }
 
-          // Check if cellContent consists only of underscore characters
-          if (/^_+$/.test(cellContent)) {
-            cellContentElement.textContent = cellContent;
-          } else {
-            cellContentElement.textContent = cellContent;
-
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-            }
-
-            // Add the CSS class for bolded items
-            if (Header === 1) {
-              displayCell.classList.add('bold');
-            }
-
-            if (Item) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
-            }
-          }
-
-          displayCell.appendChild(cellContentElement);
-        });
+        tbody.appendChild(bodyRow);
       }
 
-      bodyRow.appendChild(displayCell);
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
+      }
     }
-
-    tbody.appendChild(bodyRow);
-  }
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
 
 
 
@@ -300,15 +300,17 @@ function createOMTable(selectedData) {
         filterData({ target: dropdown });
       }
     }
+
+    // Function to handle the Go Forward button click event
     function handleGoForward() {
-  if (forwardHistory.length > 0) {
-    const nextItem = forwardHistory.pop();
-    history.push(nextItem);
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = nextItem;
-    filterData({ target: dropdown });
-  }
-}
+      if (forwardHistory.length > 0) {
+        const nextItem = forwardHistory.pop();
+        history.push(nextItem);
+        const dropdown = document.getElementById('filterDropdown');
+        dropdown.value = nextItem;
+        filterData({ target: dropdown });
+      }
+    }
 
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
@@ -317,24 +319,14 @@ function createOMTable(selectedData) {
       filterData({ target: dropdown });
     }
 
-function pushHistory(item) {
-  history.push(item);
-  clearForwardHistory();
-}
+    function pushHistory(item) {
+      history.push(item);
+      clearForwardHistory();
+    }
 
-function clearForwardHistory() {
-  forwardHistory = [];
-}
-
-function handleGoForward() {
-  if (forwardHistory.length > 0) {
-    const nextItem = forwardHistory.pop();
-    history.push(nextItem);
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = nextItem;
-    filterData({ target: dropdown });
-  }
-}
+    function clearForwardHistory() {
+      forwardHistory = [];
+    }
 
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
@@ -352,7 +344,7 @@ function handleGoForward() {
 
       document.body.removeChild(element);
     }
-  
+
     // Attach event listeners
     document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -373,9 +365,12 @@ function handleGoForward() {
         filterData({ target: dropdown });
       })
       .catch(error => {
-        console.error('Error:', error);
+        console.error('Error fetching data:', error);
       });
+
   </script>
+
 </body>
 
 </html>
+
