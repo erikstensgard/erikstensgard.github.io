@@ -284,19 +284,19 @@ let forwardHistory = []; // History of forward selections
 // Function to push the current selection to the history and clear forward history
 function pushHistory(item) {
   history.push(item);
-  forwardHistory = []; // Clear forward history
+
+  // Clear forward history except the last item (current selection)
+  forwardHistory = forwardHistory.slice(forwardHistory.length - 1);
 }
-    
+
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
     const currentSelection = history.pop(); // Remove the current item from history
-    const previousItem = history[history.length - 1]; // Get the previous item
-
     forwardHistory.push(currentSelection); // Add the current item to forwardHistory
 
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
+    dropdown.value = history[history.length - 1]; // Get the previous item from history
     filterData({ target: dropdown });
   }
 }
@@ -306,6 +306,7 @@ function handleGoForward() {
   if (forwardHistory.length > 0) {
     const nextItem = forwardHistory.pop(); // Remove the last item from forwardHistory
     history.push(nextItem);
+
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = nextItem;
     filterData({ target: dropdown });
@@ -337,15 +338,12 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
+// Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
-
-    function clearForwardHistory() {
-      forwardHistory = [];
-    }
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
