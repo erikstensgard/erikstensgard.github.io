@@ -153,72 +153,40 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  let previousCellContent = '';
+  let combinedRows = []; // Array to store combined rows
 
   for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
+    const matchingItems = Contents.filter(item => item.Row === row);
+    const hasFormatting = matchingItems.some(item => item.Header === 1);
 
-    let column = 1;
-    while (column <= columns) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
-
-      const displayCell = document.createElement('td');
-
-      if (matchingItems.length > 0) {
-        const { Text, Item, Header, DisplayText } = matchingItems[0];
-        let cellContent = Text || '';
-
-        if (cellContent === '' && DisplayText) {
-          cellContent = DisplayText;
-        } else if (cellContent === '' && Item) {
-          cellContent = Item;
-        }
-
-        const cellContentElement = document.createElement('div');
-
-        // Check if cellContent consists only of underscore characters
-        if (/^_+$/.test(cellContent)) {
-          cellContentElement.textContent = cellContent;
-        } else {
-          cellContentElement.textContent = cellContent;
-
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-          }
-
-          if (Item) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItems[0]);
-            });
-          }
-        }
-
-        displayCell.appendChild(cellContentElement);
-
-        // Merge consecutive cells with the same content and no formatting
-        if (cellContent === previousCellContent && matchingItems.every(item => item.Text === '')) {
-          const previousCell = bodyRow.lastElementChild;
-          previousCell.colSpan = (previousCell.colSpan || 1) + 1;
-          mergedCells.push(column);
-        } else {
-          bodyRow.appendChild(displayCell);
-          previousCellContent = cellContent;
-        }
-      } else {
-        // Add empty cell for blank cells
-        const emptyCell = document.createElement('td');
-        bodyRow.appendChild(emptyCell);
-        previousCellContent = '';
-      }
-
-      column++;
+    if (matchingItems.length > 0 && hasFormatting) {
+      // Add each cell as a separate row if it has formatting
+      matchingItems.forEach(item => {
+        const bodyRow = document.createElement('tr');
+        const displayCell = createDisplayCell(item);
+        bodyRow.appendChild(displayCell);
+        tbody.appendChild(bodyRow);
+      });
+      combinedRows = []; // Reset combinedRows array
+    } else if (matchingItems.length > 0) {
+      // Combine cells into a single row if they have no formatting
+      combinedRows.push(matchingItems);
+    } else {
+      // Add a blank row for empty cells
+      const blankRow = document.createElement('tr');
+      tbody.appendChild(blankRow);
     }
-
-    tbody.appendChild(bodyRow);
   }
+
+  // Append combined rows to the table body
+  combinedRows.forEach(rowItems => {
+    const bodyRow = document.createElement('tr');
+    rowItems.forEach(item => {
+      const displayCell = createDisplayCell(item);
+      bodyRow.appendChild(displayCell);
+    });
+    tbody.appendChild(bodyRow);
+  });
 
   table.appendChild(tbody);
 
@@ -227,6 +195,42 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
+}
+
+// Helper function to create a display cell
+function createDisplayCell(item) {
+  const { Text, Item, Header, DisplayText } = item;
+  const displayCell = document.createElement('td');
+  const cellContentElement = document.createElement('div');
+
+  let cellContent = Text || '';
+
+  if (cellContent === '' && DisplayText) {
+    cellContent = DisplayText;
+  } else if (cellContent === '' && Item) {
+    cellContent = Item;
+  }
+
+  // Check if cellContent consists only of underscore characters
+  if (/^_+$/.test(cellContent)) {
+    cellContentElement.textContent = cellContent;
+  } else {
+    cellContentElement.textContent = cellContent;
+
+    if (Header === 1) {
+      cellContentElement.classList.add('bold');
+    }
+
+    if (Item) {
+      cellContentElement.classList.add('clickable');
+      cellContentElement.addEventListener('click', () => {
+        handleRowClick(item);
+      });
+    }
+  }
+
+  displayCell.appendChild(cellContentElement);
+  return displayCell;
 }
 
 
