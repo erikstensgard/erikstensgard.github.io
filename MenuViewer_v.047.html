@@ -90,7 +90,7 @@
   <div id="resultContainer"></div>
   
   <div id="footer">
-    <button id="downloadJSONButton">Download JSON</button>
+  <button id="downloadJSONButton">Download JSON</button>
   </div>
   
   <script>
@@ -116,6 +116,7 @@
     let history = []; // History of selected items
     let forwardHistory = []; // History of forward selections
 
+
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
       const dropdown = document.getElementById('filterDropdown');
@@ -132,144 +133,52 @@
     // Function to handle row click event
     function handleRowClick(item) {
       const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        data => data.Name.trim().toLowerCase() === item.trim().toLowerCase()
       );
 
       if (matchingItem) {
         selectedData = matchingItem;
         createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
+        pushHistory(matchingItem.Name, 'OMJSON');
+      }
+    }
+
+    // Function to create OMJSON table
+    function createOMTable(data) {
+      const container = document.getElementById('resultContainer');
+      container.innerHTML = '';
+
+      if (data) {
+        const table = document.createElement('table');
+        table.className = 'table';
+
+        const headerRow = document.createElement('tr');
+        const columns = Object.keys(data);
+
+        columns.forEach(column => {
+          const headerCell = document.createElement('th');
+          headerCell.textContent = column;
+          headerRow.appendChild(headerCell);
+        });
+
+        table.appendChild(headerRow);
+
+        data.Values.forEach(value => {
+          const row = document.createElement('tr');
+          columns.forEach(column => {
+            const cell = document.createElement('td');
+            cell.textContent = value[column];
+            row.appendChild(cell);
+          });
+          row.addEventListener('click', () => handleRowClick(value.Name));
+          table.appendChild(row);
+        });
+
+        container.appendChild(table);
       } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
-        }
-      }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-
-    // Function to create the table with OMJSON data
-    function createOMTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
-
-      const tbody = document.createElement('tbody');
-
-      const { Contents } = selectedData;
-      const maxRow = Math.max(...Contents.map(item => item.Row));
-      const columns = Math.max(...Contents.map(item => item.Column));
-
-      for (let row = 1; row <= maxRow; row++) {
-        const bodyRow = document.createElement('tr');
-
-        for (let column = 1; column <= columns; column++) {
-          const matchingItems = Contents.filter(
-            item => item.Row === row && item.Column === column
-          );
-
-          const displayCell = document.createElement('td');
-
-          if (matchingItems.length > 0) {
-            matchingItems.forEach(matchingItem => {
-              const { Text, Item, Header, DisplayText } = matchingItem;
-              let cellContent = Text || '';
-
-              if (cellContent === '' && DisplayText) {
-                cellContent = DisplayText;
-              } else if (cellContent === '' && Item) {
-                cellContent = Item;
-              }
-
-              const cellContentElement = document.createElement('div');
-
-              // Check if cellContent consists only of underscore characters
-              if (/^_+$/.test(cellContent)) {
-                cellContentElement.textContent = cellContent;
-              } else {
-                cellContentElement.textContent = cellContent;
-
-                if (Header === 1) {
-                  cellContentElement.classList.add('bold');
-                }
-
-                // Add the CSS class for bolded items
-                if (Header === 1) {
-                  displayCell.classList.add('bold');
-                }
-
-                if (Item) {
-                  cellContentElement.classList.add('clickable');
-                  cellContentElement.addEventListener('click', () => {
-                    handleRowClick(matchingItem);
-                  });
-                }
-              }
-
-              displayCell.appendChild(cellContentElement);
-            });
-          }
-
-          bodyRow.appendChild(displayCell);
-        }
-
-        tbody.appendChild(bodyRow);
-      }
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      if (selectedData) {
-        resultContainer.appendChild(table);
-      }
-    }
-
-    // Function to create the table with ODJSON data
-    function createODTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
-
-      const tbody = document.createElement('tbody');
-
-      for (const [key, value] of Object.entries(selectedData)) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-
-        td.textContent = key;
-        tr.appendChild(td);
-
-        const td2 = document.createElement('td');
-
-        if (typeof value === 'string') {
-          td2.textContent = value;
-        } else {
-          td2.innerHTML = JSON.stringify(value);
-        }
-
-        tr.appendChild(td2);
-        tbody.appendChild(tr);
-      }
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      if (selectedData) {
-        resultContainer.appendChild(table);
+        const message = document.createElement('p');
+        message.textContent = 'No data available.';
+        container.appendChild(message);
       }
     }
 
@@ -277,20 +186,22 @@
     function handleGoBack() {
       if (history.length > 1) {
         const previousItem = history.pop();
-        const forwardItem = selectedData;
+        const selectedItem = history[history.length - 1];
+        const dataType = selectedItem.type;
 
-        forwardHistory.push(forwardItem);
+        if (dataType === 'OMJSON') {
+          selectedData = omData.find(item => item.Name === selectedItem.item);
+          createOMTable(selectedData);
+          const filterDropdown = document.getElementById('filterDropdown');
+          filterDropdown.value = selectedData.Name;
+        } else if (dataType === 'ODJSON') {
+          selectedData = odData.find(item => item.Name === selectedItem.item);
+          createODTable(selectedData);
+          const filterDropdown = document.getElementById('filterDropdown');
+          filterDropdown.value = selectedData.Name;
+        }
 
-        const previousItemIndex = history.length - 1;
-        const previousSelectedItem = omData.find(
-          item => item.Name === history[previousItemIndex]
-        );
-
-        selectedData = previousSelectedItem;
-        createOMTable(previousSelectedItem);
-
-        const filterDropdown = document.getElementById('filterDropdown');
-        filterDropdown.value = previousSelectedItem.Name;
+        forwardHistory.push(previousItem);
 
         const resultContainer = document.getElementById('resultContainer');
         resultContainer.scrollTop = 0;
@@ -307,15 +218,20 @@
     function handleGoForward() {
       if (forwardHistory.length > 0) {
         const forwardItem = forwardHistory.pop();
-        const selectedItem = forwardItem;
+        const selectedItem = forwardItem.data;
+        const dataType = forwardItem.type;
 
-        history.push(selectedItem.Name);
-
-        selectedData = selectedItem;
-        createOMTable(selectedItem);
-
-        const filterDropdown = document.getElementById('filterDropdown');
-        filterDropdown.value = selectedItem.Name;
+        if (dataType === 'OMJSON') {
+          selectedData = omData.find(item => item.Name === selectedItem);
+          createOMTable(selectedData);
+          const filterDropdown = document.getElementById('filterDropdown');
+          filterDropdown.value = selectedData.Name;
+        } else if (dataType === 'ODJSON') {
+          selectedData = odData.find(item => item.Name === selectedItem);
+          createODTable(selectedData);
+          const filterDropdown = document.getElementById('filterDropdown');
+          filterDropdown.value = selectedData.Name;
+        }
 
         const resultContainer = document.getElementById('resultContainer');
         resultContainer.scrollTop = 0;
@@ -350,65 +266,105 @@
     }
 
     // Function to push a new item to the history
-    function pushHistory(item) {
-      if (history[history.length - 1] !== item) {
-        history.push(item);
-        forwardHistory = [];
+    function pushHistory(item, dataType) {
+      const lastItem = history[history.length - 1];
+      if (lastItem && lastItem.item === item && lastItem.type === dataType) {
+        return;
+      }
+      history.push({ item, type: dataType });
+      forwardHistory = [];
+    }
+
+    // Function to handle filter dropdown change event
+    function handleFilterDropdownChange(event) {
+      const selectedValue = event.target.value;
+      const matchingItem = omData.find(
+        item => item.Name.trim().toLowerCase() === selectedValue.trim().toLowerCase()
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name, 'OMJSON');
       }
     }
 
-    // Function to handle download JSON button click
-    function handleDownloadJSON() {
-      const data = JSON.stringify(selectedData, null, 2);
-      const filename = 'selected_data.json';
+    // Function to create ODJSON table
+    function createODTable(data) {
+      const container = document.getElementById('resultContainer');
+      container.innerHTML = '';
 
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
-      link.download = filename;
+      if (data) {
+        const table = document.createElement('table');
+        table.className = 'table';
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        const headerRow = document.createElement('tr');
+        const columns = Object.keys(data);
+
+        columns.forEach(column => {
+          const headerCell = document.createElement('th');
+          headerCell.textContent = column;
+          headerRow.appendChild(headerCell);
+        });
+
+        table.appendChild(headerRow);
+
+        data.Values.forEach(value => {
+          const row = document.createElement('tr');
+          columns.forEach(column => {
+            const cell = document.createElement('td');
+            cell.textContent = value[column];
+            row.appendChild(cell);
+          });
+          row.addEventListener('click', () => handleRowClick(value.Name));
+          table.appendChild(row);
+        });
+
+        container.appendChild(table);
+      } else {
+        const message = document.createElement('p');
+        message.textContent = 'No data available.';
+        container.appendChild(message);
+      }
     }
 
-    // Event listeners
-    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
-    document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
-    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
-
-    // Main function
+    // Function to initialize the application
     async function main() {
-      // Fetch OMJSON data
+      // Fetch OMJSON and ODJSON data
       omData = await fetchOMData();
-
-      // Fetch ODJSON data
       odData = await fetchODData();
 
       // Populate the dropdown with OMJSON data
       populateDropdown(omData);
 
-      // Listen for filter dropdown change event
-      const filterDropdown = document.getElementById('filterDropdown');
-      filterDropdown.addEventListener('change', event => {
-        const selectedValue = event.target.value;
-        const matchingItem = omData.find(
-          item => item.Name.trim().toLowerCase() === selectedValue.trim().toLowerCase()
-        );
+      // Set the default selected item
+      const defaultSelectedItem = 'ORZID2 GMENU ABX INPT MAIN';
 
-        if (matchingItem) {
-          selectedData = matchingItem;
-          createOMTable(matchingItem);
-          pushHistory(matchingItem.Name);
-        }
-      });
+      const matchingOMItem = omData.find(
+        item => item.Name.trim().toLowerCase() === defaultSelectedItem.trim().toLowerCase()
+      );
+
+      if (matchingOMItem) {
+        selectedData = matchingOMItem;
+        createOMTable(matchingOMItem);
+        pushHistory(matchingOMItem.Name, 'OMJSON');
+      }
+
+      // Attach event handlers
+      const goBackButton = document.getElementById('goBackButton');
+      const goForwardButton = document.getElementById('goForwardButton');
+      const mainMenuButton = document.getElementById('mainMenuButton');
+      const filterDropdown = document.getElementById('filterDropdown');
+
+      goBackButton.addEventListener('click', handleGoBack);
+      goForwardButton.addEventListener('click', handleGoForward);
+      mainMenuButton.addEventListener('click', handleMainMenu);
+      filterDropdown.addEventListener('change', handleFilterDropdownChange);
     }
 
-    // Initialize the application
     main();
 
   </script>
-
 </body>
 
 </html>
