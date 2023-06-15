@@ -143,7 +143,6 @@
         behavior: 'smooth'
       });
     }
-// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -154,89 +153,65 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  let mergedCells = [];
+  let previousCellContent = '';
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
 
     let column = 1;
-    let currentColspan = 1;
-
     while (column <= columns) {
       const matchingItems = Contents.filter(
         item => item.Row === row && item.Column === column
       );
 
-      if (matchingItems.length === 0) {
-        column++;
-        continue; // Skip empty cells
-      }
-
-      const { Text, Item, Header, DisplayText } = matchingItems[0];
-
       const displayCell = document.createElement('td');
-      const cellContentElement = document.createElement('div');
 
-      let cellContent = Text || '';
+      if (matchingItems.length > 0) {
+        const { Text, Item, Header, DisplayText } = matchingItems[0];
+        let cellContent = Text || '';
 
-      if (cellContent === '' && DisplayText) {
-        cellContent = DisplayText;
-      } else if (cellContent === '' && Item) {
-        cellContent = Item;
-      }
-
-      // Check if cellContent consists only of underscore characters
-      if (/^_+$/.test(cellContent)) {
-        cellContentElement.textContent = cellContent;
-      } else {
-        cellContentElement.textContent = cellContent;
-
-        if (Header === 1) {
-          cellContentElement.classList.add('bold');
+        if (cellContent === '' && DisplayText) {
+          cellContent = DisplayText;
+        } else if (cellContent === '' && Item) {
+          cellContent = Item;
         }
 
-        if (Item) {
-          cellContentElement.classList.add('clickable');
-          cellContentElement.addEventListener('click', () => {
-            handleRowClick(matchingItems[0]);
-          });
+        const cellContentElement = document.createElement('div');
+
+        // Check if cellContent consists only of underscore characters
+        if (/^_+$/.test(cellContent)) {
+          cellContentElement.textContent = cellContent;
+        } else {
+          cellContentElement.textContent = cellContent;
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+          }
+
+          if (Item) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItems[0]);
+            });
+          }
         }
-      }
 
-      displayCell.appendChild(cellContentElement);
+        displayCell.appendChild(cellContentElement);
 
-      // Check if the current cell can be merged with the previous cell
-      if (
-        matchingItems.length === 1 &&
-        mergedCells.includes(column - 1) &&
-        !displayCell.classList.contains('bold') &&
-        !displayCell.classList.contains('clickable')
-      ) {
-        const previousCell = bodyRow.lastChild;
-       
-        // Merge the current cell with the previous cell
-        previousCell.colSpan = previousCell.colSpan + 1;
-        currentColspan = previousCell.colSpan;
-        mergedCells.push(column);
-
-        // Check if the merged cell exceeds the column count
-        if (column + currentColspan > columns) {
-          break;
+        // Merge consecutive cells with the same content and no formatting
+        if (cellContent === previousCellContent && matchingItems.every(item => item.Text === '')) {
+          const previousCell = bodyRow.lastElementChild;
+          previousCell.colSpan = (previousCell.colSpan || 1) + 1;
+          mergedCells.push(column);
+        } else {
+          bodyRow.appendChild(displayCell);
+          previousCellContent = cellContent;
         }
       } else {
-        // Add the CSS class for bolded items
-        if (Header === 1) {
-          displayCell.classList.add('bold');
-        }
-
-        if (Item) {
-          displayCell.classList.add('clickable');
-          displayCell.addEventListener('click', () => {
-            handleRowClick(matchingItems[0]);
-          });
-        }
-
-        bodyRow.appendChild(displayCell);
+        // Add empty cell for blank cells
+        const emptyCell = document.createElement('td');
+        bodyRow.appendChild(emptyCell);
+        previousCellContent = '';
       }
 
       column++;
