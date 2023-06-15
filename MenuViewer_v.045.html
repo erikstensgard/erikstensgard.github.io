@@ -143,7 +143,6 @@ td {
         behavior: 'smooth'
       });
     }
-
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -222,7 +221,10 @@ function createOMTable(selectedData) {
       // Create a new table row with the combined cells and add it to the tbody
       const bodyRow = document.createElement('tr');
       combinedRow.forEach(cell => {
-        bodyRow.appendChild(cell);
+        const cellWrapper = document.createElement('div');
+        cellWrapper.style.whiteSpace = 'normal'; // Set white-space to normal for line breaks
+        cellWrapper.appendChild(cell);
+        bodyRow.appendChild(cellWrapper);
       });
       tbody.appendChild(bodyRow);
 
