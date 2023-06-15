@@ -88,11 +88,11 @@
   </div>
 
   <div id="resultContainer"></div>
-
+  
   <div id="footer">
     <button id="downloadJSONButton">Download JSON</button>
   </div>
-
+  
   <script>
 
     // Fetch OMJSON Data
@@ -115,7 +115,6 @@
     let selectedData = null; // Currently selected data
     let history = []; // History of selected items
     let forwardHistory = []; // History of forward selections
-
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -239,8 +238,6 @@
       }
     }
 
-
-
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
       const table = document.createElement('table');
@@ -251,8 +248,19 @@
       for (const [key, value] of Object.entries(selectedData)) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.textContent = `${key}: ${value}`;
+
+        td.textContent = key;
         tr.appendChild(td);
+
+        const td2 = document.createElement('td');
+
+        if (typeof value === 'string') {
+          td2.textContent = value;
+        } else {
+          td2.innerHTML = JSON.stringify(value);
+        }
+
+        tr.appendChild(td2);
         tbody.appendChild(tr);
       }
 
@@ -260,117 +268,147 @@
 
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
-    }
-
-    // Function to filter data based on the selected option
-    function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
-
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
+      if (selectedData) {
+        resultContainer.appendChild(table);
       }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
     }
 
-    // Function to handle the Go Back button click event
+    // Function to handle go back button click
     function handleGoBack() {
       if (history.length > 1) {
-        const currentSelection = history.pop(); // Remove the current item from history
-        let previousItem = history.pop(); // Get the previous item
+        const previousItem = history.pop();
+        const forwardItem = selectedData;
 
-        // Keep going back until we find a valid previous item that is not the initial selection
-        while (previousItem === currentSelection && history.length > 0) {
-          previousItem = history.pop();
-        }
+        forwardHistory.push(forwardItem);
 
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = previousItem;
-        filterData({ target: dropdown });
+        const previousItemIndex = history.length - 1;
+        const previousSelectedItem = omData.find(
+          item => item.Name === history[previousItemIndex]
+        );
+
+        selectedData = previousSelectedItem;
+        createOMTable(previousSelectedItem);
+
+        const filterDropdown = document.getElementById('filterDropdown');
+        filterDropdown.value = previousSelectedItem.Name;
+
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.scrollTop = 0;
+
+        // Scroll the page to the top
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
     }
 
-    // Function to handle the Go Forward button click event
+    // Function to handle go forward button click
     function handleGoForward() {
       if (forwardHistory.length > 0) {
-        const nextItem = forwardHistory.pop();
-        history.push(nextItem);
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = nextItem;
-        filterData({ target: dropdown });
+        const forwardItem = forwardHistory.pop();
+        const selectedItem = forwardItem;
+
+        history.push(selectedItem.Name);
+
+        selectedData = selectedItem;
+        createOMTable(selectedItem);
+
+        const filterDropdown = document.getElementById('filterDropdown');
+        filterDropdown.value = selectedItem.Name;
+
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.scrollTop = 0;
+
+        // Scroll the page to the top
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
     }
 
-    // Function to handle the Main Menu button click event
+    // Function to handle main menu button click
     function handleMainMenu() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      filterData({ target: dropdown });
-    }
+      selectedData = null;
+      createOMTable(null);
 
-    function pushHistory(item) {
-      history.push(item);
-      clearForwardHistory();
-    }
+      const filterDropdown = document.getElementById('filterDropdown');
+      filterDropdown.value = '';
 
-    function clearForwardHistory() {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+      history = [];
       forwardHistory = [];
     }
 
-    // Function to handle the Download JSON button click event
-    function handleDownloadJSON() {
-      const displayText = selectedData.DisplayText || selectedData.Name;
-      const data = JSON.stringify(selectedData, null, 2);
-      const filename = `${displayText}.json`;
-
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
-      element.setAttribute('download', filename);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-
-      element.click();
-
-      document.body.removeChild(element);
+    // Function to push a new item to the history
+    function pushHistory(item) {
+      if (history[history.length - 1] !== item) {
+        history.push(item);
+        forwardHistory = [];
+      }
     }
 
-    // Attach event listeners
-    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
+    // Function to handle download JSON button click
+    function handleDownloadJSON() {
+      const data = JSON.stringify(selectedData, null, 2);
+      const filename = 'selected_data.json';
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Event listeners
     document.getElementById('goBackButton').addEventListener('click', handleGoBack);
     document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
     document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('filterDropdown').addEventListener('change', filterData);
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 
-    // Fetch data and initialize the dropdown
-    Promise.all([fetchOMData(), fetchODData()])
-      .then(([omjsonData, odjsonData]) => {
-        omData = omjsonData;
-        odData = odjsonData;
+    // Main function
+    async function main() {
+      // Fetch OMJSON data
+      omData = await fetchOMData();
 
-        populateDropdown(omData);
+      // Fetch ODJSON data
+      odData = await fetchODData();
 
-        const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-        filterData({ target: dropdown });
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      // Populate the dropdown with OMJSON data
+      populateDropdown(omData);
+
+      // Listen for filter dropdown change event
+      const filterDropdown = document.getElementById('filterDropdown');
+      filterDropdown.addEventListener('change', event => {
+        const selectedValue = event.target.value;
+        const matchingItem = omData.find(
+          item => item.Name.trim().toLowerCase() === selectedValue.trim().toLowerCase()
+        );
+
+        if (matchingItem) {
+          selectedData = matchingItem;
+          createOMTable(matchingItem);
+          pushHistory(matchingItem.Name);
+        }
       });
+    }
+
+    // Initialize the application
+    main();
 
   </script>
 
 </body>
 
 </html>
-
