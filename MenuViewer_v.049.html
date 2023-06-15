@@ -279,17 +279,11 @@
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.scrollTop = 0;
     }
-
 // Function to handle the Go Back button click event
 function handleGoBack() {
   if (history.length > 1) {
     const currentSelection = history.pop(); // Remove the current item from history
-    let previousItem = history.pop(); // Get the previous item
-
-    // Keep going back until we find a valid previous item that is not the initial selection
-    while (previousItem === currentSelection && history.length > 0) {
-      previousItem = history.pop();
-    }
+    const previousItem = history[history.length - 1]; // Get the previous item
 
     forwardHistory.push(currentSelection); // Store the current selection in forwardHistory
 
