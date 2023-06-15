@@ -113,7 +113,9 @@
     let omData = []; // OMJSON data
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
-    let history = []; // History of selected items
+   let history = []; // History of selected items
+let forwardHistory = []; // History of forward selections
+
 
     // Function to populate dropdown with OMJSON data
     function populateDropdown(data) {
@@ -315,7 +317,7 @@ function createOMTable(selectedData) {
       filterData({ target: dropdown });
     }
 
-    function pushHistory(item) {
+function pushHistory(item) {
   history.push(item);
   clearForwardHistory();
 }
@@ -324,6 +326,15 @@ function clearForwardHistory() {
   forwardHistory = [];
 }
 
+function handleGoForward() {
+  if (forwardHistory.length > 0) {
+    const nextItem = forwardHistory.pop();
+    history.push(nextItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = nextItem;
+    filterData({ target: dropdown });
+  }
+}
 
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
