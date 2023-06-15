@@ -304,13 +304,12 @@ function handleGoBack() {
 
 // Function to handle the Go Forward button click event
 function handleGoForward() {
-  // Check if there are any items in the forward history
   if (forwardHistory.length > 0) {
+    // Push the current item onto the forward history
+    forwardHistory.push(selectedData);
+
     // Pop the next item from the forward history
     const nextItem = forwardHistory.pop();
-
-    // Push the next item onto the history stack
-    history.push(nextItem);
 
     // Update the dropdown with the next item
     const dropdown = document.getElementById('filterDropdown');
