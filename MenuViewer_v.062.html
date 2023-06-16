@@ -61,7 +61,6 @@
       margin-right: 20px;
     }
 
-
     /* Table styles */
     .table {
       table-layout: fixed;
@@ -91,7 +90,6 @@
       }
     }
   </style>
-
 </head>
 
 <body>
@@ -123,151 +121,156 @@
       return data;
     }
 
-    // Function to create HTML table from JSON data
-    function createTable(data) {
-      const table = document.createElement('table');
-      table.classList.add('table');
-
-      // Create table header
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      for (const key of Object.keys(data[0])) {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-      }
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      // Create table body
-      const tbody = document.createElement('tbody');
-      for (const obj of data) {
-        const row = document.createElement('tr');
-        for (const value of Object.values(obj)) {
-          const td = document.createElement('td');
-          td.textContent = value;
-          row.appendChild(td);
-        }
-        tbody.appendChild(row);
-      }
-      table.appendChild(tbody);
-
-      return table;
+    // Global variables
+    let omData = []; // OMJSON data
+    let odData = []; // ODJSON data
+    let selectedData = null; // Currently selected data
+    let history = []; // History of selected items
+    let forwardHistory = []; // History of forward selections
+    // Function to adjust font size based on container width
+    function adjustFontSize() {
+      const containerWidth = document.getElementById('resultContainer').clientWidth;
+      const fontSize = Math.floor(containerWidth / 40); // Adjust the divisor as needed
+      document.documentElement.style.fontSize = fontSize + 'px';
     }
 
-    // Function to filter JSON data based on selected option
-    function filterData(option, data) {
-      if (option === 'All') {
-        return data;
-      }
-      return data.filter(obj => obj.category === option);
-    }
-
-    // Function to update the table with filtered data
-    function updateTable(option, data) {
-      const filteredData = filterData(option, data);
+    // Function to render the selected data
+    function renderData(data) {
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
 
-      if (filteredData.length === 0) {
-        resultContainer.textContent = 'No results found.';
-      } else {
-        const table = createTable(filteredData);
+      if (data) {
+        const table = document.createElement('table');
+        table.classList.add('table');
+
+        // Render table header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach((key) => {
+          const th = document.createElement('th');
+          th.textContent = key;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Render table body
+        const tbody = document.createElement('tbody');
+        data.forEach((item) => {
+          const row = document.createElement('tr');
+          Object.values(item).forEach((value) => {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.appendChild(cell);
+          });
+          tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
         resultContainer.appendChild(table);
+      } else {
+        resultContainer.textContent = 'No data available';
+      }
+
+      // Adjust font size after rendering data
+      adjustFontSize();
+    }
+
+    // Function to update the history
+    function updateHistory() {
+      const historyIndex = history.length - 1;
+      const forwardButton = document.getElementById('goForwardButton');
+      forwardButton.disabled = forwardHistory.length === 0;
+
+      if (history.length === 0) {
+        const goBackButton = document.getElementById('goBackButton');
+        goBackButton.disabled = true;
+      } else {
+        const goBackButton = document.getElementById('goBackButton');
+        goBackButton.disabled = false;
+        goBackButton.textContent = `&larr; Go Back to ${history[historyIndex - 1].name}`;
       }
     }
 
-    // Function to populate the filter dropdown
-    function populateFilterDropdown(data) {
-      const filterDropdown = document.getElementById('filterDropdown');
-      const options = Array.from(new Set(data.map(obj => obj.category)));
+    // Function to handle go back button click
+    function handleGoBack() {
+      const historyIndex = history.length - 1;
+      const selectedItem = history[historyIndex];
 
-      const allOption = document.createElement('option');
-      allOption.value = 'All';
-      allOption.textContent = 'All';
-      filterDropdown.appendChild(allOption);
+      if (history.length > 1) {
+        const previousItem = history[historyIndex - 1];
+        selectedData = previousItem.data;
+        renderData(selectedData);
+        history.pop();
 
-      for (const option of options) {
-        const opt = document.createElement('option');
-        opt.value = option;
-        opt.textContent = option;
-        filterDropdown.appendChild(opt);
+        const goBackButton = document.getElementById('goBackButton');
+        goBackButton.textContent = `&larr; Go Back to ${history[historyIndex - 2].name}`;
+
+        forwardHistory.push(selectedItem);
+
+        updateHistory();
       }
-
-      filterDropdown.addEventListener('change', function () {
-        const selectedOption = this.value;
-        updateTable(selectedOption, data);
-      });
     }
 
-    // Function to handle navigation buttons
-    function handleNavigationButtons() {
+    // Function to handle go forward button click
+    function handleGoForward() {
+      if (forwardHistory.length > 0) {
+        const selectedItem = forwardHistory.pop();
+        selectedData = selectedItem.data;
+        renderData(selectedData);
+        history.push(selectedItem);
+
+        updateHistory();
+      }
+    }
+
+    // Function to handle main menu button click
+    function handleMainMenu() {
+      selectedData = null;
+      renderData(selectedData);
+      history = [];
+      forwardHistory = [];
+
       const goBackButton = document.getElementById('goBackButton');
-      const goForwardButton = document.getElementById('goForwardButton');
-      const backButtonHistory = [];
-      const forwardButtonHistory = [];
+      goBackButton.disabled = true;
+      goBackButton.textContent = '&larr; Go Back';
 
-      goBackButton.addEventListener('click', function () {
-        if (backButtonHistory.length > 0) {
-          const previousData = backButtonHistory.pop();
-          forwardButtonHistory.push(currentData);
-          updateTable('All', previousData);
-        }
-      });
-
-      goForwardButton.addEventListener('click', function () {
-        if (forwardButtonHistory.length > 0) {
-          const nextData = forwardButtonHistory.pop();
-          backButtonHistory.push(currentData);
-          updateTable('All', nextData);
-        }
-      });
+      const forwardButton = document.getElementById('goForwardButton');
+      forwardButton.disabled = true;
     }
 
-    // Function to download JSON file
-    function downloadJSONFile(data) {
-      const jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'data.json';
-      link.click();
-      URL.revokeObjectURL(url);
+    // Function to handle filter dropdown change
+    function handleFilterChange(event) {
+      const selectedIndex = event.target.selectedIndex;
+      const selectedOption = event.target.options[selectedIndex];
+
+      if (selectedOption.value === 'all') {
+        selectedData = originalData;
+      } else {
+        const filterKey = selectedOption.value;
+        const filterValue = selectedOption.textContent;
+        selectedData = originalData.filter((item) => item[filterKey] === filterValue);
+      }
+
+      renderData(selectedData);
+      history.push({ name: selectedOption.textContent, data: selectedData });
+
+      updateHistory();
     }
 
-    // Function to handle download button click
-    function handleDownloadButton(data) {
-      const downloadButton = document.getElementById('downloadJSONButton');
-      downloadButton.addEventListener('click', function () {
-        downloadJSONFile(data);
-      });
-    }
+    // Event listeners
+    window.addEventListener('resize', adjustFontSize);
+    document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+    document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+    document.getElementById('filterDropdown').addEventListener('change', handleFilterChange);
 
-    // Function to initialize the application
-    async function initialize() {
-      const omData = await fetchOMData();
-      const odData = await fetchODData();
-      const mergedData = mergeData(omData, odData);
-      const defaultOption = 'All';
-
-      populateFilterDropdown(mergedData);
-      updateTable(defaultOption, mergedData);
-      handleNavigationButtons();
-      handleDownloadButton(mergedData);
-    }
-
-    // Helper function to merge OMJSON and ODJSON data
-    function mergeData(omData, odData) {
-      return omData.map((omObj, index) => {
-        const odObj = odData[index];
-        return { ...omObj, ...odObj };
-      });
-    }
-
-    // Run the initialization function when the DOM is ready
-    document.addEventListener('DOMContentLoaded', initialize);
+    // Initial setup
+    adjustFontSize();
+    renderData(selectedData);
+    updateHistory();
   </script>
 </body>
 
 </html>
+
