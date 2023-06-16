@@ -193,10 +193,12 @@ function filterData(event) {
   // Scroll to the top of the table
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.scrollTop = 0;
+
+  // Clear the version dropdown selection if no matching data is found
+  if (!matchingData && !odMatchingData) {
+    document.getElementById('versionDropdown').value = 'default';
+  }
 }
-
-
-
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
