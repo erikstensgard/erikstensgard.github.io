@@ -358,9 +358,9 @@ function handleGoBack() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = selectedItem;
-    adjustFontSize();
     filterData({ target: dropdown });
   }
+      adjustFontSize();
 }
 
 // Function to handle the Go Forward button click event
@@ -370,16 +370,16 @@ function handleGoForward() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = selectedItem;
-    adjustFontSize();
     filterData({ target: dropdown });
   }
+      adjustFontSize();
 }
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      adjustFontSize();
       filterData({ target: dropdown });
+          adjustFontSize();
     }
 
     // Function to handle the Download JSON button click event
