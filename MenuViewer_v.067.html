@@ -134,8 +134,8 @@ async function fetchODData() {
   return data;
 }
 document.getElementById('locationDropdown').addEventListener('change', async () => {
-  await fetchOMJSON();
-  await fetchODJSON();
+  await fetchOMData();
+  await fetchODData();
 });
 
     // Global variables
@@ -460,6 +460,7 @@ Promise.all([fetchOMData(), fetchODData()])
   .catch(error => {
     console.error('Error:', error);
   });
+
 
 
   </script>
