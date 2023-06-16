@@ -199,8 +199,7 @@ function filterData(event) {
     document.getElementById('versionDropdown').value = 'default';
   }
 }
-    // Function to change the filter dropdown based on the selected version dropdown
-function changeFilterDropdown() {
+    function changeFilterDropdown() {
   const filterDropdown = document.getElementById('filterDropdown');
   const versionDropdown = document.getElementById('versionDropdown');
   const selectedVersion = versionDropdown.value;
@@ -208,23 +207,24 @@ function changeFilterDropdown() {
   const matchingItem = omData.find(item => item.Name === filterDropdown.value && item.Version === selectedVersion);
 
   if (matchingItem) {
-    return; // No need to change the filter dropdown if there is a match
-  }
-
-  const defaultMenuItem = 'ORZID2 GMENU ABX INPT MAIN';
-
-  if (selectedVersion === 'default') {
-    filterDropdown.value = defaultMenuItem;
+    filterDropdown.value = matchingItem.Name; // Set the filter dropdown to the matching item name
   } else {
-    const defaultMenuItemMatch = omData.find(item => item.Name === defaultMenuItem && item.Version === selectedVersion);
+    const defaultMenuItem = 'ORZID2 GMENU ABX INPT MAIN';
 
-    if (defaultMenuItemMatch) {
+    if (selectedVersion === 'default') {
       filterDropdown.value = defaultMenuItem;
     } else {
-      filterDropdown.value = ''; // Clear the filter dropdown if there is no match for the default menu item with the new version
+      const defaultMenuItemMatch = omData.find(item => item.Name === defaultMenuItem && item.Version === selectedVersion);
+
+      if (defaultMenuItemMatch) {
+        filterDropdown.value = defaultMenuItem;
+      } else {
+        filterDropdown.value = ''; // Clear the filter dropdown if there is no match for the default menu item with the new version
+      }
     }
   }
 }
+
 
 // Attach the event listener to the version dropdown
 document.getElementById('versionDropdown').addEventListener('change', changeFilterDropdown);
