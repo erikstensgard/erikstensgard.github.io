@@ -152,7 +152,7 @@ async function fetchFilesInFolder() {
 
 // Function to parse the file list retrieved from the server response
 function parseFileList(text) {
-  const regex = /href="([^"]*OMJSON\.json)"/g; // Updated regular expression pattern
+  const regex = /"([^"]*OMJSON\.json)"/g; // Updated regular expression pattern
   const fileList = [];
   let match;
 
