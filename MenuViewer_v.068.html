@@ -97,11 +97,8 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
+    <select id="versionDropdown"></select>
     <select id="filterDropdown"></select>
-    <select id="locationDropdown">
-      <option value="Minneapolis">Minneapolis</option>
-      <option value="St. Cloud">St. Cloud</option>
-    </select>
   </div>
 
   <div id="resultContainer"></div>
@@ -112,6 +109,7 @@
 
   <script>
     // Global variables
+    let versionData = []; // Version data
     let omData = []; // OMJSON data
     let odData = []; // ODJSON data
     let selectedData = null; // Currently selected data
@@ -119,172 +117,249 @@
     let forwardHistory = []; // History of forward selections
     let historyIndex = -1; // Index of the current selection in the history
 
-    async function fetchOMData(selectedLocation) {
-      const response = await fetch(`${selectedLocation}OMJSON.json`);
+    // Fetch version data
+    async function fetchVersionData() {
+      const response = await fetch('versionData.json');
       const data = await response.json();
       return data;
     }
 
-    async function fetchODData(selectedLocation) {
-      const response = await fetch(`${selectedLocation}ODJSON.json`);
+    // Fetch OMJSON Data for the selected version
+    async function fetchOMData(version) {
+      const response = await fetch(`${version}OMJSON.json`);
       const data = await response.json();
       return data;
     }
 
-    function populateDropdown(data) {
-      const dropdown = document.getElementById('filterDropdown');
+    // Fetch ODJSON Data for the selected version
+    async function fetchODData(version) {
+      const response = await fetch(`${version}ODJSON.json`);
+      const data = await response.json();
+      return data;
+    }
+
+    // Function to populate dropdown with version data
+    function populateVersionDropdown() {
+      const dropdown = document.getElementById('versionDropdown');
       dropdown.innerHTML = '';
 
-      data.forEach(item => {
+      versionData.forEach(item => {
         const option = document.createElement('option');
-        option.value = item.value;
-        option.textContent = item.text;
+        option.value = item;
+        option.textContent = item;
         dropdown.appendChild(option);
       });
     }
 
-    function updateResultContainer() {
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
+    // Function to populate dropdown with OMJSON data based on the selected version
+    function populateDropdown(data) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.innerHTML = '';
 
-      if (selectedData) {
-        const table = document.createElement('table');
-        table.classList.add('table');
+      data.sort((a, b) => {
+        const displayTextA = a.DisplayText || a.Name;
+        const displayTextB = b.DisplayText || b.Name;
+        return displayTextA.localeCompare(displayTextB);
+      });
 
-        // Create table headers
-        const thead = document.createElement('thead');
-        const tr = document.createElement('tr');
-        selectedData.headers.forEach(headerText => {
-          const th = document.createElement('th');
-          th.textContent = headerText;
-          tr.appendChild(th);
-        });
-        thead.appendChild(tr);
-        table.appendChild(thead);
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = item.DisplayText || item.Name;
+        dropdown.appendChild(option);
+      });
+    }
 
-        // Create table rows
-        const tbody = document.createElement('tbody');
-        selectedData.data.forEach(rowData => {
-          const tr = document.createElement('tr');
-          rowData.forEach(cellData => {
-            const td = document.createElement('td');
-            td.textContent = cellData;
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
+    // Function to filter data based on the selected option and version
+    function filterData(event) {
+      const selectedOption = event.target.value;
+      const selectedVersion = document.getElementById('versionDropdown').value;
 
-        resultContainer.appendChild(table);
-      } else {
-        resultContainer.textContent = 'No data available.';
+      if (selectedVersion && selectedVersion !== '' && selectedOption && selectedOption !== '') {
+        const matchingData = omData.find(item => item.Name === selectedOption);
+        if (matchingData) {
+          selectedData = matchingData;
+          createOMTable(matchingData);
+          pushHistory(matchingData.Name);
+        } else {
+          const odMatchingData = odData.find(item => item.Name === selectedOption);
+          if (odMatchingData) {
+            selectedData = odMatchingData;
+            createODTable(odMatchingData);
+            pushHistory(odMatchingData.Item);
+          }
+        }
+
+        adjustFontSize();
+        // Scroll to the top of the table
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.scrollTop = 0;
       }
     }
 
-    function pushHistory(selectedValue) {
-      // Clear forward history
-      forwardHistory = [];
-      historyIndex++;
+    // Function to handle version change event
+    function handleVersionChange(event) {
+      const selectedVersion = event.target.value;
 
-      // Add the selected value to history
-      history.splice(historyIndex, 0, selectedValue);
+      if (selectedVersion && selectedVersion !== '') {
+        const matchingVersionData = versionData.find(item => item === selectedVersion);
+        if (matchingVersionData) {
+          fetchOMData(selectedVersion)
+            .then(data => {
+              omData = data;
+              populateDropdown(omData);
+              filterData({ target: document.getElementById('filterDropdown') });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+
+          fetchODData(selectedVersion)
+            .then(data => {
+              odData = data;
+              populateDropdown(odData);
+              filterData({ target: document.getElementById('filterDropdown') });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+      }
     }
 
-    function updateNavigationButtons() {
-      const goBackButton = document.getElementById('goBackButton');
-      const goForwardButton = document.getElementById('goForwardButton');
-
-      goBackButton.disabled = historyIndex === 0;
-      goForwardButton.disabled = historyIndex === history.length - 1;
-    }
-
-    function handleLocationChange() {
-      const selectedLocation = this.value;
-      Promise.all([fetchOMData(selectedLocation), fetchODData(selectedLocation)])
-        .then(([omjsonData, odjsonData]) => {
-          omData = omjsonData;
-          odData = odjsonData;
-
-          populateDropdown(omData);
-
-          const dropdown = document.getElementById('filterDropdown');
-          dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-          pushHistory(dropdown.value);
-          filterData({ target: dropdown });
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
-
-    function handleFilterChange(event) {
-      const selectedValue = event.target.value;
-      const filteredData = selectedData.data.filter(rowData =>
-        rowData.some(cellData => cellData.includes(selectedValue))
-      );
-
-      selectedData = {
-        headers: selectedData.headers,
-        data: filteredData
-      };
-
-      updateResultContainer();
-      pushHistory(selectedValue);
-      updateNavigationButtons();
-    }
-
+    // Function to handle the click event of the "Go Back" button
     function handleGoBack() {
       if (historyIndex > 0) {
         historyIndex--;
-        const selectedValue = history[historyIndex];
+        const selectedItem = history[historyIndex];
         const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = selectedValue;
+        dropdown.value = selectedItem;
         filterData({ target: dropdown });
       }
     }
 
+    // Function to handle the click event of the "Go Forward" button
     function handleGoForward() {
       if (historyIndex < history.length - 1) {
         historyIndex++;
-        const selectedValue = history[historyIndex];
+        const selectedItem = history[historyIndex];
         const dropdown = document.getElementById('filterDropdown');
-        dropdown.value = selectedValue;
+        dropdown.value = selectedItem;
         filterData({ target: dropdown });
       }
     }
 
+    // Function to handle the click event of the "Main Menu" button
     function handleMainMenu() {
+      historyIndex = -1;
+      history = [];
+      forwardHistory = [];
       const dropdown = document.getElementById('filterDropdown');
       dropdown.value = '';
       filterData({ target: dropdown });
     }
 
+    // Function to handle the click event of the "Download JSON" button
     function handleDownloadJSON() {
-      const json = JSON.stringify(selectedData, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'filteredData.json';
-      a.click();
+      if (selectedData) {
+        const jsonData = JSON.stringify(selectedData, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${selectedData.Name}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
     }
 
-    function filterData(event) {
-      const selectedValue = event.target.value;
-      const selectedDataset = selectedValue.startsWith('OM') ? omData : odData;
+    // Function to create the OMJSON table
+    function createOMTable(data) {
+      const container = document.getElementById('resultContainer');
+      container.innerHTML = '';
 
-      selectedData = selectedDataset.find(data => data.value === selectedValue);
-      updateResultContainer();
-      pushHistory(selectedValue);
-      updateNavigationButtons();
+      const table = document.createElement('table');
+      table.className = 'table';
+      container.appendChild(table);
+
+      const tbody = document.createElement('tbody');
+      table.appendChild(tbody);
+
+      const properties = Object.keys(data);
+
+      properties.forEach(property => {
+        const row = tbody.insertRow();
+
+        const cell1 = row.insertCell();
+        const cell2 = row.insertCell();
+
+        cell1.textContent = property;
+        cell2.textContent = data[property];
+      });
     }
 
-    function initializeApp() {
-      const locationDropdown = document.getElementById('locationDropdown');
-      locationDropdown.addEventListener('change', handleLocationChange);
+    // Function to create the ODJSON table
+    function createODTable(data) {
+      const container = document.getElementById('resultContainer');
+      container.innerHTML = '';
+
+      const table = document.createElement('table');
+      table.className = 'table';
+      container.appendChild(table);
+
+      const tbody = document.createElement('tbody');
+      table.appendChild(tbody);
+
+      data.forEach(item => {
+        const row = tbody.insertRow();
+
+        const cell1 = row.insertCell();
+        const cell2 = row.insertCell();
+
+        cell1.textContent = item.Item;
+        cell2.textContent = item.Value;
+      });
+    }
+
+    // Function to adjust the font size of buttons and dropdowns based on the container width
+    function adjustFontSize() {
+      const containerWidth = document.getElementById('header').clientWidth;
+      const buttons = document.querySelectorAll('button');
+      const dropdowns = document.querySelectorAll('select');
+
+      const maxFontSize = 24; // Set your desired maximum font size here
+      const minFontSize = 12; // Set your desired minimum font size here
+
+      buttons.forEach(button => {
+        const fontSize = Math.min(maxFontSize, Math.max(minFontSize, containerWidth * 0.03));
+        button.style.fontSize = fontSize + 'px';
+      });
+
+      dropdowns.forEach(dropdown => {
+        const fontSize = Math.min(maxFontSize, Math.max(minFontSize, containerWidth * 0.015));
+        dropdown.style.fontSize = fontSize + 'px';
+      });
+    }
+
+    // Function to push the selected item to the history
+    function pushHistory(item) {
+      history.push(item);
+      historyIndex = history.length - 1;
+      forwardHistory = [];
+    }
+
+    // Initialization function
+    async function initialize() {
+      versionData = await fetchVersionData();
+      populateVersionDropdown();
+
+      const versionDropdown = document.getElementById('versionDropdown');
+      versionDropdown.addEventListener('change', handleVersionChange);
 
       const filterDropdown = document.getElementById('filterDropdown');
-      filterDropdown.addEventListener('change', handleFilterChange);
+      filterDropdown.addEventListener('change', filterData);
 
       const goBackButton = document.getElementById('goBackButton');
       goBackButton.addEventListener('click', handleGoBack);
@@ -297,10 +372,20 @@
 
       const downloadJSONButton = document.getElementById('downloadJSONButton');
       downloadJSONButton.addEventListener('click', handleDownloadJSON);
+
+      window.addEventListener('resize', adjustFontSize);
+
+      // Set initial version selection
+      if (versionData.length > 0) {
+        versionDropdown.value = versionData[0];
+        versionDropdown.dispatchEvent(new Event('change'));
+      }
     }
 
-    initializeApp();
+    // Call the initialization function
+    initialize();
   </script>
 </body>
 
 </html>
+
