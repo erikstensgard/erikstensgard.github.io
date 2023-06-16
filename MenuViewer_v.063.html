@@ -109,149 +109,42 @@
   </div>
 
   <script>
-
-Yes, you can modify the JavaScript code to dynamically pull the files based on the end of the file names. Here's an updated version of the code that achieves this:
-
-html
-Copy code
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Test</title>
-  <style>
-    /* Common styles */
-    table {
-      border-collapse: collapse;
-      padding: 0; /* Reduce table padding */
-    }
-
-    th,
-    td {
-      border: none;
-      padding: 4px; /* Reduce cell padding */
-    }
-
-    .clickable {
-      color: blue;
-      cursor: pointer;
-    }
-
-    .bold {
-      font-weight: bold;
-      background-color: lightblue; /* Set your desired background color here */
-    }
-
-    /* Header styles */
-    #header {
-      position: sticky;
-      top: 0;
-      background-color: white;
-      z-index: 1;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    #header button,
-    #header select {
-      margin: 5px;
-      flex: 0 0 auto;
-    }
-
-    #goBackButton {
-      margin-left: 20px;
-    }
-
-    #mainMenuButton {
-      margin-right: auto;
-    }
-
-    #goForwardButton {
-      margin-right: 20px;
-    }
-
-    #filterDropdown {
-      margin-right: 20px;
-    }
-
-    /* Table styles */
-    .table {
-      table-layout: fixed;
-      width: 100%;
-    }
-
-    .table td {
-      white-space: nowrap; /* Disable text wrapping within a cell */
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Media queries for responsive design */
-    @media screen and (max-width: 768px) {
-      /* Adjust button and dropdown font size for smaller screens */
-      button,
-      select {
-        font-size: 11px;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      /* Further adjust button and dropdown font size for even smaller screens */
-      button,
-      select {
-        font-size: 8px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div id="header">
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <button id="goForwardButton">Go Forward &rarr;</button>
-    <select id="filterDropdown"></select>
-  </div>
-
-  <div id="resultContainer"></div>
-
-  <div id="footer">
-    <button id="downloadJSONButton">Download JSON</button>
-  </div>
-
-  <script>
-    // Global variables
-    let omData = []; // OMJSON data
-    let odData = []; // ODJSON data
-
     // Fetch OMJSON Data
-    async function fetchOMData() {
-      const fileNames = await fetchFileNames('*OMJSON.json');
-      for (const fileName of fileNames) {
-        const response = await fetch(fileName);
-        const data = await response.json();
-        omData.push(...data);
-      }
-    }
+async function fetchOMData() {
+  const response = await fetchMatchingFile('*OMJSON.json');
+  const data = await response.json();
+  return data;
+}
 
-  // Fetch ODJSON Data
-    async function fetchODData() {
-      const fileNames = await fetchFileNames('*ODJSON.json');
-      for (const fileName of fileNames) {
-        const response = await fetch(fileName);
-        const data = await response.json();
-        odData.push(...data);
-      }
-    }
- // Fetch file names based on pattern
-    async function fetchFileNames(pattern) {
-      const response = await fetch('fileNames.json');
-      const data = await response.json();
-      return data.filter((fileName) => fileName.endsWith(pattern));
-    }
+// Fetch ODJSON Data
+async function fetchODData() {
+  const response = await fetchMatchingFile('*OMDJSON.json');
+  const data = await response.json();
+  return data;
+}
+
+// Function to fetch a file based on a wildcard pattern
+async function fetchMatchingFile(pattern) {
+  const filesResponse = await fetchFilesInFolder();
+  const files = await filesResponse.json();
+  const matchingFiles = files.filter(file => file.endsWith(pattern));
+
+  if (matchingFiles.length > 0) {
+    const matchingFile = matchingFiles[0]; // Assuming there is only one matching file
+    const fileResponse = await fetch(matchingFile);
+    return fileResponse;
+  } else {
+    throw new Error(`No matching file found for pattern: ${pattern}`);
+  }
+}
+
+// Function to fetch the files in the same folder as the HTML file
+async function fetchFilesInFolder() {
+  const path = window.location.pathname;
+  const folderPath = path.substring(0, path.lastIndexOf('/')); // Get the folder path of the HTML file
+  const response = await fetch(folderPath);
+  return response.text();
+}
 
 
     // Global variables
@@ -560,4 +453,3 @@ Promise.all([fetchOMData(), fetchODData()])
 </body>
 
 </html>
-
