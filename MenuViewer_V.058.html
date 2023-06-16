@@ -209,7 +209,7 @@ function createOMTable(selectedData) {
 
   // Calculate the dynamic font size based on column count and screen width
   const screenWidth = window.innerWidth || document.documentElement.clientWidth;
-  const fontSize = Math.min(18, Math.max(6, screenWidth / (columns * 2)));
+  const fontSize = Math.min(24, Math.max(4, screenWidth / (columns)));
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
