@@ -101,7 +101,7 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
-    <select id="locationDropdown">
+   <select id="locationDropdown">
   <option value="Minneapolis">Minneapolis</option>
   <option value="St. Cloud">St. Cloud</option>
 </select>
@@ -416,7 +416,22 @@ document.getElementById('downloadJSONButton').addEventListener('click', handleDo
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-document.getElementById('filterDropdown').addEventListener('change', filterData);
+    document.getElementById('locationDropdown').addEventListener('change', handleLocationChange);
+// Add event listener to location dropdown
+
+
+// Function to handle location dropdown change event
+async function handleLocationChange() {
+  const omData = await fetchOMData();
+  const odData = await fetchODData();
+
+  populateDropdown(omData);
+
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+  pushHistory(dropdown.value);
+  filterData({ target: dropdown });
+}
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
@@ -428,7 +443,7 @@ Promise.all([fetchOMData(), fetchODData()])
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    pushHistory(dropdown.value);
     filterData({ target: dropdown });
   })
   .catch(error => {
