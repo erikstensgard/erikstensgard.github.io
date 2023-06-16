@@ -102,7 +102,8 @@
     <select id="filterDropdown"></select>
    <select id="locationDropdown">
   <option value="Minneapolis">Minneapolis</option>
-  <option value="St. Cloud">St. Cloud</option>
+  <option value="St.Cloud">St. Cloud</option>
+
 </select>
 
   </div>
@@ -117,7 +118,7 @@
 async function fetchOMData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
-  const sanitizedLocation = selectedLocation.replace(/\s/g, ''); // Remove spaces from the location name
+  const sanitizedLocation = selectedLocation.replace(/\s/g, '');
 
   const response = await fetch(`${sanitizedLocation}OMJSON.json`);
   const data = await response.json();
@@ -127,12 +128,13 @@ async function fetchOMData() {
 async function fetchODData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
-  const sanitizedLocation = selectedLocation.replace(/\s/g, ''); // Remove spaces from the location name
+  const sanitizedLocation = selectedLocation.replace(/\s/g, '');
 
   const response = await fetch(`${sanitizedLocation}ODJSON.json`);
   const data = await response.json();
   return data;
 }
+
 
 document.getElementById('locationDropdown').addEventListener('change', async () => {
   omData = await fetchOMData();
@@ -425,7 +427,6 @@ document.getElementById('locationDropdown').addEventListener('change', async () 
   await fetchLocationData();
 });
 
-// Function to fetch location-specific data
 async function fetchLocationData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
