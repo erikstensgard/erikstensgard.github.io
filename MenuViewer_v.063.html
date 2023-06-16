@@ -109,36 +109,17 @@
   </div>
 
   <script>
+
 // Fetch OMJSON Data
 async function fetchOMData() {
-  const response = await fetchJSONFileEndingWith('OMJSON.json');
-  return response;
+  const response = await fetch('OMJSON.json');
+  return response.json();
 }
 
 // Fetch ODJSON Data
 async function fetchODData() {
-  const response = await fetchJSONFileEndingWith('ODJSON.json');
-  return response;
-}
-// Fetch JSON file ending with specified name
-async function fetchJSONFileEndingWith(filenameEnding) {
-  const response = await fetch('directory.json');
-  const directory = await response.json();
-  const matchingFiles = directory.filter(file => file.endsWith(filenameEnding));
-
-  if (matchingFiles.length === 0) {
-    throw new Error(`No JSON files found ending with "${filenameEnding}" in the directory.`);
-  }
-
-  const jsonData = [];
-
-  for (const file of matchingFiles) {
-    const fileResponse = await fetch(file);
-    const fileData = await fileResponse.json();
-    jsonData.push(fileData);
-  }
-
-  return jsonData;
+  const response = await fetch('ODJSON.json');
+  return response.json();
 }
 
     // Global variables
