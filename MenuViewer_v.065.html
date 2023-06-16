@@ -100,10 +100,7 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
-    <select id="versionDropdown">
-  <option value="Minneapolis">Minneapolis</option>
-  <option value="St. Cloud">St. Cloud</option>
-</select>
+    <select id="versionDropdown"></select>
   </div>
 
   <div id="resultContainer"></div>
@@ -138,24 +135,36 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-  function populateDropdown(data, version) {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
+    function populateDropdown(data) {
+  const filterDropdown = document.getElementById('filterDropdown');
+  const versionDropdown = document.getElementById('versionDropdown');
 
-  data
-    .filter(item => item.Version === version)
-    .sort((a, b) => {
-      const displayTextA = a.DisplayText || a.Name;
-      const displayTextB = b.DisplayText || b.Name;
-      return displayTextA.localeCompare(displayTextB);
-    })
-    .forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = item.DisplayText || item.Name;
-      dropdown.appendChild(option);
-    });
+  filterDropdown.innerHTML = '';
+  versionDropdown.innerHTML = '';
+
+  const distinctVersions = [...new Set(data.map(item => item.Version))];
+
+  distinctVersions.forEach(version => {
+    const versionOption = document.createElement('option');
+    versionOption.value = version;
+    versionOption.textContent = version;
+    versionDropdown.appendChild(versionOption);
+  });
+
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    filterDropdown.appendChild(option);
+  });
 }
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -193,19 +202,9 @@ adjustFontSize();
 window.addEventListener('resize', adjustFontSize);
 
 
-window.addEventListener('DOMContentLoaded', () => {
-  const versionDropdown = document.getElementById('versionDropdown');
-  versionDropdown.value = 'Minneapolis';
+// Call the adjustFontSize function on page load and window resize
+window.addEventListener('DOMContentLoaded', adjustFontSize);
 
-  versionDropdown.addEventListener('change', () => {
-    const selectedVersion = versionDropdown.value;
-    const selectedOption = document.getElementById('filterDropdown').value;
-    populateDropdown(omData, selectedVersion);
-    filterData({ target: { value: selectedOption } });
-  });
-
-  adjustFontSize();
-});
 
     // Function to handle row click event
     function handleRowClick(item) {
@@ -339,32 +338,26 @@ window.addEventListener('DOMContentLoaded', () => {
       resultContainer.appendChild(table);
     }
 
- function filterData(event) {
-  const selectedOption = event.target.value;
-  const selectedVersion = document.getElementById('versionDropdown').value;
+    // Function to filter data based on the selected option
+    function filterData(event) {
+      const selectedOption = event.target.value;
+      const matchingData = omData.find(item => item.Name === selectedOption);
 
-  const matchingData = omData.find(
-    item => item.Name === selectedOption && item.Version === selectedVersion
-  );
-
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-    const odMatchingData = odData.find(
-      item => item.Name === selectedOption && item.Version === selectedVersion
-    );
-    selectedData = odMatchingData;
-    createODTable(odMatchingData);
-    pushHistory(odMatchingData.Item);
-  }
-  adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-}
-
+      if (matchingData) {
+        selectedData = matchingData;
+        createOMTable(matchingData);
+        pushHistory(matchingData.Name);
+      } else {
+        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        selectedData = odMatchingData;
+        createODTable(odMatchingData);
+        pushHistory(odMatchingData.Item);
+      }
+      adjustFontSize();
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+    }
 
 // Function to push the current selection to the history
 function pushHistory(item) {
