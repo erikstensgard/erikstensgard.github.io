@@ -133,9 +133,10 @@ async function fetchODData() {
   const data = await response.json();
   return data;
 }
+
 document.getElementById('locationDropdown').addEventListener('change', async () => {
-  await fetchOMData();
-  await fetchODData();
+  omData = await fetchOMData();
+  odData = await fetchODData();
 });
 
     // Global variables
@@ -429,11 +430,15 @@ async function fetchLocationData() {
   const selectedLocation = locationDropdown.value;
   const sanitizedLocation = selectedLocation.replace(/\s/g, '');
 
+async function fetchLocationData() {
+
   const omResponse = await fetch(`${sanitizedLocation}OMJSON.json`);
-  const omData = await omResponse.json();
+  omData = await omResponse.json();
 
   const odResponse = await fetch(`${sanitizedLocation}ODJSON.json`);
-  const odData = await odResponse.json();
+  odData = await odResponse.json();
+
+
 
   populateDropdown(omData);
 
