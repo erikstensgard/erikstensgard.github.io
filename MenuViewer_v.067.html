@@ -425,6 +425,7 @@ document.getElementById('locationDropdown').addEventListener('change', async () 
   await fetchLocationData();
 });
 
+// Function to fetch location-specific data
 async function fetchLocationData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
@@ -436,14 +437,12 @@ async function fetchLocationData() {
   const odResponse = await fetch(`${sanitizedLocation}ODJSON.json`);
   odData = await odResponse.json();
 
-
-
   populateDropdown(omData);
 
   const dropdown = document.getElementById('filterDropdown');
   dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-  pushHistory(dropdown.value);
   filterData({ target: dropdown });
+  adjustFontSize();
 }
 
 
