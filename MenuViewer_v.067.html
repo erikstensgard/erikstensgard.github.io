@@ -417,12 +417,12 @@ document.getElementById('downloadJSONButton').addEventListener('click', handleDo
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-    document.getElementById('locationDropdown').addEventListener('change', handleLocationChange);
+document.getElementById('locationDropdown').addEventListener('change', fetchLocationData);
+
 // Add event listener to location dropdown
 
 
-// Function to handle location dropdown change event
-async function handleLocationChange() {
+async function fetchLocationData() {
   const omData = await fetchOMData();
   const odData = await fetchODData();
 
