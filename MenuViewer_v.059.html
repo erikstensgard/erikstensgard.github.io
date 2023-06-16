@@ -164,22 +164,24 @@ function populateDropdown(data) {
 function adjustFontSize() {
   const tableCells = document.querySelectorAll('.table td');
   const screenWidth = window.innerWidth;
+  const baseFontSize = 14; // Adjust this value as desired
 
   tableCells.forEach(cell => {
     const column = cell.cellIndex + 1;
     let fontSize;
 
     if (screenWidth <= 480) {
-      fontSize = `calc(10px - 1px * ${column})`;
+      fontSize = `calc(${baseFontSize - (column * 2)}px)`;
     } else if (screenWidth <= 768) {
-      fontSize = `calc(12px - 0.5px * ${column})`;
+      fontSize = `calc(${baseFontSize - (column * 1)}px)`;
     } else {
-      fontSize = `calc(14px - 1px * ${column})`;
+      fontSize = `${baseFontSize - (column * 0.5)}px`;
     }
 
     cell.style.fontSize = fontSize;
   });
 }
+
 
 
 // Call the adjustFontSize function on page load and window resize
