@@ -103,7 +103,6 @@
     <select id="versionDropdown"></select>
   </div>
 
-
   <div id="resultContainer"></div>
 
   <div id="footer">
@@ -173,11 +172,10 @@ let historyIndex = -1; // Index of the current selection in the history
   });
 }
 
-// Function to filter data based on the selected version
-function filterByVersion(event) {
-  const selectedVersion = event.target.value;
-  const selectedOption = document.getElementById('filterDropdown').value;
-
+// Function to filter data based on the selected option and version
+function filterData(event) {
+  const selectedOption = event.target.value;
+  const selectedVersion = document.getElementById('versionDropdown').value;
   const matchingData = omData.find(item => item.Name === selectedOption && item.Version === selectedVersion);
 
   if (matchingData) {
@@ -199,10 +197,37 @@ function filterByVersion(event) {
   // Clear the version dropdown selection if no matching data is found
   if (!matchingData && !odMatchingData) {
     document.getElementById('versionDropdown').value = 'default';
-    alert('No matching menu for this version');
-    document.getElementById('filterPopup').value = 'ORZID2 GMENU ABX INPT MAIN';
   }
 }
+    // Function to change the filter dropdown based on the selected version dropdown
+function changeFilterDropdown() {
+  const filterDropdown = document.getElementById('filterDropdown');
+  const versionDropdown = document.getElementById('versionDropdown');
+  const selectedVersion = versionDropdown.value;
+
+  const matchingItem = omData.find(item => item.Name === filterDropdown.value && item.Version === selectedVersion);
+
+  if (matchingItem) {
+    return; // No need to change the filter dropdown if there is a match
+  }
+
+  const defaultMenuItem = 'ORZID2 GMENU ABX INPT MAIN';
+
+  if (selectedVersion === 'default') {
+    filterDropdown.value = defaultMenuItem;
+  } else {
+    const defaultMenuItemMatch = omData.find(item => item.Name === defaultMenuItem && item.Version === selectedVersion);
+
+    if (defaultMenuItemMatch) {
+      filterDropdown.value = defaultMenuItem;
+    } else {
+      filterDropdown.value = ''; // Clear the filter dropdown if there is no match for the default menu item with the new version
+    }
+  }
+}
+
+// Attach the event listener to the version dropdown
+document.getElementById('versionDropdown').addEventListener('change', changeFilterDropdown);
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
