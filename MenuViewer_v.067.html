@@ -423,6 +423,7 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('locationDropdown').addEventListener('change', async () => {
   await fetchLocationData();
 });
+
 async function fetchLocationData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
