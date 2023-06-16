@@ -144,6 +144,9 @@ async function fetchFilesInFolder() {
   const response = await fetch(folderPath);
   const text = await response.text();
   const files = parseFileList(text);
+
+  console.log('Files in folder:', files); // Log the retrieved file list
+
   return files;
 }
 
