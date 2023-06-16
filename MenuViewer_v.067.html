@@ -115,7 +115,7 @@
   </div>
 
   <script>
-   async function fetchOMData() {
+async function fetchOMData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
 
@@ -132,6 +132,7 @@ async function fetchODData() {
   const data = await response.json();
   return data;
 }
+
 
 
     // Global variables
