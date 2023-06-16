@@ -111,22 +111,30 @@
   <script>
 // Fetch OMJSON Data
 async function fetchOMData() {
-  const response = await fetchJSONFiles('*OMJSON.json');
+  const response = await fetch('MinneapolisOMJSON.json');
   const data = await response.json();
   return data;
 }
 
 // Fetch ODJSON Data
 async function fetchODData() {
-  const response = await fetchJSONFiles('*ODJSON.json');
+  const response = await fetch('MinneapolisODJSON.json');
   const data = await response.json();
   return data;
 }
 
-// Function to fetch JSON files based on a wildcard pattern
-async function fetchJSONFiles(pattern) {
-  const response = await fetch(`./${pattern}`);
-  return response;
+// Fetch Additional JSON Data from Directory File
+async function fetchAdditionalData() {
+  const response = await fetch('DirectoryFile.json');
+  const directoryData = await response.json();
+
+  const additionalDataPromises = directoryData.files.map(async (filePath) => {
+    const fileResponse = await fetch(filePath);
+    return fileResponse.json();
+  });
+
+  const additionalData = await Promise.all(additionalDataPromises);
+  return additionalData;
 }
 
     // Global variables
@@ -414,22 +422,31 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData()])
-  .then(([omjsonData, odjsonData]) => {
-    omData = omjsonData;
-    odData = odjsonData;
+Promise.all([fetchOMDirectoryData(), fetchODDirectoryData()])
+  .then(([omDirectoryData, odDirectoryData]) => {
+    const omDataPromises = omDirectoryData.files.map(fetchOMData);
+    const odDataPromises = odDirectoryData.files.map(fetchODData);
 
-    populateDropdown(omData);
+    Promise.all(omDataPromises)
+      .then((omjsonData) => {
+        omData = omjsonData;
+        populateDropdown(omData);
+      })
+      .catch((error) => {
+        console.error('Error fetching OMJSON data:', error);
+      });
 
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
-    filterData({ target: dropdown });
+    Promise.all(odDataPromises)
+      .then((odjsonData) => {
+        odData = odjsonData;
+      })
+      .catch((error) => {
+        console.error('Error fetching ODJSON data:', error);
+      });
   })
-  .catch(error => {
-    console.error('Error:', error);
+  .catch((error) => {
+    console.error('Error fetching directory data:', error);
   });
-
 
   </script>
 </body>
