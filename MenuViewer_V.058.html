@@ -171,6 +171,8 @@ function adjustFontSize() {
 
     if (screenWidth <= 480) {
       fontSize = `calc(10px - 1px * ${column})`;
+    } else if (screenWidth <= 768) {
+      fontSize = `calc(12px - 0.5px * ${column})`;
     } else {
       fontSize = `calc(14px - 1px * ${column})`;
     }
@@ -178,6 +180,7 @@ function adjustFontSize() {
     cell.style.fontSize = fontSize;
   });
 }
+
 
 // Call the adjustFontSize function on page load and window resize
 window.addEventListener('DOMContentLoaded', adjustFontSize);
