@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en"><!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -410,25 +411,6 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-// Function to handle location dropdown change event
-function handleLocationChange() {
-  Promise.all([fetchOMData(), fetchODData()])
-    .then(([omjsonData, odjsonData]) => {
-      omData = omjsonData;
-      odData = odjsonData;
-
-      populateDropdown(omData);
-
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
-      filterData({ target: dropdown });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-
-    
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
