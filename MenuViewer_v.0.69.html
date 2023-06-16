@@ -114,14 +114,14 @@
   <script>
     // Fetch OMJSON Data
     async function fetchOMData() {
-      const response = await fetch('MinneapolisOMJSON.json');
+      const response = await fetch('StCloudOMJSON.json');
       const data = await response.json();
       return data;
     }
 
     // Fetch ODJSON Data
     async function fetchODData() {
-      const response = await fetch('MinneapolisODJSON.json');
+      const response = await fetch('StCloudODJSON.json');
       const data = await response.json();
       return data;
     }
