@@ -409,8 +409,9 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
   .then(([omjsonData, odjsonData]) => {
-    omData = omjsonData.flat(); // Flatten the array of objects
-    odData = odjsonData.flat(); // Flatten the array of objects
+    omData = omjsonData; // Remove .flat() method call
+odData = odjsonData; // Remove .flat() method call
+
 
     populateDropdown(omData);
 
