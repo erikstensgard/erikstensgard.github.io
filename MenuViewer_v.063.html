@@ -109,33 +109,22 @@
   </div>
 
   <script>
-// Fetch OMJSON Directory Data
-async function fetchOMDirectoryData() {
-  const response = await fetch('OMJSONDirectory.json');
-  const directoryData = await response.json();
-  return directoryData;
-}
-
-// Fetch ODJSON Directory Data
-async function fetchODDirectoryData() {
-  const response = await fetch('ODJSONDirectory.json');
-  const directoryData = await response.json();
-  return directoryData;
-}
-
-// Fetch OMJSON Data from File
-async function fetchOMData(file) {
-  const response = await fetch(file);
-  const data = await response.json();
-  return data;
-}
-
-// Fetch ODJSON Data from File
-async function fetchODData(file) {
-  const response = await fetch(file);
-  const data = await response.json();
-  return data;
-}
+    // Fetch OMJSON Data
+    async function fetchOMData() {
+      const response1 = await fetch('St. CloudOMJSON.json');
+      const response2 = await fetch('MinneapolisOMJSON.json');
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+      return [...data1, ...data2];
+    }
+    // Fetch ODJSON Data
+    async function fetchODData() {
+      const response1 = await fetch('St. CloudODJSON.json');
+      const response2 = await fetch('MinneapolisODJSON.json');
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+      return [...data1, ...data2];
+    }
 
     // Global variables
 let omData = []; // OMJSON data
@@ -422,31 +411,22 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMDirectoryData(), fetchODDirectoryData()])
-  .then(([omDirectoryData, odDirectoryData]) => {
-    const omDataPromises = omDirectoryData.files.map(fetchOMData);
-    const odDataPromises = odDirectoryData.files.map(fetchODData);
+Promise.all([fetchOMData(), fetchODData()])
+  .then(([omjsonData, odjsonData]) => {
+    omData = omjsonData;
+    odData = odjsonData;
 
-    Promise.all(omDataPromises)
-      .then((omjsonData) => {
-        omData = omjsonData;
-        populateDropdown(omData);
-      })
-      .catch((error) => {
-        console.error('Error fetching OMJSON data:', error);
-      });
+    populateDropdown(omData);
 
-    Promise.all(odDataPromises)
-      .then((odjsonData) => {
-        odData = odjsonData;
-      })
-      .catch((error) => {
-        console.error('Error fetching ODJSON data:', error);
-      });
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    filterData({ target: dropdown });
   })
-  .catch((error) => {
-    console.error('Error fetching directory data:', error);
+  .catch(error => {
+    console.error('Error:', error);
   });
+
 
   </script>
 </body>
