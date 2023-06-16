@@ -164,18 +164,17 @@ function populateDropdown(data) {
 function adjustFontSize() {
   const tableCells = document.querySelectorAll('.table td');
   const screenWidth = window.innerWidth;
-  const baseFontSize = 14; // Adjust this value as desired
 
   tableCells.forEach(cell => {
     const column = cell.cellIndex + 1;
     let fontSize;
 
     if (screenWidth <= 480) {
-      fontSize = `calc(${baseFontSize - (column * 2)}px)`;
+      fontSize = `calc(12px - 1px * ${column})`;
     } else if (screenWidth <= 768) {
-      fontSize = `calc(${baseFontSize - (column * 1)}px)`;
+      fontSize = `calc(14px - 1px * ${column})`;
     } else {
-      fontSize = `${baseFontSize - (column * 0.5)}px`;
+      fontSize = `calc(16px - 1px * ${column})`;
     }
 
     cell.style.fontSize = fontSize;
