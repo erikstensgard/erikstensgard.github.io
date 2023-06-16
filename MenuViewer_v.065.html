@@ -142,27 +142,28 @@ let historyIndex = -1; // Index of the current selection in the history
   filterDropdown.innerHTML = '';
   versionDropdown.innerHTML = '';
 
-  data.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
-  });
-
   const versions = new Set();
 
   data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    filterDropdown.appendChild(option);
-
-    // Check if 'Version' exists in the item and add it to the version dropdown
     if (item.Version) {
       versions.add(item.Version);
     }
   });
 
-  // Add the distinct versions to the version dropdown
+  versions.forEach(version => {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = version;
+
+    data.filter(item => item.Version === version).forEach(filteredItem => {
+      const option = document.createElement('option');
+      option.value = filteredItem.Name;
+      option.textContent = filteredItem.DisplayText || filteredItem.Name;
+      optgroup.appendChild(option);
+    });
+
+    filterDropdown.appendChild(optgroup);
+  });
+
   versions.forEach(version => {
     const versionOption = document.createElement('option');
     versionOption.value = version;
@@ -193,6 +194,7 @@ function filterData(event) {
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.scrollTop = 0;
 }
+
 
 
 // Function to adjust the font size based on column number and window/screen size
