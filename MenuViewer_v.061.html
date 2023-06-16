@@ -210,6 +210,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
           createODTable(selectedData);
           pushHistory(selectedData.Item);
         }
+        adjustFontSize();
       }
 
       // Scroll to the top of the table
@@ -336,7 +337,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
         createODTable(odMatchingData);
         pushHistory(odMatchingData.Item);
       }
-
+      adjustFontSize();
       // Scroll to the top of the table
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.scrollTop = 0;
