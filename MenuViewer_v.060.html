@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Test</title>
+  <style>
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
+
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue; /* Set your desired background color here */
+    }
+
+    /* Header styles */
+ #header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#header button,
+#header select {
+  margin: 5px;
+  flex: 0 0 auto;
+}
+
+#goBackButton {
+  margin-left: 20px;
+}
+
+#mainMenuButton {
+  margin-right: auto;
+}
+
+#goForwardButton {
+  margin-right: 20px;
+}
+
+#filterDropdown {
+  margin-right: 20px;
+}
+
+
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .table td {
+      white-space: nowrap; /* Disable text wrapping within a cell */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Media queries for responsive design */
+    @media screen and (max-width: 768px) {
+      /* Adjust button and dropdown font size for smaller screens */
+      button,
+      select {
+        font-size: 11px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      /* Further adjust button and dropdown font size for even smaller screens */
+      button,
+      select {
+        font-size: 8px;
+      }
+    }
+.table td {
+  font-size: calc(14px - 1px * var(--column));
+}
+
+@media screen and (max-width: 480px) {
+  .table td {
+    font-size: calc(10px - 1px * var(--column));
+  }
+}
+
+  </style>
+
+</head>
+
+<body>
+  <div id="header">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <button id="goForwardButton">Go Forward &rarr;</button>
+    <select id="filterDropdown"></select>
+  </div>
+
+  <div id="resultContainer"></div>
+
+  <div id="footer">
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
+
+  <script>
+    // Fetch OMJSON Data
+    async function fetchOMData() {
+      const response = await fetch('MinneapolisOMJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Fetch ODJSON Data
+    async function fetchODData() {
+      const response = await fetch('MinneapolisODJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Global variables
+let omData = []; // OMJSON data
+let odData = []; // ODJSON data
+let selectedData = null; // Currently selected data
+let history = []; // History of selected items
+let forwardHistory = []; // History of forward selections
+let historyIndex = -1; // Index of the current selection in the history
+
+    // Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
+
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    dropdown.appendChild(option);
+  });
+}
+
+// Function to adjust the font size based on column number and window/screen size
+function adjustFontSize() {
+  const tableCells = document.querySelectorAll('.table td');
+  const screenWidth = window.innerWidth;
+
+  tableCells.forEach(cell => {
+    const column = cell.cellIndex + 1;
+    let fontSize;
+
+    if (screenWidth <= 320) {
+      fontSize = `calc(10px - 1px * ${column})`; // Mobile (small)
+    } else if (screenWidth <= 480) {
+      fontSize = `calc(12px - 1px * ${column})`; // Mobile (iPhone)
+    } else if (screenWidth <= 768) {
+      fontSize = `calc(14px - 1px * ${column})`; // Mobile (iPad)
+    } else if (screenWidth <= 1024) {
+      fontSize = `calc(16px - 1px * ${column})`; // Tablet (iPad Pro)
+    } else {
+      fontSize = `calc(18px - 1px * ${column})`; // Desktop
+    }
+
+    cell.style.fontSize = fontSize;
+  });
+}
+
+
+// Call the adjustFontSize function on page load and window resize
+window.addEventListener('DOMContentLoaded', adjustFontSize);
+window.addEventListener('resize', adjustFontSize);
+
+
+    // Function to handle row click event
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
+      } else {
+        const matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
+
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+          pushHistory(selectedData.Item);
+        }
+      }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Function to create the table with OMJSON data
+    function createOMTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
+
+      const tbody = document.createElement('tbody');
+
+      const { Contents } = selectedData;
+      const maxRow = Math.max(...Contents.map(item => item.Row));
+      const columns = Math.max(...Contents.map(item => item.Column));
+
+      for (let row = 1; row <= maxRow; row++) {
+        const bodyRow = document.createElement('tr');
+
+        for (let column = 1; column <= columns; column++) {
+          const matchingItems = Contents.filter(
+            item => item.Row === row && item.Column === column
+          );
+
+          const displayCell = document.createElement('td');
+
+          if (matchingItems.length > 0) {
+            matchingItems.forEach(matchingItem => {
+              const { Text, Item, Header, DisplayText } = matchingItem;
+              let cellContent = Text || '';
+
+              if (cellContent === '' && DisplayText) {
+                cellContent = DisplayText;
+              } else if (cellContent === '' && Item) {
+                cellContent = Item;
+              }
+
+              const cellContentElement = document.createElement('div');
+
+              // Check if cellContent consists only of underscore characters
+              if (/^_+$/.test(cellContent)) {
+                cellContentElement.textContent = cellContent;
+              } else {
+                cellContentElement.textContent = cellContent;
+
+                if (Header === 1) {
+                  cellContentElement.classList.add('bold');
+                }
+
+                // Add the CSS class for bolded items
+                if (Header === 1) {
+                  displayCell.classList.add('bold');
+                }
+
+                if (Item) {
+                  cellContentElement.classList.add('clickable');
+                  cellContentElement.addEventListener('click', () => {
+                    handleRowClick(matchingItem);
+                  });
+                }
+              }
+
+              displayCell.appendChild(cellContentElement);
+            });
+          }
+
+          bodyRow.appendChild(displayCell);
+        }
+
+        tbody.appendChild(bodyRow);
+      }
+
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      if (selectedData) {
+        resultContainer.appendChild(table);
+      }
+    }
+
+    // Function to create the table with ODJSON data
+    function createODTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
+
+      const tbody = document.createElement('tbody');
+
+      for (const [key, value] of Object.entries(selectedData)) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(table);
+    }
+
+    // Function to filter data based on the selected option
+    function filterData(event) {
+      const selectedOption = event.target.value;
+      const matchingData = omData.find(item => item.Name === selectedOption);
+
+      if (matchingData) {
+        selectedData = matchingData;
+        createOMTable(matchingData);
+        pushHistory(matchingData.Name);
+      } else {
+        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        selectedData = odMatchingData;
+        createODTable(odMatchingData);
+        pushHistory(odMatchingData.Item);
+      }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+    }
+
+// Function to push the current selection to the history
+function pushHistory(item) {
+  if (item !== history[historyIndex]) {
+    historyIndex++;
+    history.splice(historyIndex, history.length - historyIndex, item);
+    forwardHistory = [];
+  }
+}
+
+// Function to handle the Go Back button click event
+function handleGoBack() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    const selectedItem = history[historyIndex];
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedItem;
+    filterData({ target: dropdown });
+  }
+}
+
+// Function to handle the Go Forward button click event
+function handleGoForward() {
+  if (historyIndex < history.length - 1) {
+    historyIndex++;
+    const selectedItem = history[historyIndex];
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedItem;
+    filterData({ target: dropdown });
+  }
+}
+    // Function to handle the Main Menu button click event
+    function handleMainMenu() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      filterData({ target: dropdown });
+    }
+
+    // Function to handle the Download JSON button click event
+    function handleDownloadJSON() {
+      const displayText = selectedData.DisplayText || selectedData.Name;
+      const data = JSON.stringify(selectedData, null, 2);
+      const filename = `${displayText}.json`;
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+// Attach event listeners
+document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
+document.getElementById('goBackButton').addEventListener('click', handleGoBack);
+document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
+document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('filterDropdown').addEventListener('change', filterData);
+
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData()])
+  .then(([omjsonData, odjsonData]) => {
+    omData = omjsonData;
+    odData = odjsonData;
+
+    populateDropdown(omData);
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    filterData({ target: dropdown });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+
+  </script>
+</body>
+
+</html>
