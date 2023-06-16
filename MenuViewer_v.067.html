@@ -430,8 +430,6 @@ async function fetchLocationData() {
   const selectedLocation = locationDropdown.value;
   const sanitizedLocation = selectedLocation.replace(/\s/g, '');
 
-async function fetchLocationData() {
-
   const omResponse = await fetch(`${sanitizedLocation}OMJSON.json`);
   omData = await omResponse.json();
 
