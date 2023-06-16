@@ -206,8 +206,17 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  const screenWidth = window.innerWidth;
-  const fontSize = Math.min(16, Math.max(10, screenWidth / (columns * 2)));
+  const adjustFontSize = () => {
+    const screenWidth = window.innerWidth;
+    const fontSize = Math.min(16, Math.max(10, screenWidth / (columns * 2)));
+
+    Array.from(tbody.getElementsByTagName('div')).forEach(cellContentElement => {
+      cellContentElement.style.fontSize = `${fontSize}px`;
+    });
+  };
+
+  window.addEventListener('resize', adjustFontSize);
+  adjustFontSize(); // Initial font size adjustment
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
@@ -255,8 +264,6 @@ function createOMTable(selectedData) {
             }
           }
 
-          cellContentElement.style.fontSize = `${fontSize}px`; // Set the dynamic font size
-
           displayCell.appendChild(cellContentElement);
         });
       }
@@ -275,7 +282,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
