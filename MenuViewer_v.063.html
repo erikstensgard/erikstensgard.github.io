@@ -109,32 +109,32 @@
   </div>
 
   <script>
-// Fetch OMJSON Data
-async function fetchOMData() {
-  const response = await fetch('MinneapolisOMJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Fetch ODJSON Data
-async function fetchODData() {
-  const response = await fetch('MinneapolisODJSON.json');
-  const data = await response.json();
-  return data;
-}
-
-// Fetch Additional JSON Data from Directory File
-async function fetchAdditionalData() {
-  const response = await fetch('DirectoryFile.json');
+// Fetch OMJSON Directory Data
+async function fetchOMDirectoryData() {
+  const response = await fetch('OMJSONDirectory.json');
   const directoryData = await response.json();
+  return directoryData;
+}
 
-  const additionalDataPromises = directoryData.files.map(async (filePath) => {
-    const fileResponse = await fetch(filePath);
-    return fileResponse.json();
-  });
+// Fetch ODJSON Directory Data
+async function fetchODDirectoryData() {
+  const response = await fetch('ODJSONDirectory.json');
+  const directoryData = await response.json();
+  return directoryData;
+}
 
-  const additionalData = await Promise.all(additionalDataPromises);
-  return additionalData;
+// Fetch OMJSON Data from File
+async function fetchOMData(file) {
+  const response = await fetch(file);
+  const data = await response.json();
+  return data;
+}
+
+// Fetch ODJSON Data from File
+async function fetchODData(file) {
+  const response = await fetch(file);
+  const data = await response.json();
+  return data;
 }
 
     // Global variables
