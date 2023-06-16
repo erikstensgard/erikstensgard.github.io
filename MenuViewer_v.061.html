@@ -358,6 +358,7 @@ function handleGoBack() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = selectedItem;
+    adjustFontSize();
     filterData({ target: dropdown });
   }
 }
@@ -369,6 +370,7 @@ function handleGoForward() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = selectedItem;
+    adjustFontSize();
     filterData({ target: dropdown });
   }
 }
@@ -376,6 +378,7 @@ function handleGoForward() {
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      adjustFontSize();
       filterData({ target: dropdown });
     }
 
