@@ -100,9 +100,9 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
-    <select id="filterDropdown">
+    <select id="locationDropdown">
   <option value="Minneapolis">Minneapolis</option>
-  <option value="St. Cloud">St. Cloud</option>
+  <option value="StCloud">StCloud</option>
 </select>
 
   </div>
@@ -115,49 +115,20 @@
 
   <script>
    // Fetch OMJSON Data
-async function fetchOMData(city) {
-  const response = await fetch(`${city}OMJSON.json`);
+async function fetchOMData() {
+  const location = document.getElementById('locationDropdown').value;
+  const response = await fetch(`${location}OMJSON.json`);
   const data = await response.json();
   return data;
 }
 
 // Fetch ODJSON Data
-async function fetchODData(city) {
-  const response = await fetch(`${city}ODJSON.json`);
+async function fetchODData() {
+  const location = document.getElementById('locationDropdown').value;
+  const response = await fetch(`${location}ODJSON.json`);
   const data = await response.json();
   return data;
 }
-
-// Function to filter data based on the selected option
-function filterData(event) {
-  const selectedOption = event.target.value;
-  let fetchData;
-
-  if (selectedOption === "Minneapolis") {
-    fetchData = Promise.all([fetchOMData("Minneapolis"), fetchODData("Minneapolis")]);
-  } else if (selectedOption === "St. Cloud") {
-    fetchData = Promise.all([fetchOMData("St. Cloud"), fetchODData("St. Cloud")]);
-  }
-
-  fetchData
-    .then(([omjsonData, odjsonData]) => {
-      omData = omjsonData;
-      odData = odjsonData;
-
-      populateDropdown(omData);
-
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = selectedOption;
-      pushHistory(dropdown.value);
-      filterData({ target: dropdown });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
-
-// Attach event listener to the dropdown
-document.getElementById('filterDropdown').addEventListener('change', filterData);
 
 
     // Global variables
@@ -169,23 +140,24 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
     // Function to populate dropdown with OMJSON data
+// Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
+  const locationDropdown = document.getElementById('locationDropdown');
 
-  data.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
-  });
-
+  // Clear and populate the location drop-down
+  locationDropdown.innerHTML = '';
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
+    locationDropdown.appendChild(option);
   });
+
+  // Set the initial value of the location drop-down
+  locationDropdown.value = 'Minneapolis';
 }
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
