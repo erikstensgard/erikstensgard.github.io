@@ -480,7 +480,7 @@ function filterByVersion(event) {
     // Handle the case when there is no matching data for the selected version
   }
   adjustFontSize();
-
+document.getElementById('versionDropdown').addEventListener('change', changeFilterDropdown);
   // Scroll to the top of the table
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.scrollTop = 0;
