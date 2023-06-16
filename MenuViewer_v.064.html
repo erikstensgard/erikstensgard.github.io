@@ -100,6 +100,7 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
+    <select id="versionDropdown"></select>
   </div>
 
   <div id="resultContainer"></div>
@@ -134,10 +135,12 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
+    function populateDropdown(data) {
+  const filterDropdown = document.getElementById('filterDropdown');
+  const versionDropdown = document.getElementById('versionDropdown');
+
+  filterDropdown.innerHTML = '';
+  versionDropdown.innerHTML = '';
 
   data.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
@@ -149,7 +152,15 @@ function populateDropdown(data) {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
+    filterDropdown.appendChild(option);
+
+    // Check if 'Version' exists in the item and add it to the version dropdown
+    if (item.Version) {
+      const versionOption = document.createElement('option');
+      versionOption.value = item.Version;
+      versionOption.textContent = item.Version;
+      versionDropdown.appendChild(versionOption);
+    }
   });
 }
 
@@ -409,6 +420,27 @@ document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
+document.getElementById('versionDropdown').addEventListener('change', filterByVersion);
+
+// Function to filter data based on the selected version
+function filterByVersion(event) {
+  const selectedVersion = event.target.value;
+  const filteredData = omData.filter(item => item.Version === selectedVersion);
+
+  if (filteredData.length > 0) {
+    selectedData = filteredData[0];
+    createOMTable(selectedData);
+    pushHistory(selectedData.Name);
+  } else {
+    // Handle the case when there is no matching data for the selected version
+  }
+  adjustFontSize();
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
