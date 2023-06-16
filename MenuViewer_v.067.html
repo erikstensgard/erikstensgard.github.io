@@ -118,8 +118,9 @@
 async function fetchOMData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
+  const sanitizedLocation = selectedLocation.replace(/\s/g, ''); // Remove spaces from the location name
 
-  const response = await fetch(`${selectedLocation}OMJSON.json`);
+  const response = await fetch(`${sanitizedLocation}OMJSON.json`);
   const data = await response.json();
   return data;
 }
@@ -127,8 +128,9 @@ async function fetchOMData() {
 async function fetchODData() {
   const locationDropdown = document.getElementById('locationDropdown');
   const selectedLocation = locationDropdown.value;
+  const sanitizedLocation = selectedLocation.replace(/\s/g, ''); // Remove spaces from the location name
 
-  const response = await fetch(`${selectedLocation}ODJSON.json`);
+  const response = await fetch(`${sanitizedLocation}ODJSON.json`);
   const data = await response.json();
   return data;
 }
