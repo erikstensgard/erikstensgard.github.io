@@ -133,9 +133,9 @@ async function fetchODData() {
   const data = await response.json();
   return data;
 }
-// Add event listener to location dropdown
 document.getElementById('locationDropdown').addEventListener('change', async () => {
-  await fetchLocationData();
+  await fetchOMJSON();
+  await fetchODJSON();
 });
 
     // Global variables
