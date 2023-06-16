@@ -195,7 +195,6 @@ function populateDropdown(data) {
         behavior: 'smooth'
       });
     }
-
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -208,7 +207,8 @@ function createOMTable(selectedData) {
 
   const adjustFontSize = () => {
     const screenWidth = window.innerWidth;
-    const fontSize = Math.min(16, Math.max(10, screenWidth / (columns * 2)));
+    const maxWidth = Math.floor(screenWidth / (columns * 2));
+    const fontSize = Math.min(maxWidth, 16);
 
     Array.from(tbody.getElementsByTagName('div')).forEach(cellContentElement => {
       cellContentElement.style.fontSize = `${fontSize}px`;
@@ -282,6 +282,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
     // Function to create the table with ODJSON data
