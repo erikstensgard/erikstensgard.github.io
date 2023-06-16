@@ -423,14 +423,16 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('locationDropdown').addEventListener('change', async () => {
   await fetchLocationData();
 });
-
-
-// Add event listener to location dropdown
-
-
 async function fetchLocationData() {
-  const omData = await fetchOMData();
-  const odData = await fetchODData();
+  const locationDropdown = document.getElementById('locationDropdown');
+  const selectedLocation = locationDropdown.value;
+  const sanitizedLocation = selectedLocation.replace(/\s/g, '');
+
+  const omResponse = await fetch(`${sanitizedLocation}OMJSON.json`);
+  const omData = await omResponse.json();
+
+  const odResponse = await fetch(`${sanitizedLocation}ODJSON.json`);
+  const odData = await odResponse.json();
 
   populateDropdown(omData);
 
@@ -439,6 +441,7 @@ async function fetchLocationData() {
   pushHistory(dropdown.value);
   filterData({ target: dropdown });
 }
+
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
