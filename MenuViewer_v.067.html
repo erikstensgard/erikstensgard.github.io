@@ -100,6 +100,11 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
+    <select id="locationDropdown">
+  <option value="Minneapolis">Minneapolis</option>
+  <option value="St. Cloud">St. Cloud</option>
+</select>
+
   </div>
 
   <div id="resultContainer"></div>
@@ -109,33 +114,24 @@
   </div>
 
   <script>
-   // Fetch OMJSON Data
-async function fetchOMData() {
-  let omData;
-  const selectedOption = document.getElementById('filterDropdown').value;
-  if (selectedOption === 'Minneapolis') {
-    const response = await fetch('MinneapolisOMJSON.json');
-    omData = await response.json();
-  } else if (selectedOption === 'St. Cloud') {
-    const response = await fetch('St. CloudOMJSON.json');
-    omData = await response.json();
-  }
-  return omData;
+   async function fetchOMData() {
+  const locationDropdown = document.getElementById('locationDropdown');
+  const selectedLocation = locationDropdown.value;
+
+  const response = await fetch(`${selectedLocation}OMJSON.json`);
+  const data = await response.json();
+  return data;
 }
 
-// Fetch ODJSON Data
 async function fetchODData() {
-  let odData;
-  const selectedOption = document.getElementById('filterDropdown').value;
-  if (selectedOption === 'Minneapolis') {
-    const response = await fetch('MinneapolisODJSON.json');
-    odData = await response.json();
-  } else if (selectedOption === 'St. Cloud') {
-    const response = await fetch('St. CloudODJSON.json');
-    odData = await response.json();
-  }
-  return odData;
+  const locationDropdown = document.getElementById('locationDropdown');
+  const selectedLocation = locationDropdown.value;
+
+  const response = await fetch(`${selectedLocation}ODJSON.json`);
+  const data = await response.json();
+  return data;
 }
+
 
     // Global variables
 let omData = []; // OMJSON data
@@ -145,19 +141,10 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-  function populateDropdown(data) {
+    // Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
-
-  const option1 = document.createElement('option');
-  option1.value = 'Minneapolis';
-  option1.textContent = 'Minneapolis';
-  dropdown.appendChild(option1);
-
-  const option2 = document.createElement('option');
-  option2.value = 'St. Cloud';
-  option2.textContent = 'St. Cloud';
-  dropdown.appendChild(option2);
 
   data.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
@@ -172,7 +159,6 @@ let historyIndex = -1; // Index of the current selection in the history
     dropdown.appendChild(option);
   });
 }
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -346,26 +332,26 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
       resultContainer.appendChild(table);
     }
 
-    // Function to filter data based on the selected option
     function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
-      }
-      adjustFontSize();
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-    }
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
