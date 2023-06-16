@@ -100,17 +100,6 @@
         font-size: 8px;
       }
     }
-function calculateFontSize(column) {
-  let fontSize = 14; // Default font size
-  if (column <= 3) {
-    fontSize = 14; // Font size for columns 1 to 3
-  } else if (column <= 6) {
-    fontSize = 12; // Font size for columns 4 to 6
-  } else {
-    fontSize = 10; // Font size for columns 7 and above
-  }
-  return fontSize;
-}
 
   </style>
 
@@ -206,6 +195,22 @@ function populateDropdown(data) {
         behavior: 'smooth'
       });
     }
+    // Function to dynamically set font size in table
+function calculateFontSize(column) {
+  let fontSize = 14; // Default font size
+  if (column = 1) {
+    fontSize = 14; // Font size for columns = 1
+  } else if (column = 3) {
+    fontSize = 12; // Font size for columns = 2
+   } else if (column = 4) {
+    fontSize = 10; // Font size for columns = 3
+   } else if (column = 4) {
+    fontSize = 8; // Font size for columns = 4
+  } else {
+    fontSize = 6; // Font size for columns 5 and above
+  }
+  return fontSize;
+}
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
@@ -281,23 +286,6 @@ function populateDropdown(data) {
       if (selectedData) {
         resultContainer.appendChild(table);
       }
-    
-      for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
-
-    for (let column = 1; column <= columns; column++) {
-      // Existing code...
-
-      const displayCell = document.createElement('td');
-      displayCell.style.fontSize = `${calculateFontSize(column)}px`; // Set the font size
-
-      // Existing code...
-
-      bodyRow.appendChild(displayCell);
-    }
-
-    tbody.appendChild(bodyRow);
-  }
     }
 
     // Function to create the table with ODJSON data
