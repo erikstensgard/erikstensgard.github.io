@@ -135,21 +135,12 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    function populateDropdown(data) {
+  function populateDropdown(data) {
   const filterDropdown = document.getElementById('filterDropdown');
   const versionDropdown = document.getElementById('versionDropdown');
 
   filterDropdown.innerHTML = '';
   versionDropdown.innerHTML = '';
-
-  const distinctVersions = [...new Set(data.map(item => item.Version))];
-
-  distinctVersions.forEach(version => {
-    const versionOption = document.createElement('option');
-    versionOption.value = version;
-    versionOption.textContent = version;
-    versionDropdown.appendChild(versionOption);
-  });
 
   data.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
@@ -157,12 +148,50 @@ let historyIndex = -1; // Index of the current selection in the history
     return displayTextA.localeCompare(displayTextB);
   });
 
+  const versions = new Set();
+
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     filterDropdown.appendChild(option);
+
+    // Check if 'Version' exists in the item and add it to the version dropdown
+    if (item.Version) {
+      versions.add(item.Version);
+    }
   });
+
+  // Add the distinct versions to the version dropdown
+  versions.forEach(version => {
+    const versionOption = document.createElement('option');
+    versionOption.value = version;
+    versionOption.textContent = version;
+    versionDropdown.appendChild(versionOption);
+  });
+}
+
+// Function to filter data based on the selected option and version
+function filterData(event) {
+  const selectedOption = event.target.value;
+  const selectedVersion = document.getElementById('versionDropdown').value;
+  const matchingData = omData.find(item => item.Name === selectedOption && item.Version === selectedVersion);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 }
 
 
@@ -338,27 +367,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
       resultContainer.appendChild(table);
     }
 
-    // Function to filter data based on the selected option
-    function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
-
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
-      }
-      adjustFontSize();
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-    }
-
+   
 // Function to push the current selection to the history
 function pushHistory(item) {
   if (item !== history[historyIndex]) {
