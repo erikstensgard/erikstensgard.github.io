@@ -73,33 +73,37 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    /* Media queries for responsive design */
+ /* Media queries for responsive design */
     @media screen and (max-width: 768px) {
-      /* Adjust table font size for smaller screens */
-      .table td {
-        font-size: 11px;
-      }
-
-      /* Adjust button and dropdown font size for smaller screens */
-      button,
+  .table {
+    font-size: 14px;
+  }
+            button,
       select {
-        font-size: 11px;
+        font-size: 14px;
       }
-    }
+}
 
-    @media screen and (max-width: 480px) {
-      /* Further adjust table font size for even smaller screens */
-      .table td {
-        font-size: 8px;
-      }
-
-      /* Further adjust button and dropdown font size for even smaller screens */
-      button,
+@media screen and (max-width: 480px) {
+  .table {
+    font-size: 12px;
+  }
+        button,
       select {
-        font-size: 8px;
+        font-size: 12px;
       }
-    }
+}
+
+@media screen and (max-width: 320px) {
+  .table {
+    font-size: 10px;
+  }
+        button,
+      select {
+        font-size: 10px;
+      }
+}
+
 
   </style>
 
@@ -209,10 +213,7 @@ function createOMTable(selectedData) {
     const screenWidth = window.innerWidth;
     const maxWidth = Math.floor(screenWidth / (columns * 2));
     const fontSize = Math.min(maxWidth, 16);
-
-    Array.from(tbody.getElementsByTagName('div')).forEach(cellContentElement => {
-      cellContentElement.style.fontSize = `${fontSize}px`;
-    });
+    table.style.fontSize = `${fontSize}px`;
   };
 
   window.addEventListener('resize', adjustFontSize);
@@ -282,8 +283,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-
 
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
