@@ -150,6 +150,20 @@ async function fetchFilesInFolder() {
   return files;
 }
 
+// Function to parse the file list retrieved from the server response
+function parseFileList(text) {
+  const regex = /href="([^"]+)"/g;
+  const fileList = [];
+  let match;
+
+  while ((match = regex.exec(text))) {
+    const file = match[1];
+    fileList.push(file);
+  }
+
+  return fileList;
+}
+
 // Function to parse the file list from plain text
 function parseFileList(text) {
   const fileRegex = /href="([^"]+)"/g;
