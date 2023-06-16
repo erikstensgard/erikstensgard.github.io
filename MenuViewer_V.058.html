@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Test</title>
+  <style>
+    /* Common styles */
+    table {
+      border-collapse: collapse;
+      padding: 0; /* Reduce table padding */
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 4px; /* Reduce cell padding */
+    }
+
+    .clickable {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .bold {
+      font-weight: bold;
+      background-color: lightblue; /* Set your desired background color here */
+    }
+
+    /* Header styles */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    #header button,
+    #header select {
+      margin: 5px;
+      flex: 0 0 auto;
+    }
+
+    /* Table styles */
+    .table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .table td {
+      white-space: nowrap; /* Disable text wrapping within a cell */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <button id="goForwardButton">Go Forward &rarr;</button>
+    <select id="filterDropdown"></select>
+  </div>
+
+  <div id="resultContainer"></div>
+
+  <div id="footer">
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
+
+  <script>
+    // Fetch OMJSON Data
+    async function fetchOMData() {
+      const response = await fetch('MinneapolisOMJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Fetch ODJSON Data
+    async function fetchODData() {
+      const response = await fetch('MinneapolisODJSON.json');
+      const data = await response.json();
+      return data;
+    }
+
+    // Global variables
+    let omData = []; // OMJSON data
+    let odData = []; // ODJSON data
+    let selectedData = null; // Currently selected data
+    let history = []; // History of selected items
+    let forwardHistory = []; // History of forward selections
+    let historyIndex = -1; // Index of the current selection in the history
+
+    // Function to populate dropdown with OMJSON data
+    function populateDropdown(data) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.innerHTML = '';
+
+      data.sort((a, b) => {
+        const displayTextA = a.DisplayText || a.Name;
+        const displayTextB = b.DisplayText || b.Name;
+        return displayTextA.localeCompare(displayTextB);
+      });
+
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = item.DisplayText || item.Name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Function to handle row click event
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        history.push(selectedData);
+        historyIndex = history.length - 1;
+        forwardHistory = [];
+
+        renderSelectedData();
+      }
+    }
+
+    // Function to render the selected data
+    function renderSelectedData() {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
+      if (selectedData) {
+        const table = document.createElement('table');
+        table.className = 'table';
+
+        const headerRow = document.createElement('tr');
+        headerRow.id = 'headerRow';
+
+        const headerCell1 = document.createElement('th');
+        headerCell1.textContent = 'Property';
+        headerRow.appendChild(headerCell1);
+
+        const headerCell2 = document.createElement('th');
+        headerCell2.textContent = 'Value';
+        headerRow.appendChild(headerCell2);
+
+        table.appendChild(headerRow);
+
+        Object.entries(selectedData).forEach(([key, value]) => {
+          const dataRow = document.createElement('tr');
+
+          const propertyCell = document.createElement('td');
+          propertyCell.textContent = key;
+          dataRow.appendChild(propertyCell);
+
+          const valueCell = document.createElement('td');
+          valueCell.textContent = value;
+          dataRow.appendChild(valueCell);
+
+          table.appendChild(dataRow);
+        });
+
+        resultContainer.appendChild(table);
+      }
+    }
+
+    // Function to go back to the previous selection
+    function goBack() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        selectedData = history[historyIndex];
+        forwardHistory.push(history.pop());
+
+        renderSelectedData();
+      }
+    }
+
+    // Function to go forward to the next selection
+    function goForward() {
+      if (forwardHistory.length > 0) {
+        const forwardItem = forwardHistory.pop();
+        history.push(forwardItem);
+        historyIndex++;
+
+        selectedData = forwardItem;
+        renderSelectedData();
+      }
+    }
+
+    // Function to handle the go back button click event
+    function handleGoBackButtonClick() {
+      goBack();
+    }
+
+    // Function to handle the go forward button click event
+    function handleGoForwardButtonClick() {
+      goForward();
+    }
+
+    // Function to handle the main menu button click event
+    function handleMainMenuButtonClick() {
+      history = [];
+      forwardHistory = [];
+      historyIndex = -1;
+      selectedData = null;
+      renderSelectedData();
+    }
+
+    // Function to handle the dropdown change event
+    function handleDropdownChange() {
+      const selectedOption = document.getElementById('filterDropdown').value;
+      const matchingData = omData.find(
+        item => item.Name.trim().toLowerCase() === selectedOption.trim().toLowerCase()
+      );
+
+      if (matchingData) {
+        selectedData = matchingData;
+        history.push(selectedData);
+        historyIndex = history.length - 1;
+        forwardHistory = [];
+
+        renderSelectedData();
+      }
+    }
+
+    // Function to handle the download JSON button click event
+    function handleDownloadJSONButtonClick() {
+      if (selectedData) {
+        const dataStr = JSON.stringify(selectedData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        const exportFileDefaultName = 'selectedData.json';
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      }
+    }
+
+    // Adjust font size based on column number and screen size
+    function adjustFontSize() {
+      const table = document.getElementById('dataTable');
+      const headerRow = document.getElementById('headerRow');
+      const headerCells = headerRow.getElementsByTagName('th');
+
+      // Get the number of columns
+      const columnCount = headerCells.length;
+
+      // Get the screen width
+      const screenWidth = window.innerWidth;
+
+      // Calculate the desired font size based on the number of columns and screen width
+      const desiredFontSize = Math.floor(screenWidth / columnCount / 10); // Adjust the divisor to control the font size
+
+      // Set the font size for header cells
+      for (let i = 0; i < headerCells.length; i++) {
+        headerCells[i].style.fontSize = desiredFontSize + 'px';
+      }
+    }
+
+    // Event listeners
+    document.getElementById('goBackButton').addEventListener('click', handleGoBackButtonClick);
+    document.getElementById('goForwardButton').addEventListener('click', handleGoForwardButtonClick);
+    document.getElementById('mainMenuButton').addEventListener('click', handleMainMenuButtonClick);
+    document.getElementById('filterDropdown').addEventListener('change', handleDropdownChange);
+    document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSONButtonClick);
+    window.addEventListener('resize', adjustFontSize);
+
+    // Initialization
+    (async function () {
+      // Fetch OMJSON data
+      omData = await fetchOMData();
+      populateDropdown(omData);
+
+      // Fetch ODJSON data
+      odData = await fetchODData();
+
+      // Adjust font size initially
+      adjustFontSize();
+    })();
+  </script>
+</body>
+
+</html>
