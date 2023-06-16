@@ -109,76 +109,19 @@
   </div>
 
   <script>
-  // Fetch OMJSON Data
+// Fetch OMJSON Data
 async function fetchOMData() {
-  const response = await fetchMatchingFile('*OMJSON.json');
+  const response = await fetch('*/*OMJSON.json');
   const data = await response.json();
   return data;
 }
 
 // Fetch ODJSON Data
 async function fetchODData() {
-  const response = await fetchMatchingFile('*OMDJSON.json');
+  const response = await fetch('*/*ODJSON.json');
   const data = await response.json();
   return data;
 }
-
-// Function to fetch a file based on a wildcard pattern
-async function fetchMatchingFile(pattern) {
-  const files = await fetchFilesInFolder();
-  const matchingFiles = files.filter(file => file.endsWith(pattern));
-
-  if (matchingFiles.length > 0) {
-    const matchingFile = matchingFiles[0]; // Assuming there is only one matching file
-    const fileResponse = await fetch(matchingFile);
-    return fileResponse;
-  } else {
-    throw new Error(`No matching file found for pattern: ${pattern}`);
-  }
-}
-
-// Function to fetch the files in the same folder as the HTML file
-async function fetchFilesInFolder() {
-  const path = window.location.pathname;
-  const folderPath = path.substring(0, path.lastIndexOf('/')); // Get the folder path of the HTML file
-  const response = await fetch(folderPath);
-  const text = await response.text();
-  const files = parseFileList(text);
-
-  console.log('Files in folder:', files); // Log the retrieved file list
-
-  return files;
-}
-
-// Function to parse the file list retrieved from the server response
-function parseFileList(text) {
-  const regex = /"([^"]*OMJSON\.json)"/g; // Updated regular expression pattern
-  const fileList = [];
-  let match;
-
-  while ((match = regex.exec(text))) {
-    const file = match[1];
-    fileList.push(file);
-  }
-
-  return fileList;
-}
-
-
-// Function to parse the file list from plain text
-function parseFileList(text) {
-  const fileRegex = /href="([^"]+)"/g;
-  const files = [];
-  let match;
-
-  while ((match = fileRegex.exec(text)) !== null) {
-    const file = match[1];
-    files.push(file);
-  }
-
-  return files;
-}
-
 
     // Global variables
 let omData = []; // OMJSON data
