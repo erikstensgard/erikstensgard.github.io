@@ -189,24 +189,24 @@
       resultContainer.appendChild(table);
     }
 
-    // Filter table based on selected option
-    function filterTable(data, filterKey) {
-      const filteredData = data.filter(item => item.Type === filterKey);
-      renderTable(filteredData);
-    }
+// Filter table based on selected option
+function filterTable(tableData, filterKey) {
+  const filteredData = tableData.filter(item => item.Type === filterKey);
+  renderTable(filteredData);
+}
 
-    // Search table for matching values
-    function searchTable(data, searchValue) {
-      const filteredData = data.filter(item => {
-        for (const key of Object.keys(item)) {
-          if (item[key].toLowerCase().includes(searchValue.toLowerCase())) {
-            return true;
-          }
-        }
-        return false;
-      });
-      renderTable(filteredData);
+// Search table for matching values
+function searchTable(tableData, searchValue) {
+  const filteredData = tableData.filter(item => {
+    for (const key of Object.keys(item)) {
+      if (item[key].toLowerCase().includes(searchValue.toLowerCase())) {
+        return true;
+      }
     }
+    return false;
+  });
+  renderTable(filteredData);
+}
 
     // Event listeners
     document.getElementById('goBackButton').addEventListener('click', () => {
