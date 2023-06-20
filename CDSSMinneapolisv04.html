@@ -346,11 +346,14 @@ function filterData(event) {
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
   if (searchInput !== '') {
-    const matchingData = omData.filter(
-      item =>
-        item.Name.toLowerCase().includes(searchInput) ||
-        (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
-    );
+    const matchingData = omData.filter(item => {
+      for (const content of item.contents) {
+        if (content.text.toLowerCase().includes(searchInput)) {
+          return true;
+        }
+      }
+      return false;
+    });
 
     if (matchingData.length > 0) {
       // Clear the previous results
@@ -402,6 +405,7 @@ function filterData(event) {
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.scrollTop = 0;
 }
+
 function handleMatchingDropdownChange(event) {
   const selectedItemName = event.target.value;
   const matchingItem = omData.find(
