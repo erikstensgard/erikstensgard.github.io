@@ -124,7 +124,8 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
-    <input type="text" id="searchbar placeholder="Search...">
+    <input type="text" id="searchInput" placeholder="Search..." />
+
   </div>
 
   <div id="resultContainer"></div>
@@ -340,26 +341,41 @@ adjustFontSize();
       resultContainer.appendChild(table);
     }
 
-    // Function to filter data based on the selected option
-    function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
+   function filterData(event) {
+  const selectedOption = event.target.value;
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
-      }
-      adjustFontSize();
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
+  if (searchInput !== '') {
+    const matchingData = omData.filter(item =>
+      item.Name.toLowerCase().includes(searchInput) ||
+      (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
+    );
+
+    if (matchingData.length > 0) {
+      selectedData = matchingData[0];
+      createOMTable(matchingData[0]);
+      pushHistory(matchingData[0].Name);
+      return;
     }
+  }
+
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -417,40 +433,6 @@ function handleGoForward() {
 
       document.body.removeChild(element);
     }
-// Search bar
-const searchBar = document.getElementById('searchBar');
-searchBar.addEventListener('keyup', handleSearch);
-
-function handleSearch(event) {
-  const searchText = event.target.value;
-  const filteredData = omData.filter(item => {
-    const contents = item.Contents;
-    return contents.some(content => content.Text.toLowerCase().includes(searchText.toLowerCase()));
-  });
-
-  const dropdown = document.getElementById('searchDropdown');
-  dropdown.innerHTML = '';
-
-  filteredData.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
-  });
-}
-
-// Populate result container
-function populateResultContainer(item) {
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-
-  if (item) {
-    createOMTable(item);
-  }
-}
-
-// Click event handler for search dropdown
-document.getElementById('searchDropdown').addEventListener('change', populateResultContainer);
 
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
@@ -460,6 +442,7 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
+document.getElementById('searchInput').addEventListener('input', filterData);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
