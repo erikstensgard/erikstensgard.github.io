@@ -247,7 +247,8 @@ adjustFontSize();
     const searchInput = document.getElementById('searchInput');
     const searchText = searchInput.value.toLowerCase();
 
-    const filteredData = data.filter(item => item.text.toLowerCase().includes(searchText));
+    const filteredData = omData.filter(item => item.DisplayText.toLowerCase().includes(searchText));
+
     createTable(filteredData);
     }
     
