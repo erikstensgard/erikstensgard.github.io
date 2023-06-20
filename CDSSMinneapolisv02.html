@@ -75,19 +75,31 @@
     }
 
     /* Media queries for responsive design */
-    @media screen and (max-width: 768px) {
-      /* Adjust button and dropdown font size for smaller screens */
+    @media screen and (max-width: 1024px) {
       button,
       select {
-        font-size: 11px;
+        font-size: 12px;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      button,
+      select {
+        font-size: 10px;
       }
     }
 
     @media screen and (max-width: 480px) {
-      /* Further adjust button and dropdown font size for even smaller screens */
       button,
       select {
         font-size: 8px;
+      }
+    }
+    
+    @media screen and (max-width: 320px) {
+      button,
+      select {
+        font-size: 6px;
       }
     }
   </style>
