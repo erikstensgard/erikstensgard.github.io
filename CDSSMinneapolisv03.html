@@ -124,7 +124,6 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
-    <input type="text" id="searchInput" placeholder="Search..." />
   </div>
 
   <div id="resultContainer"></div>
@@ -242,16 +241,6 @@ adjustFontSize();
       adjustFontSize();
     }
 
-    // Function to perform search and update the table
-    function performSearch() {
-    const searchInput = document.getElementById('searchInput');
-    const searchText = searchInput.value.toLowerCase();
-
-    const filteredData = omData.filter(item => item.DisplayText.toLowerCase().includes(searchText));
-
-    createTable(filteredData);
-    }
-    
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
       const table = document.createElement('table');
@@ -326,7 +315,6 @@ adjustFontSize();
       if (selectedData) {
         resultContainer.appendChild(table);
       }
-      adjustFontSize();
     }
 
     // Function to create the table with ODJSON data
@@ -428,6 +416,40 @@ function handleGoForward() {
 
       document.body.removeChild(element);
     }
+// Search bar
+const searchBar = document.getElementById('searchBar');
+searchBar.addEventListener('keyup', handleSearch);
+
+function handleSearch(event) {
+  const searchText = event.target.value;
+  const filteredData = omData.filter(item => {
+    const contents = item.Contents;
+    return contents.some(content => content.Text.toLowerCase().includes(searchText.toLowerCase()));
+  });
+
+  const dropdown = document.getElementById('searchDropdown');
+  dropdown.innerHTML = '';
+
+  filteredData.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    dropdown.appendChild(option);
+  });
+}
+
+// Populate result container
+function populateResultContainer(item) {
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+
+  if (item) {
+    createOMTable(item);
+  }
+}
+
+// Click event handler for search dropdown
+document.getElementById('searchDropdown').addEventListener('change', populateResultContainer);
 
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
@@ -437,7 +459,6 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
-document.getElementById('searchInput').addEventListener('input', performSearch);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
