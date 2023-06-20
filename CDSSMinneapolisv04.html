@@ -134,12 +134,53 @@
   </div>
 
   <script>
-    // Fetch OMJSON Data
-    async function fetchOMData() {
-      const response = await fetch('MinneapolisOMJSON.json');
-      const data = await response.json();
-      return data;
-    }
+// Define and initialize the omData array
+let omData = [];
+
+// Fetch the JSON file
+fetch('MinneapolisOMJSON.json')
+  .then(response => response.json())
+  .then(data => {
+    // Populate the omData array with the contents from the JSON
+    omData = data.map(item => {
+      const contents = item.Contents.map(content => ({
+        text: content.Text,
+        displaytext: content.DisplayText
+      }));
+
+      return {
+        text: item.Name,
+        displaytext: item.DisplayText,
+        contents: contents
+      };
+    });
+  })
+  .catch(error => {
+    console.error('Error loading JSON:', error);
+  });
+
+// Perform search function
+function performSearch() {
+  // Get the search input value
+  const searchInput = document.getElementById('search-input').value.toLowerCase();
+
+  // Filter the omData array based on the search input
+  const filteredData = omData.filter(item => {
+    return item.text.toLowerCase().includes(searchInput) || item.displaytext.toLowerCase().includes(searchInput);
+  });
+
+  // Clear the result container
+  const resultContainer = document.getElementById('result-container');
+  resultContainer.innerHTML = '';
+
+  // Populate the result container with the filtered data
+  filteredData.forEach(item => {
+    const displayText = document.createElement('div');
+    displayText.innerText = item.displaytext;
+    resultContainer.appendChild(displayText);
+  });
+}
+
 
     // Fetch ODJSON Data
     async function fetchODData() {
@@ -149,7 +190,6 @@
     }
 
     // Global variables
-let omData = []; // OMJSON data
 let odData = []; // ODJSON data
 let selectedData = null; // Currently selected data
 let history = []; // History of selected items
@@ -241,38 +281,6 @@ adjustFontSize();
       });
       adjustFontSize();
     }
-
-// Function to perform search and update the result container
-function performSearch() {
-  const searchInput = document.getElementById('searchInput');
-  const searchText = searchInput.value.toLowerCase();
-
-  const matchingDisplayTexts = omData
-    .filter(item => item.text.toLowerCase().includes(searchText))
-    .map(item => item.displaytext);
-
-  updateResultContainer(matchingDisplayTexts);
-}
-
-// Function to update the result container with matching display texts
-function updateResultContainer(matchingDisplayTexts) {
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-
-  if (matchingDisplayTexts.length > 0) {
-    const ul = document.createElement('ul');
-
-    matchingDisplayTexts.forEach(displayText => {
-      const li = document.createElement('li');
-      li.textContent = displayText;
-      ul.appendChild(li);
-    });
-
-    resultContainer.appendChild(ul);
-  } else {
-    resultContainer.textContent = 'No matching items found.';
-  }
-}
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
