@@ -341,21 +341,35 @@ adjustFontSize();
       resultContainer.appendChild(table);
     }
 
- function filterData(event) {
+function filterData(event) {
   const selectedOption = event.target.value;
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
   if (searchInput !== '') {
-    const matchingData = omData.filter(item => {
-      return item.Contents.some(content =>
-        content.Text.toLowerCase().includes(searchInput)
-      );
-    });
+    const matchingData = omData.filter(
+      item =>
+        item.Name.toLowerCase().includes(searchInput) ||
+        (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
+    );
 
     if (matchingData.length > 0) {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
-      
+      // Clear the previous results
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
+      // Create the dropdown for matching items
+      const dropdown = document.createElement('select');
+      dropdown.setAttribute('id', 'matchingDropdown');
+      dropdown.addEventListener('change', handleMatchingDropdownChange);
+
+      // Create the default option
+      const defaultOption = document.createElement('option');
+      defaultOption.textContent = 'Select an item';
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      dropdown.appendChild(defaultOption);
+
+      // Add the matching items as options in the dropdown
       matchingData.forEach(item => {
         const option = document.createElement('option');
         option.value = item.Name;
@@ -363,14 +377,57 @@ adjustFontSize();
         dropdown.appendChild(option);
       });
 
-      selectedData = matchingData[0];
-      createOMTable(matchingData[0]);
-      pushHistory(matchingData[0].Name);
+      // Append the dropdown to the result container
+      resultContainer.appendChild(dropdown);
       return;
     }
   }
 
-  // Rest of the code...
+  // If no matching items found or the search input is empty, proceed with selecting from the main dropdown
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+function handleMatchingDropdownChange(event) {
+  const selectedItemName = event.target.value;
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
+    );
+
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      createODTable(selectedData);
+      pushHistory(selectedData.Item);
+    }
+    adjustFontSize();
+  }
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 }
 
 
