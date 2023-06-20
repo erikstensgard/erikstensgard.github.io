@@ -182,14 +182,6 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-// Call the function whenever the window is resized
-window.addEventListener('resize', adjustFontSize);
-
-
-// Call the adjustFontSize function on page load and window resize
-window.addEventListener('DOMContentLoaded', adjustFontSize);
-
-
     // Function to handle row click event
     function handleRowClick(item) {
       const matchingItem = omData.find(
@@ -222,6 +214,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
         top: 0,
         behavior: 'smooth'
       });
+      adjustFontSize();
     }
 
     // Function to create the table with OMJSON data
@@ -406,6 +399,8 @@ document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
+window.addEventListener('resize', adjustFontSize);
+window.addEventListener('DOMContentLoaded', adjustFontSize);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
