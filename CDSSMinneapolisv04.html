@@ -341,52 +341,24 @@ adjustFontSize();
       resultContainer.appendChild(table);
     }
 
-function filterData(event) {
+   function filterData(event) {
   const selectedOption = event.target.value;
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
   if (searchInput !== '') {
-    const matchingData = omData.filter(item => {
-      for (const content of item.contents) {
-        if (content.text.toLowerCase().includes(searchInput)) {
-          return true;
-        }
-      }
-      return false;
-    });
+    const matchingData = omData.filter(item =>
+      item.Name.toLowerCase().includes(searchInput) ||
+      (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
+    );
 
     if (matchingData.length > 0) {
-      // Clear the previous results
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-
-      // Create the dropdown for matching items
-      const dropdown = document.createElement('select');
-      dropdown.setAttribute('id', 'matchingDropdown');
-      dropdown.addEventListener('change', handleMatchingDropdownChange);
-
-      // Create the default option
-      const defaultOption = document.createElement('option');
-      defaultOption.textContent = 'Select an item';
-      defaultOption.disabled = true;
-      defaultOption.selected = true;
-      dropdown.appendChild(defaultOption);
-
-      // Add the matching items as options in the dropdown
-      matchingData.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.DisplayText || item.Name;
-        dropdown.appendChild(option);
-      });
-
-      // Append the dropdown to the result container
-      resultContainer.appendChild(dropdown);
+      selectedData = matchingData[0];
+      createOMTable(matchingData[0]);
+      pushHistory(matchingData[0].Name);
       return;
     }
   }
 
-  // If no matching items found or the search input is empty, proceed with selecting from the main dropdown
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
@@ -400,40 +372,10 @@ function filterData(event) {
     pushHistory(odMatchingData.Item);
   }
   adjustFontSize();
-
   // Scroll to the top of the table
   const resultContainer = document.getElementById('resultContainer');
   resultContainer.scrollTop = 0;
 }
-
-function handleMatchingDropdownChange(event) {
-  const selectedItemName = event.target.value;
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    const matchingItemIndex = odData.findIndex(
-      odItem => odItem.Name.trim().toLowerCase() === selectedItemName.trim().toLowerCase()
-    );
-
-    if (matchingItemIndex !== -1) {
-      selectedData = odData[matchingItemIndex];
-      createODTable(selectedData);
-      pushHistory(selectedData.Item);
-    }
-    adjustFontSize();
-  }
-
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-}
-
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -499,23 +441,7 @@ document.getElementById('goForwardButton').addEventListener('click', handleGoFor
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
-// Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData()])
-  .then(([omjsonData, odjsonData]) => {
-    omData = omjsonData;
-    odData = odjsonData;
-
-    populateDropdown(omData);
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
-    filterData({ target: dropdown });
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-
+window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', filterData);
 
 // Fetch data and initialize the dropdown
