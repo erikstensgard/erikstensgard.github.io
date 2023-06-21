@@ -157,24 +157,85 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
+    // Function to populate dropdown with filtered data based on search bar input
+function populateDropdown(data, searchInput) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  data.sort((a, b) => {
+  const matchingData = data.filter(item =>
+    item.Contents.some(content =>
+      content.Text.toLowerCase().includes(searchInput.toLowerCase())
+    )
+  );
+
+  matchingData.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
     const displayTextB = b.DisplayText || b.Name;
     return displayTextA.localeCompare(displayTextB);
   });
 
-  data.forEach(item => {
+  matchingData.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
 }
+
+// Function to filter the data based on the search bar input
+function filterData(event) {
+  const selectedOption = event.target.value;
+  const searchInput = document.getElementById('searchInput').value.trim();
+
+  if (searchInput !== '') {
+    const matchingData = omData.filter(item =>
+      item.Contents.some(content =>
+        content.Text.toLowerCase().includes(searchInput.toLowerCase())
+      )
+    );
+
+    populateDropdown(matchingData, searchInput);
+
+    if (matchingData.length > 0) {
+      const matchingItem = matchingData.find(
+        item => item.Name === selectedOption
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
+        return;
+      }
+    }
+  }
+
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+
+// Function to handle the search input event
+function handleSearchInput() {
+  const searchInput = document.getElementById('searchInput').value.trim();
+  populateDropdown(omData, searchInput);
+}
+
+// Attach event listeners
+document.getElementById('searchInput').addEventListener('input', handleSearchInput);
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
