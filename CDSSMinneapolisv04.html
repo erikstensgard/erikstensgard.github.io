@@ -346,10 +346,13 @@ adjustFontSize();
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
   if (searchInput !== '') {
-    const matchingData = omData.filter(item =>
-      item.Name.toLowerCase().includes(searchInput) ||
-      (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
-    );
+   const matchingData = omData.filter(item => {
+  const matchingContents = item.Contents.find(content =>
+    content.Text && content.Text.toLowerCase().includes(searchInput)
+  );
+  return matchingContents;
+});
+
 
     if (matchingData.length > 0) {
       selectedData = matchingData[0];
