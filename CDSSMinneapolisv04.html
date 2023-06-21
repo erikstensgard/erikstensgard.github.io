@@ -456,6 +456,35 @@ function handleGoForward() {
 
       document.body.removeChild(element);
     }
+function filterData() {
+  const searchInput = document.getElementById("searchInput");
+  const filterDropdown = document.getElementById("filterDropdown");
+  const table = document.getElementById("resultTable");
+  const rows = table.getElementsByTagName("tr");
+
+  const searchValue = searchInput.value.toLowerCase();
+  const filterValue = filterDropdown.value.toLowerCase();
+
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].getElementsByTagName("td");
+    let showRow = false;
+
+    for (let j = 0; j < cells.length; j++) {
+      const cell = cells[j];
+      const cellValue = cell.textContent || cell.innerText;
+
+      if (filterValue === "all" || cell.getAttribute("data-filter") === filterValue) {
+        if (cellValue.toLowerCase().indexOf(searchValue) > -1) {
+          showRow = true;
+          break;
+        }
+      }
+    }
+
+    rows[i].style.display = showRow ? "" : "none";
+  }
+}
+
 
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
