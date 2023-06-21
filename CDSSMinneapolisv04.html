@@ -157,21 +157,29 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Function to populate dropdown with OMJSON data
+// Function to populate dropdown with filtered OMJSON data
 function populateDropdown(data) {
-  items = data; // Store the items in a global variable
-
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  data.contents.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.DisplayText || item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+  const filteredData = data.filter(item =>
+    item.contents && item.contents.text.toLowerCase().includes(searchInput)
+  );
+
+  filteredData.sort((a, b) => {
+    const displayTextA = a.displaytext || a.name;
+    const displayTextB = b.displaytext || b.name;
+    return displayTextA.localeCompare(displayTextB);
   });
 
-  filterDropdownItems(); // Filter the dropdown items based on the search input
+  filteredData.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.name;
+    option.textContent = item.displaytext || item.name;
+    dropdown.appendChild(option);
+  });
 }
 
 
@@ -340,18 +348,41 @@ adjustFontSize();
       resultContainer.appendChild(table);
     }
 
-function filterData(event) {
+   function filterData(event) {
   const selectedOption = event.target.value;
-  const dropdown = document.getElementById('filterDropdown');
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
 
-  // Update the selected option based on the dropdown value
-  dropdown.value = selectedOption;
+  if (searchInput !== '') {
+    const matchingData = omData.filter(item =>
+      item.Name.toLowerCase().includes(searchInput) ||
+      (item.DisplayText && item.DisplayText.toLowerCase().includes(searchInput))
+    );
 
-  // Filter the dropdown items based on the search input
-  filterDropdownItems();
+    if (matchingData.length > 0) {
+      selectedData = matchingData[0];
+      createOMTable(matchingData[0]);
+      pushHistory(matchingData[0].Name);
+      return;
+    }
+  }
 
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    selectedData = odMatchingData;
+    createODTable(odMatchingData);
+    pushHistory(odMatchingData.Item);
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 }
-
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -410,29 +441,6 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-    function filterDropdownItems() {
-  const searchInput = document.getElementById('searchInput').value.toLowerCase();
-  const dropdown = document.getElementById('filterDropdown');
-
-  // Clear the previous dropdown options
-  dropdown.innerHTML = '';
-
-  // Filter the items based on the search input
-  const filteredItems = items.contents.filter(item =>
-    item.Text.toLowerCase().includes(searchInput)
-  );
-
-  // Populate the filtered items in the dropdown
-  filteredItems.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.DisplayText || item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
-  });
-}
-
-
-    
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
