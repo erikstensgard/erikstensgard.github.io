@@ -575,14 +575,36 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-document.addEventListener("click", function(event) {
-  var searchBox = document.getElementById("searchInput");
-  var filterDropdown = document.getElementById("filterDropdown");
-  
-  if (event.target !== searchBox && event.target !== filterDropdown) {
-    filterDropdown.classList.remove("show");
-  }
-});
+    // Function to close the dropdown
+    function closeDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.style.display = 'none';
+    }
+
+    // Function to open the dropdown
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.style.display = 'block';
+    }
+
+    // Function to check if the target element or its parent is the search input
+    function isSearchInput(element) {
+      const searchInput = document.getElementById('searchInput');
+      return element === searchInput || element.parentNode === searchInput;
+    }
+
+    // Event listener for document click event
+    document.addEventListener('click', function (event) {
+      const target = event.target;
+      if (!isSearchInput(target)) {
+        closeDropdown();
+      }
+    });
+
+    // Event listener for search input click event
+    document.getElementById('searchInput').addEventListener('click', function (event) {
+      openDropdown();
+    });
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
