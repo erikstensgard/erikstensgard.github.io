@@ -285,6 +285,28 @@ function detachOutsideClickListener() {
   document.removeEventListener('click', handleOutsideClick);
 }
 
+// Function to handle click events outside of the search input
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close the filter dropdown without hiding it
+    filterDropdown.size = 0;
+  }
+}
+
+// Function to attach the outside click event listener
+function attachOutsideClickListener() {
+  document.addEventListener('click', handleOutsideClick);
+}
+
+// Function to detach the outside click event listener
+function detachOutsideClickListener() {
+  document.removeEventListener('click', handleOutsideClick);
+}
+
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -307,8 +329,6 @@ function searchAndOpenDropdown() {
     dropdown.size = options.length;
 
     if (matchFound) {
-      dropdown.style.display = 'block';
-
       // Open the dropdown by triggering a click event on the search input
       var event = new MouseEvent('click', {
         bubbles: true,
@@ -317,10 +337,11 @@ function searchAndOpenDropdown() {
       });
       searchInput.dispatchEvent(event);
 
-      // Attach the outside click listener to close the dropdown
+      // Attach the outside click listener to keep the dropdown visible
       attachOutsideClickListener();
     } else {
-      dropdown.style.display = 'none';
+      // Close the dropdown without hiding it
+      dropdown.size = 0;
     }
   }
 
