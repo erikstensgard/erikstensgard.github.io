@@ -566,7 +566,14 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
+ // Add an event listener to the search input
+  const searchInput = document.getElementById("searchInput");
+  const filterDropdown = document.getElementById("filterDropdown");
 
+  searchInput.addEventListener("click", function() {
+    // Toggle the dropdown visibility when the search input is clicked
+    filterDropdown.style.display = filterDropdown.style.display === "none" ? "block" : "none";
+  });
 
     // Function to open the dropdown
     function openDropdown() {
