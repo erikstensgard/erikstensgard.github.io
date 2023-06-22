@@ -267,6 +267,7 @@ function searchData() {
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
+  var isOpen = false;
 
   function filterDropdownOptions(filterText) {
     var options = dropdown.options;
@@ -294,15 +295,30 @@ function searchAndOpenDropdown() {
         view: window
       });
       searchInput.dispatchEvent(event);
+      isOpen = true;
     } else {
-      dropdown.style.display = 'none';
+      closeDropdown();
     }
+  }
+
+  function closeDropdown() {
+    dropdown.style.display = 'none';
+    isOpen = false;
   }
 
   searchInput.addEventListener('input', function () {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
+
+  // Close the dropdown when clicking outside the search input and dropdown
+  document.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!searchInput.contains(target) && !dropdown.contains(target) && isOpen) {
+      closeDropdown();
+    }
+  });
+}
 
   // Hide the dropdown when clicking outside the search input and dropdown
   document.addEventListener('click', function (event) {
