@@ -267,7 +267,6 @@ function searchData() {
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
-  var isOpen = false;
 
   function filterDropdownOptions(filterText) {
     var options = dropdown.options;
@@ -295,40 +294,16 @@ function searchAndOpenDropdown() {
         view: window
       });
       searchInput.dispatchEvent(event);
-      isOpen = true;
     } else {
-      closeDropdown();
+      dropdown.style.display = 'none';
     }
-  }
-
-  function closeDropdown() {
-    dropdown.style.display = 'none';
-    isOpen = false;
   }
 
   searchInput.addEventListener('input', function () {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
-
-  // Close the dropdown when clicking outside the search input and dropdown
-  document.addEventListener('click', function (event) {
-    var target = event.target;
-    if (!searchInput.contains(target) && !dropdown.contains(target) && isOpen) {
-      closeDropdown();
-    }
-  });
 }
-
-  // Hide the dropdown when clicking outside the search input and dropdown
-  document.addEventListener('click', function (event) {
-    var target = event.target;
-    if (target !== searchInput && target !== dropdown) {
-      dropdown.style.display = 'none';
-    }
-  });
-}
-
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
@@ -608,7 +583,29 @@ window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 
+  // Function to close the dropdown when clicking outside the search bar
+    function closeDropdownOnClickOutside(event) {
+      const searchInput = document.getElementById('searchInput');
+      const dropdown = document.getElementById('filterDropdown');
 
+      if (!searchInput.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('open');
+      }
+    }
+
+    // Add event listener to close dropdown on click outside
+    document.addEventListener('click', closeDropdownOnClickOutside);
+
+    // Function to toggle the dropdown when the search bar is clicked
+    function toggleDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.classList.toggle('open');
+    }
+
+    // Add event listener to toggle dropdown on search bar click
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('click', toggleDropdown);
+    
     // Function to open the dropdown
     function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
