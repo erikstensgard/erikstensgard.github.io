@@ -263,18 +263,15 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-
-
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
 
-  searchInput.addEventListener('input', function() {
-    var filterText = this.value.toLowerCase();
+  function filterDropdownOptions(filterText) {
     var options = dropdown.options;
-
     var matchFound = false;
+
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       var optionText = option.text.toLowerCase();
@@ -286,6 +283,7 @@ function searchAndOpenDropdown() {
     }
 
     dropdown.size = options.length;
+
     if (matchFound) {
       dropdown.style.display = 'block';
 
@@ -299,15 +297,17 @@ function searchAndOpenDropdown() {
     } else {
       dropdown.style.display = 'none';
     }
-  });
+  }
 
-  // Close the dropdown when clicking outside the search input
-  document.addEventListener('click', function(event) {
-    if (event.target !== searchInput) {
-      dropdown.style.display = 'none';
-    }
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
   });
 }
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -560,6 +560,19 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
+    // Function to open the dropdown when clicking into the search input
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
+      dropdown.style.display = 'block';
+    }
+
+    // Event listener to open the dropdown when clicking into the search input
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('click', openDropdown);
+
+
+  
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -569,11 +582,7 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-    // Function to close the dropdown
-    function closeDropdown() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.style.display = 'none';
-    }
+
 
     // Function to open the dropdown
     function openDropdown() {
@@ -586,17 +595,6 @@ document.getElementById('searchInput').addEventListener('input', searchData);
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-
-document.addEventListener("click", function(event) {
-  // Check if the clicked element is the search input or the dropdown
-  const searchInput = document.getElementById("searchInput");
-  const dropdown = document.getElementById("filterDropdown");
-  
-  if (event.target !== searchInput && event.target !== dropdown) {
-    // Close the dropdown
-    dropdown.style.display = "none";
-  }
-});
 
     // Event listener for search input click event
     document.getElementById('searchInput').addEventListener('click', function (event) {
