@@ -281,20 +281,29 @@ function searchAndOpenDropdown() {
     var options = document.getElementById('filterDropdown').options;
 
     // Loop through the options and check for matches
+    var matchFound = false;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       var optionText = option.text.toLowerCase();
-      
+
       // If the filter text is found in the option text, select the option
       if (optionText.indexOf(filterText) !== -1) {
         option.selected = true;
+        matchFound = true;
       }
     }
 
-    // Open the dropdown
-    document.getElementById('filterDropdown').size = options.length;
+    // Open or close the dropdown based on matchFound
+    var dropdown = document.getElementById('filterDropdown');
+    dropdown.size = options.length;
+    if (matchFound) {
+      dropdown.style.display = 'block';
+    } else {
+      dropdown.style.display = 'none';
+    }
   });
 }
+
 
 
 // Function to adjust the font size based on column number and window/screen size
