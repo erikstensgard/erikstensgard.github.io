@@ -557,6 +557,20 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
+    // Function to open the dropdown menu when clicking into the search bar
+function openDropdown() {
+  const searchInput = document.getElementById('searchInput');
+  const dropdown = document.getElementById('filterDropdown');
+
+  searchInput.addEventListener('click', function() {
+    dropdown.style.display = 'block';
+  });
+}
+
+// Call the function to open the dropdown menu
+openDropdown();
+
+  
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
