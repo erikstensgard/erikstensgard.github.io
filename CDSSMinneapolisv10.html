@@ -308,20 +308,6 @@ function searchAndOpenDropdown() {
   });
 }
 
-
-    // Open or close the dropdown based on matchFound
-    var dropdown = document.getElementById('filterDropdown');
-    dropdown.size = options.length;
-    if (matchFound) {
-      dropdown.style.display = 'block';
-    } else {
-      dropdown.style.display = 'none';
-    }
-  });
-}
-
-
-
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
