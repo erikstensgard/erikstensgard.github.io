@@ -299,12 +299,15 @@ function searchAndOpenDropdown() {
     }
   }
 
-searchInput.addEventListener('input', function () {
-  var filterText = this.value.toLowerCase();
-  filterDropdownOptions(filterText);
-});
-
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
+  });
 }
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
