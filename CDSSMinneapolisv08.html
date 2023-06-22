@@ -180,42 +180,28 @@ let historyIndex = -1; // Index of the current selection in the history
 
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
-  const tableBody = document.getElementById('tableBody');
-  tableBody.innerHTML = '';
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
 
-  if (data.length === 0) {
-    const noMatchRow = document.createElement('tr');
-    const noMatchCell = document.createElement('td');
-    noMatchCell.setAttribute('colspan', '4');
-    noMatchCell.textContent = 'There are no recommendations with matching text in the search bar';
-    noMatchRow.appendChild(noMatchCell);
-    tableBody.appendChild(noMatchRow);
-    return;
-  }
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  // Sort the data by the number of matches
+  data.sort((a, b) => {
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const matchesA = getMatchCount(a, searchText);
+    const matchesB = getMatchCount(b, searchText);
+    return matchesB - matchesA;
+  });
 
   data.forEach(item => {
-    const row = document.createElement('tr');
-
-    const displayTextCell = document.createElement('td');
-    displayTextCell.textContent = item.DisplayText || item.Name;
-    row.appendChild(displayTextCell);
-
-    const categoryCell = document.createElement('td');
-    categoryCell.textContent = item.Category;
-    row.appendChild(categoryCell);
-
-    const scoreCell = document.createElement('td');
-    scoreCell.textContent = item.Score;
-    row.appendChild(scoreCell);
-
-    const detailsCell = document.createElement('td');
-    const detailsButton = document.createElement('button');
-    detailsButton.textContent = 'Details';
-    detailsButton.addEventListener('click', () => showDetails(item));
-    detailsCell.appendChild(detailsButton);
-    row.appendChild(detailsCell);
-
-    tableBody.appendChild(row);
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    dropdown.appendChild(option);
   });
 }
 
