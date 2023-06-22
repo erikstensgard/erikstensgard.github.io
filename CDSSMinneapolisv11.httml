@@ -263,18 +263,15 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-
-
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
 
-  searchInput.addEventListener('input', function() {
-    var filterText = this.value.toLowerCase();
+  function filterDropdownOptions(filterText) {
     var options = dropdown.options;
-
     var matchFound = false;
+
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       var optionText = option.text.toLowerCase();
@@ -286,6 +283,7 @@ function searchAndOpenDropdown() {
     }
 
     dropdown.size = options.length;
+
     if (matchFound) {
       dropdown.style.display = 'block';
 
@@ -299,11 +297,16 @@ function searchAndOpenDropdown() {
     } else {
       dropdown.style.display = 'none';
     }
+  }
+
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
   });
 
-  // Close the dropdown when clicking outside the search input
-  document.addEventListener('click', function(event) {
-    if (event.target !== searchInput) {
+  // Close the dropdown when clicking outside the search input or dropdown
+  document.addEventListener('click', function (event) {
+    if (event.target !== searchInput && event.target !== dropdown) {
       dropdown.style.display = 'none';
     }
   });
