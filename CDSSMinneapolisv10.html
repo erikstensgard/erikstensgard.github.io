@@ -270,41 +270,45 @@ function searchData() {
     filterData({ target: dropdown });
   }
 }
-function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
-  var dropdown = document.getElementById('filterDropdown');
+// Function to search and open dropdown
+    function searchAndOpenDropdown() {
+      var searchInput = document.getElementById('searchInput');
+      var dropdown = document.getElementById('filterDropdown');
 
-  searchInput.addEventListener('input', function() {
-    var filterText = this.value.toLowerCase();
-    var options = dropdown.options;
+      searchInput.addEventListener('input', function() {
+        var filterText = this.value.toLowerCase();
+        var options = dropdown.options;
 
-    var matchFound = false;
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
+        var matchFound = false;
+        for (var i = 0; i < options.length; i++) {
+          var option = options[i];
+          var optionText = option.text.toLowerCase();
 
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
-      }
-    }
+          if (optionText.indexOf(filterText) !== -1) {
+            option.selected = true;
+            matchFound = true;
+          }
+        }
 
-    dropdown.size = options.length;
-    if (matchFound) {
-      dropdown.style.display = 'block';
+        dropdown.size = options.length;
+        if (matchFound) {
+          dropdown.style.display = 'block';
 
-      // Open the dropdown by triggering a click event on the search input
-      var event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
+          // Open the dropdown by triggering a click event on the search input
+          var event = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          });
+          searchInput.dispatchEvent(event);
+        } else {
+          dropdown.style.display = 'none';
+        }
       });
-      searchInput.dispatchEvent(event);
-    } else {
-      dropdown.style.display = 'none';
     }
-  });
-}
+
+    // Call the searchAndOpenDropdown function
+    searchAndOpenDropdown();
 
 
 // Function to adjust the font size based on column number and window/screen size
