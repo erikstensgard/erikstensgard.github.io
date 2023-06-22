@@ -271,17 +271,6 @@ function searchData() {
   }
 }
 
-  populateDropdown(filteredData);
-  filterData({ target: document.getElementById('filterDropdown') });
-
-  const resultContainer = document.getElementById('resultContainer');
-  if (filteredData.length === 0) {
-    resultContainer.textContent = 'There are no matches for search text';
-  } else {
-    resultContainer.textContent = '';
-  }
-}
-
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
