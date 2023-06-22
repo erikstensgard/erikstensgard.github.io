@@ -227,7 +227,8 @@ function searchData() {
 
   let filteredData = omData.filter(item => {
     const displayText = item.DisplayText || item.Name;
-    return displayText.toLowerCase().includes(searchText);
+    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+    return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
   });
 
   filteredData.sort((a, b) => {
@@ -257,6 +258,7 @@ function searchData() {
   populateDropdown(filteredData);
   filterData({ target: document.getElementById('filterDropdown') });
 }
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
