@@ -436,24 +436,32 @@ adjustFontSize();
 
     // Function to filter data based on the selected option
     function filterData(event) {
-      const selectedOption = event.target.value;
-      const matchingData = omData.find(item => item.Name === selectedOption);
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-      if (matchingData) {
-        selectedData = matchingData;
-        createOMTable(matchingData);
-        pushHistory(matchingData.Name);
-      } else {
-        const odMatchingData = odData.find(item => item.Name === selectedOption);
-        selectedData = odMatchingData;
-        createODTable(odMatchingData);
-        pushHistory(odMatchingData.Item);
-      }
-      adjustFontSize();
-      // Scroll to the top of the table
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    if (odMatchingData) {
+      selectedData = odMatchingData;
+      createODTable(odMatchingData);
+      pushHistory(odMatchingData.Item);
+    } else {
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
       const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
+      resultContainer.innerHTML = 'Selected data not found.';
     }
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
