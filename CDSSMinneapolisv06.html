@@ -379,66 +379,25 @@ adjustFontSize();
     }
 
     // Function to filter data based on the selected option
-function filterData(event) {
-  const selectedOption = event.target.value;
+    function filterData(event) {
+      const selectedOption = event.target.value;
+      const matchingData = omData.find(item => item.Name === selectedOption);
 
-  // Filter the data based on the search query
-  const filteredData = omData.filter(item => {
-    const textFields = item.Contents.map(content => content.Text || "").join(" ").toLowerCase();
-    const searchTerm = selectedOption.toLowerCase();
-    return textFields.includes(searchTerm);
-  });
-
-  // Sort the filtered data by the number of matches
-  filteredData.sort((a, b) => {
-    const aMatches = (a.Contents.map(content => content.Text || "").join(" ").toLowerCase().match(new RegExp(selectedOption, "g")) || []).length;
-    const bMatches = (b.Contents.map(content => content.Text || "").join(" ").toLowerCase().match(new RegExp(selectedOption, "g")) || []).length;
-    return bMatches - aMatches;
-  });
-
-  // Update the dropdown options with the sorted results
-  populateDropdown(filteredData);
-
-  // Select the first option (highest number of matches)
-  if (filteredData.length > 0) {
-    const dropdown = document.getElementById("filterDropdown");
-    dropdown.value = filteredData[0].Name;
-    selectedData = filteredData[0];
-    createOMTable(filteredData[0]);
-    pushHistory(filteredData[0].Name);
-  } else {
-    selectedData = null;
-    const resultContainer = document.getElementById("resultContainer");
-    resultContainer.innerHTML = "";
-  }
-  adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById("resultContainer");
-  resultContainer.scrollTop = 0;
-}
-
-
-  // Update the dropdown options with the sorted results
-  populateDropdown(filteredData);
-
-  // Select the first option (highest number of matches or displayText match)
-  if (filteredData.length > 0) {
-    const dropdown = document.getElementById("filterDropdown");
-    dropdown.value = filteredData[0].Name;
-    selectedData = filteredData[0];
-    createOMTable(filteredData[0]);
-    pushHistory(filteredData[0].Name);
-  } else {
-    selectedData = null;
-    const resultContainer = document.getElementById("resultContainer");
-    resultContainer.innerHTML = "";
-  }
-  adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById("resultContainer");
-  resultContainer.scrollTop = 0;
-}
-
+      if (matchingData) {
+        selectedData = matchingData;
+        createOMTable(matchingData);
+        pushHistory(matchingData.Name);
+      } else {
+        const odMatchingData = odData.find(item => item.Name === selectedOption);
+        selectedData = odMatchingData;
+        createODTable(odMatchingData);
+        pushHistory(odMatchingData.Item);
+      }
+      adjustFontSize();
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+    }
 
 // Function to push the current selection to the history
 function pushHistory(item) {
