@@ -275,7 +275,7 @@ function searchAndOpenDropdown() {
   // Get the search input element
   var searchInput = document.getElementById('searchInput');
 
-  // Add an event listener to the search input
+  // Add an event listener to the search input for the 'input' event
   searchInput.addEventListener('input', function() {
     var filterText = this.value.toLowerCase();
     var options = document.getElementById('filterDropdown').options;
@@ -295,6 +295,7 @@ function searchAndOpenDropdown() {
     document.getElementById('filterDropdown').size = options.length;
   });
 }
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
