@@ -270,43 +270,42 @@ function searchData() {
     filterData({ target: dropdown });
   }
 }
-    
 function searchAndOpenDropdown() {
-  // Get the search input element
   var searchInput = document.getElementById('searchInput');
+  var dropdown = document.getElementById('filterDropdown');
 
-  // Add an event listener to the search input for the 'input' event
   searchInput.addEventListener('input', function() {
     var filterText = this.value.toLowerCase();
-    var options = document.getElementById('filterDropdown').options;
+    var options = dropdown.options;
 
-    // Loop through the options and check for matches
     var matchFound = false;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       var optionText = option.text.toLowerCase();
 
-      // If the filter text is found in the option text, select the option
       if (optionText.indexOf(filterText) !== -1) {
         option.selected = true;
         matchFound = true;
       }
     }
 
-    // Open or close the dropdown based on matchFound
-    var dropdown = document.getElementById('filterDropdown');
     dropdown.size = options.length;
     if (matchFound) {
       dropdown.style.display = 'block';
 
-      // Simulate a click on the dropdown to open it
-      var event = new Event('mousedown');
-      dropdown.dispatchEvent(event);
+      // Open the dropdown by triggering a click event on the search input
+      var event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      searchInput.dispatchEvent(event);
     } else {
       dropdown.style.display = 'none';
     }
   });
 }
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
