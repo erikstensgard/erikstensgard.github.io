@@ -270,6 +270,31 @@ function searchData() {
     filterData({ target: dropdown });
   }
 }
+    
+function searchAndOpenDropdown() {
+  // Get the search input element
+  var searchInput = document.getElementById('searchInput');
+
+  // Add an event listener to the search input
+  searchInput.addEventListener('input', function() {
+    var filterText = this.value.toLowerCase();
+    var options = document.getElementById('filterDropdown').options;
+
+    // Loop through the options and check for matches
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var optionText = option.text.toLowerCase();
+      
+      // If the filter text is found in the option text, select the option
+      if (optionText.indexOf(filterText) !== -1) {
+        option.selected = true;
+      }
+    }
+
+    // Open the dropdown
+    document.getElementById('filterDropdown').size = options.length;
+  });
+}
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
