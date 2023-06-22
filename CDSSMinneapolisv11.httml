@@ -294,9 +294,7 @@ function searchAndOpenDropdown() {
         view: window
       });
       searchInput.dispatchEvent(event);
-    } else {
-      dropdown.style.display = 'none';
-    }
+    } 
   }
 
 searchInput.addEventListener('input', function () {
