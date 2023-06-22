@@ -263,6 +263,28 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
+// Function to handle click events outside of the search input
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close the filter dropdown
+    filterDropdown.style.display = 'none';
+  }
+}
+
+// Function to attach the outside click event listener
+function attachOutsideClickListener() {
+  document.addEventListener('click', handleOutsideClick);
+}
+
+// Function to detach the outside click event listener
+function detachOutsideClickListener() {
+  document.removeEventListener('click', handleOutsideClick);
+}
+
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -294,23 +316,22 @@ function searchAndOpenDropdown() {
         view: window
       });
       searchInput.dispatchEvent(event);
+
+      // Attach the outside click listener to close the dropdown
+      attachOutsideClickListener();
     } else {
       dropdown.style.display = 'none';
     }
   }
-
-  // Close the dropdown when clicked outside of the search bar
-  document.addEventListener('click', function(event) {
-    if (event.target !== searchInput) {
-      dropdown.style.display = 'none';
-    }
-  });
 
   searchInput.addEventListener('input', function () {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
 }
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
 
 
 // Function to adjust the font size based on column number and window/screen size
