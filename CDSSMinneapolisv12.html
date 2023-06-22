@@ -262,28 +262,16 @@ function searchData() {
   });
 
   populateDropdown(filteredData);
-  filterData({ target: document.getElementById('filterDropdown') });
-
-  const resultContainer = document.getElementById('resultContainer');
-  if (filteredData.length === 0) {
-    resultContainer.textContent = 'There are no matches for search text';
-  } else {
-    resultContainer.textContent = '';
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = filteredData[0].Name; // Set the first item as the default selection
-    filterData({ target: dropdown });
-  }
 }
 // Function to search and open dropdown
-   function searchAndOpenDropdown() {
+function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
 
-  searchInput.addEventListener('input', function () {
-    var filterText = this.value.toLowerCase();
+  function filterDropdownOptions(filterText) {
     var options = dropdown.options;
-
     var matchFound = false;
+
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       var optionText = option.text.toLowerCase();
@@ -295,26 +283,28 @@ function searchData() {
     }
 
     dropdown.size = options.length;
+
     if (matchFound) {
       dropdown.style.display = 'block';
+
+      // Open the dropdown by triggering a click event on the search input
+      var event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      searchInput.dispatchEvent(event);
     } else {
       dropdown.style.display = 'none';
     }
-  });
+  }
 
-  // Prevent the dropdown from closing when clicking outside the search box
-  dropdown.addEventListener('click', function (event) {
-    event.stopPropagation();
-  });
+searchInput.addEventListener('input', function () {
+  var filterText = this.value.toLowerCase();
+  filterDropdownOptions(filterText);
+});
 
-  document.addEventListener('click', function () {
-    dropdown.style.display = 'block';
-  });
 }
-
-    // Call the searchAndOpenDropdown function
-    searchAndOpenDropdown();
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -576,11 +566,7 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-    // Function to close the dropdown
-    function closeDropdown() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.style.display = 'none';
-    }
+
 
     // Function to open the dropdown
     function openDropdown() {
@@ -593,14 +579,6 @@ document.getElementById('searchInput').addEventListener('input', searchData);
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-
-    // Event listener for document click event
-    document.addEventListener('click', function (event) {
-      const target = event.target;
-      if (!isSearchInput(target)) {
-        closeDropdown();
-      }
-    });
 
     // Event listener for search input click event
     document.getElementById('searchInput').addEventListener('click', function (event) {
