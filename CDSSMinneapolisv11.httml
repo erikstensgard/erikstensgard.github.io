@@ -262,16 +262,6 @@ function searchData() {
   });
 
   populateDropdown(filteredData);
-
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.value = ''; // Clear the dropdown selection
-
-  // Check if the filtered data is empty
-  if (filteredData.length === 0) {
-    dropdown.style.display = 'none'; // Hide the dropdown if there are no matches
-  } else {
-    dropdown.style.display = 'block'; // Show the dropdown if there are matches
-  }
 }
 
 
