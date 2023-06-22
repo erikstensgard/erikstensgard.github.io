@@ -263,13 +263,12 @@ function searchData() {
 
   populateDropdown(filteredData);
 
-  const resultContainer = document.getElementById('resultContainer');
-  if (filteredData.length === 0) {
-    resultContainer.textContent = 'There are no matches for search text';
-  } else {
-    resultContainer.textContent = '';
-  }
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.value = ''; // Clear the dropdown selection
+
+  filterData({ target: dropdown });
 }
+
 
 // Function to search and open dropdown
     function searchAndOpenDropdown() {
