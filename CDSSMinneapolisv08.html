@@ -231,7 +231,7 @@ function searchData() {
     return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
   });
 
-  filteredData = filteredData.filter(item => !item.DisplayText.toLowerCase().includes('index'));
+  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   filteredData.sort((a, b) => {
     const aDisplayText = a.DisplayText || a.Name;
