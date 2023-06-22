@@ -557,18 +557,17 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-    // Function to open the dropdown menu when clicking into the search bar
-function openDropdown() {
-  const searchInput = document.getElementById('searchInput');
-  const dropdown = document.getElementById('filterDropdown');
+    // Function to open the dropdown when clicking into the search input
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
+      dropdown.style.display = 'block';
+    }
 
-  searchInput.addEventListener('click', function() {
-    dropdown.style.display = 'block';
-  });
-}
+    // Event listener to open the dropdown when clicking into the search input
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('click', openDropdown);
 
-// Call the function to open the dropdown menu
-openDropdown();
 
   
 // Attach event listeners
