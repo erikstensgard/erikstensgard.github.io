@@ -304,15 +304,13 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
-// Close the dropdown when clicking outside the search input or dropdown
-document.addEventListener('click', function (event) {
-  if (event.target !== searchInput) {
-    if (event.target !== dropdown && !dropdown.contains(event.target)) {
+  // Close the dropdown when clicking outside the search input or dropdown
+  document.addEventListener('click', function (event) {
+    if (event.target !== searchInput && event.target !== dropdown) {
       dropdown.style.display = 'none';
     }
-  }
-});
-
+  });
+}
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
