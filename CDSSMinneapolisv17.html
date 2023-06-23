@@ -328,6 +328,11 @@ function searchAndOpenDropdown() {
   searchInput.addEventListener('input', function () {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
+
+    // Clear the selected option if the search input is empty
+    if (filterText === '') {
+      dropdown.selectedIndex = 0;
+    }
   });
 }
 
