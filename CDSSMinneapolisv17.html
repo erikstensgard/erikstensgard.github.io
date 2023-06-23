@@ -202,10 +202,11 @@ function populateDropdown(data) {
     return matchesB - matchesA;
   });
 
-  const defaultOption = document.createElement('option');
-  defaultOption.textContent = 'Click here to view search results';
-  defaultOption.disabled = true;
-  dropdown.appendChild(defaultOption);
+const defaultOption = document.createElement('option');
+defaultOption.textContent = 'Click here to view search results';
+defaultOption.value = '';
+dropdown.appendChild(defaultOption);
+
 
   data.forEach(item => {
     const option = document.createElement('option');
