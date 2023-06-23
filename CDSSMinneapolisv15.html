@@ -29,47 +29,40 @@
     }
 
     /* Header styles */
- #header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap; /* Allow wrapping of elements */
+    }
 
-#header button,
-#header select {
-  margin: 5px;
-  flex: 0 0 auto;
-}
+    #header button,
+    #header select {
+      margin: 5px;
+      flex: 0 0 auto;
+    }
 
-#goBackButton {
-  margin-left: 20px;
-}
+    #header #goBackButton {
+      order: 1; /* Change the order of the button */
+    }
 
-#mainMenuButton {
-  margin-right: auto;
-}
+    #header #mainMenuButton {
+      order: 2; /* Change the order of the button */
+    }
 
-#goForwardButton {
-  margin-right: 20px;
-}
+    #header #goForwardButton {
+      order: 3; /* Change the order of the button */
+    }
 
-#filterDropdown {
-  margin-right: 20px;
-  width: 600px;
-  z-index: 2; /* Updated value */
-  position: absolute; /* Added property */
-  top: 100%; /* Adjust the top position as needed */
-}
-
-
-#searchInput {
-  margin-right: 20px;
-  width: 200px;
-}
+    #header #filterDropdown,
+    #header #searchInput {
+      order: 4; /* Change the order of the elements */
+      margin-right: 20px;
+    }
 
     /* Table styles */
     .table {
@@ -89,27 +82,31 @@
       select {
         font-size: 12px;
       }
-      #filterDropdown {
-         width: 400px;
-    }
-      #searchInput {
-        font-size: 12px; 
+
+      #header #filterDropdown {
+        width: 400px;
+      }
+
+      #header #searchInput {
+        font-size: 12px;
         width: 150px;
+      }
     }
-    }
-    
+
     @media screen and (max-width: 768px) {
       button,
       select {
         font-size: 10px;
       }
-      #filterDropdown {
-         width: 200px;
-    }
-       #searchInput {
-        font-size: 10px; 
+
+      #header #filterDropdown {
+        width: 200px;
+      }
+
+      #header #searchInput {
+        font-size: 10px;
         width: 150px;
-    }
+      }
     }
 
     @media screen and (max-width: 480px) {
@@ -117,27 +114,31 @@
       select {
         font-size: 8px;
       }
-      #filterDropdown {
-         width: 100px;
-    } 
-      #searchInput {
-        font-size: 8px; 
+
+      #header #filterDropdown {
         width: 100px;
+      }
+
+      #header #searchInput {
+        font-size: 8px;
+        width: 100px;
+      }
     }
-    }
-    
+
     @media screen and (max-width: 320px) {
       button,
       select {
         font-size: 6px;
       }
-      #filterDropdown {
-         width: 75px;
-    }
-       #searchInput {
-        font-size: 6px; 
+
+      #header #filterDropdown {
+        width: 75px;
+      }
+
+      #header #searchInput {
+        font-size: 6px;
         width: 50px;
-    }
+      }
     }
   </style>
 
@@ -145,21 +146,17 @@
 
 <body>
   <div id="header">
-    <button id="goBackButton">&larr; Go Back</button>
-    <button id="mainMenuButton">Main Menu</button>
-    <button id="goForwardButton">Go Forward &rarr;</button>
-    <div id="searchDropdown">
-  <input type="text" id="searchInput" placeholder="Search...">
-  <select id="filterDropdown"></select>
-</div>
+    <button id="goBackButton" onclick="goBack()">Go Back</button>
+    <button id="mainMenuButton" onclick="goToMainMenu()">Main Menu</button>
+    <button id="goForwardButton" onclick="goForward()">Go Forward</button>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <select id="filterDropdown"></select>
+  </div>
 
   <div id="resultContainer"></div>
 
-  <div id="footer">
-    <button id="downloadJSONButton">Download JSON</button>
-  </div>
-
   <script>
+
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
