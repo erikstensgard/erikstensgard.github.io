@@ -148,10 +148,10 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
-    <select id="filterDropdown"></select>
-    <input type="text" id="searchInput" placeholder="Search...">
-
-  </div>
+    <div id="searchDropdown">
+  <input type="text" id="searchInput" placeholder="Search...">
+  <select id="filterDropdown"></select>
+</div>
 
   <div id="resultContainer"></div>
 
@@ -185,20 +185,26 @@ let historyIndex = -1; // Index of the current selection in the history
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
-  const searchInput = document.getElementById('searchInput');
-  const searchText = searchInput.value.trim().toLowerCase();
-
   dropdown.innerHTML = '';
-  dropdown.size = data.length;
+
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  // Sort the data by the number of matches
+  data.sort((a, b) => {
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const matchesA = getMatchCount(a, searchText);
+    const matchesB = getMatchCount(b, searchText);
+    return matchesB - matchesA;
+  });
 
   data.forEach(item => {
     const option = document.createElement('option');
-    const displayText = item.DisplayText || item.Name;
-    const matchCount = getMatchCount(item, searchText);
-    const resultText = `${matchCount} result${matchCount !== 1 ? 's' : ''}`;
-
     option.value = item.Name;
-    option.textContent = `${displayText}, ${resultText}`;
+    option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
 }
@@ -293,12 +299,42 @@ function searchAndOpenDropdown() {
     }
   }
 
-searchInput.addEventListener('input', function () {
-  var filterText = this.value.toLowerCase();
-  filterDropdownOptions(filterText);
-});
-
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
+  });
 }
+
+// Function to filter data based on the selected option
+function filterData(event) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    if (odMatchingData) {
+      selectedData = odMatchingData;
+      createODTable(odMatchingData);
+      pushHistory(odMatchingData.Item);
+    } else {
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
+    }
+  }
+  adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+}
+
+// Update the event listeners for the search input and dropdown
+searchAndOpenDropdown();
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -560,7 +596,6 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-
 
     // Function to open the dropdown
     function openDropdown() {
