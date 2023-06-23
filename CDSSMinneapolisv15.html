@@ -557,6 +557,18 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
+  // Function to generate the search options based on item.displaytext
+    function generateSearchOptions(data) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.innerHTML = '';
+
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.displaytext;
+        dropdown.appendChild(option);
+      });
+    }
+    
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
