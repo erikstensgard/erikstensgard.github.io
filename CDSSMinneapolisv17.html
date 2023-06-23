@@ -202,6 +202,11 @@ function populateDropdown(data) {
     return matchesB - matchesA;
   });
 
+  const defaultOption = document.createElement('option');
+  defaultOption.textContent = 'Click here to view search results';
+  defaultOption.disabled = true;
+  dropdown.appendChild(defaultOption);
+
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
@@ -209,11 +214,8 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 
-  const defaultOption = document.createElement('option');
-  defaultOption.textContent = 'Click here to view search results';
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  dropdown.insertBefore(defaultOption, dropdown.firstChild);
+  // Set the default option
+  dropdown.selectedIndex = 0;
 }
 
 // Helper function to get the number of matches in an item
