@@ -203,8 +203,8 @@ function populateDropdown(data) {
 
   data.forEach(item => {
     const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
+    option.value = item.DisplayText || item.Name; // Set the value to item.displaytext
+    option.textContent = item.DisplayText || item.Name; // Set the displayed text to item.displaytext
     dropdown.appendChild(option);
   });
 }
