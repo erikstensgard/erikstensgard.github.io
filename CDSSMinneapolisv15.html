@@ -148,11 +148,11 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
-    <select id="filterDropdown"></select>
-    <input type="text" id="searchInput" placeholder="Search...">
-
+ <div id="combinedInput">
+    <input type="text" id="searchInput" placeholder="Search..." list="filterDropdown" autocomplete="off">
+    <datalist id="filterDropdown"></datalist>
   </div>
-
+</div>
   <div id="resultContainer"></div>
 
   <div id="footer">
