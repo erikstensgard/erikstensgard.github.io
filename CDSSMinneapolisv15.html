@@ -29,40 +29,47 @@
     }
 
     /* Header styles */
-    #header {
-      position: sticky;
-      top: 0;
-      background-color: white;
-      z-index: 1;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: wrap; /* Allow wrapping of elements */
-    }
+ #header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 
-    #header button,
-    #header select {
-      margin: 5px;
-      flex: 0 0 auto;
-    }
+#header button,
+#header select {
+  margin: 5px;
+  flex: 0 0 auto;
+}
 
-    #header #goBackButton {
-      order: 1; /* Change the order of the button */
-    }
+#goBackButton {
+  margin-left: 20px;
+}
 
-    #header #mainMenuButton {
-      order: 2; /* Change the order of the button */
-    }
+#mainMenuButton {
+  margin-right: auto;
+}
 
-    #header #goForwardButton {
-      order: 3; /* Change the order of the button */
-    }
+#goForwardButton {
+  margin-right: 20px;
+}
 
-    #header #filterDropdown,
-    #header #searchInput {
-      order: 4; /* Change the order of the elements */
-      margin-right: 20px;
-    }
+#filterDropdown {
+  margin-right: 20px;
+  width: 600px;
+  z-index: 2; /* Updated value */
+  position: absolute; /* Added property */
+  top: 100%; /* Adjust the top position as needed */
+}
+
+
+#searchInput {
+  margin-right: 20px;
+  width: 200px;
+}
 
     /* Table styles */
     .table {
@@ -82,31 +89,27 @@
       select {
         font-size: 12px;
       }
-
-      #header #filterDropdown {
-        width: 400px;
-      }
-
-      #header #searchInput {
-        font-size: 12px;
-        width: 150px;
-      }
+      #filterDropdown {
+         width: 400px;
     }
-
+      #searchInput {
+        font-size: 12px; 
+        width: 150px;
+    }
+    }
+    
     @media screen and (max-width: 768px) {
       button,
       select {
         font-size: 10px;
       }
-
-      #header #filterDropdown {
-        width: 200px;
-      }
-
-      #header #searchInput {
-        font-size: 10px;
+      #filterDropdown {
+         width: 200px;
+    }
+       #searchInput {
+        font-size: 10px; 
         width: 150px;
-      }
+    }
     }
 
     @media screen and (max-width: 480px) {
@@ -114,31 +117,27 @@
       select {
         font-size: 8px;
       }
-
-      #header #filterDropdown {
+      #filterDropdown {
+         width: 100px;
+    } 
+      #searchInput {
+        font-size: 8px; 
         width: 100px;
-      }
-
-      #header #searchInput {
-        font-size: 8px;
-        width: 100px;
-      }
     }
-
+    }
+    
     @media screen and (max-width: 320px) {
       button,
       select {
         font-size: 6px;
       }
-
-      #header #filterDropdown {
-        width: 75px;
-      }
-
-      #header #searchInput {
-        font-size: 6px;
+      #filterDropdown {
+         width: 75px;
+    }
+       #searchInput {
+        font-size: 6px; 
         width: 50px;
-      }
+    }
     }
   </style>
 
@@ -146,17 +145,21 @@
 
 <body>
   <div id="header">
-    <button id="goBackButton" onclick="goBack()">Go Back</button>
-    <button id="mainMenuButton" onclick="goToMainMenu()">Main Menu</button>
-    <button id="goForwardButton" onclick="goForward()">Go Forward</button>
-    <input type="text" id="searchInput" placeholder="Search...">
+    <button id="goBackButton">&larr; Go Back</button>
+    <button id="mainMenuButton">Main Menu</button>
+    <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
+    <input type="text" id="searchInput" placeholder="Search...">
+
   </div>
 
   <div id="resultContainer"></div>
 
-  <script>
+  <div id="footer">
+    <button id="downloadJSONButton">Download JSON</button>
+  </div>
 
+  <script>
     // Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
@@ -296,42 +299,12 @@ function searchAndOpenDropdown() {
     }
   }
 
-  searchInput.addEventListener('input', function () {
-    var filterText = this.value.toLowerCase();
-    filterDropdownOptions(filterText);
-  });
+searchInput.addEventListener('input', function () {
+  var filterText = this.value.toLowerCase();
+  filterDropdownOptions(filterText);
+});
+
 }
-
-// Function to filter data based on the selected option
-function filterData(event) {
-  const selectedOption = event.target.value;
-  const matchingData = omData.find(item => item.Name === selectedOption);
-
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-    const odMatchingData = odData.find(item => item.Name === selectedOption);
-    if (odMatchingData) {
-      selectedData = odMatchingData;
-      createODTable(odMatchingData);
-      pushHistory(odMatchingData.Item);
-    } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  }
-  adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-}
-
-// Update the event listeners for the search input and dropdown
-searchAndOpenDropdown();
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -593,6 +566,7 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
+
 
     // Function to open the dropdown
     function openDropdown() {
