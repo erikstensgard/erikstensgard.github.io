@@ -263,7 +263,8 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-// Function to handle click events outside of the search input and dropdown
+
+    // Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
@@ -315,7 +316,20 @@ function searchAndOpenDropdown() {
       searchInput.dispatchEvent(event);
 
       // Attach the outside click listener to keep the dropdown visible
-      attachOutsideClickListener();
+      // Attach the outside click event listener
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      var isSearchInput = target === searchInput;
+      var isDropdownOption = dropdown.contains(target);
+
+      if (!isSearchInput && !isDropdownOption) {
+        // Close and hide the filter dropdown
+        dropdown.style.display = "";
+
+        // Detach the outside click event listener
+        document.removeEventListener('click', arguments.callee);
+      }
+    });
     } else {
       // Close the dropdown without hiding it
       dropdown.style.display = ""; 
