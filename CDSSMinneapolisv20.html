@@ -330,7 +330,20 @@ function searchAndOpenDropdown() {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
+// Attach the outside click event listener
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      var isSearchInput = target === searchInput;
+      var isDropdownOption = dropdown.contains(target);
 
+      if (!isSearchInput && !isDropdownOption) {
+        // Close and hide the filter dropdown
+        dropdown.size = 0;
+
+        // Detach the outside click event listener
+        document.removeEventListener('click', arguments.callee);
+      }
+    });
   // Prevent default behavior of closing the dropdown when clicked inside the search input
   searchInput.addEventListener('click', function (event) {
     event.stopPropagation();
