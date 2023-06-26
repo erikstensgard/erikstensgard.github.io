@@ -272,7 +272,7 @@ function handleOutsideClick(event) {
   if (event.target !== searchInput && event.target !== filterDropdown) {
     // Close and hide the filter dropdown
     filterDropdown.size = 0;
-    filterDropdown.style.display = 'block'; 
+    filterDropdown.style.display = 'none'; 
 
     // Detach the outside click event listener
     detachOutsideClickListener();
