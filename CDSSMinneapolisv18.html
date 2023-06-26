@@ -148,11 +148,11 @@
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
- <div id="combinedInput">
-    <input type="text" id="searchInput" placeholder="Search..." list="filterDropdown" autocomplete="off">
-    <datalist id="filterDropdown"></datalist>
+    <select id="filterDropdown"></select>
+    <input type="text" id="searchInput" placeholder="Search...">
+
   </div>
-</div>
+
   <div id="resultContainer"></div>
 
   <div id="footer">
@@ -203,8 +203,8 @@ function populateDropdown(data) {
 
   data.forEach(item => {
     const option = document.createElement('option');
-    option.value = item.DisplayText || item.Name; // Set the value to item.displaytext
-    option.textContent = item.DisplayText || item.Name; // Set the displayed text to item.displaytext
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
 }
@@ -263,6 +263,50 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
+// Function to handle click events outside of the search input
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close the filter dropdown
+    filterDropdown.style.display = 'none';
+  }
+}
+
+// Function to attach the outside click event listener
+function attachOutsideClickListener() {
+  document.addEventListener('click', handleOutsideClick);
+}
+
+// Function to detach the outside click event listener
+function detachOutsideClickListener() {
+  document.removeEventListener('click', handleOutsideClick);
+}
+
+// Function to handle click events outside of the search input
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close the filter dropdown without hiding it
+    filterDropdown.size = 0;
+  }
+}
+
+// Function to attach the outside click event listener
+function attachOutsideClickListener() {
+  document.addEventListener('click', handleOutsideClick);
+}
+
+// Function to detach the outside click event listener
+function detachOutsideClickListener() {
+  document.removeEventListener('click', handleOutsideClick);
+}
+
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -285,8 +329,6 @@ function searchAndOpenDropdown() {
     dropdown.size = options.length;
 
     if (matchFound) {
-      dropdown.style.display = 'block';
-
       // Open the dropdown by triggering a click event on the search input
       var event = new MouseEvent('click', {
         bubbles: true,
@@ -294,17 +336,24 @@ function searchAndOpenDropdown() {
         view: window
       });
       searchInput.dispatchEvent(event);
+
+      // Attach the outside click listener to keep the dropdown visible
+      attachOutsideClickListener();
     } else {
-      dropdown.style.display = 'none';
+      // Close the dropdown without hiding it
+      dropdown.size = 0;
     }
   }
 
-searchInput.addEventListener('input', function () {
-  var filterText = this.value.toLowerCase();
-  filterDropdownOptions(filterText);
-});
-
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
+  });
 }
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -557,18 +606,19 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-  // Function to generate the search options based on item.displaytext
-    function generateSearchOptions(data) {
+    // Function to open the dropdown when clicking into the search input
+    function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.innerHTML = '';
-
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.displaytext;
-        dropdown.appendChild(option);
-      });
+      dropdown.size = dropdown.options.length;
+      dropdown.style.display = 'block';
     }
-    
+
+    // Event listener to open the dropdown when clicking into the search input
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('click', openDropdown);
+
+
+  
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
