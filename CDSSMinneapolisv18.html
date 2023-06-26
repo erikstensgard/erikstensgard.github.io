@@ -308,12 +308,9 @@ function searchAndOpenDropdown() {
     if (matchFound) {
       // Open the dropdown by setting its display property to "block"
       dropdown.style.display = 'block';
-
-      // Attach the outside click listener to keep the dropdown visible
-      attachOutsideClickListener();
     } else {
-      // Close the dropdown by setting its display property to "none"
-      dropdown.style.display = 'block'; // Change this line to keep the dropdown open
+      // If no matching options, keep the dropdown open
+      dropdown.style.display = 'block';
     }
   }
 
@@ -322,6 +319,7 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 }
+
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
