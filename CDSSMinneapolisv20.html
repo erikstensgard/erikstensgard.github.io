@@ -270,20 +270,8 @@ function handleOutsideClick(event) {
 
   // Check if the clicked element is outside the search input and the filter dropdown
   if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close the filter dropdown
-    filterDropdown.style.display = 'none';
-  }
-}
-
-// Function to handle click events outside of the search input and filter dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Hide the filter dropdown
-    filterDropdown.style.display = 'none';
+    // Close the filter dropdown without hiding it
+    filterDropdown.size = 0;
   }
 }
 
@@ -327,26 +315,28 @@ function searchAndOpenDropdown() {
       });
       searchInput.dispatchEvent(event);
 
-      // Attach the outside click listener to hide the dropdown when clicking outside
+      // Attach the outside click listener to keep the dropdown visible
       attachOutsideClickListener();
     } else {
-      // Hide the dropdown
-      dropdown.style.display = 'none';
+      // Close the dropdown without hiding it
+      dropdown.size = 0;
     }
   }
 
-  searchInput.addEventListener('input', function () {
+  searchInput.addEventListener('input', function (event) {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
+
+  // Prevent default behavior of closing the dropdown when clicked inside the search input
+  searchInput.addEventListener('click', function (event) {
+    event.stopPropagation();
+  });
 }
 
-  // Hide the filter dropdown when a row is clicked
-  const filterDropdown = document.getElementById('filterDropdown');
-  filterDropdown.style.display = 'none';
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
 
-// Function to attach the outside click event listener initially
-attachOutsideClickListener();
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
