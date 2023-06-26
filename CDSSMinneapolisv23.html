@@ -328,7 +328,7 @@ function searchAndOpenDropdown() {
   }
 
   searchInput.addEventListener('input', function (event) {
-    var filterText = this.value.toLowerCase();
+    var filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
   });
   
