@@ -274,15 +274,7 @@ function handleOutsideClick(event) {
     // Close and hide the filter dropdown
    
     filterDropdown.style.display = ""; 
-
-    // Detach the outside click event listener
-    detachOutsideClickListener();
   }
-}
-
-// Function to detach the outside click event listener
-function detachOutsideClickListener() {
-  document.removeEventListener('click', handleOutsideClick);
 }
 
 // Function to search and open dropdown
