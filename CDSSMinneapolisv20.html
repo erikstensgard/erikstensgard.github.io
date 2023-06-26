@@ -103,7 +103,7 @@
       select {
         font-size: 10px;
       }
-      #filterDropdown {
+      # {
          width: 200px;
     }
        #searchInput {
@@ -272,15 +272,11 @@ function handleOutsideClick(event) {
   if (event.target !== searchInput && event.target !== filterDropdown) {
     // Close and hide the filter dropdown
     filterDropdown.size = 0;
+    filterDropdown.display: none; 
 
     // Detach the outside click event listener
     detachOutsideClickListener();
   }
-}
-
-// Function to attach the outside click event listener
-function attachOutsideClickListener() {
-  document.addEventListener('click', handleOutsideClick);
 }
 
 // Function to detach the outside click event listener
