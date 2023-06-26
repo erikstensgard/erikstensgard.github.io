@@ -306,11 +306,13 @@ function searchAndOpenDropdown() {
     }
 
     if (matchFound) {
-      // Open the dropdown by setting its display property to "block"
-      dropdown.style.display = 'block';
-    } else {
-      // If no matching options, keep the dropdown open
-      dropdown.style.display = 'block';
+      // Open the dropdown by simulating a click on it
+      var event = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      dropdown.dispatchEvent(event);
     }
   }
 
