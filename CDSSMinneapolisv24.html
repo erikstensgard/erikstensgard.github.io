@@ -348,6 +348,10 @@ document.addEventListener('click', function (event) {
   });
 }
 
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
+
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
@@ -608,12 +612,6 @@ function handleGoForward() {
       dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
-
-    // Event listener to open the dropdown when clicking into the search input
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('click', openDropdown);
-
-
   
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
@@ -624,8 +622,9 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-
-
+document.getElementById('searchInput').addEventListener('click', openDropdown);
+document.getElementById('searchInput').addEventListener('input', openDropdown);
+    
     // Function to open the dropdown
     function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
