@@ -327,11 +327,6 @@ function searchAndOpenDropdown() {
     }
   }
 
-  searchInput.addEventListener('input', function (event) {
-    var filterText = this.value.toLowerCase();
-    filterDropdownOptions(filterText);
-  });
-  
 // Attach the outside click event listener
 document.addEventListener('click', function (event) {
       var target = event.target;
