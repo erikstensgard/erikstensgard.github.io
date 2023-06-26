@@ -263,15 +263,18 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-// Function to handle click events outside of the search input
+// Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
 
   // Check if the clicked element is outside the search input and the filter dropdown
   if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close the filter dropdown without hiding it
+    // Close and hide the filter dropdown
     filterDropdown.size = 0;
+
+    // Detach the outside click event listener
+    detachOutsideClickListener();
   }
 }
 
