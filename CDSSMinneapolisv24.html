@@ -612,6 +612,12 @@ function handleGoForward() {
       dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
+    
+    // Function to check if the target element or its parent is the search input
+    function isSearchInput(element) {
+      const searchInput = document.getElementById('searchInput');
+      return element === searchInput || element.parentNode === searchInput;
+    }
   
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
@@ -625,17 +631,6 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
     
-    // Function to open the dropdown
-    function openDropdown() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.style.display = 'block';
-    }
-
-    // Function to check if the target element or its parent is the search input
-    function isSearchInput(element) {
-      const searchInput = document.getElementById('searchInput');
-      return element === searchInput || element.parentNode === searchInput;
-    }
 
     // Event listener for search input click event
     document.getElementById('searchInput').addEventListener('click', function (event) {
