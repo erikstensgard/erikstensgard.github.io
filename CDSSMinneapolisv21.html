@@ -307,7 +307,6 @@ function searchAndOpenDropdown() {
       });
       searchInput.dispatchEvent(event);
 
-      // Attach the outside click listener to keep the dropdown visible
       // Attach the outside click event listener
     document.addEventListener('click', function (event) {
       var target = event.target;
@@ -334,7 +333,7 @@ function searchAndOpenDropdown() {
   });
   
 // Attach the outside click event listener
-    document.addEventListener('click', function (event) {
+document.addEventListener('click', function (event) {
       var target = event.target;
       var isSearchInput = target === searchInput;
       var isDropdownOption = dropdown.contains(target);
@@ -342,9 +341,6 @@ function searchAndOpenDropdown() {
       if (!isSearchInput && !isDropdownOption) {
         // Close and hide the filter dropdown
         dropdown.style.display = "";
-
-        // Detach the outside click event listener
-        document.removeEventListener('click', arguments.callee);
       }
     });
   // Prevent default behavior of closing the dropdown when clicked inside the search input
