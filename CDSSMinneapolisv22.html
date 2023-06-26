@@ -582,8 +582,10 @@ function handleGoForward() {
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').style.display = "";
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
           adjustFontSize();
+          filterData({ target: dropdown });
     }
 
     // Function to handle the Download JSON button click event
