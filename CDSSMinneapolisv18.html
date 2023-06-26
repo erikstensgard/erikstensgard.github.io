@@ -60,9 +60,10 @@
 #filterDropdown {
   margin-right: 20px;
   width: 600px;
-  z-index: 2; /* Updated value */
-  position: absolute; /* Added property */
-  top: 100%; /* Adjust the top position as needed */
+  z-index: 2;
+  position: absolute;
+  top: 100%;
+  display: none; /* Hide the dropdown by default */
 }
 
 
@@ -182,7 +183,7 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Function to populate dropdown with OMJSON data
+// Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -201,14 +202,29 @@ function populateDropdown(data) {
     return matchesB - matchesA;
   });
 
+     const defaultOption = document.createElement('option');
+      defaultOption.textContent = 'Click here to view search results';
+      defaultOption.value = '';
+      dropdown.appendChild(defaultOption);
+
+
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
+
+  // Set the default option
+  dropdown.selectedIndex = 0;
 }
 
+  window.addEventListener('load', function () {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.value = ''; // Set the value to the default text
+    });
+
+    
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
@@ -263,7 +279,7 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-// Function to handle click events outside of the search input
+// Function to handle click events outside of the search input and filter dropdown
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
@@ -272,28 +288,6 @@ function handleOutsideClick(event) {
   if (event.target !== searchInput && event.target !== filterDropdown) {
     // Close the filter dropdown
     filterDropdown.style.display = 'none';
-  }
-}
-
-// Function to attach the outside click event listener
-function attachOutsideClickListener() {
-  document.addEventListener('click', handleOutsideClick);
-}
-
-// Function to detach the outside click event listener
-function detachOutsideClickListener() {
-  document.removeEventListener('click', handleOutsideClick);
-}
-
-// Function to handle click events outside of the search input
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close the filter dropdown without hiding it
-    filterDropdown.size = 0;
   }
 }
 
@@ -326,30 +320,35 @@ function searchAndOpenDropdown() {
       }
     }
 
-    dropdown.size = options.length;
-
     if (matchFound) {
-      // Open the dropdown by triggering a click event on the search input
-      var event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      searchInput.dispatchEvent(event);
+      // Open the dropdown by setting its display property to "block"
+      dropdown.style.display = 'block';
 
       // Attach the outside click listener to keep the dropdown visible
       attachOutsideClickListener();
     } else {
-      // Close the dropdown without hiding it
-      dropdown.size = 0;
+      // Close the dropdown by setting its display property to "none"
+      dropdown.style.display = 'none';
     }
   }
 
   searchInput.addEventListener('input', function () {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
+
+    // Clear the selected option if the search input is empty
+    if (filterText === '') {
+      dropdown.selectedIndex = 0;
+    }
+  });
+
+  // Open the dropdown when the search input is focused
+  searchInput.addEventListener('focus', function () {
+    var filterText = this.value.toLowerCase();
+    filterDropdownOptions(filterText);
   });
 }
+
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
