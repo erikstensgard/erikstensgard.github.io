@@ -318,7 +318,7 @@ function searchAndOpenDropdown() {
       attachOutsideClickListener();
     } else {
       // Close the dropdown without hiding it
-      dropdown.size = 0;
+      dropdown.style.display = ""; 
     }
   }
 
@@ -326,6 +326,7 @@ function searchAndOpenDropdown() {
     var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
   });
+  
 // Attach the outside click event listener
     document.addEventListener('click', function (event) {
       var target = event.target;
@@ -334,7 +335,7 @@ function searchAndOpenDropdown() {
 
       if (!isSearchInput && !isDropdownOption) {
         // Close and hide the filter dropdown
-        dropdown.size = 0;
+        dropdown.style.display = "";
 
         // Detach the outside click event listener
         document.removeEventListener('click', arguments.callee);
