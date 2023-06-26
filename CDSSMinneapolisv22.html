@@ -183,7 +183,7 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
     // Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
+function populateDropdown(omdata) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
@@ -582,7 +582,9 @@ function handleGoForward() {
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
           adjustFontSize();
           filterData({ target: dropdown });
