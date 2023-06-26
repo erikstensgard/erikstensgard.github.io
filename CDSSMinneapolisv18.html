@@ -149,10 +149,9 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
  <div id="combinedInput">
-  <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
-</div>
-<div id="filterDropdown"></div>
-
+    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+    <datalist id="filterDropdown"></datalist>
+  </div>
 </div>
   <div id="resultContainer"></div>
 
@@ -283,13 +282,28 @@ function searchAndOpenDropdown() {
       }
     }
 
-    dropdown.style.display = matchFound ? 'block' : 'none';
+    dropdown.size = options.length;
+
+    if (matchFound) {
+      dropdown.style.display = 'block';
+
+      // Open the dropdown by triggering a click event on the search input
+      var event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      searchInput.dispatchEvent(event);
+    } else {
+      dropdown.style.display = 'none';
+    }
   }
 
-  searchInput.addEventListener('input', function () {
-    var filterText = this.value.toLowerCase();
-    filterDropdownOptions(filterText);
-  });
+searchInput.addEventListener('input', function () {
+  var filterText = this.value.toLowerCase();
+  filterDropdownOptions(filterText);
+});
+
 }
 
 // Function to adjust the font size based on column number and window/screen size
