@@ -386,36 +386,41 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-    //HandleRowClick function
-function handleRowClick(item) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    // Fetch the latest ODJSON data
-    fetchODData()
-      .then(data => {
-        odData = data;
-
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+     // Function to handle row click events
+    function handleRowClick(item, isODData) {
+      if (isODData) {
+        selectedData = item;
+        createODTable(selectedData);
+        pushHistory(selectedData.Item);
+      } else {
+        const matchingItem = omData.find(
+          omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
 
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
+        if (matchingItem) {
+          selectedData = matchingItem;
+          createOMTable(matchingItem);
+          pushHistory(matchingItem.Name);
+        } else {
+          fetchODData()
+            .then(data => {
+              odData = data;
+
+              const matchingItemIndex = odData.findIndex(
+                odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+              );
+
+              if (matchingItemIndex !== -1) {
+                selectedData = odData[matchingItemIndex];
+                createODTable(selectedData);
+                pushHistory(selectedData.Item);
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching ODJSON data:', error);
+            });
         }
-      })
-      .catch(error => {
-        console.error('Error fetching ODJSON data:', error);
-      });
-  }
+      }
 
   // Scroll to the top of the table
   const resultContainer = document.getElementById('resultContainer');
@@ -570,12 +575,32 @@ function pushHistory(item) {
   }
 }
 
-const goBackButton = document.getElementById('goBackButton');
-const goForwardButton = document.getElementById('goForwardButton');
+ // Event listener for the goBackButton
+    const goBackButton = document.getElementById('goBackButton');
+    goBackButton.addEventListener('click', () => {
+      if (historyIndex > 0) {
+        historyIndex--;
+        const selectedItem = history[historyIndex];
+        const isODData = !!odData.find(
+          odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
+        );
+        handleRowClick({ Item: selectedItem }, isODData);
+      }
+    });
 
-goBackButton.addEventListener('click', handleGoBack);
-goForwardButton.addEventListener('click', handleGoForward);
-
+    // Event listener for the goForwardButton
+    const goForwardButton = document.getElementById('goForwardButton');
+    goForwardButton.addEventListener('click', () => {
+      if (historyIndex < history.length - 1) {
+        historyIndex++;
+        const selectedItem = history[historyIndex];
+        const isODData = !!odData.find(
+          odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
+        );
+        handleRowClick({ Item: selectedItem }, isODData);
+      }
+    });
+    
 function handleGoBack() {
   if (historyIndex > 0) {
     historyIndex--;
