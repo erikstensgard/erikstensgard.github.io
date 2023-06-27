@@ -386,58 +386,39 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-     // Function to handle row click events
-    function handleRowClick(item, isODData) {
-      if (isODData) {
-        selectedData = item;
-        createODTable(selectedData);
-        pushHistory(selectedData.Item);
+    // Function to handle row click event
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
+
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
       } else {
-        const matchingItem = omData.find(
-          omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        const matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
         );
 
-        if (matchingItem) {
-          selectedData = matchingItem;
-          createOMTable(matchingItem);
-          pushHistory(matchingItem.Name);
-        } else {
-          fetchODData()
-            .then(data => {
-              odData = data;
-
-              const matchingItemIndex = odData.findIndex(
-                odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-              );
-
-              if (matchingItemIndex !== -1) {
-                selectedData = odData[matchingItemIndex];
-                createODTable(selectedData);
-                pushHistory(selectedData.Item);
-              }
-            })
-            .catch(error => {
-              console.error('Error fetching ODJSON data:', error);
-            });
-        }
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+                  }
+        adjustFontSize();
       }
 
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
 
-  // Scroll the page to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-}
-
-function pushHistory(selectedItem) {
-  history = history.slice(0, historyIndex + 1);
-  history.push(selectedItem);
-  historyIndex++;
-}
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      adjustFontSize();
+    }
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
@@ -532,9 +513,11 @@ function pushHistory(selectedItem) {
 
       table.appendChild(tbody);
 
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
+  const popupWindow = window.open('', '_blank');
+  const popupDocument = popupWindow.document;
+  popupDocument.innerHTML = '';
+  popupDocument.body.appendChild(table);
+  resultContainer.appendChild(table);
     }
 
     // Function to filter data based on the selected option
@@ -551,7 +534,6 @@ function pushHistory(selectedItem) {
     if (odMatchingData) {
       selectedData = odMatchingData;
       createODTable(odMatchingData);
-      pushHistory(odMatchingData.Item);
     } else {
       // Handle the case when selectedData is not found
       // For example, display an error message or clear the result container
@@ -575,94 +557,29 @@ function pushHistory(item) {
   }
 }
 
- // Event listener for the goBackButton
-    const goBackButton = document.getElementById('goBackButton');
-    goBackButton.addEventListener('click', () => {
-      if (historyIndex > 0) {
-        historyIndex--;
-        const selectedItem = history[historyIndex];
-        const isODData = !!odData.find(
-          odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
-        );
-        handleRowClick({ Item: selectedItem }, isODData);
-      }
-    });
-
-    // Event listener for the goForwardButton
-    const goForwardButton = document.getElementById('goForwardButton');
-    goForwardButton.addEventListener('click', () => {
-      if (historyIndex < history.length - 1) {
-        historyIndex++;
-        const selectedItem = history[historyIndex];
-        const isODData = !!odData.find(
-          odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
-        );
-        handleRowClick({ Item: selectedItem }, isODData);
-      }
-    });
-    
-function goBack() {
-  if (historyIndex > 0) {
-    historyIndex--;
-    const selectedItem = history[historyIndex];
-    handleRowClick({ Item: selectedItem }, false);
-  }
-}
-
-function goForward() {
-  if (historyIndex < history.length - 1) {
-    historyIndex++;
-    const selectedItem = history[historyIndex];
-    handleRowClick({ Item: selectedItem }, false);
-  }
-}
-    
+// Function to handle the Go Back button click event
 function handleGoBack() {
   if (historyIndex > 0) {
     historyIndex--;
     const selectedItem = history[historyIndex];
-    navigateToSelectedItem(selectedItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedItem;
+    filterData({ target: dropdown });
   }
+      adjustFontSize();
 }
 
+// Function to handle the Go Forward button click event
 function handleGoForward() {
   if (historyIndex < history.length - 1) {
     historyIndex++;
     const selectedItem = history[historyIndex];
-    navigateToSelectedItem(selectedItem);
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = selectedItem;
+    filterData({ target: dropdown });
   }
+      adjustFontSize();
 }
-
-function navigateToSelectedItem(selectedItem) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-  } else {
-    const matchingItemIndex = odData.findIndex(
-      odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
-    );
-
-    if (matchingItemIndex !== -1) {
-      selectedData = odData[matchingItemIndex];
-      createODTable(selectedData);
-    }
-  }
-
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-
-  // Scroll the page to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-}
-
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
@@ -715,7 +632,6 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-document.addEventListener('click', handleOutsideClick);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
@@ -739,3 +655,4 @@ Promise.all([fetchOMData(), fetchODData()])
 </body>
 
 </html>
+
