@@ -410,11 +410,13 @@ adjustFontSize();
           selectedData = odData[matchingItemIndex];
           createODTable(selectedData);
         }
-        adjustFontSize();
       }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
+      scrollToTop()
+      adjustFontSize();
+    }
+      
+    // Scroll to the top of the table
+      function scrollToTop {const resultContainer = document.getElementById('resultContainer');
       resultContainer.scrollTop = 0;
 
       // Scroll the page to the top
@@ -422,9 +424,8 @@ adjustFontSize();
         top: 0,
         behavior: 'smooth'
       });
-      adjustFontSize();
-    }
-
+                           }
+    
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
       const table = document.createElement('table');
@@ -543,11 +544,8 @@ adjustFontSize();
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = 'Selected data not found.';
     }
-  
+  scrollToTop()
   adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
 }
 
 
@@ -566,9 +564,13 @@ function handleGoBack() {
     historyIndex--;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
+      scrollToTop()
       adjustFontSize();
 }
 
@@ -578,9 +580,13 @@ function handleGoForward() {
     historyIndex++;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
+      scrollToTop()
       adjustFontSize();
 }
     // Function to handle the Main Menu button click event
@@ -590,8 +596,9 @@ function handleGoForward() {
       document.getElementById('searchInput').placeholder = "Search...";
       populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-          adjustFontSize();
-          filterData({ target: dropdown });
+      filterData({ target: dropdown });
+      scrollToTop()    
+      adjustFontSize();
     }
 
     // Function to handle the Main Menu button click event
@@ -601,8 +608,10 @@ function handleGoForward() {
       document.getElementById('searchInput').placeholder = "Search...";
       populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
-          adjustFontSize();
-          filterData({ target: dropdown });
+      filterData({ target: dropdown });
+      adjustFontSize();      
+      scrollToTop()    
+      adjustFontSize();
     }
 
     
