@@ -498,27 +498,55 @@ function handleRowClick(item) {
       }
     }
 
-    // Function to create the table with ODJSON data
-    function createODTable(selectedData) {
-      const table = document.createElement('table');
-      table.classList.add('table');
+   // Function to create the table with ODJSON data
+function createODTable(selectedData) {
+  const table = document.createElement('table');
+  table.classList.add('table');
 
-      const tbody = document.createElement('tbody');
+  const tbody = document.createElement('tbody');
 
-      for (const [key, value] of Object.entries(selectedData)) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.textContent = `${key}: ${value}`;
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-      }
+  const { Contents } = selectedData;
 
-      table.appendChild(tbody);
+  Contents.forEach(item => {
+    const { Text, Item, Header } = item;
 
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      resultContainer.appendChild(table);
+    const bodyRow = document.createElement('tr');
+
+    const displayCell = document.createElement('td');
+
+    if (Header === 1) {
+      displayCell.classList.add('bold');
     }
+
+    const cellContentElement = document.createElement('div');
+
+    if (Item) {
+      cellContentElement.classList.add('clickable');
+      cellContentElement.addEventListener('click', () => {
+        handleRowClick(item);
+      });
+    }
+
+    if (Text) {
+      cellContentElement.textContent = Text;
+    } else {
+      cellContentElement.textContent = Item;
+    }
+
+    displayCell.appendChild(cellContentElement);
+    bodyRow.appendChild(displayCell);
+    tbody.appendChild(bodyRow);
+  });
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  if (selectedData) {
+    resultContainer.appendChild(table);
+  }
+}
+
 
     // Function to filter data based on the selected option
     function filterData(event) {
