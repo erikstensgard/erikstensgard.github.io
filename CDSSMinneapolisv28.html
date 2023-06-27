@@ -53,13 +53,17 @@
   margin-right: auto;
 }
 
+#indexButton {
+  margin-right: auto;
+}
+
 #goForwardButton {
   margin-right: 20px;
 }
 
     #filterDropdown {
       margin-right: 20px;
-      width: 600px;
+      width: 580px;
       z-index: 2;
       position: absolute;
       top: 100%;
@@ -92,7 +96,7 @@
         font-size: 12px;
       }
       #filterDropdown {
-         width: 400px;
+         width: 500px;
     }
       #searchInput {
         font-size: 12px; 
@@ -105,8 +109,8 @@
       select {
         font-size: 10px;
       }
-      # {
-         width: 200px;
+      #filterDropdown  {
+         width: 400px;
     }
        #searchInput {
         font-size: 10px; 
@@ -120,7 +124,7 @@
         font-size: 8px;
       }
       #filterDropdown {
-         width: 100px;
+         width: 300px;
     } 
       #searchInput {
         font-size: 8px; 
@@ -134,7 +138,7 @@
         font-size: 6px;
       }
       #filterDropdown {
-         width: 75px;
+         width: 200px;
     }
        #searchInput {
         font-size: 6px; 
@@ -149,6 +153,7 @@
   <div id="header">
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
+    <button id="indexButton">Index</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
     <input type="text" id="searchInput" placeholder="Search...">
@@ -405,21 +410,24 @@ adjustFontSize();
           selectedData = odData[matchingItemIndex];
           createODTable(selectedData);
         }
-        adjustFontSize();
       }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      scrollToTop()
       adjustFontSize();
     }
+      
+  // Scroll to the top of the table
+function scrollToTop() { // Add opening curly brace here
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+} // Add closing curly brace here
+
+    
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
       const table = document.createElement('table');
@@ -495,7 +503,7 @@ adjustFontSize();
         resultContainer.appendChild(table);
       }
     }
-
+    
     // Function to create the table with ODJSON data
     function createODTable(selectedData) {
       const table = document.createElement('table');
@@ -538,11 +546,8 @@ adjustFontSize();
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = 'Selected data not found.';
     }
-  
+  scrollToTop()
   adjustFontSize();
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
 }
 
 
@@ -561,9 +566,13 @@ function handleGoBack() {
     historyIndex--;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
+      scrollToTop()
       adjustFontSize();
 }
 
@@ -573,9 +582,13 @@ function handleGoForward() {
     historyIndex++;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
+      scrollToTop()
       adjustFontSize();
 }
     // Function to handle the Main Menu button click event
@@ -585,10 +598,25 @@ function handleGoForward() {
       document.getElementById('searchInput').placeholder = "Search...";
       populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-          adjustFontSize();
-          filterData({ target: dropdown });
+      filterData({ target: dropdown });
+      scrollToTop()    
+      adjustFontSize();
     }
 
+    // Function to handle the Main Menu button click event
+    function handleIndex() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
+      document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
+      dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
+      filterData({ target: dropdown });
+      adjustFontSize();      
+      scrollToTop()    
+      adjustFontSize();
+    }
+
+    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
@@ -624,6 +652,7 @@ document.getElementById('downloadJSONButton').addEventListener('click', handleDo
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('indexButton').addEventListener('click', handleIndex);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
