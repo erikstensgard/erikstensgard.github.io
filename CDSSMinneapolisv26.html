@@ -387,26 +387,37 @@ function adjustFontSize() {
 adjustFontSize();
 
     // Function to handle row click event
-    function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+   function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
 
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-                  }
-        adjustFontSize();
-      }
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      displayPopup(selectedData);
+    }
+  }
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  adjustFontSize();
+}
 
       // Scroll to the top of the table
       const resultContainer = document.getElementById('resultContainer');
@@ -519,7 +530,31 @@ adjustFontSize();
   popupDocument.body.appendChild(table);
   resultContainer.appendChild(table);
     }
+    
+    //funtion to display popup
+function displayPopup(item) {
+  const popup = window.open('', '_blank', 'width=600,height=400');
+  const popupDocument = popup.document;
 
+  const table = popupDocument.createElement('table');
+  table.classList.add('table');
+
+  const tbody = popupDocument.createElement('tbody');
+
+  const bodyRow = popupDocument.createElement('tr');
+
+  const displayCell = popupDocument.createElement('td');
+  displayCell.textContent = item.Item;
+
+  bodyRow.appendChild(displayCell);
+  tbody.appendChild(bodyRow);
+  table.appendChild(tbody);
+
+  popupDocument.body.appendChild(table);
+}
+
+
+    
     // Function to filter data based on the selected option
     function filterData(event) {
   const selectedOption = event.target.value;
