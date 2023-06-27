@@ -567,7 +567,7 @@ const goForwardButton = document.getElementById('goForwardButton');
 goBackButton.addEventListener('click', handlegoBack);
 goForwardButton.addEventListener('click', handlegoForward);
 
-function handlegoBack() {
+function handleGoBack() {
   if (historyIndex > 0) {
     historyIndex--;
     const selectedItem = history[historyIndex];
@@ -575,7 +575,7 @@ function handlegoBack() {
   }
 }
 
-function handlegoForward() {
+function handleGoForward() {
   if (historyIndex < history.length - 1) {
     historyIndex++;
     const selectedItem = history[historyIndex];
