@@ -575,6 +575,12 @@ function pushHistory(item) {
   }
 }
 
+const goBackButton = document.getElementById('goBackButton');
+const goForwardButton = document.getElementById('goForwardButton');
+
+goBackButton.addEventListener('click', goBack);
+goForwardButton.addEventListener('click', goForward);
+
  // Event listener for the goBackButton
     const goBackButton = document.getElementById('goBackButton');
     goBackButton.addEventListener('click', () => {
@@ -600,6 +606,22 @@ function pushHistory(item) {
         handleRowClick({ Item: selectedItem }, isODData);
       }
     });
+    
+function goBack() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    const selectedItem = history[historyIndex];
+    handleRowClick({ Item: selectedItem }, false);
+  }
+}
+
+function goForward() {
+  if (historyIndex < history.length - 1) {
+    historyIndex++;
+    const selectedItem = history[historyIndex];
+    handleRowClick({ Item: selectedItem }, false);
+  }
+}
     
 function handleGoBack() {
   if (historyIndex > 0) {
@@ -699,6 +721,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
+document.addEventListener('click', handleOutsideClick);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
