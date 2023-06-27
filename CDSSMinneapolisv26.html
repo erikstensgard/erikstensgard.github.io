@@ -387,40 +387,39 @@ function adjustFontSize() {
 adjustFontSize();
 
     // Function to handle row click event
-function handleRowClick(item) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
+    function handleRowClick(item) {
+      const matchingItem = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+      );
 
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    const matchingItemIndex = odData.findIndex(
-      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
+      if (matchingItem) {
+        selectedData = matchingItem;
+        createOMTable(matchingItem);
+        pushHistory(matchingItem.Name);
+      } else {
+        const matchingItemIndex = odData.findIndex(
+          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+        );
 
-    if (matchingItemIndex !== -1) {
-      selectedData = odData[matchingItemIndex];
-      createODTable(selectedData);
-      pushHistory(selectedData.Name); // Store the name of the selected OD item in the history
+        if (matchingItemIndex !== -1) {
+          selectedData = odData[matchingItemIndex];
+          createODTable(selectedData);
+          pushHistory(selectedData.Item);
+        }
+        adjustFontSize();
+      }
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      adjustFontSize();
     }
-    adjustFontSize();
-  }
-
-  // Scroll to the top of the table
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-
-  // Scroll the page to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-  adjustFontSize();
-}
-
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
@@ -498,55 +497,32 @@ function handleRowClick(item) {
       }
     }
 
-   // Function to create the table with ODJSON data
-function createODTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
+    // Function to create the table with ODJSON data
+    function createODTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+      const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
+      for (const [key, value] of Object.entries(selectedData)) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
 
-  Contents.forEach(item => {
-    const { Text, Item, Header } = item;
-
-    const bodyRow = document.createElement('tr');
-
-    const displayCell = document.createElement('td');
-
-    if (Header === 1) {
-      displayCell.classList.add('bold');
+      table.appendChild(tbody);
+      
+  const popup = window.open("", "ODData Popup", "width=600,height=400");
+  const popupContent = document.createElement('div');
+  popupContent.innerHTML = '<h2>ODData Table</h2>';
+  popupContent.appendChild(table);
+  
+  popup.document.body.appendChild(popupContent);
+  popup.document.title = "ODData Popup";  
+    
     }
-
-    const cellContentElement = document.createElement('div');
-
-    if (Item) {
-      cellContentElement.classList.add('clickable');
-      cellContentElement.addEventListener('click', () => {
-        handleRowClick(item);
-      });
-    }
-
-    if (Text) {
-      cellContentElement.textContent = Text;
-    } else {
-      cellContentElement.textContent = Item;
-    }
-
-    displayCell.appendChild(cellContentElement);
-    bodyRow.appendChild(displayCell);
-    tbody.appendChild(bodyRow);
-  });
-
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
-
 
     // Function to filter data based on the selected option
     function filterData(event) {
