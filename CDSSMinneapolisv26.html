@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -227,34 +226,6 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
-//Autocomplete Function
-  const searchInput = document.getElementById('searchInput');
-  const autocompleteList = document.createElement('ul');
-  autocompleteList.id = 'autocompleteList';
-  searchInput.parentNode.appendChild(autocompleteList);
-
-  function autocomplete() {
-    const searchText = searchInput.value.trim().toLowerCase();
-    const filteredData = omData.filter(item => {
-      const displayText = item.DisplayText || item.Name;
-      return displayText.toLowerCase().includes(searchText);
-    });
-
-    populateAutocompleteList(filteredData);
-  }
-
-  function populateAutocompleteList(data) {
-    autocompleteList.innerHTML = '';
-
-    data.forEach(item => {
-      const listItem = document.createElement('li');
-      listItem.textContent = item.DisplayText || item.Name;
-      autocompleteList.appendChild(listItem);
-    });
-  }
-
-  searchInput.addEventListener('input', autocomplete);
-    
 // Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
@@ -415,40 +386,44 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-    // Function to handle row click event
-    function handleRowClick(item) {
-      const matchingItem = omData.find(
-        omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-      );
+    //HandleRowClick function
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
-      if (matchingItem) {
-        selectedData = matchingItem;
-        createOMTable(matchingItem);
-        pushHistory(matchingItem.Name);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
 
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-          pushHistory(selectedData.Item);
-        }
-        adjustFontSize();
-      }
-
-      // Scroll to the top of the table
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.scrollTop = 0;
-
-      // Scroll the page to the top
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      adjustFontSize();
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      createODTable(selectedData);
+      pushHistory(selectedData.Item);
     }
+  }
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+function pushHistory(selectedItem) {
+  history = history.slice(0, historyIndex + 1);
+  history.push(selectedItem);
+  historyIndex++;
+}
 
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
@@ -586,29 +561,58 @@ function pushHistory(item) {
   }
 }
 
-// Function to handle the Go Back button click event
-function handleGoBack() {
+const goBackButton = document.getElementById('goBackButton');
+const goForwardButton = document.getElementById('goForwardButton');
+
+goBackButton.addEventListener('click', goBack);
+goForwardButton.addEventListener('click', goForward);
+
+function goBack() {
   if (historyIndex > 0) {
     historyIndex--;
     const selectedItem = history[historyIndex];
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedItem;
-    filterData({ target: dropdown });
+    navigateToSelectedItem(selectedItem);
   }
-      adjustFontSize();
 }
 
-// Function to handle the Go Forward button click event
-function handleGoForward() {
+function goForward() {
   if (historyIndex < history.length - 1) {
     historyIndex++;
     const selectedItem = history[historyIndex];
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedItem;
-    filterData({ target: dropdown });
+    navigateToSelectedItem(selectedItem);
   }
-      adjustFontSize();
 }
+
+function navigateToSelectedItem(selectedItem) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+  } else {
+    const matchingItemIndex = odData.findIndex(
+      odItem => odItem.Name.trim().toLowerCase() === selectedItem.trim().toLowerCase()
+    );
+
+    if (matchingItemIndex !== -1) {
+      selectedData = odData[matchingItemIndex];
+      createODTable(selectedData);
+    }
+  }
+
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
