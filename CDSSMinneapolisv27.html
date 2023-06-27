@@ -53,6 +53,10 @@
   margin-right: auto;
 }
 
+#indexButton {
+  margin-right: auto;
+}
+
 #goForwardButton {
   margin-right: 20px;
 }
@@ -589,6 +593,18 @@ function handleGoForward() {
           filterData({ target: dropdown });
     }
 
+    // Function to handle the Main Menu button click event
+    function handleIndex() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
+      document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
+      dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
+          adjustFontSize();
+          filterData({ target: dropdown });
+    }
+
+    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
@@ -624,6 +640,7 @@ document.getElementById('downloadJSONButton').addEventListener('click', handleDo
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('indexButton').addEventListener('click', handleMainMenu);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
