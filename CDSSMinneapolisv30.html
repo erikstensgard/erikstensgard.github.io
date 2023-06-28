@@ -67,7 +67,7 @@
       z-index: 2;
       position: absolute;
       top: 100%;
-      display: block; /* Hide the dropdown by default */
+      display: none; /* Hide the dropdown by default */
       max-height: 200px; /* Set the maximum height for the dropdown */
       overflow-y: auto; /* Enable vertical scrolling for the dropdown */
     }
@@ -189,6 +189,14 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
+    // Detect Enter keypress in the search box for mobile users
+    searchBox.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter' && window.innerWidth <= 768) { // Trigger only for mobile users
+        event.preventDefault();
+        dropdown.click();
+      }
+    });
+    
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
@@ -213,7 +221,6 @@ function populateDropdown(data) {
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
-    dropdown.innerHTML = dropdown.innerHTML & '<p>' & appendChild(option)& '</p>'
   });
 }
 
@@ -271,6 +278,85 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
+
+function searchAndOpenDropdown() {
+  var searchInput = document.getElementById('searchInput');
+  var dropdown = document.getElementById('filterDropdown');
+  var isDropdownOpen = false;
+
+  function filterDropdownOptions(filterText) {
+    var options = dropdown.options;
+    var matchFound = false;
+
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var optionText = option.text.toLowerCase();
+
+      if (optionText.indexOf(filterText) !== -1) {
+        option.selected = true;
+        matchFound = true;
+      }
+    }
+
+    dropdown.size = options.length;
+
+    if (matchFound) {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    } else {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    }
+  }
+
+  searchInput.addEventListener('input', function (event) {
+    var filterText = searchInput.value.trim().toLowerCase();
+    filterDropdownOptions(filterText);
+  });
+
+
+    // Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close and hide the filter dropdown
+   
+    filterDropdown.style.display = ''; 
+  }
+}
+
+
+  
+  // Add event listener to close the dropdown when clicking outside the search input
+  document.addEventListener('click', handleOutsideClick);
+
+  // Add event listener to allow tapping into the dropdown on mobile
+  searchInput.addEventListener('click', function (event) {
+    if (isDropdownOpen) {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    } else {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    }
+  });
+
+  // Add event listener to close the dropdown when an option is selected
+  dropdown.addEventListener('change', function (event) {
+    dropdown.style.display = '';
+    isDropdownOpen = false;
+  });
+}
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
 
 
 // Function to adjust the font size based on column number and window/screen size
