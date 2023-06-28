@@ -313,13 +313,8 @@ function searchAndOpenDropdown() {
     if (event.key === 'Enter') {
       event.preventDefault();
       if (!isDropdownOpen) {
-        // Simulate a click on the dropdown
-        var clickEvent = new MouseEvent('mousedown', {
-          bubbles: true,
-          cancelable: true,
-          view: window
-        });
-        dropdown.dispatchEvent(clickEvent);
+        // Simulate a click on the dropdown by triggering a focus event
+        dropdown.focus();
       }
     }
   });
