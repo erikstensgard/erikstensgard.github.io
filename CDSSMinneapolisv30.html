@@ -308,22 +308,35 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
+  // Listen for Enter key press event
+  searchInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission
+      if (isDropdownOpen) {
+        // Close the dropdown by hiding it
+        dropdown.style.display = '';
+        isDropdownOpen = false;
+      } else {
+        // Open the dropdown by setting its display property
+        dropdown.style.display = 'block';
+        isDropdownOpen = true;
+      }
+    }
+  });
 
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
+  // Function to handle click events outside of the search input and dropdown
+  function handleOutsideClick(event) {
+    const searchInput = document.getElementById('searchInput');
+    const filterDropdown = document.getElementById('filterDropdown');
 
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
+    // Check if the clicked element is outside the search input and the filter dropdown
+    if (event.target !== searchInput && event.target !== filterDropdown) {
+      // Close and hide the filter dropdown
+      filterDropdown.style.display = '';
+      isDropdownOpen = false;
+    }
   }
-}
 
-
-  
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
@@ -349,7 +362,6 @@ function handleOutsideClick(event) {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
