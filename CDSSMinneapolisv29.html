@@ -294,10 +294,10 @@ function searchAndOpenDropdown() {
 
     if (matchFound) {
       // Open the dropdown by setting its display property
-      dropdown.style.display = "block";
+      dropdown.style.display = 'block';
     } else {
-      // Close the dropdown without hiding it
-      dropdown.style.display = ""; 
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
     }
   }
 
@@ -306,14 +306,20 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
-  // Prevent default behavior of closing the dropdown when clicked inside the search input
-  searchInput.addEventListener('click', function (event) {
-    event.stopPropagation();
-  });
+  function handleOutsideClick(event) {
+    if (!searchInput.contains(event.target)) {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+    }
+  }
+
+  // Add event listener to close the dropdown when clicking outside the search input
+  document.addEventListener('click', handleOutsideClick);
 }
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
