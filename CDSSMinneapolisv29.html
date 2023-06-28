@@ -308,13 +308,22 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
-  function handleOutsideClick(event) {
-    if (!searchInput.contains(event.target) && !isDropdownOpen) {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-    }
-  }
 
+    // Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close and hide the filter dropdown
+   
+    filterDropdown.style.display = ''; 
+  }
+}
+
+
+  
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
