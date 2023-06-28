@@ -303,7 +303,14 @@ function searchAndOpenDropdown() {
   if (matchFound) {
     // Open the dropdown by setting its display property
     dropdown.style.display = 'block';
-    dropdown.focus();
+    // Trigger the click event on the dropdown to open it
+if (typeof Event === 'function') {
+  dropdown.dispatchEvent(new Event('click'));
+} else {
+  var clickEvent = document.createEvent('Event');
+  clickEvent.initEvent('click', true, true);
+  dropdown.dispatchEvent(clickEvent);
+}
     isDropdownOpen = true;
   } else {
     // Close the dropdown by hiding it
