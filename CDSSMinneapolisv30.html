@@ -89,69 +89,64 @@
       text-overflow: ellipsis;
     }
 
-    /* Media queries for responsive design */
-    @media screen and (max-width: 1024px) {
-      button,
-      select {
-        font-size: 12px;
-      }
-      #filterDropdown {
-         width: 440px;
-    }
-      #searchInput {
-        font-size: 12px; 
-        width: 150px;
-    }
-    }
+   @media screen and (max-width: 1024px) {
+  button,
+  select {
+    font-size: 12px;
+  }
+  #filterDropdown {
+    width: 440px;
+  }
+  #searchInput {
+    font-size: 12px; 
+    width: 150px;
+  }
+}
 
-    
-    
-    @media screen and (max-width: 768px) {
-      .header{min-width:100%;}
-    #banner{min-width:100% !important;}
-    .whitebox_wrapper{min-width:100%;}
-    .index_wrapper{width:100%;}
- 
-      button,
-      select {
-        font-size: 10px;
-      }
-      #filterDropdown  {
-         width: 400px;
-    }
-       #searchInput {
-        font-size: 10px; 
-        width: 150px;
-    }
-    }
+@media screen and (max-width: 768px) {
+  button,
+  select {
+    font-size: 10px;
+  }
+  #filterDropdown  {
+    width: 100%; /* Adjust the width to occupy the full width of the container */
+    max-width: 560px; /* Set a maximum width if desired */
+  }
+  #searchInput {
+    font-size: 10px; 
+    width: 150px;
+  }
+}
 
-    @media screen and (max-width: 480px) {
-      button,
-      select {
-        font-size: 8px;
-      }
-      #filterDropdown {
-         width: 360px;
-    } 
-      #searchInput {
-        font-size: 8px; 
-        width: 100px;
-    }
-    }
-    
-    @media screen and (max-width: 320px) {
-      button,
-      select {
-        font-size: 6px;
-      }
-      #filterDropdown {
-         width: 320px;
-    }
-       #searchInput {
-        font-size: 6px; 
-        width: 50px;
-    }
-    }
+@media screen and (max-width: 480px) {
+  button,
+  select {
+    font-size: 8px;
+  }
+  #filterDropdown {
+    width: 100%; /* Adjust the width to occupy the full width of the container */
+    max-width: 560px; /* Set a maximum width if desired */
+  } 
+  #searchInput {
+    font-size: 8px; 
+    width: 100px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  button,
+  select {
+    font-size: 6px;
+  }
+  #filterDropdown {
+    width: 100%; /* Adjust the width to occupy the full width of the container */
+    max-width: 560px; /* Set a maximum width if desired */
+  }
+  #searchInput {
+    font-size: 6px; 
+    width: 50px;
+  }
+}
   </style>
 
 </head>
