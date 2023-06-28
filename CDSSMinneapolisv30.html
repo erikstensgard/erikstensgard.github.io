@@ -190,7 +190,7 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
     // Detect Enter keypress in the search box for mobile users
-    searchBox.addEventListener('keyup', function(event) {
+    searchInput.addEventListener('keyup', function(event) {
       if (event.key === 'Enter' && window.innerWidth <= 768) { // Trigger only for mobile users
         event.preventDefault();
         dropdown.click();
