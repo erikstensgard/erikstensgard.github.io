@@ -213,6 +213,7 @@ function populateDropdown(data) {
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
+    dropdown.innerHTML = '<p>' & appendChild(option)& '</p>'
   });
 }
 
