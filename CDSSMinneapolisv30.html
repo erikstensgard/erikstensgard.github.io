@@ -312,14 +312,14 @@ function searchAndOpenDropdown() {
   searchInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
       event.preventDefault();
-      if (isDropdownOpen) {
-        // Close the dropdown by hiding it
-        dropdown.style.display = '';
-        isDropdownOpen = false;
-      } else {
-        // Open the dropdown by setting its display property
-        dropdown.style.display = 'block';
-        isDropdownOpen = true;
+      if (!isDropdownOpen) {
+        // Simulate a click on the dropdown
+        var clickEvent = new MouseEvent('mousedown', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        });
+        dropdown.dispatchEvent(clickEvent);
       }
     }
   });
@@ -362,6 +362,7 @@ function searchAndOpenDropdown() {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
