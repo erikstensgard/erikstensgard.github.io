@@ -189,14 +189,6 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Detect Enter keypress in the search box for mobile users
-    searchInput.addEventListener('keyup', function(event) {
-      if (event.key === 'Enter' && window.innerWidth <= 768) { // Trigger only for mobile users
-        event.preventDefault();
-        dropdown.click();
-      }
-    });
-    
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
@@ -284,40 +276,32 @@ function searchAndOpenDropdown() {
   var dropdown = document.getElementById('filterDropdown');
   var isDropdownOpen = false;
 
- function filterDropdownOptions(filterText) {
-  var options = dropdown.options;
-  var matchFound = false;
+  function filterDropdownOptions(filterText) {
+    var options = dropdown.options;
+    var matchFound = false;
 
-  for (var i = 0; i < options.length; i++) {
-    var option = options[i];
-    var optionText = option.text.toLowerCase();
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var optionText = option.text.toLowerCase();
 
-    if (optionText.indexOf(filterText) !== -1) {
-      option.selected = true;
-      matchFound = true;
+      if (optionText.indexOf(filterText) !== -1) {
+        option.selected = true;
+        matchFound = true;
+      }
+    }
+
+    dropdown.size = options.length;
+
+    if (matchFound) {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    } else {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
     }
   }
-
-  dropdown.size = options.length;
-
-  if (matchFound) {
-    // Open the dropdown by setting its display property
-    dropdown.style.display = 'block';
-    // Trigger the click event on the dropdown to open it
-if (typeof Event === 'function') {
-  dropdown.dispatchEvent(new Event('click'));
-} else {
-  var clickEvent = document.createEvent('Event');
-  clickEvent.initEvent('click', true, true);
-  dropdown.dispatchEvent(clickEvent);
-}
-    isDropdownOpen = true;
-  } else {
-    // Close the dropdown by hiding it
-    dropdown.style.display = '';
-    isDropdownOpen = false;
-  }
-}
 
   searchInput.addEventListener('input', function (event) {
     var filterText = searchInput.value.trim().toLowerCase();
@@ -648,7 +632,6 @@ function handleGoForward() {
     // Function to open the dropdown when clicking into the search input
     function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
-      dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
     
