@@ -314,7 +314,7 @@ function searchAndOpenDropdown() {
 searchInput.addEventListener('click', function (event) {
   if (window.innerWidth <= 768) {
     // Open the dropdown by setting its display property
-    filterDropdown.style.display = 'block';
+    filterDropdown.style.display = 'block !important;';
   }
 });
 
@@ -338,7 +338,7 @@ searchInput.addEventListener('click', function (event) {
   searchInput.addEventListener('click', function (event) {
     if (window.innerWidth <= 768 && !isDropdownOpen) {
       // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
+      dropdown.style.display = 'block !important;';
       isDropdownOpen = true;
     }
   });
