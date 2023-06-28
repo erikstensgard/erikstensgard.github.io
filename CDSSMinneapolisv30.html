@@ -234,43 +234,17 @@ function populateList(data) {
 
     dropdown.appendChild(listItem);
   });
-}
 
-// Replace the existing populateDropdown function with this updated version
-function populateDropdown(data) {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
+  // Add event listener to close the dropdown when clicking outside the search input and dropdown
+  document.addEventListener('click', handleOutsideClick);
 
-  data.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
-  });
-
-  // Sort the data by the number of matches
-  data.sort((a, b) => {
-    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-    const matchesA = getMatchCount(a, searchText);
-    const matchesB = getMatchCount(b, searchText);
-    return matchesB - matchesA;
-  });
-
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
-  });
+  // Add event listener to allow tapping into the dropdown on mobile
+  document.getElementById('filterDropdown').addEventListener('click', handleDropdownClick);
 }
 
 // Call the populateList function initially
 populateList(omData);
 
-// Function to search
-function searchData() {
-  // Existing code
-  populateList(filteredData);
-}
 
 // Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
