@@ -275,6 +275,7 @@ function searchData() {
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
+  var isDropdownOpen = false;
 
   function filterDropdownOptions(filterText) {
     var options = dropdown.options;
@@ -295,9 +296,11 @@ function searchAndOpenDropdown() {
     if (matchFound) {
       // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
+      isDropdownOpen = true;
     } else {
       // Close the dropdown by hiding it
       dropdown.style.display = '';
+      isDropdownOpen = false;
     }
   }
 
@@ -307,7 +310,7 @@ function searchAndOpenDropdown() {
   });
 
   function handleOutsideClick(event) {
-    if (!searchInput.contains(event.target)) {
+    if (!searchInput.contains(event.target) && !isDropdownOpen) {
       // Close the dropdown by hiding it
       dropdown.style.display = '';
     }
@@ -315,6 +318,19 @@ function searchAndOpenDropdown() {
 
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
+
+  // Add event listener to allow tapping into the dropdown on mobile
+  searchInput.addEventListener('click', function (event) {
+    if (isDropdownOpen) {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    } else {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    }
+  });
 }
 
 // Call the searchAndOpenDropdown function initially
