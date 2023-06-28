@@ -30,7 +30,7 @@
 
     /* Header styles */
  #header {
-  position: relative;
+  position: sticky;
   top: 0;
   background-color: white;
   z-index: 1;
@@ -39,21 +39,6 @@
   align-items: center;
 }
 
-
-#filterDropdown li {
-  padding: 4px;
-  cursor: pointer;
-}
-
-#filterDropdown li:hover {
-  background-color: lightblue;
-}
-
-#filterDropdown.open {
-  display: block;
-}
-
-    
 #header button,
 #header select {
   margin: 5px;
@@ -78,7 +63,7 @@
 
     #filterDropdown {
       margin-right: 20px;
-      width: 100%;
+      width: 560px;
       z-index: 2;
       position: absolute;
       top: 100%;
@@ -170,8 +155,9 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="indexButton">Index</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
-<ul id="filterDropdown" class="dropdown"></ul>
-  <input type="text" id="searchInput" placeholder="Search...">
+    <select id="filterDropdown"></select>
+    <input type="text" id="searchInput" placeholder="Search...">
+
   </div>
 
   <div id="resultContainer"></div>
@@ -203,7 +189,8 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-function populateList(data) {
+    // Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
@@ -221,48 +208,27 @@ function populateList(data) {
     return matchesB - matchesA;
   });
 
+  // Get the number of matches for the current search text
+  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+  const matchCount = data.reduce((count, item) => {
+    count += getMatchCount(item, searchText);
+    return count;
+  }, 0);
+
+  // Create the first line in the dropdown
+  const firstLine = document.createElement('option');
+  firstLine.textContent = `# of matches: ${matchCount} - click to view search results`;
+  firstLine.disabled = true;
+  firstLine.selected = true;
+  dropdown.appendChild(firstLine);
+
   data.forEach(item => {
-    const listItem = document.createElement('li');
-    listItem.textContent = item.DisplayText || item.Name;
-
-    if (item.Item) {
-      listItem.classList.add('clickable');
-      listItem.addEventListener('click', () => {
-        handleRowClick(item);
-      });
-    }
-
-    dropdown.appendChild(listItem);
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    dropdown.appendChild(option);
   });
-
-  // Add event listener to close the dropdown when clicking outside the search input and dropdown
-  document.addEventListener('click', handleOutsideClick);
-
-  // Add event listener to allow tapping into the dropdown on mobile
-  document.getElementById('filterDropdown').addEventListener('click', handleDropdownClick);
 }
-
-// Call the populateList function initially
-populateList(omData);
-
-
-// Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  // Existing code
-}
-
-// Function to allow tapping into the dropdown on mobile
-function handleDropdownClick() {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.classList.toggle('open');
-}
-
-// Add event listener to close the dropdown when clicking outside the search input and dropdown
-document.addEventListener('click', handleOutsideClick);
-
-// Add event listener to allow tapping into the dropdown on mobile
-document.getElementById('filterDropdown').addEventListener('click', handleDropdownClick);
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
