@@ -67,7 +67,7 @@
       z-index: 2;
       position: absolute;
       top: 100%;
-      display: none; /* Hide the dropdown by default */
+      display: block; /* Hide the dropdown by default */
       max-height: 200px; /* Set the maximum height for the dropdown */
       overflow-y: auto; /* Enable vertical scrolling for the dropdown */
     }
@@ -145,21 +145,6 @@
         width: 50px;
     }
     }
-
-    #mobileSearchContainer {
-  display: none;
-  padding: 10px;
-}
-
-#mobileSearchInput {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-#mobileSearchButton {
-  width: 100%;
-}
-
   </style>
 
 </head>
@@ -172,8 +157,7 @@
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
     <input type="text" id="searchInput" placeholder="Search...">
-  <input type="text" id="mobileSearchInput" placeholder="Search...">
-  <button id="mobileSearchButton">Search</button>
+
   </div>
 
   <div id="resultContainer"></div>
@@ -246,19 +230,6 @@ function getMatchCount(item, searchText) {
 
   return matchCount;
 }
-// Function to handle the click event on the search bar
-function handleSearchBarClick() {
-  const searchBar = document.getElementById('searchInput');
-  const mobileSearchContainer = document.getElementById('mobileSearchContainer');
-
-  // Show the mobile search container and hide the search bar
-  searchBar.style.display = 'none';
-  mobileSearchContainer.style.display = 'block';
-}
-
-// Add event listener to the search bar
-const searchBar = document.getElementById('searchInput');
-searchBar.addEventListener('click', handleSearchBarClick);
 
 // Function to search
 function searchData() {
@@ -299,84 +270,6 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-
-function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
-  var dropdown = document.getElementById('filterDropdown');
-  var isDropdownOpen = false;
-
-  function filterDropdownOptions(filterText) {
-    var options = dropdown.options;
-    var matchFound = false;
-
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
-
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
-      }
-    }
-
-    dropdown.size = options.length;
-
-    if (matchFound) {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      isDropdownOpen = true;
-    } else {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
-  }
-
-  searchInput.addEventListener('input', function (event) {
-    var filterText = searchInput.value.trim().toLowerCase();
-    filterDropdownOptions(filterText);
-  });
-
-
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
-  }
-}
-
-
-  
-   // Function to handle the input event on the mobile search input
-  function handleMobileSearchInput(event) {
-    const filterText = event.target.value.trim().toLowerCase();
-    filterDropdownOptions(filterText);
-  }
-
-  // Function to handle the click event on the mobile search button
-  function handleMobileSearchButtonClick() {
-    const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const filterText = mobileSearchInput.value.trim().toLowerCase();
-    filterDropdownOptions(filterText);
-  }
-
-  // Add event listener to the mobile search input
-  const mobileSearchInput = document.getElementById('mobileSearchInput');
-  mobileSearchInput.addEventListener('input', handleMobileSearchInput);
-
-  // Add event listener to the mobile search button
-  const mobileSearchButton = document.getElementById('mobileSearchButton');
-  mobileSearchButton.addEventListener('click', handleMobileSearchButtonClick);
-}
-
-// Call the searchAndOpenDropdown function initially
-searchAndOpenDropdown();
 
 
 // Function to adjust the font size based on column number and window/screen size
