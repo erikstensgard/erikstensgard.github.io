@@ -309,10 +309,6 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
   
-// Add event listener to open the dropdown when clicking on the search input (mobile only)
-const searchInput = document.getElementById('searchInput');
-const filterDropdown = document.getElementById('filterDropdown');
-
 searchInput.addEventListener('click', function (event) {
   if (window.innerWidth <= 768) {
     // Open the dropdown by setting its display property
