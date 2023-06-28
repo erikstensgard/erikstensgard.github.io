@@ -271,7 +271,6 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
-// Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
@@ -330,6 +329,12 @@ function searchAndOpenDropdown() {
       dropdown.style.display = 'block';
       isDropdownOpen = true;
     }
+  });
+
+  // Add event listener to close the dropdown when an option is selected
+  dropdown.addEventListener('change', function (event) {
+    dropdown.style.display = '';
+    isDropdownOpen = false;
   });
 }
 
