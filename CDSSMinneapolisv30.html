@@ -271,6 +271,7 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
+    // Function to open dropdown when searching
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
@@ -308,34 +309,30 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
+  // Function to handle click events outside of the search input and dropdown
+  function handleOutsideClick(event) {
+    const searchInput = document.getElementById('searchInput');
+    const filterDropdown = document.getElementById('filterDropdown');
 
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
+    // Check if the clicked element is outside the search input and the filter dropdown
+    if (event.target !== searchInput && event.target !== filterDropdown) {
+      // Close and hide the filter dropdown
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    }
   }
-}
 
-
-  
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
-// Add event listener to open the dropdown when clicking on the search input
-searchInput.addEventListener('click', function (event) {
-  if (window.innerWidth <= 768) {
-    // Open the dropdown by setting its display property
-    dropdown.style.display = 'block';
-    isDropdownOpen = true;
-  }
-});
-
+  // Add event listener to open the dropdown when clicking on the search input
+  searchInput.addEventListener('click', function (event) {
+    if (window.innerWidth <= 768 && !isDropdownOpen) {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    }
+  });
 
   // Add event listener to close the dropdown when an option is selected
   dropdown.addEventListener('change', function (event) {
@@ -346,7 +343,6 @@ searchInput.addEventListener('click', function (event) {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
