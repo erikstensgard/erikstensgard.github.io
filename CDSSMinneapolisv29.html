@@ -271,7 +271,7 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
- // Function to search and open dropdown
+// Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
@@ -293,44 +293,17 @@ function searchAndOpenDropdown() {
     dropdown.size = options.length;
 
     if (matchFound) {
-      // Open the dropdown by setting the display style to "block"
+      // Open the dropdown by setting its display property
       dropdown.style.display = "block";
-
-      // Attach the outside click event listener
-      document.addEventListener('click', function (event) {
-        var target = event.target;
-        var isSearchInput = target === searchInput;
-        var isDropdownOption = dropdown.contains(target);
-
-        if (!isSearchInput && !isDropdownOption) {
-          // Close and hide the filter dropdown
-          dropdown.style.display = "none";
-
-          // Detach the outside click event listener
-          document.removeEventListener('click', arguments.callee);
-        }
-      });
     } else {
       // Close the dropdown without hiding it
-      dropdown.style.display = "none";
+      dropdown.style.display = ""; 
     }
   }
 
   searchInput.addEventListener('input', function (event) {
     var filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
-    searchData(); // Call the searchData function to perform the search
-  });
-
-  // Attach the outside click event listener
-  document.addEventListener('click', function (event) {
-    var target = event.target;
-    var isSearchInput = target === searchInput;
-
-    if (!isSearchInput) {
-      // Close and hide the filter dropdown
-      dropdown.style.display = "none";
-    }
   });
 
   // Prevent default behavior of closing the dropdown when clicked inside the search input
@@ -341,7 +314,6 @@ function searchAndOpenDropdown() {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
