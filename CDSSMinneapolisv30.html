@@ -30,7 +30,7 @@
 
     /* Header styles */
  #header {
-  position: sticky;
+  position: relative;
   top: 0;
   background-color: white;
   z-index: 1;
@@ -39,6 +39,21 @@
   align-items: center;
 }
 
+
+#filterDropdown li {
+  padding: 4px;
+  cursor: pointer;
+}
+
+#filterDropdown li:hover {
+  background-color: lightblue;
+}
+
+#filterDropdown.open {
+  display: block;
+}
+
+    
 #header button,
 #header select {
   margin: 5px;
@@ -63,7 +78,7 @@
 
     #filterDropdown {
       margin-right: 20px;
-      width: 560px;
+      width: 100%;
       z-index: 2;
       position: absolute;
       top: 100%;
@@ -155,9 +170,8 @@
     <button id="mainMenuButton">Main Menu</button>
     <button id="indexButton">Index</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
-    <select id="filterDropdown"></select>
-    <input type="text" id="searchInput" placeholder="Search...">
-
+<ul id="filterDropdown" class="dropdown"></ul>
+  <input type="text" id="searchInput" placeholder="Search...">
   </div>
 
   <div id="resultContainer"></div>
@@ -189,7 +203,40 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 
-    // Function to populate dropdown with OMJSON data
+function populateList(data) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
+
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  // Sort the data by the number of matches
+  data.sort((a, b) => {
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const matchesA = getMatchCount(a, searchText);
+    const matchesB = getMatchCount(b, searchText);
+    return matchesB - matchesA;
+  });
+
+  data.forEach(item => {
+    const listItem = document.createElement('li');
+    listItem.textContent = item.DisplayText || item.Name;
+
+    if (item.Item) {
+      listItem.classList.add('clickable');
+      listItem.addEventListener('click', () => {
+        handleRowClick(item);
+      });
+    }
+
+    dropdown.appendChild(listItem);
+  });
+}
+
+// Replace the existing populateDropdown function with this updated version
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -215,6 +262,33 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
+
+// Call the populateList function initially
+populateList(omData);
+
+// Function to search
+function searchData() {
+  // Existing code
+  populateList(filteredData);
+}
+
+// Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  // Existing code
+}
+
+// Function to allow tapping into the dropdown on mobile
+function handleDropdownClick() {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.classList.toggle('open');
+}
+
+// Add event listener to close the dropdown when clicking outside the search input and dropdown
+document.addEventListener('click', handleOutsideClick);
+
+// Add event listener to allow tapping into the dropdown on mobile
+document.getElementById('filterDropdown').addEventListener('click', handleDropdownClick);
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -308,30 +382,22 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
-  // Add event listener to handle Enter key press
-  searchInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      if (!isDropdownOpen) {
-        // Simulate a click on the dropdown by triggering a focus event
-        dropdown.focus();
-      }
-    }
-  });
 
-  // Function to handle click events outside of the search input and dropdown
-  function handleOutsideClick(event) {
-    var searchInput = document.getElementById('searchInput');
-    var filterDropdown = document.getElementById('filterDropdown');
+    // Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
 
-    // Check if the clicked element is outside the search input and the filter dropdown
-    if (event.target !== searchInput && event.target !== filterDropdown) {
-      // Close and hide the filter dropdown
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close and hide the filter dropdown
+   
+    filterDropdown.style.display = ''; 
   }
+}
 
+
+  
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
@@ -640,6 +706,7 @@ function handleGoForward() {
     // Function to open the dropdown when clicking into the search input
     function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
     
