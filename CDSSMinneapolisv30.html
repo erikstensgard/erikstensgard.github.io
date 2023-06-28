@@ -145,6 +145,21 @@
         width: 50px;
     }
     }
+
+    #mobileSearchContainer {
+  display: none;
+  padding: 10px;
+}
+
+#mobileSearchInput {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#mobileSearchButton {
+  width: 100%;
+}
+
   </style>
 
 </head>
@@ -157,7 +172,8 @@
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
     <input type="text" id="searchInput" placeholder="Search...">
-
+  <input type="text" id="mobileSearchInput" placeholder="Search...">
+  <button id="mobileSearchButton">Search</button>
   </div>
 
   <div id="resultContainer"></div>
@@ -230,6 +246,19 @@ function getMatchCount(item, searchText) {
 
   return matchCount;
 }
+// Function to handle the click event on the search bar
+function handleSearchBarClick() {
+  const searchBar = document.getElementById('searchInput');
+  const mobileSearchContainer = document.getElementById('mobileSearchContainer');
+
+  // Show the mobile search container and hide the search bar
+  searchBar.style.display = 'none';
+  mobileSearchContainer.style.display = 'block';
+}
+
+// Add event listener to the search bar
+const searchBar = document.getElementById('searchInput');
+searchBar.addEventListener('click', handleSearchBarClick);
 
 // Function to search
 function searchData() {
@@ -324,27 +353,26 @@ function handleOutsideClick(event) {
 
 
   
-  // Add event listener to close the dropdown when clicking outside the search input
-  document.addEventListener('click', handleOutsideClick);
+   // Function to handle the input event on the mobile search input
+  function handleMobileSearchInput(event) {
+    const filterText = event.target.value.trim().toLowerCase();
+    filterDropdownOptions(filterText);
+  }
 
-  // Add event listener to allow tapping into the dropdown on mobile
-  searchInput.addEventListener('click', function (event) {
-    if (isDropdownOpen) {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    } else {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      isDropdownOpen = true;
-    }
-  });
+  // Function to handle the click event on the mobile search button
+  function handleMobileSearchButtonClick() {
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const filterText = mobileSearchInput.value.trim().toLowerCase();
+    filterDropdownOptions(filterText);
+  }
 
-  // Add event listener to close the dropdown when an option is selected
-  dropdown.addEventListener('change', function (event) {
-    dropdown.style.display = '';
-    isDropdownOpen = false;
-  });
+  // Add event listener to the mobile search input
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  mobileSearchInput.addEventListener('input', handleMobileSearchInput);
+
+  // Add event listener to the mobile search button
+  const mobileSearchButton = document.getElementById('mobileSearchButton');
+  mobileSearchButton.addEventListener('click', handleMobileSearchButtonClick);
 }
 
 // Call the searchAndOpenDropdown function initially
