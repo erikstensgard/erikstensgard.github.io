@@ -63,12 +63,12 @@
 
     #filterDropdown {
       margin-right: 20px;
-     
+      width: 560px;
       z-index: 2;
       position: absolute;
       top: 100%;
       display: none; /* Hide the dropdown by default */
-     /* Set the maximum height for the dropdown */
+      max-height: 200px; /* Set the maximum height for the dropdown */
       overflow-y: auto; /* Enable vertical scrolling for the dropdown */
     }
 
@@ -89,64 +89,62 @@
       text-overflow: ellipsis;
     }
 
-   @media screen and (max-width: 1024px) {
-  button,
-  select {
-    font-size: 12px;
-  }
-  #filterDropdown {
-   
-  }
-  #searchInput {
-    font-size: 12px; 
-    width: 150px;
-  }
-}
+    /* Media queries for responsive design */
+    @media screen and (max-width: 1024px) {
+      button,
+      select {
+        font-size: 12px;
+      }
+      #filterDropdown {
+         width: 440px;
+    }
+      #searchInput {
+        font-size: 12px; 
+        width: 150px;
+    }
+    }
+    
+    @media screen and (max-width: 768px) {
+      button,
+      select {
+        font-size: 10px;
+      }
+      #filterDropdown  {
+         width: 400px;
+    }
+       #searchInput {
+        font-size: 10px; 
+        width: 150px;
+    }
+    }
 
-@media screen and (max-width: 768px) {
-  button,
-  select {
-    font-size: 10px;
-  }
-  #filterDropdown  {
-    width: 100%; /* Adjust the width to occupy the full width of the container */
-     /* Set a maximum width if desired */
-  }
-  #searchInput {
-    font-size: 10px; 
-    width: 150px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  button,
-  select {
-    font-size: 8px;
-  }
-  #filterDropdown {
-    width: 100%; /* Adjust the width to occupy the full width of the container */
-    /* Set a maximum width if desired */
-  } 
-  #searchInput {
-    font-size: 8px; 
-    width: 100px;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  button,
-  select {
-    font-size: 6px;
-  }
-  #filterDropdown {
-    width: 100%; /* Adjust the width to occupy the full width of the container */
-     /* Set a maximum width if desired */
-  }
-  #searchInput {
-    font-size: 6px; 
-    width: 50px;
-  }
-}
+    @media screen and (max-width: 480px) {
+      button,
+      select {
+        font-size: 8px;
+      }
+      #filterDropdown {
+         width: 360px;
+    } 
+      #searchInput {
+        font-size: 8px; 
+        width: 100px;
+    }
+    }
+    
+    @media screen and (max-width: 320px) {
+      button,
+      select {
+        font-size: 6px;
+      }
+      #filterDropdown {
+         width: 320px;
+    }
+       #searchInput {
+        font-size: 6px; 
+        width: 50px;
+    }
+    }
   </style>
 
 </head>
@@ -273,7 +271,6 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
-    // Function to open dropdown when searching
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
@@ -310,35 +307,35 @@ function searchAndOpenDropdown() {
     var filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
   });
+
+
+    // Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close and hide the filter dropdown
+   
+    filterDropdown.style.display = ''; 
+  }
+}
+
+
   
-searchInput.addEventListener('click', function (event) {
-  if (window.innerWidth <= 768) {
-    // Open the dropdown by setting its display property
-    filterDropdown.style.display = 'block !important;';
-  }
-});
-
-  // Function to handle click events outside of the search input and dropdown
-  function handleOutsideClick(event) {
-    const searchInput = document.getElementById('searchInput');
-    const filterDropdown = document.getElementById('filterDropdown');
-
-    // Check if the clicked element is outside the search input and the filter dropdown
-    if (event.target !== searchInput && event.target !== filterDropdown) {
-      // Close and hide the filter dropdown
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
-  }
-
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
-  // Add event listener to open the dropdown when clicking on the search input
+  // Add event listener to allow tapping into the dropdown on mobile
   searchInput.addEventListener('click', function (event) {
-    if (window.innerWidth <= 768 && !isDropdownOpen) {
+    if (isDropdownOpen) {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    } else {
       // Open the dropdown by setting its display property
-      dropdown.style.display = 'block !important;';
+      dropdown.style.display = 'block';
       isDropdownOpen = true;
     }
   });
@@ -352,6 +349,7 @@ searchInput.addEventListener('click', function (event) {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
