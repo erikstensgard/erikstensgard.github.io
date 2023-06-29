@@ -38,16 +38,7 @@
   justify-content: flex-start;
   align-items: center;
 }
- #filterDropdown {
-      margin-right: 20px;
-      width: 560px;
-      z-index: 2;
-      position: absolute;
-      top: 100%;
-      display: block; /* Hide the dropdown by default */
-      max-height: 200px; /* Set the maximum height for the dropdown */
-      overflow-y: auto; /* Enable vertical scrolling for the dropdown */
-    }
+
 #header button,
 #header select {
   margin: 5px;
@@ -70,6 +61,16 @@
   margin-right: 20px;
 }
 
+    #filterDropdown {
+      margin-right: 20px;
+      width: 560px;
+      z-index: 2;
+      position: absolute;
+      top: 100%;
+      display: none; /* Hide the dropdown by default */
+      max-height: 200px; /* Set the maximum height for the dropdown */
+      overflow-y: auto; /* Enable vertical scrolling for the dropdown */
+    }
 
 #searchInput {
   margin-right: 20px;
@@ -94,7 +95,9 @@
       select {
         font-size: 12px;
       }
-    
+      #filterDropdown {
+         width: 440px;
+    }
       #searchInput {
         font-size: 12px; 
         width: 150px;
@@ -106,7 +109,9 @@
       select {
         font-size: 10px;
       }
- 
+      #filterDropdown  {
+         width: 400px;
+    }
        #searchInput {
         font-size: 10px; 
         width: 150px;
@@ -118,7 +123,9 @@
       select {
         font-size: 8px;
       }
- 
+      #filterDropdown {
+         width: 360px;
+    } 
       #searchInput {
         font-size: 8px; 
         width: 100px;
@@ -130,7 +137,9 @@
       select {
         font-size: 6px;
       }
-
+      #filterDropdown {
+         width: 320px;
+    }
        #searchInput {
         font-size: 6px; 
         width: 50px;
@@ -305,6 +314,7 @@ function searchAndOpenDropdown() {
     if (matchFound) {
       // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
+      dropdown.style.width = '100%';
       isDropdownOpen = true;
     } else {
       // Close the dropdown by hiding it
@@ -318,22 +328,6 @@ function searchAndOpenDropdown() {
     filterDropdownOptions(filterText);
   });
 
-
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
-  }
-}
-
-
-  
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
@@ -346,6 +340,7 @@ function handleOutsideClick(event) {
     } else {
       // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
+      dropdown.style.width = '100%';
       isDropdownOpen = true;
     }
   });
@@ -642,6 +637,7 @@ function handleGoForward() {
     // Function to open the dropdown when clicking into the search input
     function openDropdown() {
       const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
     
