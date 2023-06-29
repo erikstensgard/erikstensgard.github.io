@@ -248,7 +248,6 @@ function searchData() {
   populateDropdown(filteredData);
 }
 // Function to search and open dropdown
-// Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
@@ -273,6 +272,7 @@ function searchAndOpenDropdown() {
     if (matchFound) {
       // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
+      dropdown.focus(); // Add this line to focus on the dropdown
       isDropdownOpen = true;
     } else {
       // Close the dropdown by hiding it
@@ -294,6 +294,15 @@ function searchAndOpenDropdown() {
     } else {
       var filterText = this.value.toLowerCase();
       filterDropdownOptions(filterText);
+    }
+  });
+
+  // Event listener to close the dropdown when clicking outside of it
+  document.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!target.matches('#searchInput') && !target.matches('#filterDropdown')) {
+      dropdown.style.display = 'none';
+      isDropdownOpen = false;
     }
   });
 }
