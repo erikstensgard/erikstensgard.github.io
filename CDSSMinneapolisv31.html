@@ -249,7 +249,6 @@ function searchData() {
 }
 // Function to search and open dropdown
 function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
   var isDropdownOpen = false;
 
@@ -296,17 +295,15 @@ function searchAndOpenDropdown() {
       filterDropdownOptions(filterText);
     }
   });
-// Event listener to close the dropdown when clicking outside of it
-window.addEventListener('click', function (event) {
-  var target = event.target;
-  if (!target.matches('#searchInput') && !target.matches('#filterDropdown')) {
-    dropdown.style.display = 'none';
-    isDropdownOpen = false;
-  }
-});
-
-// Call the searchAndOpenDropdown function initially
-searchAndOpenDropdown();
+  // Event listener to close the dropdown when clicking outside of it
+  window.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!target.matches('#searchInput') && !target.matches('#filterDropdown')) {
+      dropdown.style.display = 'none';
+      isDropdownOpen = false;
+    }
+  });
+}
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
