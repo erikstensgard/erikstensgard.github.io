@@ -217,13 +217,9 @@ function populateDropdown(data) {
 
   // Create the first line in the dropdown
   const firstLine = document.createElement('option');
-  if (window.innerWidth <= 768) {
-    firstLine.textContent = `# of matches: ${matchCount} - click to view search results`;
-  } else {
-    firstLine.textContent = `# of matches: ${matchCount}`;
-  }
+  firstLine.textContent = `# of matches: ${matchCount}`;
 
-  firstLine.disabled = true;
+  firstLine.disabled = false;
   firstLine.selected = true;
   dropdown.appendChild(firstLine);
 
@@ -234,6 +230,7 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
