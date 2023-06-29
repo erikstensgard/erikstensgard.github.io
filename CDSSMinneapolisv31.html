@@ -352,6 +352,17 @@ function searchAndOpenDropdown() {
   });
 }
 
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== filterDropdown) {
+    // Close and hide the filter dropdown
+    filterDropdown.style.display = '';
+  }
+}
+
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
 
