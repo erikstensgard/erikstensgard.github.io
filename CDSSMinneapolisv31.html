@@ -290,71 +290,70 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
-function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
-  var dropdown = document.getElementById('filterDropdown');
-  var isDropdownOpen = false;
+    function searchAndOpenDropdown() {
+      var searchInput = document.getElementById('searchInput');
+      var dropdown = document.getElementById('filterDropdown');
+      var isDropdownOpen = false;
 
-  function filterDropdownOptions(filterText) {
-    var options = dropdown.options;
-    var matchFound = false;
+      function filterDropdownOptions(filterText) {
+        var options = dropdown.options;
+        var matchFound = false;
 
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
+        for (var i = 0; i < options.length; i++) {
+          var option = options[i];
+          var optionText = option.text.toLowerCase();
 
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
+          if (optionText.indexOf(filterText) !== -1) {
+            option.selected = true;
+            matchFound = true;
+          }
+        }
+
+        dropdown.size = 'auto';
+
+        if (matchFound) {
+          // Open the dropdown by setting its display property
+          dropdown.style.display = 'block';
+          dropdown.style.width = '100%';
+          isDropdownOpen = true;
+        } else {
+          // Close the dropdown by hiding it
+          dropdown.style.display = '';
+          isDropdownOpen = false;
+        }
       }
+
+      searchInput.addEventListener('input', function (event) {
+        var filterText = searchInput.value.trim().toLowerCase();
+        filterDropdownOptions(filterText);
+      });
+
+      // Add event listener to close the dropdown when clicking outside the search input
+      document.addEventListener('click', handleOutsideClick);
+
+      // Add event listener to allow tapping into the dropdown on mobile
+      searchInput.addEventListener('click', function (event) {
+        if (isDropdownOpen) {
+          // Close the dropdown by hiding it
+          dropdown.style.display = '';
+          isDropdownOpen = false;
+        } else {
+          // Open the dropdown by setting its display property
+          dropdown.style.display = 'block';
+          dropdown.style.width = '100%';
+          isDropdownOpen = true;
+        }
+      });
+
+      // Add event listener to close the dropdown when an option is selected
+      dropdown.addEventListener('change', function (event) {
+        dropdown.style.display = '';
+        isDropdownOpen = false;
+      });
     }
 
-    dropdown.size = 'auto';
-
-    if (matchFound) {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      dropdown.style.width = '100%';
-      isDropdownOpen = true;
-    } else {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
-  }
-
-  searchInput.addEventListener('input', function (event) {
-    var filterText = searchInput.value.trim().toLowerCase();
-    filterDropdownOptions(filterText);
-  });
-
-  // Add event listener to close the dropdown when clicking outside the search input
-  document.addEventListener('click', handleOutsideClick);
-
-  // Add event listener to allow tapping into the dropdown on mobile
-  searchInput.addEventListener('click', function (event) {
-    if (isDropdownOpen) {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    } else {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      dropdown.style.width = '100%';
-      isDropdownOpen = true;
-    }
-  });
-
-  // Add event listener to close the dropdown when an option is selected
-  dropdown.addEventListener('change', function (event) {
-    dropdown.style.display = '';
-    isDropdownOpen = false;
-  });
-}
-
-// Call the searchAndOpenDropdown function initially
-searchAndOpenDropdown();
-
+    // Call the searchAndOpenDropdown function initially
+    searchAndOpenDropdown();
 
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
