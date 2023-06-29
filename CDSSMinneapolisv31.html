@@ -691,6 +691,9 @@ Promise.all([fetchOMData(), fetchODData()])
     console.error('Error:', error);
   });
 
+
+const dropdown = document.getElementById('filterDropdown');
+    
 // Check if the dropdown is positioned outside of the viewport
 if (dropdown.getBoundingClientRect().top < 0 || dropdown.getBoundingClientRect().left < 0) {
   console.log('The dropdown is positioned outside of the viewport.');
