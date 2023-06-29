@@ -34,9 +34,10 @@
 
   <p>CDSS Menu Viewer Testing. Please select a menu name below to begin.</p>
 
-  <select id="filterDropdown">
-    <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
-  </select>
+<select id="filterDropdown" size="1">
+  <option value="ORZID2 GMENU ABX INPT MAIN">ORZID2 GMENU ABX INPT MAIN</option>
+</select>
+
 
   <div id="resultContainer"></div>
 
@@ -195,7 +196,7 @@ function createOMTable(selectedData) {
       resultContainer.appendChild(table);
     }
 
- // Function to filter data based on the selected option
+// Function to filter data based on the selected option
 async function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
@@ -216,57 +217,37 @@ async function filterData(event) {
   resultContainer.scrollTop = 0;
 }
 
-// Function to handle the go back button click event
-function goBack() {
-  if (history.length > 1) {
-    const currentSelection = history.pop(); // Remove the current item from history
-    let previousItem = history.pop(); // Get the previous item
-
-    // Keep going back until we find a valid previous item that is not the initial selection
-    while (previousItem === currentSelection && history.length > 0) {
-      previousItem = history.pop();
-    }
-
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = previousItem;
-    filterData({ target: dropdown });
-  }
+// Function to load the main menu by default
+function loadMainMenu() {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
+  filterData({ target: dropdown });
 }
 
+// Initialize the application
+async function initialize() {
+  omData = await fetchOMData();
+  odData = await fetchODData();
+  populateDropdown(omData);
 
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.addEventListener('change', filterData);
 
-    // Function to push the selected item to the history
-    function pushHistory(item) {
-      history.push(item);
-    }
+  const goBackButton = document.getElementById('goBackButton');
+  goBackButton.addEventListener('click', goBack);
 
-    // Function to load the main menu by default
-    function loadMainMenu() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.value = "ORZID2 GMENU ABX INPT MAIN";
-      filterData({ target: dropdown });
-    }
+  const mainMenuButton = document.getElementById('mainMenuButton');
+  mainMenuButton.addEventListener('click', loadMainMenu);
 
-    // Initialize the application
-    async function initialize() {
-      omData = await fetchOMData();
-      odData = await fetchODData();
-      populateDropdown(omData);
+  loadMainMenu(); // Load the main menu by default
 
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.addEventListener('change', filterData);
+  // Open the dropdown by default
+  dropdown.setAttribute('size', dropdown.length);
+}
 
-      const goBackButton = document.getElementById('goBackButton');
-      goBackButton.addEventListener('click', goBack);
+// Call the initialize function
+initialize();
 
-      const mainMenuButton = document.getElementById('mainMenuButton');
-      mainMenuButton.addEventListener('click', loadMainMenu);
-
-      loadMainMenu(); // Load the main menu by default
-    }
-
-    // Call the initialize function
-    initialize();
   </script>
 </body>
 
