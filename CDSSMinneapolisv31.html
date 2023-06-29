@@ -296,16 +296,14 @@ function searchAndOpenDropdown() {
       filterDropdownOptions(filterText);
     }
   });
-
-  // Event listener to close the dropdown when clicking outside of it
-  document.addEventListener('click', function (event) {
-    var target = event.target;
-    if (!target.matches('#searchInput') && !target.matches('#filterDropdown')) {
-      dropdown.style.display = 'none';
-      isDropdownOpen = false;
-    }
-  });
-}
+// Event listener to close the dropdown when clicking outside of it
+window.addEventListener('click', function (event) {
+  var target = event.target;
+  if (!target.matches('#searchInput') && !target.matches('#filterDropdown')) {
+    dropdown.style.display = 'none';
+    isDropdownOpen = false;
+  }
+});
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
