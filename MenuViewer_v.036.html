@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Test</title>
@@ -231,6 +234,10 @@ async function initialize() {
   populateDropdown(omData);
 
   const dropdown = document.getElementById('filterDropdown');
+
+  // Initialize Select2 on the dropdown
+  $(dropdown).select2();
+
   dropdown.addEventListener('change', filterData);
 
   const goBackButton = document.getElementById('goBackButton');
@@ -242,11 +249,12 @@ async function initialize() {
   loadMainMenu(); // Load the main menu by default
 
   // Open the dropdown by default
-  dropdown.setAttribute('size', dropdown.length);
+  $(dropdown).select2('open');
 }
 
 // Call the initialize function
 initialize();
+
 
   </script>
 </body>
