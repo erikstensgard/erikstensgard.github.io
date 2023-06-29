@@ -53,24 +53,18 @@
   margin-right: auto;
 }
 
-#indexButton {
-  margin-right: auto;
-}
-
 #goForwardButton {
   margin-right: 20px;
 }
 
-    #filterDropdown {
-      margin-right: 20px;
-      width: 560px;
-      z-index: 2;
-      position: absolute;
-      top: 100%;
-      display: none; /* Hide the dropdown by default */
-      max-height: 200px; /* Set the maximum height for the dropdown */
-      overflow-y: auto; /* Enable vertical scrolling for the dropdown */
-    }
+#filterDropdown {
+  margin-right: 20px;
+  width: 600px;
+  z-index: 2; /* Updated value */
+  position: absolute; /* Added property */
+  top: 100%; /* Adjust the top position as needed */
+}
+
 
 #searchInput {
   margin-right: 20px;
@@ -96,7 +90,7 @@
         font-size: 12px;
       }
       #filterDropdown {
-         width: 440px;
+         width: 400px;
     }
       #searchInput {
         font-size: 12px; 
@@ -109,8 +103,8 @@
       select {
         font-size: 10px;
       }
-      #filterDropdown  {
-         width: 400px;
+      #filterDropdown {
+         width: 200px;
     }
        #searchInput {
         font-size: 10px; 
@@ -124,7 +118,7 @@
         font-size: 8px;
       }
       #filterDropdown {
-         width: 360px;
+         width: 100px;
     } 
       #searchInput {
         font-size: 8px; 
@@ -138,7 +132,7 @@
         font-size: 6px;
       }
       #filterDropdown {
-         width: 320px;
+         width: 75px;
     }
        #searchInput {
         font-size: 6px; 
@@ -153,7 +147,6 @@
   <div id="header">
     <button id="goBackButton">&larr; Go Back</button>
     <button id="mainMenuButton">Main Menu</button>
-    <button id="indexButton">Index</button>
     <button id="goForwardButton">Go Forward &rarr;</button>
     <select id="filterDropdown"></select>
     <input type="text" id="searchInput" placeholder="Search...">
@@ -207,25 +200,6 @@ function populateDropdown(data) {
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
-
-  // Get the number of matches for the current search text
-  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  const matchCount = data.reduce((count, item) => {
-    count += getMatchCount(item, searchText);
-    return count;
-  }, 0);
-
-  // Create the first line in the dropdown
-  const firstLine = document.createElement('option');
-  if (window.innerWidth <= 768) {
-    firstLine.textContent = `# of matches: ${matchCount} - click to view search results`;
-  } else {
-    firstLine.textContent = `# of matches: ${matchCount}`;
-  }
-
-  firstLine.disabled = true;
-  firstLine.selected = true;
-  dropdown.appendChild(firstLine);
 
   data.forEach(item => {
     const option = document.createElement('option');
@@ -289,11 +263,10 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-
+// Function to search and open dropdown
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
-  var isDropdownOpen = false;
 
   function filterDropdownOptions(filterText) {
     var options = dropdown.options;
@@ -312,57 +285,23 @@ function searchAndOpenDropdown() {
     dropdown.size = options.length;
 
     if (matchFound) {
-      // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
-      isDropdownOpen = true;
+
+      // Open the dropdown by triggering a click event on the search input
+      var event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      searchInput.dispatchEvent(event);
     } else {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
+      dropdown.style.display = 'none';
     }
   }
 
-  searchInput.addEventListener('input', function (event) {
-    var filterText = searchInput.value.trim().toLowerCase();
+  searchInput.addEventListener('input', function () {
+    var filterText = this.value.toLowerCase();
     filterDropdownOptions(filterText);
-  });
-
-
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
-
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
-  }
-}
-
-
-  
-  // Add event listener to close the dropdown when clicking outside the search input
-  document.addEventListener('click', handleOutsideClick);
-
-  // Add event listener to allow tapping into the dropdown on mobile
-  searchInput.addEventListener('click', function (event) {
-    if (isDropdownOpen) {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    } else {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      isDropdownOpen = true;
-    }
-  });
-
-  // Add event listener to close the dropdown when an option is selected
-  dropdown.addEventListener('change', function (event) {
-    dropdown.style.display = '';
-    isDropdownOpen = false;
   });
 }
 
@@ -420,25 +359,23 @@ adjustFontSize();
         if (matchingItemIndex !== -1) {
           selectedData = odData[matchingItemIndex];
           createODTable(selectedData);
+          pushHistory(selectedData.Item);
         }
+        adjustFontSize();
       }
-      scrollToTop()
+
+      // Scroll to the top of the table
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.scrollTop = 0;
+
+      // Scroll the page to the top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
       adjustFontSize();
     }
-      
-  // Scroll to the top of the table
-function scrollToTop() { // Add opening curly brace here
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
 
-  // Scroll the page to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-} // Add closing curly brace here
-
-    
     // Function to create the table with OMJSON data
     function createOMTable(selectedData) {
       const table = document.createElement('table');
@@ -514,36 +451,28 @@ function scrollToTop() { // Add opening curly brace here
         resultContainer.appendChild(table);
       }
     }
-    
-   // Function to create the table with ODJSON data
-function createODTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
 
-  const tbody = document.createElement('tbody');
+    // Function to create the table with ODJSON data
+    function createODTable(selectedData) {
+      const table = document.createElement('table');
+      table.classList.add('table');
 
-  for (const [key, value] of Object.entries(selectedData)) {
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.textContent = `${key}: ${value}`;
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-  }
+      const tbody = document.createElement('tbody');
 
-  table.appendChild(tbody);
+      for (const [key, value] of Object.entries(selectedData)) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `${key}: ${value}`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
 
-  const popup = window.open("", "Order Dialog Information", "width=600,height=400");
-  const popupContent = document.createElement('div');
-  popupContent.innerHTML = '<h2>Order Dialog Information</h2>';
-  popupContent.appendChild(table);
+      table.appendChild(tbody);
 
-  // Clear existing content in the popup
-  popup.document.body.innerHTML = "";
-  popup.document.title = "Order Dialog Information";
-
-  popup.document.body.appendChild(popupContent);
-}
-
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(table);
+    }
 
     // Function to filter data based on the selected option
     function filterData(event) {
@@ -555,13 +484,22 @@ function createODTable(selectedData) {
     createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
+    const odMatchingData = odData.find(item => item.Name === selectedOption);
+    if (odMatchingData) {
+      selectedData = odMatchingData;
+      createODTable(odMatchingData);
+      pushHistory(odMatchingData.Item);
+    } else {
       // Handle the case when selectedData is not found
       // For example, display an error message or clear the result container
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = 'Selected data not found.';
     }
-  scrollToTop()
+  }
   adjustFontSize();
+  // Scroll to the top of the table
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
 }
 
 
@@ -580,13 +518,9 @@ function handleGoBack() {
     historyIndex--;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
-    document.getElementById('searchInput').value = null;
-    document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
-      scrollToTop()
       adjustFontSize();
 }
 
@@ -596,41 +530,19 @@ function handleGoForward() {
     historyIndex++;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
-    document.getElementById('searchInput').value = null;
-    document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
-      scrollToTop()
       adjustFontSize();
 }
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
       const dropdown = document.getElementById('filterDropdown');
-      document.getElementById('searchInput').value = null;
-      document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
       filterData({ target: dropdown });
-      scrollToTop()    
-      adjustFontSize();
+          adjustFontSize();
     }
 
-    // Function to handle the Main Menu button click event
-    function handleIndex() {
-      const dropdown = document.getElementById('filterDropdown');
-      document.getElementById('searchInput').value = null;
-      document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
-      dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
-      filterData({ target: dropdown });
-      adjustFontSize();      
-      scrollToTop()    
-      adjustFontSize();
-    }
-
-    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
@@ -654,25 +566,40 @@ function handleGoForward() {
       dropdown.size = dropdown.options.length;
       dropdown.style.display = 'block';
     }
-    
-    // Function to check if the target element or its parent is the search input
-    function isSearchInput(element) {
-      const searchInput = document.getElementById('searchInput');
-      return element === searchInput || element.parentNode === searchInput;
-    }
+
+    // Event listener to open the dropdown when clicking into the search input
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('click', openDropdown);
+
+
   
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
-document.getElementById('indexButton').addEventListener('click', handleIndex);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-document.getElementById('searchInput').addEventListener('click', openDropdown);
-document.getElementById('searchInput').addEventListener('input', openDropdown);
+
+
+    // Function to open the dropdown
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.style.display = 'block';
+    }
+
+    // Function to check if the target element or its parent is the search input
+    function isSearchInput(element) {
+      const searchInput = document.getElementById('searchInput');
+      return element === searchInput || element.parentNode === searchInput;
+    }
+
+    // Event listener for search input click event
+    document.getElementById('searchInput').addEventListener('click', function (event) {
+      openDropdown();
+    });
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
@@ -692,24 +619,6 @@ Promise.all([fetchOMData(), fetchODData()])
   });
 
 
-const dropdown = document.getElementById('filterDropdown');
-    
-// Check if the dropdown is positioned outside of the viewport
-if (dropdown.getBoundingClientRect().top < 0 || dropdown.getBoundingClientRect().left < 0) {
-  console.log('The dropdown is positioned outside of the viewport.');
-}
-
-// Check if the dropdown is hidden by another element
-const style = getComputedStyle(dropdown);
-if (style.display === 'none') {
-  console.log('The dropdown is hidden.');
-}
-
-// Check for JavaScript errors
-const errors = window.console.error;
-if (errors.length > 0) {
-  console.log('There are JavaScript errors.');
-}
   </script>
 </body>
 
