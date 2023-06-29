@@ -217,9 +217,13 @@ function populateDropdown(data) {
 
   // Create the first line in the dropdown
   const firstLine = document.createElement('option');
-  firstLine.textContent = `# of matches: ${matchCount}`;
+  if (window.innerWidth <= 768) {
+    firstLine.textContent = `# of matches: ${matchCount} - click to view search results`;
+  } else {
+    firstLine.textContent = `# of matches: ${matchCount}`;
+  }
 
-  firstLine.disabled = false;
+  firstLine.disabled = true;
   firstLine.selected = true;
   dropdown.appendChild(firstLine);
 
@@ -230,7 +234,6 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -287,71 +290,45 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
-    function searchAndOpenDropdown() {
-      var searchInput = document.getElementById('searchInput');
-      var dropdown = document.getElementById('filterDropdown');
-      var isDropdownOpen = false;
+function searchAndOpenDropdown() {
+  var searchInput = document.getElementById('searchInput');
+  var dropdown = document.getElementById('filterDropdown');
+  var isDropdownOpen = false;
 
-      function filterDropdownOptions(filterText) {
-        var options = dropdown.options;
-        var matchFound = false;
+  function filterDropdownOptions(filterText) {
+    var options = dropdown.options;
+    var matchFound = false;
 
-        for (var i = 0; i < options.length; i++) {
-          var option = options[i];
-          var optionText = option.text.toLowerCase();
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var optionText = option.text.toLowerCase();
 
-          if (optionText.indexOf(filterText) !== -1) {
-            option.selected = true;
-            matchFound = true;
-          }
-        }
-
-        dropdown.size = 'auto';
-
-        if (matchFound) {
-          // Open the dropdown by setting its display property
-          dropdown.style.display = 'block';
-          dropdown.style.width = '100%';
-          isDropdownOpen = true;
-        } else {
-          // Close the dropdown by hiding it
-          dropdown.style.display = '';
-          isDropdownOpen = false;
-        }
+      if (optionText.indexOf(filterText) !== -1) {
+        option.selected = true;
+        matchFound = true;
       }
-
-      searchInput.addEventListener('input', function (event) {
-        var filterText = searchInput.value.trim().toLowerCase();
-        filterDropdownOptions(filterText);
-      });
-
-      // Add event listener to close the dropdown when clicking outside the search input
-      document.addEventListener('click', handleOutsideClick);
-
-      // Add event listener to allow tapping into the dropdown on mobile
-      searchInput.addEventListener('click', function (event) {
-        if (isDropdownOpen) {
-          // Close the dropdown by hiding it
-          dropdown.style.display = '';
-          isDropdownOpen = false;
-        } else {
-          // Open the dropdown by setting its display property
-          dropdown.style.display = 'block';
-          dropdown.style.width = '100%';
-          isDropdownOpen = true;
-        }
-      });
-
-      // Add event listener to close the dropdown when an option is selected
-      dropdown.addEventListener('change', function (event) {
-        dropdown.style.display = '';
-        isDropdownOpen = false;
-      });
     }
 
-    // Call the searchAndOpenDropdown function initially
-    searchAndOpenDropdown();
+    dropdown.size = options.length;
 
+    if (matchFound) {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    } else {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    }
+  }
+
+  searchInput.addEventListener('input', function (event) {
+    var filterText = searchInput.value.trim().toLowerCase();
+    filterDropdownOptions(filterText);
+  });
+
+
+    // Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
@@ -359,9 +336,39 @@ function handleOutsideClick(event) {
   // Check if the clicked element is outside the search input and the filter dropdown
   if (event.target !== searchInput && event.target !== filterDropdown) {
     // Close and hide the filter dropdown
-    filterDropdown.style.display = '';
+   
+    filterDropdown.style.display = ''; 
   }
 }
+
+
+  
+  // Add event listener to close the dropdown when clicking outside the search input
+  document.addEventListener('click', handleOutsideClick);
+
+  // Add event listener to allow tapping into the dropdown on mobile
+  searchInput.addEventListener('click', function (event) {
+    if (isDropdownOpen) {
+      // Close the dropdown by hiding it
+      dropdown.style.display = '';
+      isDropdownOpen = false;
+    } else {
+      // Open the dropdown by setting its display property
+      dropdown.style.display = 'block';
+      isDropdownOpen = true;
+    }
+  });
+
+  // Add event listener to close the dropdown when an option is selected
+  dropdown.addEventListener('change', function (event) {
+    dropdown.style.display = '';
+    isDropdownOpen = false;
+  });
+}
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
@@ -641,7 +648,12 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-
+    // Function to open the dropdown when clicking into the search input
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
+      dropdown.style.display = 'block';
+    }
     
     // Function to check if the target element or its parent is the search input
     function isSearchInput(element) {
@@ -659,7 +671,8 @@ document.getElementById('filterDropdown').addEventListener('change', filterData)
 window.addEventListener('resize', adjustFontSize);
 window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
-
+document.getElementById('searchInput').addEventListener('click', openDropdown);
+document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData()])
@@ -678,7 +691,22 @@ Promise.all([fetchOMData(), fetchODData()])
     console.error('Error:', error);
   });
 
+// Check if the dropdown is positioned outside of the viewport
+if (dropdown.getBoundingClientRect().top < 0 || dropdown.getBoundingClientRect().left < 0) {
+  console.log('The dropdown is positioned outside of the viewport.');
+}
 
+// Check if the dropdown is hidden by another element
+const style = getComputedStyle(dropdown);
+if (style.display === 'none') {
+  console.log('The dropdown is hidden.');
+}
+
+// Check for JavaScript errors
+const errors = window.console.error;
+if (errors.length > 0) {
+  console.log('There are JavaScript errors.');
+}
   </script>
 </body>
 
