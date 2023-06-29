@@ -309,7 +309,7 @@ function searchAndOpenDropdown() {
       }
     }
 
-    dropdown.size = options.length;
+    dropdown.size = 'auto';
 
     if (matchFound) {
       // Open the dropdown by setting its display property
@@ -352,6 +352,10 @@ function searchAndOpenDropdown() {
   });
 }
 
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
+
 function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
@@ -362,10 +366,6 @@ function handleOutsideClick(event) {
     filterDropdown.style.display = '';
   }
 }
-
-// Call the searchAndOpenDropdown function initially
-searchAndOpenDropdown();
-
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
