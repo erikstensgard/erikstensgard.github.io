@@ -208,25 +208,6 @@ function populateDropdown(data) {
     return matchesB - matchesA;
   });
 
-  // Get the number of matches for the current search text
-  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  const matchCount = data.reduce((count, item) => {
-    count += getMatchCount(item, searchText);
-    return count;
-  }, 0);
-
-  // Create the first line in the dropdown
-  const firstLine = document.createElement('option');
-  if (window.innerWidth <= 768) {
-    firstLine.textContent = `# of matches: ${matchCount} - click to view search results`;
-  } else {
-    firstLine.textContent = `# of matches: ${matchCount}`;
-  }
-
-  firstLine.disabled = true;
-  firstLine.selected = true;
-  dropdown.appendChild(firstLine);
-
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
@@ -532,16 +513,21 @@ function createODTable(selectedData) {
 
   table.appendChild(tbody);
 
-  const popup = window.open("", "Order Dialog Information", "width=600,height=400");
-  const popupContent = document.createElement('div');
-  popupContent.innerHTML = '<h2>Order Dialog Information</h2>';
-  popupContent.appendChild(table);
+  if (selectedData.LinkURL1) {
+    // Open the link if "LinkURL1" field is present
+    window.open(selectedData.LinkURL1, "Order Dialog Information");
+  } else {
+    const popup = window.open("", "Order Dialog Information", "width=600,height=400");
+    const popupContent = document.createElement('div');
+    popupContent.innerHTML = '<h2>Order Dialog Information</h2>';
+    popupContent.appendChild(table);
 
-  // Clear existing content in the popup
-  popup.document.body.innerHTML = "";
-  popup.document.title = "Order Dialog Information";
+    // Clear existing content in the popup
+    popup.document.body.innerHTML = "";
+    popup.document.title = "Order Dialog Information";
 
-  popup.document.body.appendChild(popupContent);
+    popup.document.body.appendChild(popupContent);
+  }
 }
 
 
