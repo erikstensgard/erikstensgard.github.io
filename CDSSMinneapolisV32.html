@@ -496,7 +496,7 @@ function scrollToTop() { // Add opening curly brace here
       }
     }
     
- // Function to create the table with ODJSON data
+// Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -513,8 +513,8 @@ function createODTable(selectedData) {
     tr.appendChild(td);
     tbody.appendChild(tr);
 
-    // Check if the key starts with "LinkURL"
-    if (key.startsWith('LinkURL')) {
+    // Check if the key starts with "LinkURL" and value is a valid URL
+    if (key.startsWith('LinkURL') && isValidURL(value)) {
       urls.push(value);
     }
   }
@@ -536,6 +536,7 @@ function createODTable(selectedData) {
       const link = document.createElement('a');
       link.href = url;
       link.textContent = url;
+      link.target = "_blank"; // Open link in a new tab
       li.appendChild(link);
       ul.appendChild(li);
     });
@@ -547,9 +548,30 @@ function createODTable(selectedData) {
     popup.document.title = "Order Dialog Information";
 
     popup.document.body.appendChild(popupContent);
+  } else {
+    // Open the default popup when no URLs are present
+    const popup = window.open("", "Order Dialog Information", "width=600,height=400");
+    const popupContent = document.createElement('div');
+    popupContent.innerHTML = '<h2>Order Dialog Information</h2>';
+    popupContent.appendChild(table);
+
+    // Clear existing content in the popup
+    popup.document.body.innerHTML = "";
+    popup.document.title = "Order Dialog Information";
+
+    popup.document.body.appendChild(popupContent);
   }
 }
 
+// Function to check if a value is a valid URL
+function isValidURL(value) {
+  try {
+    new URL(value);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
 
     // Function to filter data based on the selected option
