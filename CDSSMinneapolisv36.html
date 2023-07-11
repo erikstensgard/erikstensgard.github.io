@@ -204,7 +204,7 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
-   // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
+  // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
 function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
@@ -248,7 +248,18 @@ function createOMTable(selectedData) {
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
-            cellContentElement.textContent = cellContent;
+            const contentText = cellContent;
+            const matchingURL = getMatchingURL(contentText);
+
+            if (matchingURL) {
+              const linkElement = document.createElement('a');
+              linkElement.href = matchingURL;
+              linkElement.target = '_blank';
+              linkElement.textContent = contentText;
+              cellContentElement.appendChild(linkElement);
+            } else {
+              cellContentElement.textContent = contentText;
+            }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
@@ -264,15 +275,6 @@ function createOMTable(selectedData) {
               cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
-            } else if (cellContent) {
-              const matchingURL = getMatchingURL(cellContent);
-              if (matchingURL) {
-                const linkElement = document.createElement('a');
-                linkElement.href = matchingURL;
-                linkElement.target = '_blank';
-                linkElement.textContent = cellContent;
-                cellContentElement.appendChild(linkElement);
-              }
             }
           }
 
@@ -294,6 +296,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
 // Function to open the URL in a new window/tab
