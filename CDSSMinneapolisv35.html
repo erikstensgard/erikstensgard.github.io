@@ -595,31 +595,23 @@ function adjustFontSize() {
 adjustFontSize();
 
     // Function to handle row click event
-   async function handleRowClick(item) {
-  // Check if the item has a matching URL in the OMJSON.json data
-  const matchingItem = omData.find(omItem => omItem.Item === item.Item);
-  
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
   if (matchingItem) {
-    // Open the URL associated with the matching item
-    const { URL } = matchingItem;
-    
-    if (URL) {
-      if (isValidURL(URL)) {
-        // Open the URL in a new window/tab
-        window.open(URL, '_blank');
-      } else {
-        console.log('Invalid URL:', URL);
-      }
-    } else {
-      console.log('No URL found for the item:', item.Item);
-    }
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
   } else {
-    // Check if the item has a matching URL in the MinneapolisItemLink.json data
-    const matchingLink = itemLinkData.find(linkItem => linkItem.Name === item.Item);
-  
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
     if (matchingLink) {
       const { URL } = matchingLink;
-      
+
       if (isValidURL(URL)) {
         // Open the URL in a new window/tab
         window.open(URL, '_blank');
@@ -630,7 +622,10 @@ adjustFontSize();
       console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
     }
   }
+  scrollToTop();
+  adjustFontSize();
 }
+
 
 
   // Scroll to the top of the table
