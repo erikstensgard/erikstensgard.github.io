@@ -206,7 +206,7 @@ let historyIndex = -1; // Index of the current selection in the history
     
    // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
 function getMatchingURL(displayText) {
-  const matchingItem = abxLinkData.find(item => item.Name.toLowerCase() === displayText.toLowerCase());
+  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
 }
 
