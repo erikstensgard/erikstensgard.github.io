@@ -252,18 +252,13 @@ function createOMTable(selectedData) {
             const matchingURL = getMatchingURL(contentText);
 
             if (matchingURL) {
-              const contentParts = contentText.split(new RegExp(`(${abxLinkData.map(item => item.Name).join('|')})`, 'gi'));
+              cellContentElement.innerHTML = contentText.replace(
+                new RegExp(matchingURL.Name, 'gi'),
+                `<span class="clickable">${matchingURL.Name}</span>`
+              );
 
-              contentParts.forEach(part => {
-                if (abxLinkData.find(item => item.Name.toLowerCase() === part.toLowerCase())) {
-                  const linkElement = document.createElement('a');
-                  linkElement.href = matchingURL;
-                  linkElement.target = '_blank';
-                  linkElement.textContent = part;
-                  cellContentElement.appendChild(linkElement);
-                } else {
-                  cellContentElement.textContent += part;
-                }
+              cellContentElement.addEventListener('click', () => {
+                window.open(matchingURL.URL);
               });
             } else {
               cellContentElement.textContent = contentText;
@@ -271,18 +266,7 @@ function createOMTable(selectedData) {
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
-            }
-
-            // Add the CSS class for bolded items
-            if (Header === 1) {
               displayCell.classList.add('bold');
-            }
-
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
             }
           }
 
@@ -303,27 +287,6 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
-}
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }
 
 
