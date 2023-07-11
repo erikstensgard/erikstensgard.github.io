@@ -264,11 +264,15 @@ function createOMTable(selectedData) {
               cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
-            } else if (cellContent && isValidURL(getMatchingURL(cellContent))) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                openURL(getMatchingURL(cellContent));
-              });
+            } else if (cellContent) {
+              const matchingURL = getMatchingURL(cellContent);
+              if (matchingURL) {
+                const linkElement = document.createElement('a');
+                linkElement.href = matchingURL;
+                linkElement.target = '_blank';
+                linkElement.textContent = cellContent;
+                cellContentElement.appendChild(linkElement);
+              }
             }
           }
 
@@ -290,6 +294,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
