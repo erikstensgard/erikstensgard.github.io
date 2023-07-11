@@ -204,7 +204,7 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
-// Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
+  // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
 function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
@@ -252,21 +252,29 @@ function createOMTable(selectedData) {
             const matchingURL = getMatchingURL(contentText);
 
             if (matchingURL) {
-              cellContentElement.innerHTML = contentText.replace(
-                new RegExp(matchingURL.Name, 'gi'),
-                `<span class="clickable">${matchingURL.Name}</span>`
-              );
-
-              cellContentElement.addEventListener('click', () => {
-                window.open(matchingURL.URL);
-              });
+              const linkElement = document.createElement('a');
+              linkElement.href = matchingURL;
+              linkElement.target = '_blank';
+              linkElement.textContent = contentText;
+              cellContentElement.appendChild(linkElement);
             } else {
               cellContentElement.textContent = contentText;
             }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
+            }
+
+            // Add the CSS class for bolded items
+            if (Header === 1) {
               displayCell.classList.add('bold');
+            }
+
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => {
+                handleRowClick(matchingItem);
+              });
             }
           }
 
@@ -287,6 +295,29 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
+}
+
+
+
+// Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
+}
+
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 
