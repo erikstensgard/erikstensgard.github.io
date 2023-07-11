@@ -733,7 +733,7 @@ document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjasonData]) => {
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
