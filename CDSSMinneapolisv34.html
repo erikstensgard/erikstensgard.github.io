@@ -419,19 +419,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-function shouldIncludeItemClickable(item) {
-  const odMatch = odData.find(odItem => odItem.Name && odItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase());
-  const odNameContents = odMatch ? odMatch.name && odMatch.name.contents : '';
-
-  if (odMatch && odNameContents && odNameContents.includes('{FLD')) {
-    return true;
-  }
-
-  return false;
-}
-
-
-// Function to create the table with OMJSON data
+    // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -475,6 +463,11 @@ function createOMTable(selectedData) {
               cellContentElement.classList.add('bold');
             }
 
+            // Add the CSS class for bolded items
+            if (Header === 1) {
+              displayCell.classList.add('bold');
+            }
+
             if (Item && shouldIncludeItemClickable(matchingItem)) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
@@ -500,6 +493,21 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
+}
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 
