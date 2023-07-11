@@ -419,17 +419,17 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
- // Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
-  const odMatch = odData.find(odItem => odItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase());
-  const odNameContents = odMatch ? odMatch.name.contents : '';
+  const odMatch = odData.find(odItem => odItem.Name && odItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase());
+  const odNameContents = odMatch ? odMatch.name && odMatch.name.contents : '';
 
-  if (odMatch && odNameContents.includes('{FLD')) {
+  if (odMatch && odNameContents && odNameContents.includes('{FLD')) {
     return true;
   }
 
   return false;
 }
+
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
