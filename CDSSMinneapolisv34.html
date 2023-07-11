@@ -418,7 +418,7 @@ function scrollToTop() { // Add opening curly brace here
     behavior: 'smooth'
   });
 } // Add closing curly brace here
-
+// Function to createOMTable
     function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -493,17 +493,23 @@ function scrollToTop() { // Add opening curly brace here
     resultContainer.appendChild(table);
   }
 }
-
 // Helper function to determine if an item should be excluded from being clickable
 function shouldExcludeItemClickable(name) {
+  if (!name) {
+    return false; // or true, depending on your desired behavior for items without a Name field
+  }
+  
   const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+  
   for (let prefix of excludedPrefixes) {
     if (name.startsWith(prefix)) {
       return true;
     }
   }
+  
   return false;
 }
+
 
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
