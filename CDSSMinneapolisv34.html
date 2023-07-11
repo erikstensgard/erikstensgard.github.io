@@ -181,9 +181,24 @@
       return data;
     }
 
+    // Fetch ItemLink Data
+    async function fetchItemLink() {
+      const response = await fetch('MinneapolisItemLinks.json');
+      const data = await response.json();
+      return data;
+    }
+        // Fetch AbxLink Data
+    async function fetchAbxLink() {
+      const response = await fetch('MinneapolisAbxLinks.json');
+      const data = await response.json();
+      return data;
+    }
+    
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
+let itemLinkData = [];  // ItemLink data
+let abxLinkData = [];  // AbxLink data
 let selectedData = null; // Currently selected data
 let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
@@ -717,11 +732,12 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData()])
-  .then(([omjsonData, odjsonData]) => {
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjasonData]) => {
     omData = omjsonData;
     odData = odjsonData;
-
+    itemLinkData = itemlinkjsonData;
+    abxLinkData = abxlinkjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
