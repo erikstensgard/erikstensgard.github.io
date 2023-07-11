@@ -418,8 +418,9 @@ function scrollToTop() { // Add opening curly brace here
     behavior: 'smooth'
   });
 } // Add closing curly brace here
-// Function to createOMTable
-    function createOMTable(selectedData) {
+
+    // Function to createOMTable
+   function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -467,7 +468,7 @@ function scrollToTop() { // Add opening curly brace here
               displayCell.classList.add('bold');
             }
 
-            if (Item && !shouldExcludeItemClickable(Name)) {
+            if (Item && shouldIncludeItemClickable(Name)) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
@@ -493,21 +494,16 @@ function scrollToTop() { // Add opening curly brace here
     resultContainer.appendChild(table);
   }
 }
-// Helper function to determine if an item should be excluded from being clickable
-function shouldExcludeItemClickable(name) {
-  if (!name) {
-    return false; // or true, depending on your desired behavior for items without a Name field
-  }
-  
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(name) {
   const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-  
   for (let prefix of excludedPrefixes) {
-    if (name.startsWith(prefix)) {
-      return true;
+    if (name && name.startsWith(prefix)) {
+      return false;
     }
   }
-  
-  return false;
+  return true;
 }
 
 
