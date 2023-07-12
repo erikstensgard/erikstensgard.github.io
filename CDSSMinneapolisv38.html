@@ -278,8 +278,11 @@ function createOMTable(selectedData) {
                   linkElement.href = URL;
                   linkElement.target = '_blank';
                   linkElement.textContent = linkText;
-                  linkContainer.appendChild(document.createTextNode(nonLinkText));
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
+
                   currentIndex = match.index + match[0].length;
 
                   matchedLinks.add(linkText);
@@ -287,8 +290,9 @@ function createOMTable(selectedData) {
               });
 
               if (currentIndex < contentText.length) {
-                const nonLinkText = contentText.substring(currentIndex);
-                linkContainer.appendChild(document.createTextNode(nonLinkText));
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
 
               cellContentElement.appendChild(linkContainer);
@@ -335,6 +339,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
 // Function to create the table with ODJSON data
