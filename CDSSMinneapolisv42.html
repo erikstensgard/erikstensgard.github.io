@@ -632,11 +632,12 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData()])
-  .then(([omjsonData, odjsonData]) => {
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
-
+    itemLinkData = itemlinkjsonData;
+    abxLinkData = abxlinkjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
@@ -647,7 +648,6 @@ Promise.all([fetchOMData(), fetchODData()])
   .catch(error => {
     console.error('Error:', error);
   });
-
 
   </script>
 </body>
