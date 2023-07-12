@@ -258,6 +258,8 @@ function createOMTable(selectedData) {
                 .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
                 .sort((a, b) => b.Name.length - a.Name.length);
 
+              const matchedLinks = new Set(); // Store matched links to avoid duplicates
+
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
@@ -265,13 +267,22 @@ function createOMTable(selectedData) {
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
+
+                  // Check if the link text has already been matched in the current cell
+                  if (matchedLinks.has(linkText)) {
+                    continue;
+                  }
+
                   const linkElement = document.createElement('a');
                   linkElement.href = URL;
                   linkElement.target = '_blank';
-                  linkElement.textContent = match[0];
+                  linkElement.textContent = linkText;
                   linkContainer.appendChild(document.createTextNode(nonLinkText));
                   linkContainer.appendChild(linkElement);
                   currentIndex = match.index + match[0].length;
+
+                  matchedLinks.add(linkText);
                 }
               });
 
@@ -323,28 +334,6 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
-}
-
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }
 
 
