@@ -244,11 +244,13 @@ function createOMTable(selectedData) {
         item => item.Row === row && item.Column === column
       );
 
-      const displayCell = document.createElement('td');
-
       if (matchingItems.length > 0) {
+        const displayCell = document.createElement('td');
+        const cellContentElement = document.createElement('div');
+
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText, Name } = matchingItem;
+
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -256,8 +258,6 @@ function createOMTable(selectedData) {
           } else if (cellContent === '' && Item) {
             cellContent = Item;
           }
-
-          const cellContentElement = document.createElement('div');
 
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
@@ -323,37 +323,22 @@ function createOMTable(selectedData) {
             if (Header === 1) {
               displayCell.classList.add('bold');
             }
-
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const matchingURL = getMatchingURL(contentText);
-
-              if (matchingURL) {
-                const rowElement = document.createElement('tr');
-                rowElement.appendChild(displayCell);
-
-                // Add click event to the entire row
-                rowElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-
-                tbody.appendChild(rowElement);
-              } else {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-              }
-            }
           }
-
-          displayCell.appendChild(cellContentElement);
         });
-      }
 
-      bodyRow.appendChild(displayCell);
+        displayCell.appendChild(cellContentElement);
+        bodyRow.appendChild(displayCell);
+      }
     }
 
-    tbody.appendChild(bodyRow);
+    if (bodyRow.childElementCount > 0) {
+      tbody.appendChild(bodyRow);
+
+      // Add click event to the entire row
+      bodyRow.addEventListener('click', () => {
+        handleRowClick(selectedData);
+      });
+    }
   }
 
   table.appendChild(tbody);
@@ -364,8 +349,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-
 
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
@@ -666,10 +649,10 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-    // Function to handle row click event
+// Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    omItem => omItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase()
   );
 
   if (matchingItem) {
@@ -698,8 +681,7 @@ function handleRowClick(item) {
   adjustFontSize();
 }
 
-
-
+    
   // Scroll to the top of the table
 function scrollToTop() { // Add opening curly brace here
   const resultContainer = document.getElementById('resultContainer');
