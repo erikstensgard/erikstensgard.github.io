@@ -254,7 +254,11 @@ function createOMTable(selectedData) {
               const linkContainer = document.createElement('div');
               let currentIndex = 0;
 
-              abxLinkData.forEach(matchingURL => {
+              const sortedMatchingURLs = abxLinkData
+                .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
+                .sort((a, b) => b.Name.length - a.Name.length);
+
+              sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
@@ -320,6 +324,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
