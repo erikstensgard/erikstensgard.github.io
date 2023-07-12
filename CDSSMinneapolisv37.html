@@ -337,7 +337,13 @@ function shouldIncludeItemClickable(item) {
   return true;
 }
 
+// Helper function to get the matching URL from MinneapolisAbxLinks.json
+function getMatchingAbx(displayText) {
+  const matchingItems = abxLinkData.filter(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  return matchingItems.length > 0 ? matchingItems[0] : null;
+}
 
+    
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
