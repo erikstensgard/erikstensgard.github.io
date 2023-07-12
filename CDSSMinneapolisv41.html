@@ -249,50 +249,52 @@ function createOMTable(selectedData) {
           } else {
             const contentText = cellContent;
 
-            if (abxLinkData.length > 0) {
-              const linkContainer = document.createElement('div');
-              const linkTexts = new Set(); // Store unique link texts
-
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-
-                return aIndex - bIndex;
+            if (Item && shouldIncludeRowClickable(matchingItem)) {
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => {
+                handleRowClick(matchingItem);
               });
-
-              sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                let match;
-
-                while ((match = nameRegex.exec(contentText)) !== null) {
-                  const nonLinkText = contentText.substring(match.index, match.index + match[0].length);
-                  const linkText = match[0];
-
-                  // Check if the link text is already added
-                  if (linkTexts.has(linkText)) {
-                    continue;
-                  }
-
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.target = '_blank';
-                  linkElement.textContent = linkText;
-
-                  linkContainer.appendChild(linkElement);
-                  linkTexts.add(linkText);
-                }
-              });
-
-              if (linkContainer.children.length === 0) {
-                cellContentElement.textContent = contentText;
-              } else {
-                cellContentElement.appendChild(linkContainer);
-              }
             } else {
-              cellContentElement.textContent = contentText;
+              if (abxLinkData.length > 0) {
+                const linkContainer = document.createElement('div');
+                const linkTexts = new Set(); // Store unique link texts
+
+                const sortedMatchingURLs = abxLinkData
+                  .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
+                  .sort((a, b) => b.Name.length - a.Name.length);
+
+                sortedMatchingURLs.forEach(matchingURL => {
+                  const { Name, URL } = matchingURL;
+                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                  let match;
+
+                  while ((match = nameRegex.exec(contentText)) !== null) {
+                    const nonLinkText = contentText.substring(match.index, match.index + match[0].length);
+                    const linkText = match[0];
+
+                    // Check if the link text is already added
+                    if (linkTexts.has(linkText)) {
+                      continue;
+                    }
+
+                    const linkElement = document.createElement('a');
+                    linkElement.href = URL;
+                    linkElement.target = '_blank';
+                    linkElement.textContent = linkText;
+
+                    linkContainer.appendChild(linkElement);
+                    linkTexts.add(linkText);
+                  }
+                });
+
+                if (linkContainer.children.length === 0) {
+                  cellContentElement.textContent = contentText;
+                } else {
+                  cellContentElement.appendChild(linkContainer);
+                }
+              } else {
+                cellContentElement.textContent = contentText;
+              }
             }
 
             if (Header === 1) {
@@ -302,17 +304,6 @@ function createOMTable(selectedData) {
             // Add the CSS class for bolded items
             if (Header === 1) {
               displayCell.classList.add('bold');
-            }
-
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-
-              if (matchingURLs.length === 0) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-              }
             }
           }
 
@@ -335,27 +326,6 @@ function createOMTable(selectedData) {
   }
 }
 
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
 
 
 // Function to create the table with ODJSON data
