@@ -396,6 +396,17 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
+fetchItemLink()
+  .then(itemLinkData => {
+    // Save the fetched data and use it in your code
+    // For example, you can store it in a global variable or pass it to relevant functions
+    console.log(itemLinkData); // Use the fetched data as needed
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+    
 // Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
@@ -412,11 +423,12 @@ function handleRowClick(item) {
     if (matchingItem.Item && matchingItem.Item.startsWith('ORZ GTX')) {
       const matchingLink = itemLinkData.find(link => link.Name === matchingItem.Item);
       if (matchingLink) {
-        window.open(matchingLink.URL, '_blank');
+        window.open(matchingLink.URL, '_blank'); // Open the link in a new tab
       }
     }
   }
 }
+
 
 
 // Function to create the table with OMJSON data
