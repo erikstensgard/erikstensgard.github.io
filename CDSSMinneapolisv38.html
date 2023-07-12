@@ -313,10 +313,19 @@ function createOMTable(selectedData) {
               const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
               if (matchingURLs.length === 0) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
+                // Check if the cellContentElement contains only a single text node
+                if (cellContentElement.childNodes.length === 1 && cellContentElement.childNodes[0].nodeType === Node.TEXT_NODE) {
+                  const linkElement = document.createElement('a');
+                  linkElement.href = '#';
+                  linkElement.classList.add('clickable');
+                  linkElement.textContent = cellContentElement.textContent;
+                  linkElement.addEventListener('click', () => {
+                    handleRowClick(matchingItem);
+                  });
+
+                  cellContentElement.textContent = '';
+                  cellContentElement.appendChild(linkElement);
+                }
               }
             }
           }
@@ -339,7 +348,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
