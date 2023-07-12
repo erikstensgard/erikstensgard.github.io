@@ -209,6 +209,7 @@ function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
 }
+
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -246,66 +247,75 @@ function createOMTable(selectedData) {
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
-            const contentText = cellContentElement.textContent;
+            const contentText = cellContent;
             let currentIndex = 0;
 
-            let matchingURL = null;
+            if (abxLinkData.length > 0 && shouldIncludeItemClickable(matchingItem)) {
+              const linkContainer = document.createElement('div');
+              const linkTexts = new Set(); // Store unique link texts
 
-            if (omData.length > 0) {
-              const matchingLink = omData.find(
-                linkItem => linkItem.Name && linkItem.Name.trim().toLowerCase() === Item.trim().toLowerCase()
-              );
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-              if (matchingLink) {
-                matchingURL = matchingLink.URL;
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+
+                return aIndex - bIndex;
+              });
+
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
+
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
+
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
+                  }
+
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText);
+                  currentIndex = match.index + match[0].length;
+                }
+              });
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
-            }
 
-            if (!matchingURL && itemLinkData.length > 0) {
-              const matchingItemLink = itemLinkData.find(
-                linkItem => linkItem.Item && linkItem.Item.trim().toLowerCase() === Item.trim().toLowerCase()
-              );
-
-              if (matchingItemLink) {
-                matchingURL = matchingItemLink.URL;
-              }
-            }
-
-            if (!matchingURL && abxLinkData.length > 0) {
-              const matchingAbxLink = abxLinkData.find(
-                linkItem => contentText.toLowerCase().includes(linkItem.Name.toLowerCase())
-              );
-
-              if (matchingAbxLink) {
-                matchingURL = matchingAbxLink.URL;
-              }
-            }
-
-            if (matchingURL) {
-              const linkElement = document.createElement('a');
-              linkElement.href = matchingURL;
-              linkElement.target = '_blank';
-              linkElement.textContent = contentText;
-
-              cellContentElement.appendChild(linkElement);
+              cellContentElement.appendChild(linkContainer);
             } else {
               cellContentElement.textContent = contentText;
             }
-          }
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-            displayCell.classList.add('bold');
-          }
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
+            }
 
-          if (Item && shouldIncludeItemClickable(matchingItem)) {
-            const matchingURL = getMatchingURL(contentText);
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURL = getMatchingURL(contentText);
 
-            if (!matchingURL) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
+              if (!matchingURL) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
             }
           }
 
@@ -327,7 +337,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
 // Function to open the URL in a new window/tab
