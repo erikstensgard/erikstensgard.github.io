@@ -248,59 +248,7 @@ function createOMTable(selectedData) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
-            let currentIndex = 0;
-
-            if (abxLinkData.length > 0) {
-              const linkContainer = document.createElement('div');
-              const linkTexts = new Set(); // Store unique link texts
-
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-
-const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-
-  return aIndex - bIndex;
-});
-
-              sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                let match;
-
-                while ((match = nameRegex.exec(contentText)) !== null) {
-                  const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0];
-
-                  // Check if the link text is already added
-                  if (linkTexts.has(linkText)) {
-                    continue;
-                  }
-
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.target = '_blank';
-                  linkElement.textContent = linkText;
-
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
-
-                  linkTexts.add(linkText);
-                  currentIndex = match.index + match[0].length;
-                }
-              });
-
-              if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
-              }
-
-              cellContentElement.appendChild(linkContainer);
-            } else {
-              cellContentElement.textContent = contentText;
-            }
+            let currentIndex = 0
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
