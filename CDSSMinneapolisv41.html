@@ -253,11 +253,19 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            if (shouldIncludeAbxLinkItem && abxLinkData.length > 0) {
+            if (shouldIncludeRowClickItem && (omData.length > 0 || itemLinkData.length > 0)) {
               const linkContainer = document.createElement('div');
               const linkTexts = new Set(); // Store unique link texts
 
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+              const matchingURLs = [];
+              if (omData.length > 0) {
+                const omMatchingURLs = omData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+                matchingURLs.push(...omMatchingURLs);
+              }
+              if (itemLinkData.length > 0) {
+                const itemLinkMatchingURLs = itemLinkData.filter(item => contentText.toLowerCase().includes(item.Item.toLowerCase()));
+                matchingURLs.push(...itemLinkMatchingURLs);
+              }
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
                 const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
@@ -340,6 +348,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
