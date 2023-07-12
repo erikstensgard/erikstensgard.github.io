@@ -231,6 +231,9 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
+        const shouldIncludeRowClickItem = matchingItems.some(item => shouldIncludeItemClickable(item));
+        const shouldIncludeAbxLinkItem = matchingItems.every(item => !shouldIncludeItemClickable(item));
+
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText, Name } = matchingItem;
           let cellContent = Text || '';
@@ -250,7 +253,7 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            if (abxLinkData.length > 0) {
+            if (shouldIncludeAbxLinkItem && abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const linkTexts = new Set(); // Store unique link texts
 
@@ -307,7 +310,7 @@ function createOMTable(selectedData) {
               displayCell.classList.add('bold');
             }
 
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
+            if (shouldIncludeRowClickItem && Item && shouldIncludeItemClickable(matchingItem)) {
               const matchingURL = getMatchingURL(contentText);
 
               if (!matchingURL) {
