@@ -334,6 +334,28 @@ function createOMTable(selectedData) {
   }
 }
 
+    // Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
+}
+
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+    
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
