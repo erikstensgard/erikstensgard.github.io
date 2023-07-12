@@ -258,31 +258,21 @@ function createOMTable(selectedData) {
               linkElement.textContent = contentText;
               cellContentElement.appendChild(linkElement);
             } else {
-              const abxMatch = getMatchingAbx(contentText);
-              if (abxMatch) {
-                const matchedText = abxMatch.Name;
-                const textNode = document.createTextNode(contentText);
-                const matchNode = document.createElement('span');
-                matchNode.classList.add('clickable');
-                matchNode.textContent = matchedText;
-                matchNode.addEventListener('click', () => {
-                  openURL(abxMatch.URL);
-                });
-
-                cellContentElement.appendChild(textNode);
-                cellContentElement.appendChild(matchNode);
-              } else {
-                cellContentElement.textContent = contentText;
-              }
+              cellContentElement.textContent = contentText;
             }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
             }
 
+            // Add the CSS class for bolded items
+            if (Header === 1) {
+              displayCell.classList.add('bold');
+            }
+
             if (Item && shouldIncludeItemClickable(matchingItem)) {
-              bodyRow.classList.add('clickable');
-              bodyRow.addEventListener('click', () => {
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
             }
