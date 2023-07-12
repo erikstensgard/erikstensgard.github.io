@@ -254,12 +254,29 @@ function createOMTable(selectedData) {
               const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
               
               if (matchingURLs.length > 0) {
-                const matchingURL = matchingURLs[0].URL;
-                const linkElement = document.createElement('a');
-                linkElement.href = matchingURL;
-                linkElement.target = '_blank';
-                linkElement.textContent = contentText;
-                cellContentElement.appendChild(linkElement);
+                const linkContainer = document.createElement('div');
+                let currentIndex = 0;
+                let lastIndex = 0;
+
+                matchingURLs.forEach(matchingURL => {
+                  const { Name, URL } = matchingURL;
+                  lastIndex = contentText.toLowerCase().indexOf(Name.toLowerCase(), currentIndex);
+                  const nonLinkText = contentText.substring(currentIndex, lastIndex);
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = Name;
+                  linkContainer.appendChild(document.createTextNode(nonLinkText));
+                  linkContainer.appendChild(linkElement);
+                  currentIndex = lastIndex + Name.length;
+                });
+
+                if (currentIndex < contentText.length) {
+                  const nonLinkText = contentText.substring(currentIndex);
+                  linkContainer.appendChild(document.createTextNode(nonLinkText));
+                }
+
+                cellContentElement.appendChild(linkContainer);
               } else {
                 cellContentElement.textContent = contentText;
               }
