@@ -271,13 +271,9 @@ function createOMTable(selectedData) {
             }
 
             if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const textElements = cellContentElement.querySelectorAll('a, span');
-
-              textElements.forEach(textElement => {
-                textElement.classList.add('clickable');
-                textElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => {
+                handleRowClick(matchingItem);
               });
             }
           }
@@ -300,6 +296,8 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
+
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
