@@ -396,7 +396,8 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
- function handleRowClick(item) {
+ // Function to handle row click event
+function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
@@ -405,19 +406,37 @@ adjustFontSize();
     selectedData = matchingItem;
     createOMTable(matchingItem);
     pushHistory(matchingItem.Name);
-    scrollToTop();
-    adjustFontSize();
+  } else {
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
 
-    if (matchingItem.Item && matchingItem.Item.startsWith('ORZ GTX')) {
-      const matchingLink = minneapolisItemLinks.find(link => link.Item === matchingItem.Item);
-      if (matchingLink) {
-        window.open(matchingLink.URL, '_blank');
+    if (matchingLink) {
+      const { URL } = matchingLink;
+
+      if (isValidURL(URL)) {
+        // Open the URL in a new window/tab
+        window.open(URL, '_blank');
+      } else {
+        console.log('Invalid URL:', URL);
       }
+    } else {
+      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
     }
   }
+  scrollToTop();
+  adjustFontSize();
 }
 
-      
+// Function to check if a value is a valid URL
+function isValidURL(value) {
+  try {
+    new URL(value);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
   // Scroll to the top of the table
 function scrollToTop() { // Add opening curly brace here
   const resultContainer = document.getElementById('resultContainer');
