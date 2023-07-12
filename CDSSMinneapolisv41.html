@@ -204,11 +204,22 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
-  // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
+// Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
 function getMatchingURL(displayText) {
-  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-  return matchingItem ? matchingItem.URL : null;
+  const matchingItem = omData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  if (matchingItem) {
+    return null; // Return null if a match is found in MinneapolisOMJSON.json
+  }
+
+  const matchingLinkItem = itemLinkData.find(item => displayText.toLowerCase().includes(item.Item.toLowerCase()));
+  if (matchingLinkItem) {
+    return null; // Return null if a match is found in MinneapolisItemLinks.json
+  }
+
+  const matchingAbxLink = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  return matchingAbxLink ? matchingAbxLink.URL : null;
 }
+
 
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -243,70 +254,79 @@ function createOMTable(selectedData) {
 
           const cellContentElement = document.createElement('div');
 
+          // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
             let currentIndex = 0;
-            const linkContainer = document.createElement('div');
-            const linkTexts = new Set();
 
-            const sortedMatchingURLs = matchingURLs.filter(b => {
-              const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-              const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+              const linkTexts = new Set(); // Store unique link texts
 
-              return aIndex - bIndex;
-            });
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-            sortedMatchingURLs.forEach(matchingURL => {
-              const { Name, URL } = matchingURL;
-              const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-              let match;
+const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
 
-              while ((match = nameRegex.exec(contentText)) !== null) {
-                const nonLinkText = contentText.substring(currentIndex, match.index);
-                const linkText = match[0];
+  return aIndex - bIndex;
+});
 
-                if (linkTexts.has(linkText)) {
-                  continue;
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
+
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
+
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
+                  }
+
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText);
+                  currentIndex = match.index + match[0].length;
                 }
+              });
 
-                const linkElement = document.createElement('a');
-                linkElement.href = URL;
-                linkElement.target = '_blank';
-                linkElement.textContent = linkText;
-
-                const nonLinkTextNode = document.createTextNode(nonLinkText);
-                linkContainer.appendChild(nonLinkTextNode);
-                linkContainer.appendChild(linkElement);
-
-                linkTexts.add(linkText);
-                currentIndex = match.index + match[0].length;
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
-            });
 
-            if (currentIndex < contentText.length) {
-              const remainingText = contentText.substring(currentIndex);
-              const remainingTextNode = document.createTextNode(remainingText);
-              linkContainer.appendChild(remainingTextNode);
+              cellContentElement.appendChild(linkContainer);
+            } else {
+              cellContentElement.textContent = contentText;
             }
 
-            cellContentElement.appendChild(linkContainer);
-          }
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
+            }
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-            displayCell.classList.add('bold');
-          }
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURL = getMatchingURL(contentText);
 
-          if (Item && shouldIncludeItemClickable(matchingItem)) {
-            const matchingURL = getMatchingURL(contentText);
-
-            if (!matchingURL) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
+              if (!matchingURL) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
             }
           }
 
