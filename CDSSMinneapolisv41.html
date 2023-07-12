@@ -209,6 +209,7 @@ function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
 }
+
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -230,9 +231,6 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
-        const shouldIncludeRowClickItem = matchingItems.some(item => shouldIncludeItemClickable(item));
-        const shouldIncludeAbxLinkItem = matchingItems.every(item => !shouldIncludeItemClickable(item));
-
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText, Name } = matchingItem;
           let cellContent = Text || '';
@@ -252,26 +250,18 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            if (shouldIncludeRowClickItem && (omData.length > 0 || itemLinkData.length > 0)) {
+            if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const linkTexts = new Set(); // Store unique link texts
 
-              const matchingURLs = [];
-              if (omData.length > 0) {
-                const omMatchingURLs = omData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-                matchingURLs.push(...omMatchingURLs);
-              }
-              if (itemLinkData.length > 0) {
-                const itemLinkMatchingURLs = itemLinkData.filter(item => contentText.toLowerCase().includes(item.Item.toLowerCase()));
-                matchingURLs.push(...itemLinkMatchingURLs);
-              }
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
 
-                return aIndex - bIndex;
-              });
+  return aIndex - bIndex;
+});
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
@@ -311,21 +301,26 @@ function createOMTable(selectedData) {
             } else {
               cellContentElement.textContent = contentText;
             }
+
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
+            }
+
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURL = getMatchingURL(contentText);
+
+              if (!matchingURL) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
+            }
           }
 
           displayCell.appendChild(cellContentElement);
         });
-
-        if (shouldIncludeRowClickItem) {
-          const matchingURL = matchingItems.find(item => shouldIncludeItemClickable(item));
-
-          if (!matchingURL) {
-            displayCell.classList.add('clickable');
-            displayCell.addEventListener('click', () => {
-              handleRowClick(matchingItems[0]);
-            });
-          }
-        }
       }
 
       bodyRow.appendChild(displayCell);
