@@ -247,7 +247,7 @@ function createOMTable(selectedData) {
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
-            const contentText = cellContent;
+            const contentText = cellContentElement.textContent;
             let currentIndex = 0;
 
             let matchingURL = null;
