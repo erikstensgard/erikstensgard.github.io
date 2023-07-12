@@ -308,22 +308,6 @@ function createOMTable(selectedData) {
               }
 
               cellContentElement.appendChild(linkContainer);
-
-              if (Header === 1) {
-                cellContentElement.classList.add('bold');
-                displayCell.classList.add('bold');
-              }
-
-              if (Item && shouldIncludeItemClickable(matchingItem)) {
-                const matchingURL = getMatchingURL(contentText);
-
-                if (!matchingURL) {
-                  displayCell.classList.add('clickable');
-                  displayCell.addEventListener('click', () => {
-                    handleRowClick(matchingItem);
-                  });
-                }
-              }
             } else {
               cellContentElement.textContent = contentText;
             }
@@ -331,6 +315,17 @@ function createOMTable(selectedData) {
 
           displayCell.appendChild(cellContentElement);
         });
+
+        if (shouldIncludeRowClickItem) {
+          const matchingURL = matchingItems.find(item => shouldIncludeItemClickable(item));
+
+          if (!matchingURL) {
+            displayCell.classList.add('clickable');
+            displayCell.addEventListener('click', () => {
+              handleRowClick(matchingItems[0]);
+            });
+          }
+        }
       }
 
       bodyRow.appendChild(displayCell);
