@@ -258,7 +258,26 @@ function createOMTable(selectedData) {
               linkElement.textContent = contentText;
               cellContentElement.appendChild(linkElement);
             } else {
-              cellContentElement.textContent = contentText;
+              const abxMatch = getMatchingAbx(contentText);
+              if (abxMatch) {
+                const matchedText = abxMatch.Name;
+                const linkElement = document.createElement('a');
+                linkElement.href = abxMatch.URL;
+                linkElement.target = '_blank';
+
+                const textNode = document.createTextNode(contentText);
+                const matchNode = document.createElement('span');
+                matchNode.classList.add('clickable');
+                matchNode.textContent = matchedText;
+                matchNode.addEventListener('click', () => {
+                  openURL(abxMatch.URL);
+                });
+
+                cellContentElement.appendChild(textNode);
+                cellContentElement.appendChild(matchNode);
+              } else {
+                cellContentElement.textContent = contentText;
+              }
             }
 
             if (Header === 1) {
@@ -296,9 +315,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
