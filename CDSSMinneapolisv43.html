@@ -417,18 +417,27 @@ function handleRowClick(item) {
     selectedData = matchingItem;
     createOMTable(matchingItem);
     pushHistory(matchingItem.Name);
-    scrollToTop();
-    adjustFontSize();
+  } else {
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
 
-    if (matchingItem.Item && matchingItem.Item.startsWith('ORZ GTX')) {
-      const matchingLink = itemLinkData.find(link => link.Name === matchingItem.Item);
-      if (matchingLink) {
-        window.open(matchingLink.URL, '_blank'); // Open the link in a new tab
+    if (matchingLink) {
+      const { URL } = matchingLink;
+
+      if (isValidURL(URL)) {
+        // Open the URL in a new window/tab
+        window.open(URL, '_blank');
+      } else {
+        console.log('Invalid URL:', URL);
       }
+    } else {
+      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
     }
   }
+  scrollToTop();
+  adjustFontSize();
 }
-
 
 
 // Function to create the table with OMJSON data
