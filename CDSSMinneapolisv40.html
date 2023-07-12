@@ -248,6 +248,7 @@ function createOMTable(selectedData) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
+            let currentIndex = 0;
 
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
@@ -331,7 +332,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
