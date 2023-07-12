@@ -254,9 +254,14 @@ function createOMTable(selectedData) {
               const linkContainer = document.createElement('div');
               const linkTexts = new Set(); // Store unique link texts
 
-              const sortedMatchingURLs = abxLinkData
-                .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
-                .sort((a, b) => b.Name.length - a.Name.length);
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+
+const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+
+  return aIndex - bIndex;
+});
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
