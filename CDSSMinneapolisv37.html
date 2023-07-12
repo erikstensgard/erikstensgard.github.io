@@ -258,31 +258,21 @@ function createOMTable(selectedData) {
               linkElement.textContent = contentText;
               cellContentElement.appendChild(linkElement);
             } else {
-              const abxMatch = getMatchingAbx(contentText);
-              if (abxMatch) {
-                const matchedText = abxMatch.Name;
-                const textNode = document.createTextNode(contentText);
-                const matchNode = document.createElement('span');
-                matchNode.classList.add('clickable');
-                matchNode.textContent = matchedText;
-                matchNode.addEventListener('click', () => {
-                  openURL(abxMatch.URL);
-                });
-
-                cellContentElement.appendChild(textNode);
-                cellContentElement.appendChild(matchNode);
-              } else {
-                cellContentElement.textContent = contentText;
-              }
+              cellContentElement.textContent = contentText;
             }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
             }
 
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              displayCell.classList.add('clickable');
-              displayCell.addEventListener('click', () => {
+            // Add the CSS class for bolded items
+            if (Header === 1) {
+              displayCell.classList.add('bold');
+            }
+
+            if (Item && isMatchingTextClickable(cellContent)) {
+              cellContentElement.classList.add('clickable');
+              cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
             }
@@ -307,13 +297,14 @@ function createOMTable(selectedData) {
   }
 }
 
+
+
 // Function to open the URL in a new window/tab
 function openURL(url) {
   window.open(url, '_blank');
 }
 
 
-// Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
   const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
 
@@ -325,21 +316,15 @@ function shouldIncludeItemClickable(item) {
     }
   }
 
-  const abxMatch = getMatchingAbx(item.Item);
-  if (abxMatch) {
-    return true;
-  }
-
-  return false;
+  return !getMatchingURL(item.DisplayText);
 }
 
-// Helper function to get the matching URL from MinneapolisAbxLinks.json
-function getMatchingAbx(displayText) {
-  const matchingItems = abxLinkData.filter(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-  return matchingItems.length > 0 ? matchingItems[0] : null;
+function isMatchingTextClickable(displayText) {
+  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  return matchingItem ? getMatchingURL(displayText) !== null : true;
 }
 
-    
+
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
@@ -639,7 +624,7 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-   // Function to handle row click event
+    // Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -670,6 +655,7 @@ function handleRowClick(item) {
   scrollToTop();
   adjustFontSize();
 }
+
 
 
   // Scroll to the top of the table
