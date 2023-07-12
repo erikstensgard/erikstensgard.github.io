@@ -270,10 +270,10 @@ function createOMTable(selectedData) {
               displayCell.classList.add('bold');
             }
 
-            if (Item && isMatchingTextClickable(cellContent)) {
+            if (DisplayText && isMatchingTextClickable(DisplayText)) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
+                openURL(getMatchingURL(DisplayText));
               });
             }
           }
@@ -296,8 +296,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
