@@ -334,7 +334,12 @@ function shouldIncludeItemClickable(item) {
     }
   }
 
-  return true;
+  const abxMatch = getMatchingAbx(item.Item);
+  if (abxMatch) {
+    return true;
+  }
+
+  return false;
 }
 
 // Helper function to get the matching URL from MinneapolisAbxLinks.json
