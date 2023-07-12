@@ -243,75 +243,81 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-          const linkContainer = document.createElement('div');
-          const nonLinkTextContainer = document.createElement('span');
-          const linkTexts = new Set(); // Store unique link texts
 
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
-            const sortedMatchingURLs = abxLinkData
-              .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
-              .sort((a, b) => b.Name.length - a.Name.length);
 
-            let currentIndex = 0;
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+              let currentIndex = 0;
 
-            sortedMatchingURLs.forEach(matchingURL => {
-              const { Name, URL } = matchingURL;
-              const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-              let match;
+              const sortedMatchingURLs = abxLinkData
+                .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
+                .sort((a, b) => b.Name.length - a.Name.length);
 
-              while ((match = nameRegex.exec(contentText)) !== null) {
-                const nonLinkText = contentText.substring(currentIndex, match.index);
-                const linkText = match[0];
+              const matchedLinks = new Set(); // Store matched links to avoid duplicates
 
-                const nonLinkTextNode = document.createTextNode(nonLinkText);
-                nonLinkTextContainer.appendChild(nonLinkTextNode);
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-                // Check if the link text is already added
-                if (!linkTexts.has(linkText)) {
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
+
+                  // Check if the link text has already been matched in the current cell
+                  if (matchedLinks.has(linkText)) {
+                    continue;
+                  }
+
                   const linkElement = document.createElement('a');
                   linkElement.href = URL;
                   linkElement.target = '_blank';
                   linkElement.textContent = linkText;
 
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
-                  linkTexts.add(linkText);
+
+                  currentIndex = match.index + match[0].length;
+
+                  matchedLinks.add(linkText);
                 }
+              });
 
-                currentIndex = match.index + match[0].length;
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
-            });
 
-            if (currentIndex < contentText.length) {
-              const remainingText = contentText.substring(currentIndex);
-              const remainingTextNode = document.createTextNode(remainingText);
-              nonLinkTextContainer.appendChild(remainingTextNode);
+              cellContentElement.appendChild(linkContainer);
+            } else {
+              cellContentElement.textContent = contentText;
             }
 
-            cellContentElement.appendChild(nonLinkTextContainer);
-            cellContentElement.appendChild(linkContainer);
-          }
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+            }
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-          }
+            // Add the CSS class for bolded items
+            if (Header === 1) {
+              displayCell.classList.add('bold');
+            }
 
-          // Add the CSS class for bolded items
-          if (Header === 1) {
-            displayCell.classList.add('bold');
-          }
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-          if (Item && shouldIncludeItemClickable(matchingItem)) {
-            const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-
-            if (matchingURLs.length === 0) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
+              if (matchingURLs.length === 0) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
             }
           }
 
@@ -333,7 +339,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to open the URL in a new window/tab
 function openURL(url) {
