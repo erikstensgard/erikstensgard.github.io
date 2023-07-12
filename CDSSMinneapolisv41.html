@@ -209,7 +209,6 @@ function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
 }
-
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -249,73 +248,55 @@ function createOMTable(selectedData) {
           } else {
             const contentText = cellContent;
             let currentIndex = 0;
+            let isClickable = false;
 
-            if (abxLinkData.length > 0) {
-              const linkContainer = document.createElement('div');
-              const linkTexts = new Set(); // Store unique link texts
+            const clickableItems = omData.concat(odData).concat(abxLinkData);
 
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+            clickableItems.forEach(clickableItem => {
+              const clickableItemName = clickableItem.Name.trim().toLowerCase();
 
-const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-
-  return aIndex - bIndex;
-});
-
-              sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+              if (contentText.toLowerCase().includes(clickableItemName)) {
+                const linkContainer = document.createElement('div');
+                const nameRegex = new RegExp(`\\b${clickableItemName}\\b`, 'gi');
                 let match;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
                   const linkText = match[0];
 
-                  // Check if the link text is already added
-                  if (linkTexts.has(linkText)) {
-                    continue;
+                  const linkElement = document.createElement('a');
+
+                  if (clickableItem.URL) {
+                    linkElement.href = clickableItem.URL;
+                    linkElement.target = '_blank';
+                  } else {
+                    linkElement.classList.add('clickable');
+                    linkElement.addEventListener('click', () => {
+                      handleRowClick(clickableItem);
+                    });
                   }
 
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.target = '_blank';
                   linkElement.textContent = linkText;
 
                   const nonLinkTextNode = document.createTextNode(nonLinkText);
                   linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText);
                   currentIndex = match.index + match[0].length;
+                  isClickable = true;
                 }
-              });
 
-              if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
+                cellContentElement.appendChild(linkContainer);
               }
+            });
 
-              cellContentElement.appendChild(linkContainer);
-            } else {
+            if (!isClickable) {
               cellContentElement.textContent = contentText;
             }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
               displayCell.classList.add('bold');
-            }
-
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const matchingURL = getMatchingURL(contentText);
-
-              if (!matchingURL) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-              }
             }
           }
 
@@ -336,27 +317,6 @@ const sortedMatchingURLs = matchingURLs.sort((a, b) => {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
-}
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }
 
 
