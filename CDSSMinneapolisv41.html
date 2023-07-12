@@ -204,31 +204,7 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
-  // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
-function getMatchingURL(displayText) {
-  const matchingItem = omData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingItem) {
-    return matchingItem.URL;
-  }
-
-  const matchingItemLink = itemLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingItemLink) {
-    return matchingItemLink.URL;
-  }
-
-  const matchingAbxLink = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingAbxLink) {
-    return matchingAbxLink.URL;
-  }
-
-  return null;
-}
-
-
-function createOMTable(selectedData) {
+ function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -268,10 +244,16 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
+            console.log('Checking contentText:', contentText);
+
             const abxLink = abxLinkData.find(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
             const itemLink = itemLinkData.find(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
+            console.log('abxLink:', abxLink);
+            console.log('itemLink:', itemLink);
+
             if (abxLink) {
+              console.log('Adding ABX link');
               const linkElement = document.createElement('a');
               linkElement.href = abxLink.URL;
               linkElement.target = '_blank';
@@ -279,6 +261,7 @@ function createOMTable(selectedData) {
 
               cellContentElement.appendChild(linkElement);
             } else if (itemLink) {
+              console.log('Adding Item link');
               const linkElement = document.createElement('a');
               linkElement.href = itemLink.URL;
               linkElement.target = '_blank';
@@ -325,6 +308,27 @@ function createOMTable(selectedData) {
   }
 }
 
+function getMatchingURL(displayText) {
+  const matchingItem = omData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+
+  if (matchingItem) {
+    return matchingItem.URL;
+  }
+
+  const matchingItemLink = itemLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+
+  if (matchingItemLink) {
+    return matchingItemLink.URL;
+  }
+
+  const matchingAbxLink = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+
+  if (matchingAbxLink) {
+    return matchingAbxLink.URL;
+  }
+
+  return null;
+}
 
 // Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
@@ -788,13 +792,12 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
-// Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
+    abxLinkData = abxlinkjsonData;
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
@@ -805,8 +808,6 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
   .catch(error => {
     console.error('Error:', error);
   });
-
-
   </script>
 </body>
 
