@@ -204,7 +204,13 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
- function createOMTable(selectedData) {
+  // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
+function getMatchingURL(displayText) {
+  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  return matchingItem ? matchingItem.URL : null;
+}
+
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -244,30 +250,46 @@ let historyIndex = -1; // Index of the current selection in the history
             const contentText = cellContent;
             let currentIndex = 0;
 
-            console.log('Checking contentText:', contentText);
+             erCase().indexOf(b.Name.toLowerCase());
 
-            const abxLink = abxLinkData.find(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
-            const itemLink = itemLinkData.find(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+  return aIndex - bIndex;
+});
 
-            console.log('abxLink:', abxLink);
-            console.log('itemLink:', itemLink);
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-            if (abxLink) {
-              console.log('Adding ABX link');
-              const linkElement = document.createElement('a');
-              linkElement.href = abxLink.URL;
-              linkElement.target = '_blank';
-              linkElement.textContent = contentText;
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
 
-              cellContentElement.appendChild(linkElement);
-            } else if (itemLink) {
-              console.log('Adding Item link');
-              const linkElement = document.createElement('a');
-              linkElement.href = itemLink.URL;
-              linkElement.target = '_blank';
-              linkElement.textContent = contentText;
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
+                  }
 
-              cellContentElement.appendChild(linkElement);
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText);
+                  currentIndex = match.index + match[0].length;
+                }
+              });
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
+              }
+
+              cellContentElement.appendChild(linkContainer);
             } else {
               cellContentElement.textContent = contentText;
             }
@@ -308,27 +330,11 @@ let historyIndex = -1; // Index of the current selection in the history
   }
 }
 
-function getMatchingURL(displayText) {
-  const matchingItem = omData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingItem) {
-    return matchingItem.URL;
-  }
-
-  const matchingItemLink = itemLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingItemLink) {
-    return matchingItemLink.URL;
-  }
-
-  const matchingAbxLink = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-
-  if (matchingAbxLink) {
-    return matchingAbxLink.URL;
-  }
-
-  return null;
+// Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
 }
+
 
 // Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
@@ -345,7 +351,39 @@ function shouldIncludeItemClickable(item) {
   return true;
 }
 
+  // Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingLink) {
+      const { URL } = matchingLink;
+
+      if (isValidURL(URL)) {
+        // Open the URL in a new window/tab
+        window.open(URL, '_blank');
+      } else {
+        console.log('Invalid URL:', URL);
+      }
+    } else {
+      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
+    }
+  }
+  scrollToTop();
+  adjustFontSize();
+}
+
+    
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
@@ -645,39 +683,6 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-    // Function to handle row click event
-function handleRowClick(item) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    const matchingLink = itemLinkData.find(
-      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
-
-    if (matchingLink) {
-      const { URL } = matchingLink;
-
-      if (isValidURL(URL)) {
-        // Open the URL in a new window/tab
-        window.open(URL, '_blank');
-      } else {
-        console.log('Invalid URL:', URL);
-      }
-    } else {
-      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
-    }
-  }
-  scrollToTop();
-  adjustFontSize();
-}
-
-
 
   // Scroll to the top of the table
 function scrollToTop() { // Add opening curly brace here
@@ -792,12 +797,13 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
+// Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData;
+    abxLinkData = abxlinkjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
@@ -808,6 +814,8 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
   .catch(error => {
     console.error('Error:', error);
   });
+
+
   </script>
 </body>
 
