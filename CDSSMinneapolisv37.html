@@ -244,41 +244,45 @@ function createOMTable(selectedData) {
 
           const cellContentElement = document.createElement('div');
 
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-            displayCell.classList.add('bold');
-          }
-
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
+            const matchingURL = getMatchingURL(contentText);
 
-            const abxMatch = getMatchingAbx(contentText);
-            if (abxMatch) {
-              const matchedText = abxMatch.Name;
+            if (matchingURL) {
               const linkElement = document.createElement('a');
-              linkElement.href = abxMatch.URL;
+              linkElement.href = matchingURL;
               linkElement.target = '_blank';
-
-              const textNode = document.createTextNode(contentText);
-              const matchNode = document.createElement('span');
-              matchNode.classList.add('clickable');
-              matchNode.textContent = matchedText;
-              matchNode.addEventListener('click', () => {
-                openURL(abxMatch.URL);
-              });
-
-              cellContentElement.appendChild(textNode);
-              cellContentElement.appendChild(matchNode);
+              linkElement.textContent = contentText;
+              cellContentElement.appendChild(linkElement);
             } else {
-              cellContentElement.textContent = contentText;
+              const abxMatch = getMatchingAbx(contentText);
+              if (abxMatch) {
+                const matchedText = abxMatch.Name;
+                const textNode = document.createTextNode(contentText);
+                const matchNode = document.createElement('span');
+                matchNode.classList.add('clickable');
+                matchNode.textContent = matchedText;
+                matchNode.addEventListener('click', () => {
+                  openURL(abxMatch.URL);
+                });
+
+                cellContentElement.appendChild(textNode);
+                cellContentElement.appendChild(matchNode);
+              } else {
+                cellContentElement.textContent = contentText;
+              }
+            }
+
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
             }
 
             if (Item && shouldIncludeItemClickable(matchingItem)) {
-              bodyRow.classList.add('clickable');
-              bodyRow.addEventListener('click', () => {
+              displayCell.classList.add('clickable');
+              displayCell.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
             }
@@ -302,7 +306,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
