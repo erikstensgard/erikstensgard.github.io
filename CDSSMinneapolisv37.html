@@ -249,14 +249,20 @@ function createOMTable(selectedData) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
-            const matchingURL = getMatchingURL(contentText);
 
-            if (matchingURL) {
-              const linkElement = document.createElement('a');
-              linkElement.href = matchingURL;
-              linkElement.target = '_blank';
-              linkElement.textContent = contentText;
-              cellContentElement.appendChild(linkElement);
+            if (abxLinkData.length > 0) {
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+              
+              if (matchingURLs.length > 0) {
+                const matchingURL = matchingURLs[0].URL;
+                const linkElement = document.createElement('a');
+                linkElement.href = matchingURL;
+                linkElement.target = '_blank';
+                linkElement.textContent = contentText;
+                cellContentElement.appendChild(linkElement);
+              } else {
+                cellContentElement.textContent = contentText;
+              }
             } else {
               cellContentElement.textContent = contentText;
             }
@@ -270,10 +276,10 @@ function createOMTable(selectedData) {
               displayCell.classList.add('bold');
             }
 
-            if (DisplayText && isMatchingTextClickable(DisplayText)) {
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
-                openURL(getMatchingURL(DisplayText));
+                handleRowClick(matchingItem);
               });
             }
           }
@@ -297,12 +303,14 @@ function createOMTable(selectedData) {
   }
 }
 
+
 // Function to open the URL in a new window/tab
 function openURL(url) {
   window.open(url, '_blank');
 }
 
 
+// Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
   const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
 
@@ -314,12 +322,7 @@ function shouldIncludeItemClickable(item) {
     }
   }
 
-  return !getMatchingURL(item.DisplayText);
-}
-
-function isMatchingTextClickable(displayText) {
-  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-  return matchingItem ? getMatchingURL(displayText) !== null : true;
+  return true;
 }
 
 
