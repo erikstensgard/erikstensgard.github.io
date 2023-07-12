@@ -310,11 +310,12 @@ function createOMTable(selectedData) {
             }
 
             if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const matchingURL = getMatchingURL(cellContent);
-              if (matchingURL) {
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+
+              if (matchingURLs.length === 0) {
                 cellContentElement.classList.add('clickable');
                 cellContentElement.addEventListener('click', () => {
-                  openURL(matchingURL);
+                  handleRowClick(matchingItem);
                 });
               }
             }
