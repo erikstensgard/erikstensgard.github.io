@@ -249,61 +249,49 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            const matchingURLs = [...abxLinkData, ...itemLinkData].filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+            const matchingURLs = itemLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+            if (matchingURLs.length > 0) {
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-  return aIndex - bIndex;
-});
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
 
-            sortedMatchingURLs.forEach(matchingURL => {
-              const { Name, URL } = matchingURL;
-              const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-              let match;
+                  // Check if the link text is already added
+                  if (cellContentElement.textContent.includes(linkText)) {
+                    continue;
+                  }
 
-              while ((match = nameRegex.exec(contentText)) !== null) {
-                const nonLinkText = contentText.substring(currentIndex, match.index);
-                const linkText = match[0];
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
 
-                // Check if the link text is already added
-                if (cellContentElement.textContent.includes(linkText)) {
-                  continue;
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkElement.appendChild(nonLinkTextNode);
+                  cellContentElement.appendChild(linkElement);
+
+                  currentIndex = match.index + match[0].length;
                 }
+              });
+            } else {
+              const matchingAbxURL = abxLinkData.find(
+                abxItem => contentText.toLowerCase().includes(abxItem.Name.toLowerCase())
+              );
+
+              if (matchingAbxURL) {
+                const { URL } = matchingAbxURL;
 
                 const linkElement = document.createElement('a');
                 linkElement.href = URL;
                 linkElement.target = '_blank';
-                linkElement.textContent = linkText;
+                linkElement.textContent = matchingAbxURL.Name;
 
-                const nonLinkTextNode = document.createTextNode(nonLinkText);
-                linkElement.appendChild(nonLinkTextNode);
                 cellContentElement.appendChild(linkElement);
-
-                currentIndex = match.index + match[0].length;
-              }
-            });
-
-            if (currentIndex < contentText.length) {
-              const remainingText = contentText.substring(currentIndex);
-              const remainingTextNode = document.createTextNode(remainingText);
-              cellContentElement.appendChild(remainingTextNode);
-            }
-
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-              displayCell.classList.add('bold');
-            }
-
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
-              const matchingURL = getMatchingURL(contentText);
-
-              if (!matchingURL) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
               }
             }
           }
