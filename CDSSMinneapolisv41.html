@@ -695,20 +695,19 @@ function handleRowClick(item) {
       } else {
         console.log('Invalid URL:', URL);
       }
-    } else if (!isRowClickable(item)) {
+    } else {
       const matchingURL = getMatchingURL(item.Item);
 
-      if (matchingURL) {
+      if (matchingURL && !isRowClickable(item)) {
         window.open(matchingURL, '_blank');
       } else {
-        console.log('No matching item found in MinneapolisOMJSON.json, MinneapolisItemLinks.json, or MinneapolisAbxLinks.json');
+        console.log('No matching item found in MinneapolisOMJSON.json or MinneapolisItemLinks.json');
       }
     }
   }
   scrollToTop();
   adjustFontSize();
 }
-
 
   // Scroll to the top of the table
 function scrollToTop() { // Add opening curly brace here
