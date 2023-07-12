@@ -671,7 +671,6 @@ function isRowClickable(item) {
   return rowClickableItems.some(rowItem => rowItem.Item === item.Item);
 }
 
-// Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -698,15 +697,13 @@ function handleRowClick(item) {
     } else {
       const matchingURL = getMatchingURL(item.Item);
 
-      if (matchingURL && !isRowClickable(item)) {
+      if (matchingURL) {
         window.open(matchingURL, '_blank');
       } else {
         console.log('No matching item found in MinneapolisOMJSON.json or MinneapolisItemLinks.json');
       }
     }
   }
-  scrollToTop();
-  adjustFontSize();
 }
 
   // Scroll to the top of the table
