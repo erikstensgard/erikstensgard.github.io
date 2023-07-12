@@ -210,6 +210,21 @@ function getMatchingURL(displayText) {
   return matchingItem ? matchingItem.URL : null;
 }
 
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeRowClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -324,27 +339,6 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
-}
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }
 
 
