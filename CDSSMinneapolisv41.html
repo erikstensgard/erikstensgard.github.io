@@ -393,16 +393,7 @@ adjustFontSize();
         selectedData = matchingItem;
         createOMTable(matchingItem);
         pushHistory(matchingItem.Name);
-      } else {
-        const matchingItemIndex = odData.findIndex(
-          odItem => odItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-        );
-
-        if (matchingItemIndex !== -1) {
-          selectedData = odData[matchingItemIndex];
-          createODTable(selectedData);
-        }
-      }
+      } 
       scrollToTop()
       adjustFontSize();
     }
