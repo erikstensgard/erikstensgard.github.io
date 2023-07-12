@@ -210,21 +210,6 @@ function getMatchingURL(displayText) {
   return matchingItem ? matchingItem.URL : null;
 }
 
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeRowClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -263,62 +248,74 @@ function createOMTable(selectedData) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent;
+            let currentIndex = 0;
 
-            if (Item && shouldIncludeRowClickable(matchingItem)) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
-            } else {
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const linkTexts = new Set(); // Store unique link texts
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+              const linkTexts = new Set(); // Store unique link texts
 
-                const sortedMatchingURLs = abxLinkData
-                  .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
-                  .sort((a, b) => b.Name.length - a.Name.length);
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
+const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(match.index, match.index + match[0].length);
-                    const linkText = match[0];
+  return aIndex - bIndex;
+});
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.target = '_blank';
-                    linkElement.textContent = linkText;
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0];
 
-                    linkContainer.appendChild(linkElement);
-                    linkTexts.add(linkText);
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
                   }
-                });
 
-                if (linkContainer.children.length === 0) {
-                  cellContentElement.textContent = contentText;
-                } else {
-                  cellContentElement.appendChild(linkContainer);
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText);
+                  currentIndex = match.index + match[0].length;
                 }
-              } else {
-                cellContentElement.textContent = contentText;
+              });
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
+
+              cellContentElement.appendChild(linkContainer);
+            } else {
+              cellContentElement.textContent = contentText;
             }
 
             if (Header === 1) {
               cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
             }
 
-            // Add the CSS class for bolded items
-            if (Header === 1) {
-              displayCell.classList.add('bold');
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURL = getMatchingURL(contentText);
+
+              if (!matchingURL) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
             }
           }
 
@@ -341,6 +338,26 @@ function createOMTable(selectedData) {
   }
 }
 
+// Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
+}
+
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
 
 
 // Function to create the table with ODJSON data
@@ -642,7 +659,19 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-    // Function to handle row click event
+    // Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
+function getMatchingURL(displayText) {
+  const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
+  return matchingItem ? matchingItem.URL : null;
+}
+
+// Helper function to check if a row item is already present as a clickable item
+function isRowClickable(item) {
+  const rowClickableItems = omData.concat(itemLinkData).concat(abxLinkData);
+  return rowClickableItems.some(rowItem => rowItem.Item === item.Item);
+}
+
+// Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -666,14 +695,19 @@ function handleRowClick(item) {
       } else {
         console.log('Invalid URL:', URL);
       }
-    } else {
-      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
+    } else if (!isRowClickable(item)) {
+      const matchingURL = getMatchingURL(item.Item);
+
+      if (matchingURL) {
+        window.open(matchingURL, '_blank');
+      } else {
+        console.log('No matching item found in MinneapolisOMJSON.json, MinneapolisItemLinks.json, or MinneapolisAbxLinks.json');
+      }
     }
   }
   scrollToTop();
   adjustFontSize();
 }
-
 
 
   // Scroll to the top of the table
