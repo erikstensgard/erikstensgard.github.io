@@ -359,7 +359,39 @@ function shouldIncludeItemClickable(item) {
   return true;
 }
 
+  // Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
 
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingLink) {
+      const { URL } = matchingLink;
+
+      if (isValidURL(URL)) {
+        // Open the URL in a new window/tab
+        window.open(URL, '_blank');
+      } else {
+        console.log('Invalid URL:', URL);
+      }
+    } else {
+      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
+    }
+  }
+  scrollToTop();
+  adjustFontSize();
+}
+
+    
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
   const table = document.createElement('table');
@@ -658,39 +690,6 @@ function adjustFontSize() {
 
 // Call the function initially
 adjustFontSize();
-
-    // Function to handle row click event
-function handleRowClick(item) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    const matchingLink = itemLinkData.find(
-      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
-
-    if (matchingLink) {
-      const { URL } = matchingLink;
-
-      if (isValidURL(URL)) {
-        // Open the URL in a new window/tab
-        window.open(URL, '_blank');
-      } else {
-        console.log('Invalid URL:', URL);
-      }
-    } else {
-      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
-    }
-  }
-  scrollToTop();
-  adjustFontSize();
-}
-
 
 
   // Scroll to the top of the table
