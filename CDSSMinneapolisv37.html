@@ -277,10 +277,12 @@ function createOMTable(selectedData) {
             }
 
             if (Item && shouldIncludeItemClickable(matchingItem)) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
+              if (abxLinkData.length > 0 && matchingURLs.length === 0) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
             }
           }
 
