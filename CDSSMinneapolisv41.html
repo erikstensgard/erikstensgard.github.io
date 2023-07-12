@@ -204,42 +204,38 @@ let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
     
-// Helper function to check if a matching URL exists in the MinneapolisAbxLink.json file
 function getMatchingURL(displayText) {
   const matchingItem = omData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-  if (matchingItem) {
-    return null; // Return null if a match is found in MinneapolisOMJSON.json
-  }
-
-  const matchingLinkItem = itemLinkData.find(item => displayText.toLowerCase().includes(item.Item.toLowerCase()));
-  if (matchingLinkItem) {
-    return null; // Return null if a match is found in MinneapolisItemLinks.json
-  }
-
-  const matchingAbxLink = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
-  return matchingAbxLink ? matchingAbxLink.URL : null;
+  return matchingItem ? null : abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
 }
+function createOMTable() {
+  const tableContainer = document.getElementById('table-container');
+  tableContainer.innerHTML = '';
 
-
-function createOMTable(selectedData) {
   const table = document.createElement('table');
-  table.classList.add('table');
-
+  const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');
 
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+  const headerRow = document.createElement('tr');
+  headerRow.classList.add('header-row');
 
-  for (let row = 1; row <= maxRow; row++) {
-    const bodyRow = document.createElement('tr');
+  const headers = omData.filter(item => item.Header === 1);
 
-    for (let column = 1; column <= columns; column++) {
-      const matchingItems = Contents.filter(
-        item => item.Row === row && item.Column === column
-      );
+  headers.forEach(header => {
+    const headerCell = document.createElement('th');
+    headerCell.textContent = header.Text;
+    headerRow.appendChild(headerCell);
+  });
 
+  thead.appendChild(headerRow);
+
+  omData.filter(item => item.Header !== 1).forEach(item => {
+    const row = document.createElement('tr');
+    const columns = omData.filter(cell => cell.Row === item.Row && cell.Column !== 1);
+
+    columns.forEach(column => {
       const displayCell = document.createElement('td');
+      const matchingItems = abxLinkData.filter(link => column.Item.toLowerCase().includes(link.Name.toLowerCase()));
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
@@ -267,12 +263,12 @@ function createOMTable(selectedData) {
 
               const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
-const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
 
-  return aIndex - bIndex;
-});
+                return aIndex - bIndex;
+              });
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
@@ -334,19 +330,15 @@ const sortedMatchingURLs = matchingURLs.sort((a, b) => {
         });
       }
 
-      bodyRow.appendChild(displayCell);
-    }
+      row.appendChild(displayCell);
+    });
 
-    tbody.appendChild(bodyRow);
-  }
+    tbody.appendChild(row);
+  });
 
+  table.appendChild(thead);
   table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
+  tableContainer.appendChild(table);
 }
 
 // Function to open the URL in a new window/tab
