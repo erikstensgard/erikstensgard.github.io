@@ -461,6 +461,8 @@ function createOMTable(selectedData) {
               cellContentElement.addEventListener('click', () => {
                 handleRowClick(matchingItem);
               });
+            } else {
+              cellContentElement.classList.add('not-clickable');
             }
           }
 
@@ -482,6 +484,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to filter data based on the selected option
     function filterData(event) {
