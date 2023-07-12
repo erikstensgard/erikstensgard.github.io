@@ -463,6 +463,7 @@ function createOMTable(selectedData) {
               });
             } else {
               cellContentElement.classList.add('not-clickable');
+              displayCell.classList.add('not-clickable-cell');
             }
           }
 
@@ -484,7 +485,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to filter data based on the selected option
     function filterData(event) {
