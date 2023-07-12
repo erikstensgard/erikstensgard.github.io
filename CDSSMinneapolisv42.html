@@ -172,7 +172,7 @@
   </div>
 
   <script>
-    // Fetch OMJSON Data
+// Fetch OMJSON Data
     async function fetchOMData() {
       const response = await fetch('MinneapolisOMJSON.json');
       const data = await response.json();
@@ -186,6 +186,18 @@
       return data;
     }
 
+    // Fetch ItemLink Data
+    async function fetchItemLink() {
+      const response = await fetch('MinneapolisItemLinks.json');
+      const data = await response.json();
+      return data;
+    }
+        // Fetch AbxLink Data
+    async function fetchAbxLink() {
+      const response = await fetch('MinneapolisAbxLinks.json');
+      const data = await response.json();
+      return data;
+    }
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
