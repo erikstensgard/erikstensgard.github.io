@@ -209,6 +209,7 @@ function getMatchingURL(displayText) {
   const matchingItem = abxLinkData.find(item => displayText.toLowerCase().includes(item.Name.toLowerCase()));
   return matchingItem ? matchingItem.URL : null;
 }
+
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -327,7 +328,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
