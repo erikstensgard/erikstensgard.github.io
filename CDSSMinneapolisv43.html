@@ -396,7 +396,7 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
- // Function to handle row click event
+// Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -410,13 +410,14 @@ function handleRowClick(item) {
     adjustFontSize();
 
     if (matchingItem.Item && matchingItem.Item.startsWith('ORZ GTX')) {
-      const matchingLink = minneapolisItemLinks.find(link => link.Name === matchingItem.Item);
+      const matchingLink = itemLinkData.find(link => link.Name === matchingItem.Item);
       if (matchingLink) {
         window.open(matchingLink.URL, '_blank');
       }
     }
   }
 }
+
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
