@@ -210,21 +210,6 @@ function getMatchingURL(displayText) {
   return matchingItem ? matchingItem.URL : null;
 }
 
-// Helper function to determine if an item should be included as clickable
-function shouldIncludeItemClickable(item) {
-  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
-
-  if (item.Item) {
-    for (let prefix of excludedPrefixes) {
-      if (item.Item.startsWith(prefix)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -244,13 +229,11 @@ function createOMTable(selectedData) {
         item => item.Row === row && item.Column === column
       );
 
-      if (matchingItems.length > 0) {
-        const displayCell = document.createElement('td');
-        const cellContentElement = document.createElement('div');
+      const displayCell = document.createElement('td');
 
+      if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText, Name } = matchingItem;
-
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -258,6 +241,8 @@ function createOMTable(selectedData) {
           } else if (cellContent === '' && Item) {
             cellContent = Item;
           }
+
+          const cellContentElement = document.createElement('div');
 
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
@@ -289,18 +274,38 @@ function createOMTable(selectedData) {
                     continue;
                   }
 
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.target = '_blank';
-                  linkElement.textContent = linkText;
+const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+const matchedLinks = new Set();
 
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
+matchingURLs.forEach(matchingURL => {
+  const { Name, URL } = matchingURL;
+  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+  let match;
 
-                  currentIndex = match.index + match[0].length;
+  while ((match = nameRegex.exec(contentText)) !== null) {
+    const nonLinkText = contentText.substring(currentIndex, match.index);
+    const linkText = match[0];
 
-                  matchedLinks.add(linkText);
+    // Check if the link text has already been matched in the current cell
+    if (matchedLinks.has(linkText)) {
+      continue;
+    }
+
+    const linkElement = document.createElement('a');
+    linkElement.href = URL;
+    linkElement.target = '_blank';
+    linkElement.textContent = linkText;
+
+    const nonLinkTextNode = document.createTextNode(nonLinkText);
+    linkContainer.appendChild(nonLinkTextNode);
+    linkContainer.appendChild(linkElement);
+
+    currentIndex = match.index + match[0].length;
+
+    matchedLinks.add(linkText);
+  }
+});
+
                 }
               });
 
@@ -323,22 +328,27 @@ function createOMTable(selectedData) {
             if (Header === 1) {
               displayCell.classList.add('bold');
             }
+
+            if (Item && shouldIncludeItemClickable(matchingItem)) {
+              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+
+              if (matchingURLs.length === 0) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
+            }
           }
+
+          displayCell.appendChild(cellContentElement);
         });
-
-        displayCell.appendChild(cellContentElement);
-        bodyRow.appendChild(displayCell);
       }
+
+      bodyRow.appendChild(displayCell);
     }
 
-    if (bodyRow.childElementCount > 0) {
-      tbody.appendChild(bodyRow);
-
-      // Add click event to the entire row
-      bodyRow.addEventListener('click', () => {
-        handleRowClick(selectedData);
-      });
-    }
+    tbody.appendChild(bodyRow);
   }
 
   table.appendChild(tbody);
@@ -349,6 +359,29 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
+
+// Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
+}
+
+
+// Helper function to determine if an item should be included as clickable
+function shouldIncludeItemClickable(item) {
+  const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
+
+  if (item.Item) {
+    for (let prefix of excludedPrefixes) {
+      if (item.Item.startsWith(prefix)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 
 // Function to create the table with ODJSON data
 function createODTable(selectedData) {
@@ -649,10 +682,10 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
-// Function to handle row click event
+    // Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Name.trim().toLowerCase()
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
   );
 
   if (matchingItem) {
@@ -681,7 +714,8 @@ function handleRowClick(item) {
   adjustFontSize();
 }
 
-    
+
+
   // Scroll to the top of the table
 function scrollToTop() { // Add opening curly brace here
   const resultContainer = document.getElementById('resultContainer');
