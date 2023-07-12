@@ -250,11 +250,6 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-              displayCell.classList.add('bold');
-            }
-
             if (Item && shouldIncludeItemClickable(matchingItem)) {
               const matchingURL = getMatchingURL(contentText);
 
@@ -264,7 +259,7 @@ function createOMTable(selectedData) {
                   handleRowClick(matchingItem);
                 });
               }
-            } else 
+            }
 
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
@@ -273,10 +268,10 @@ function createOMTable(selectedData) {
               const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-              const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-              const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
 
-              return aIndex - bIndex;
+                return aIndex - bIndex;
               });
 
               sortedMatchingURLs.forEach(matchingURL => {
@@ -304,23 +299,24 @@ function createOMTable(selectedData) {
 
                   linkTexts.add(linkText);
                   currentIndex = match.index + match[0].length;
-                  }
-                  });
+                }
+              });
 
-                if (currentIndex < contentText.length) {
+              if (currentIndex < contentText.length) {
                 const remainingText = contentText.substring(currentIndex);
                 const remainingTextNode = document.createTextNode(remainingText);
                 linkContainer.appendChild(remainingTextNode);
-                }
+              }
 
-                cellContentElement.appendChild(linkContainer);
-              } 
-            
-            else {
+              cellContentElement.appendChild(linkContainer);
+            } else {
               cellContentElement.textContent = contentText;
             }
 
-              
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
+            }
           }
 
           displayCell.appendChild(cellContentElement);
@@ -341,6 +337,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to open the URL in a new window/tab
 function openURL(url) {
