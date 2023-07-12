@@ -252,13 +252,11 @@ function createOMTable(selectedData) {
 
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
-              let currentIndex = 0;
+              const linkTexts = new Set(); // Store unique link texts
 
               const sortedMatchingURLs = abxLinkData
                 .filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()))
                 .sort((a, b) => b.Name.length - a.Name.length);
-
-              const matchedLinks = new Set(); // Store matched links to avoid duplicates
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
@@ -266,11 +264,11 @@ function createOMTable(selectedData) {
                 let match;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
-                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const nonLinkText = contentText.substring(match.index, match.index + match[0].length);
                   const linkText = match[0];
 
-                  // Check if the link text has already been matched in the current cell
-                  if (matchedLinks.has(linkText)) {
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
                     continue;
                   }
 
@@ -279,23 +277,16 @@ function createOMTable(selectedData) {
                   linkElement.target = '_blank';
                   linkElement.textContent = linkText;
 
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
-
-                  currentIndex = match.index + match[0].length;
-
-                  matchedLinks.add(linkText);
+                  linkTexts.add(linkText);
                 }
               });
 
-              if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
+              if (linkContainer.children.length === 0) {
+                cellContentElement.textContent = contentText;
+              } else {
+                cellContentElement.appendChild(linkContainer);
               }
-
-              cellContentElement.appendChild(linkContainer);
             } else {
               cellContentElement.textContent = contentText;
             }
