@@ -250,11 +250,13 @@ function createOMTable(selectedData) {
             const contentText = cellContent;
             let currentIndex = 0;
 
-            if (abxLinkData.length > 0 && shouldIncludeItemClickable(matchingItem)) {
+            if (shouldIncludeItemClickable(matchingItem)) {
               const linkContainer = document.createElement('div');
               const linkTexts = new Set(); // Store unique link texts
 
-              const matchingURLs = abxLinkData.filter(item => contentText.toLowerCase().includes(item.Name.toLowerCase()));
+              const matchingURLs = abxLinkData.filter(
+                item => contentText.toLowerCase().includes(item.Name.toLowerCase())
+              );
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
                 const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
@@ -307,7 +309,7 @@ function createOMTable(selectedData) {
               displayCell.classList.add('bold');
             }
 
-            if (Item && shouldIncludeItemClickable(matchingItem)) {
+            if (Item && shouldIncludeRowClickItem(matchingItem)) {
               const matchingURL = getMatchingURL(contentText);
 
               if (!matchingURL) {
@@ -338,13 +340,6 @@ function createOMTable(selectedData) {
   }
 }
 
-
-// Function to open the URL in a new window/tab
-function openURL(url) {
-  window.open(url, '_blank');
-}
-
-
 // Helper function to determine if an item should be included as clickable
 function shouldIncludeItemClickable(item) {
   const excludedPrefixes = ["PSCZID", "PSJZID", "PSJIZID", "PSOZID", "PSHZID", "ORZ SET"];
@@ -358,6 +353,20 @@ function shouldIncludeItemClickable(item) {
   }
 
   return true;
+}
+
+// Helper function to determine if an item should be included as a row click item
+function shouldIncludeRowClickItem(item) {
+  const itemName = item.Item.trim().toLowerCase();
+  const matchingItem = itemLinkData.find(linkItem => linkItem.Item.trim().toLowerCase() === itemName);
+  
+  return !matchingItem;
+}
+
+
+// Function to open the URL in a new window/tab
+function openURL(url) {
+  window.open(url, '_blank');
 }
 
   // Function to handle row click event
