@@ -260,11 +260,10 @@ function createOMTable(selectedData) {
                 const linkContainer = document.createElement('div');
                 const linkTexts = new Set(); // Store unique link texts
 
-                const matchingURLs = abxLinkData.filter(item =>
-                item.Name.toLowerCase().includes(contentText)
-                );
-
-
+               // With this line
+              const matchingURLs = abxLinkData.filter(item =>
+              item.Name.toLowerCase().includes(contentText)
+              );
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
                   const aIndex = contentText.indexOf(a.Name.toLowerCase());
                   const bIndex = contentText.indexOf(b.Name.toLowerCase());
