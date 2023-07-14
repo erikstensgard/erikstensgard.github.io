@@ -473,7 +473,7 @@ function createOMTable(selectedData) {
 
       if (matchingItems.length > 0) {
         const cellContentElement = document.createElement('div');
-        const linkContainer = document.createElement('div');
+        let combinedContent = ''; // Combined content for the cell
         const linkTexts = new Set(); // Store unique link texts
 
         matchingItems.forEach(matchingItem => {
@@ -495,7 +495,7 @@ function createOMTable(selectedData) {
             cellContentElement.addEventListener('click', () => {
               handleRowClick(matchingItem);
             });
-            cellContentElement.textContent = cellContent;
+            combinedContent += cellContent;
           } else {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
@@ -519,9 +519,8 @@ function createOMTable(selectedData) {
                     linkElement.target = '_blank';
                     linkElement.textContent = match[0]; // Use the original case for the link text
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+                    combinedContent += nonLinkText;
+                    combinedContent += linkElement.outerHTML;
 
                     linkTexts.add(linkText.toLowerCase()); // Store the lowercase link text
                   }
@@ -531,25 +530,20 @@ function createOMTable(selectedData) {
               });
 
               if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
+                combinedContent += contentText.substring(currentIndex);
               }
             } else {
-              cellContentElement.textContent = contentText;
+              combinedContent += contentText;
             }
           }
-
-          if (Header === 1) {
-            cellContentElement.classList.add('bold');
-          }
-
-          displayCell.appendChild(cellContentElement);
         });
 
-        if (linkContainer.childNodes.length > 0) {
-          cellContentElement.innerHTML = ''; // Clear existing content
-          cellContentElement.appendChild(linkContainer);
+        cellContentElement.innerHTML = combinedContent;
+        displayCell.appendChild(cellContentElement);
+
+        if (matchingItems.some(item => item.Header === 1)) {
+          cellContentElement.classList.add('bold');
+          displayCell.classList.add('bold');
         }
       }
 
@@ -567,7 +561,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
     // Function to filter data based on the selected option
