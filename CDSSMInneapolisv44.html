@@ -521,26 +521,35 @@ function createOMTable(selectedData) {
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0];
+  const nonLinkText = contentText.substring(currentIndex, match.index);
+  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
+  // Check if the link text is already added
+  let isLinkTextAdded = false;
+  for (const addedLinkText of linkTexts) {
+    if (addedLinkText.toLowerCase() === linkText) {
+      isLinkTextAdded = true;
+      break;
+    }
+  }
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.target = '_blank';
-                    linkElement.textContent = linkText;
+  if (isLinkTextAdded) {
+    continue;
+  }
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+  const linkElement = document.createElement('a');
+  linkElement.href = URL;
+  linkElement.target = '_blank';
+  linkElement.textContent = match[0]; // Use the original case for the link text
 
-                    linkTexts.add(linkText);
-                    currentIndex = match.index + match[0].length;
-                  }
+  const nonLinkTextNode = document.createTextNode(nonLinkText);
+  linkContainer.appendChild(nonLinkTextNode);
+  linkContainer.appendChild(linkElement);
+
+  linkTexts.add(match[0]); // Store the original case of the link text
+  currentIndex = match.index + match[0].length;
+}
+
                 });
 
                 if (currentIndex < contentText.length) {
