@@ -503,7 +503,6 @@ function createOMTable(selectedData) {
               // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                const linkTexts = new Set(); // Store unique link texts
-const linkContainer = null; // Store the current link container
 
 const sortedMatchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
@@ -515,6 +514,8 @@ sortedMatchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
   let match;
+
+  let currentLinkContainer = null;
 
   while ((match = nameRegex.exec(contentText)) !== null) {
     const nonLinkText = contentText.substring(currentIndex, match.index);
