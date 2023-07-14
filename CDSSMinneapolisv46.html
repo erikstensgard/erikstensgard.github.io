@@ -520,27 +520,36 @@ function createOMTable(selectedData) {
                   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                   let match;
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0];
+                  let lastMatchIndex = 0; // Track the last matched index
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
+while ((match = nameRegex.exec(contentText)) !== null) {
+  const nonLinkText = contentText.substring(lastMatchIndex, match.index);
+  const linkText = match[0];
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.target = '_blank';
-                    linkElement.textContent = linkText;
+  // Check if the link text is already added
+  if (linkTexts.has(linkText)) {
+    continue;
+  }
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+  const linkElement = document.createElement('a');
+  linkElement.href = URL;
+  linkElement.target = '_blank';
+  linkElement.textContent = linkText;
 
-                    linkTexts.add(linkText);
-                    currentIndex = match.index + match[0].length;
-                  }
+  const nonLinkTextNode = document.createTextNode(nonLinkText);
+  linkContainer.appendChild(nonLinkTextNode);
+  linkContainer.appendChild(linkElement);
+
+  linkTexts.add(linkText);
+  lastMatchIndex = match.index + match[0].length;
+}
+
+if (lastMatchIndex < contentText.length) {
+  const remainingText = contentText.substring(lastMatchIndex);
+  const remainingTextNode = document.createTextNode(remainingText);
+  linkContainer.appendChild(remainingTextNode);
+}
+
                 });
 
                 if (currentIndex < contentText.length) {
