@@ -503,11 +503,7 @@ function createOMTable(selectedData) {
               // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                const linkTexts = new Set(); // Store unique link texts
-const linkContainer = document.createElement('div');
-linkContainer.uniqueId = Math.random().toString(36).substr(2, 10);
-linkContainer.links = []; // Store all of the matching URLs
-
-let currentLinkContainer = null;
+const linkContainer = null; // Store the current link container
 
 const sortedMatchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
@@ -525,15 +521,13 @@ sortedMatchingURLs.forEach(matchingURL => {
     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
     // Check if the link text is already added
-    if (currentLinkContainer.links && currentLinkContainer.links.includes(linkText)) {
+    if (currentLinkContainer && currentLinkContainer.links.includes(linkText)) {
       continue;
     }
 
     if (!currentLinkContainer) {
       currentLinkContainer = document.createElement('div');
       currentLinkContainer.uniqueId = Math.random().toString(36).substr(2, 10);
-      currentLinkContainer.links = [];
-    } else if (!currentLinkContainer.links) {
       currentLinkContainer.links = [];
     }
 
