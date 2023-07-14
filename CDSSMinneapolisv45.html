@@ -551,7 +551,7 @@ function createOMTable(selectedData) {
 
                 cellContentElement.appendChild(linkContainer);
               } else {
-                cellContentElement.textContent = contentText;
+                cellContentElement.textContent = cellContent;
               }
             }
           }
@@ -574,13 +574,46 @@ function createOMTable(selectedData) {
 
           matchingURLs.forEach(matchingURL => {
             const { Name, URL } = matchingURL;
-
+            const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
             const linkElement = document.createElement('a');
             linkElement.href = URL;
             linkElement.target = '_blank';
             linkElement.textContent = Name;
 
-            linkContainer.appendChild(linkElement);
+            const linkTextNodes = [];
+            let match;
+
+            while ((match = nameRegex.exec(contentText)) !== null) {
+              const nonLinkText = contentText.substring(currentIndex, match.index);
+              const linkText = match[0];
+
+              // Check if the link text is already added
+              if (linkTexts.has(linkText)) {
+                continue;
+              }
+
+              const nonLinkTextNode = document.createTextNode(nonLinkText);
+              linkTextNodes.push(nonLinkTextNode);
+
+              const linkElement = document.createElement('a');
+              linkElement.href = URL;
+              linkElement.target = '_blank';
+              linkElement.textContent = linkText;
+              linkTextNodes.push(linkElement);
+
+              linkTexts.add(linkText);
+              currentIndex = match.index + match[0].length;
+            }
+
+            if (currentIndex < contentText.length) {
+              const remainingText = contentText.substring(currentIndex);
+              const remainingTextNode = document.createTextNode(remainingText);
+              linkTextNodes.push(remainingTextNode);
+            }
+
+            linkTextNodes.forEach(node => {
+              linkContainer.appendChild(node);
+            });
           });
 
           displayCell.appendChild(linkContainer);
@@ -601,6 +634,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to filter data based on the selected option
     function filterData(event) {
