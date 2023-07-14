@@ -506,7 +506,7 @@ function createOMTable(selectedData) {
             cellContent = Item;
           }
 
-          const cellContentKey = `${row}-${column}-${cellContent}`;
+          const cellContentKey = `${row}-${column}-${cellContent}-${Header}`;
           if (!cellContentMap.has(cellContentKey)) {
             cellContentMap.set(cellContentKey, true);
 
@@ -610,6 +610,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
 // Function to push the current selection to the history
