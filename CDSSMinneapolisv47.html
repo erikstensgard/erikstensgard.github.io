@@ -542,15 +542,18 @@ sortedMatchingURLs.forEach(matchingURL => {
     currentLinkContainer.appendChild(nonLinkTextNode);
 
     if (currentLinkContainer) {
-      displayCell.appendChild(currentLinkContainer);
+      if (currentLinkContainer.links.length > 0) {
+        displayCell.appendChild(currentLinkContainer);
+      }
       currentLinkContainer = null;
-      break;
+      return null;
     }
 
     currentIndex = match.index + match[0].length;
   }
 });
 
+return null;
 
 
                 sortedMatchingURLs.forEach(matchingURL => {
