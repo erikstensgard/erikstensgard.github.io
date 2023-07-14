@@ -521,35 +521,26 @@ function createOMTable(selectedData) {
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-  const nonLinkText = contentText.substring(currentIndex, match.index);
-  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                    const linkText = match[0];
 
-  // Check if the link text is already added
-  let isLinkTextAdded = false;
-  for (const addedLinkText of linkTexts) {
-    if (addedLinkText.toLowerCase() === linkText) {
-      isLinkTextAdded = true;
-      break;
-    }
-  }
+                    // Check if the link text is already added
+                    if (linkTexts.has(linkText)) {
+                      continue;
+                    }
 
-  if (isLinkTextAdded) {
-    continue;
-  }
+                    const linkElement = document.createElement('a');
+                    linkElement.href = URL;
+                    linkElement.target = '_blank';
+                    linkElement.textContent = linkText;
 
-  const linkElement = document.createElement('a');
-  linkElement.href = URL;
-  linkElement.target = '_blank';
-  linkElement.textContent = match[0]; // Use the original case for the link text
+                    const nonLinkTextNode = document.createTextNode(nonLinkText);
+                    linkContainer.appendChild(nonLinkTextNode);
+                    linkContainer.appendChild(linkElement);
 
-  const nonLinkTextNode = document.createTextNode(nonLinkText);
-  linkContainer.appendChild(nonLinkTextNode);
-  linkContainer.appendChild(linkElement);
-
-  linkTexts.add(match[0]); // Store the original case of the link text
-  currentIndex = match.index + match[0].length;
-}
-
+                    linkTexts.add(linkText);
+                    currentIndex = match.index + match[0].length;
+                  }
                 });
 
                 if (currentIndex < contentText.length) {
@@ -758,6 +749,10 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
     console.error('Error:', error);
   });
 
+  </script>
+</body>
+
+</html>
   </script>
 </body>
 
