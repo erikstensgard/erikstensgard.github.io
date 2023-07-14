@@ -396,62 +396,7 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
- // Function to handle row click event
-function handleRowClick(item) {
-  const matchingItem = omData.find(
-    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
-  );
-
-  if (matchingItem) {
-    selectedData = matchingItem;
-    createOMTable(matchingItem);
-    pushHistory(matchingItem.Name);
-  } else {
-    const matchingLink = itemLinkData.find(
-      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
-    );
-
-    if (matchingLink) {
-      const { URL } = matchingLink;
-
-      if (isValidURL(URL)) {
-        // Open the URL in a new window/tab
-        window.open(URL, '_blank');
-      } else {
-        console.log('Invalid URL:', URL);
-      }
-    } else {
-      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
-    }
-  }
-  scrollToTop();
-  adjustFontSize();
-}
-
-// Function to check if a value is a valid URL
-function isValidURL(value) {
-  try {
-    new URL(value);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-  // Scroll to the top of the table
-function scrollToTop() { // Add opening curly brace here
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.scrollTop = 0;
-
-  // Scroll the page to the top
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-} // Add closing curly brace here
-
-    
-// Function to create the table with OMJSON data
-function createOMTable(selectedData) {
+function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -472,8 +417,10 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
-        matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
+        if (matchingItems.length === 1) {
+          // Only one matching item, use the original code
+          // to append content to the displayCell
+          const { Text, Item, Header, DisplayText } = matchingItems[0];
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -495,7 +442,7 @@ function createOMTable(selectedData) {
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
+                handleRowClick(matchingItems[0]);
               });
               cellContentElement.textContent = cellContent;
             } else {
@@ -558,10 +505,111 @@ function createOMTable(selectedData) {
             }
           }
 
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+            displayCell.classList.add('bold');
+          }
+
           displayCell.appendChild(cellContentElement);
-        });
+        } else {
+          // Multiple matching items, create a container for each item
+          matchingItems.forEach(matchingItem => {
+            const { Text, Item, Header, DisplayText } = matchingItem;
+            const itemContainer = document.createElement('div');
+            let itemContent = Text || '';
+
+            if (itemContent === '' && DisplayText) {
+              itemContent = DisplayText;
+            } else if (itemContent === '' && Item) {
+              itemContent = Item;
+            }
+
+            const itemContentElement = document.createElement('div');
+
+            // Check if itemContent consists only of underscore characters
+            if (/^_+$/.test(itemContent)) {
+              itemContentElement.textContent = itemContent;
+            } else {
+              const contentText = itemContent; // Preserve original case-sensitive text
+              let currentIndex = 0;
+
+              // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
+              if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+                itemContentElement.classList.add('clickable');
+                itemContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+                itemContentElement.textContent = itemContent;
+              } else {
+                // Check if there are partial string matches with links in a row
+                if (abxLinkData.length > 0) {
+                  const linkContainer = document.createElement('div');
+                  const linkTexts = new Set(); // Store unique link texts
+
+                  const matchingURLs = abxLinkData.filter(item =>
+                    contentText.toLowerCase().includes(item.Name.toLowerCase())
+                  );
+
+                  const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
+
+                  const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                    const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
+                    const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
+
+                    return aIndex - bIndex;
+                  });
+
+                  sortedMatchingURLs.forEach(matchingURL => {
+                    const { Name, URL } = matchingURL;
+                    const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                    let match;
+
+                    while ((match = nameRegex.exec(contentText)) !== null) {
+                      const nonLinkText = contentText.substring(currentIndex, match.index);
+                      const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+
+                      // Check if the link text is already added
+                      if (linkTexts.has(linkText)) {
+                        continue;
+                      }
+
+                      const linkElement = document.createElement('a');
+                      linkElement.href = URL;
+                      linkElement.target = '_blank';
+                      linkElement.textContent = match[0]; // Use the original case for the link text
+
+                      const nonLinkTextNode = document.createTextNode(nonLinkText);
+                      linkContainer.appendChild(nonLinkTextNode);
+                      linkContainer.appendChild(linkElement);
+
+                      linkTexts.add(linkText); // Store the lowercase link text
+                      currentIndex = match.index + match[0].length;
+                    }
+                  });
+
+                  if (currentIndex < contentText.length) {
+                    const remainingText = contentText.substring(currentIndex);
+                    const remainingTextNode = document.createTextNode(remainingText);
+                    linkContainer.appendChild(remainingTextNode);
+                  }
+
+                  itemContentElement.appendChild(linkContainer);
+                } else {
+                  itemContentElement.textContent = contentText;
+                }
+              }
+            }
+
+            if (Header === 1) {
+              itemContentElement.classList.add('bold');
+            }
+
+            itemContainer.appendChild(itemContentElement);
+            displayCell.appendChild(itemContainer);
+          });
+        }
       } else {
-        // Add links from MinneapolisAbxLinks.json
+        // Add links from abxLinkData
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
@@ -598,6 +646,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to filter data based on the selected option
     function filterData(event) {
