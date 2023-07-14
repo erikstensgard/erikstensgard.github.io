@@ -205,8 +205,7 @@ let selectedData = null; // Currently selected data
 let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
-let matchingItems = [];
-    
+
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
@@ -466,11 +465,9 @@ function createOMTable(selectedData) {
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
-const matchingItems = Contents.filter(
-  item => item.Row === row && item.Column === column && !matchingItems.some(
-    item => item.abxLinkData === matchingItem.abxLinkData
-  )
-);
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
 
       const displayCell = document.createElement('td');
 
@@ -502,24 +499,52 @@ const matchingItems = Contents.filter(
               });
               cellContentElement.textContent = cellContent;
             } else {
+              
               // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const linkTexts = new Set(); // Store unique link texts
+               const linkContainer = document.createElement('div');
+const linkTexts = new Set(); // Store unique link texts
 
-                const matchingURLs = abxLinkData.filter(item =>
-                  contentText.toLowerCase().includes(item.Name.toLowerCase())
-                );
+const matchingURLs = abxLinkData.filter(item =>
+  contentText.toLowerCase().includes(item.Name.toLowerCase())
+);
 
-                const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
+const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
-                  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
+const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
+  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
 
-                  return aIndex - bIndex;
-                });
+  return aIndex - bIndex;
+});
 
+sortedMatchingURLs.forEach(matchingURL => {
+  const { Name, URL } = matchingURL;
+  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+  let match;
+
+  while ((match = nameRegex.exec(contentText)) !== null) {
+    const nonLinkText = contentText.substring(currentIndex, match.index);
+    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+
+    // Check if the link text is already added
+    if (linkTexts.has(linkText)) {
+      continue;
+    }
+
+    const linkElement = document.createElement('a');
+    linkElement.href = URL;
+    linkElement.target = '_blank';
+    linkElement.textContent = match[0]; // Use the original case for the link text
+
+    const nonLinkTextNode = document.createTextNode(nonLinkText);
+    linkContainer.appendChild(nonLinkTextNode);
+    linkContainer.appendChild(linkElement);
+
+    linkTexts.add(linkText); // Store the lowercase link text
+    currentIndex = match.index + match[0].length;
+  }
+});
                 sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
                   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
