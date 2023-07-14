@@ -508,9 +508,11 @@ function createOMTable(selectedData) {
                   contentText.toLowerCase().includes(item.Name.toLowerCase())
                 );
 
+                const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
+
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.indexOf(a.Name);
-                  const bIndex = contentText.indexOf(b.Name);
+                  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
+                  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
 
                   return aIndex - bIndex;
                 });
@@ -525,15 +527,7 @@ function createOMTable(selectedData) {
                     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
                     // Check if the link text is already added
-                    let isLinkTextAdded = false;
-                    for (const addedLinkText of linkTexts) {
-                      if (addedLinkText.toLowerCase() === linkText) {
-                        isLinkTextAdded = true;
-                        break;
-                      }
-                    }
-
-                    if (isLinkTextAdded) {
+                    if (linkTexts.has(linkText)) {
                       continue;
                     }
 
@@ -546,7 +540,7 @@ function createOMTable(selectedData) {
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    linkTexts.add(match[0].toLowerCase()); // Store the lowercase link text
+                    linkTexts.add(linkText); // Store the lowercase link text
                     currentIndex = match.index + match[0].length;
                   }
                 });
@@ -609,7 +603,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to filter data based on the selected option
     function filterData(event) {
