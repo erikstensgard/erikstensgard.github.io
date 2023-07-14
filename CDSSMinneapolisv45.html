@@ -551,7 +551,8 @@ function createOMTable(selectedData) {
 
                 cellContentElement.appendChild(linkContainer);
               } else {
-                cellContentElement.textContent = cellContent;
+                // Use the original DisplayText or Item value
+                cellContentElement.textContent = DisplayText || Item;
               }
             }
           }
@@ -634,6 +635,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
     // Function to filter data based on the selected option
