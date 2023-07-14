@@ -684,17 +684,18 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
+    abxLinkData = abxlinkjsonData;
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
     pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
-    filterData({ target: dropdown });
+    filterData({ target: dropdown }, abxLinkData); // Update this line to pass abxLinkData
   })
   .catch(error => {
     console.error('Error:', error);
   });
+
 
   </script>
 </body>
