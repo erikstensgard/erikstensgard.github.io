@@ -488,7 +488,7 @@ function createOMTable(selectedData) {
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
-            const contentText = cellContent.toLowerCase();
+            const contentText = cellContent; // Preserve original case-sensitive text
             let currentIndex = 0;
 
             // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
@@ -505,12 +505,12 @@ function createOMTable(selectedData) {
                 const linkTexts = new Set(); // Store unique link texts
 
                 const matchingURLs = abxLinkData.filter(item =>
-                  contentText.includes(item.Name.toLowerCase())
+                  contentText.toLowerCase().includes(item.Name.toLowerCase())
                 );
 
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.indexOf(b.Name.toLowerCase());
+                  const aIndex = contentText.indexOf(a.Name);
+                  const bIndex = contentText.indexOf(b.Name);
 
                   return aIndex - bIndex;
                 });
@@ -569,7 +569,7 @@ function createOMTable(selectedData) {
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
+            contentText.includes(item.Name)
           );
 
           matchingURLs.forEach(matchingURL => {
