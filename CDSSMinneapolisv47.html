@@ -473,7 +473,6 @@ function filterData(event) {
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 
 // Function to create the table with OMJSON data
-// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -594,28 +593,6 @@ function createOMTable(selectedData) {
             displayCell.appendChild(cellContentElement);
           }
         });
-      } else {
-        // Add links from MinneapolisAbxLinks.json
-        const contentText = '';
-        if (abxLinkData.length > 0) {
-          const linkContainer = document.createElement('div');
-          const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
-          );
-
-          matchingURLs.forEach(matchingURL => {
-            const { Name, URL } = matchingURL;
-
-            const linkElement = document.createElement('a');
-            linkElement.href = URL;
-            linkElement.target = '_blank';
-            linkElement.textContent = Name;
-
-            linkContainer.appendChild(linkElement);
-          });
-
-          displayCell.appendChild(linkContainer);
-        }
       }
 
       bodyRow.appendChild(displayCell);
@@ -632,6 +609,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
 // Function to push the current selection to the history
