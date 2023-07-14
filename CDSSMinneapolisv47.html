@@ -540,11 +540,16 @@ sortedMatchingURLs.forEach(matchingURL => {
 
     const nonLinkTextNode = document.createTextNode(nonLinkText);
     currentLinkContainer.appendChild(nonLinkTextNode);
-    currentLinkContainer.appendChild(linkElement);
+
+    if (currentLinkContainer) {
+      displayCell.appendChild(currentLinkContainer);
+      currentLinkContainer = null;
+    }
 
     currentIndex = match.index + match[0].length;
   }
 });
+
 
                 sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
