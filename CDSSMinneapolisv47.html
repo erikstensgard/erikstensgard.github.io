@@ -472,6 +472,10 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
+        const cellContentElement = document.createElement('div');
+        const linkContainer = document.createElement('div');
+        const linkTexts = new Set(); // Store unique link texts
+
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
@@ -482,53 +486,41 @@ function createOMTable(selectedData) {
             cellContent = Item;
           }
 
-          const cellContentElement = document.createElement('div');
+          const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0;
 
-          // Check if cellContent consists only of underscore characters
-          if (/^_+$/.test(cellContent)) {
+          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
+          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
             cellContentElement.textContent = cellContent;
           } else {
-            const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
+            // Check if there are partial string matches with links in a row
+            if (abxLinkData.length > 0) {
+              const matchingURLs = abxLinkData.filter(item =>
+                contentText.toLowerCase().includes(item.Name.toLowerCase())
+              );
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
-            if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.indexOf(a.Name);
+                const bIndex = contentText.indexOf(b.Name);
+
+                return aIndex - bIndex;
               });
-              cellContentElement.textContent = cellContent;
-            } else {
-              // Check if there are partial string matches with links in a row
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const linkTexts = new Set(); // Store unique link texts
 
-                const matchingURLs = abxLinkData.filter(item =>
-                  contentText.toLowerCase().includes(item.Name.toLowerCase())
-                );
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.indexOf(a.Name);
-                  const bIndex = contentText.indexOf(b.Name);
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0]; // Use the original case for the link text
 
-                  return aIndex - bIndex;
-                });
-
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
-
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0]; // Use the original case for the link text
-
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText.toLowerCase())) {
-                      continue;
-                    }
-
+                  // Check if the link text is already added
+                  if (!linkTexts.has(linkText.toLowerCase())) {
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
                     linkElement.target = '_blank';
@@ -539,51 +531,31 @@ function createOMTable(selectedData) {
                     linkContainer.appendChild(linkElement);
 
                     linkTexts.add(linkText.toLowerCase()); // Store the lowercase link text
-                    currentIndex = match.index + match[0].length;
                   }
-                });
 
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
+                  currentIndex = match.index + match[0].length;
                 }
+              });
 
-                cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
+            } else {
+              cellContentElement.textContent = contentText;
             }
           }
 
           if (Header === 1) {
             cellContentElement.classList.add('bold');
-            displayCell.classList.add('bold');
           }
 
           displayCell.appendChild(cellContentElement);
         });
-      } else {
-        // Add links from MinneapolisAbxLinks.json
-        const contentText = '';
-        if (abxLinkData.length > 0) {
-          const linkContainer = document.createElement('div');
-          const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
-          );
 
-          matchingURLs.forEach(matchingURL => {
-            const { Name, URL } = matchingURL;
-
-            const linkElement = document.createElement('a');
-            linkElement.href = URL;
-            linkElement.target = '_blank';
-            linkElement.textContent = Name;
-
-            linkContainer.appendChild(linkElement);
-          });
-
-          displayCell.appendChild(linkContainer);
+        if (linkContainer.childNodes.length > 0) {
+          cellContentElement.appendChild(linkContainer);
         }
       }
 
