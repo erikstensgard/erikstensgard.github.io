@@ -450,27 +450,6 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
     
-
-
-    // Function to filter data based on the selected option
-    function filterData(event) {
-  const selectedOption = event.target.value;
-  const matchingData = omData.find(item => item.Name === selectedOption);
-
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
-  adjustFontSize();
-}
-
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -587,6 +566,7 @@ function createOMTable(selectedData) {
           displayCell.appendChild(cellContentElement);
         });
       } else {
+        // Add links from MinneapolisAbxLinks.json
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
@@ -622,10 +602,27 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
+}
 
-  scrollToTop();
+    // Function to filter data based on the selected option
+    function filterData(event) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
+    }
+  scrollToTop()
   adjustFontSize();
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
