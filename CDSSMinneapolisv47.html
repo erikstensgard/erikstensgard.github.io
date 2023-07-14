@@ -544,11 +544,13 @@ sortedMatchingURLs.forEach(matchingURL => {
     if (currentLinkContainer) {
       displayCell.appendChild(currentLinkContainer);
       currentLinkContainer = null;
+      break;
     }
 
     currentIndex = match.index + match[0].length;
   }
 });
+
 
 
                 sortedMatchingURLs.forEach(matchingURL => {
