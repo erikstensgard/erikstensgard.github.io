@@ -396,6 +396,60 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
+ // Function to handle row click event
+function handleRowClick(item) {
+  const matchingItem = omData.find(
+    omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
+  );
+
+  if (matchingItem) {
+    selectedData = matchingItem;
+    createOMTable(matchingItem);
+    pushHistory(matchingItem.Name);
+  } else {
+    const matchingLink = itemLinkData.find(
+      linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
+    );
+
+    if (matchingLink) {
+      const { URL } = matchingLink;
+
+      if (isValidURL(URL)) {
+        // Open the URL in a new window/tab
+        window.open(URL, '_blank');
+      } else {
+        console.log('Invalid URL:', URL);
+      }
+    } else {
+      console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
+    }
+  }
+  scrollToTop();
+  adjustFontSize();
+}
+
+// Function to check if a value is a valid URL
+function isValidURL(value) {
+  try {
+    new URL(value);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+  // Scroll to the top of the table
+function scrollToTop() { // Add opening curly brace here
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.scrollTop = 0;
+
+  // Scroll the page to the top
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+} // Add closing curly brace here
+
+    
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -417,8 +471,7 @@ function createOMTable(selectedData, abxLinkData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
-        const cellContentElement = document.createElement('div');
-        const linkTexts = new Set(); // Store unique link texts
+        const cellContentContainer = document.createElement('div');
 
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText } = matchingItem;
@@ -429,6 +482,8 @@ function createOMTable(selectedData, abxLinkData) {
           } else if (cellContent === '' && Item) {
             cellContent = Item;
           }
+
+          const cellContentElement = document.createElement('div');
 
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
@@ -448,6 +503,7 @@ function createOMTable(selectedData, abxLinkData) {
               // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
+                const linkTexts = new Set(); // Store unique link texts
 
                 const matchingURLs = abxLinkData.filter(item =>
                   contentText.toLowerCase().includes(item.Name.toLowerCase())
@@ -507,11 +563,13 @@ function createOMTable(selectedData, abxLinkData) {
             cellContentElement.classList.add('bold');
             displayCell.classList.add('bold');
           }
+
+          cellContentContainer.appendChild(cellContentElement);
         });
 
-        displayCell.appendChild(cellContentElement);
+        displayCell.appendChild(cellContentContainer);
       } else {
-        // Add links from abxLinkData
+        // Add links from MinneapolisAbxLinks.json
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
@@ -547,26 +605,6 @@ function createOMTable(selectedData, abxLinkData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
-}
-
-
-    // Function to filter data based on the selected option
-    function filterData(event) {
-  const selectedOption = event.target.value;
-  const matchingData = omData.find(item => item.Name === selectedOption);
-
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
-  adjustFontSize();
 }
 
 
@@ -684,18 +722,17 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData;
+    abxLinkData = abxlinkjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
     pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
-    filterData({ target: dropdown }, abxLinkData); // Update this line to pass abxLinkData
+    filterData({ target: dropdown });
   })
   .catch(error => {
     console.error('Error:', error);
   });
-
 
   </script>
 </body>
