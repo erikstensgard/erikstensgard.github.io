@@ -507,20 +507,13 @@ const linkContainer = document.createElement('div');
 linkContainer.uniqueId = Math.random().toString(36).substr(2, 10);
 linkContainer.links = []; // Store all of the matching URLs
 
+let currentLinkContainer = null;
+
 const sortedMatchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
 );
 
 const matchingURLNames = sortedMatchingURLs.map(item => item.Name.toLowerCase());
-
-const sortedMatchingURLs = sortedMatchingURLs.sort((a, b) => {
-  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
-  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
-
-  return aIndex - bIndex;
-});
-
-let currentLinkContainer = null;
 
 sortedMatchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
@@ -556,6 +549,7 @@ sortedMatchingURLs.forEach(matchingURL => {
     currentIndex = match.index + match[0].length;
   }
 });
+
 
                 sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
