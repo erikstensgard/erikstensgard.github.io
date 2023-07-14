@@ -245,7 +245,6 @@ function createOMTable(selectedData) {
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
-            const contentText = cellContent.toLowerCase();
             let currentIndex = 0;
 
             // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
@@ -262,8 +261,9 @@ function createOMTable(selectedData) {
                 const linkTexts = new Set(); // Store unique link texts
 
                 const matchingURLs = abxLinkData.filter(item =>
-                  contentText.includes(item.Name.toLowerCase())
+                item.Name.toLowerCase().includes(contentText)
                 );
+
 
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
                   const aIndex = contentText.indexOf(a.Name.toLowerCase());
