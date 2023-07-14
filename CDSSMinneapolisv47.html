@@ -525,13 +525,15 @@ sortedMatchingURLs.forEach(matchingURL => {
     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
     // Check if the link text is already added
-    if (currentLinkContainer.links.includes(linkText)) {
+    if (currentLinkContainer.links && currentLinkContainer.links.includes(linkText)) {
       continue;
     }
 
     if (!currentLinkContainer) {
       currentLinkContainer = document.createElement('div');
       currentLinkContainer.uniqueId = Math.random().toString(36).substr(2, 10);
+      currentLinkContainer.links = [];
+    } else if (!currentLinkContainer.links) {
       currentLinkContainer.links = [];
     }
 
@@ -549,7 +551,6 @@ sortedMatchingURLs.forEach(matchingURL => {
     currentIndex = match.index + match[0].length;
   }
 });
-
 
                 sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
