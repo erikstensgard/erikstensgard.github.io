@@ -505,7 +505,8 @@ function createOMTable(selectedData) {
                 const linkTexts = new Set(); // Store unique link texts
 
                 const matchingURLs = abxLinkData.filter(item =>
-  const linkContainer = document.createElement('div');
+  contentText.toLowerCase().includes(item.Name.toLowerCase())
+);
 
 matchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
@@ -515,11 +516,9 @@ matchingURLs.forEach(matchingURL => {
   linkElement.target = '_blank';
   linkElement.textContent = Name;
 
-  const newLinkContainer = document.createElement('div');
-  newLinkContainer.appendChild(linkElement);
-
-  linkContainer.appendChild(newLinkContainer);
+  linkContainer.appendChild(linkElement);
 });
+
 
 
 
