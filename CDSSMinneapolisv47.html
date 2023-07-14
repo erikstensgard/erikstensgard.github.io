@@ -504,11 +504,11 @@ function createOMTable(selectedData) {
                 const linkContainer = document.createElement('div');
                 const linkTexts = new Set(); // Store unique link texts
 
-                const matchingURLs = abxLinkData.filter(item =>
+              const sortedMatchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
-);
+).sort((a, b) => a.Name.localeCompare(b.Name));
 
-matchingURLs.forEach(matchingURL => {
+const matchingURLs = sortedMatchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
 
   const linkElement = document.createElement('a');
