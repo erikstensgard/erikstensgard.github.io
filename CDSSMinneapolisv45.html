@@ -255,60 +255,63 @@ function createOMTable(selectedData) {
               });
               cellContentElement.textContent = cellContent;
             } else {
+              
               // Check if there are partial string matches with links in a row
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const linkTexts = new Set(); // Store unique link texts
-                
-              const matchingURLs = abxLinkData.filter(item =>
-              item.Name.toLowerCase().includes(cellContent.toLowerCase())
-              );
-                
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.indexOf(b.Name.toLowerCase());
+if (abxLinkData.length > 0) {
+  const linkContainer = document.createElement('div');
+  const linkTexts = new Set(); // Store unique link texts
 
-                  return aIndex - bIndex;
-                });
+  const matchingURLs = abxLinkData.filter(item =>
+    item.Name.toLowerCase().includes(cellContent.toLowerCase())
+  );
 
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
+  const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+    const aIndex = cellContent.toLowerCase().indexOf(a.Name.toLowerCase());
+    const bIndex = cellContent.toLowerCase().indexOf(b.Name.toLowerCase());
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0];
+    return aIndex - bIndex;
+  });
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
+  sortedMatchingURLs.forEach(matchingURL => {
+    const { Name, URL } = matchingURL;
+    const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+    let match;
+    let currentIndex = 0;
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.target = '_blank';
-                    linkElement.textContent = linkText;
+    while ((match = nameRegex.exec(cellContent.toLowerCase())) !== null) {
+      const nonLinkText = cellContent.substring(currentIndex, match.index);
+      const linkText = match[0];
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+      // Check if the link text is already added
+      if (linkTexts.has(linkText)) {
+        continue;
+      }
 
-                    linkTexts.add(linkText);
-                    currentIndex = match.index + match[0].length;
-                  }
-                });
+      const linkElement = document.createElement('a');
+      linkElement.href = URL;
+      linkElement.target = '_blank';
+      linkElement.textContent = linkText;
 
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-                }
+      const nonLinkTextNode = document.createTextNode(nonLinkText);
+      linkContainer.appendChild(nonLinkTextNode);
+      linkContainer.appendChild(linkElement);
 
-                cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
-              }
+      linkTexts.add(linkText);
+      currentIndex = match.index + match[0].length;
+    }
+
+    if (currentIndex < cellContent.length) {
+      const remainingText = cellContent.substring(currentIndex);
+      const remainingTextNode = document.createTextNode(remainingText);
+      linkContainer.appendChild(remainingTextNode);
+    }
+  });
+
+  cellContentElement.appendChild(linkContainer);
+} else {
+  cellContentElement.textContent = cellContent;
+}
+
             }
           }
 
