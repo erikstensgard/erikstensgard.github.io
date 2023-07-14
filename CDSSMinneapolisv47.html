@@ -541,12 +541,9 @@ sortedMatchingURLs.forEach(matchingURL => {
     const nonLinkTextNode = document.createTextNode(nonLinkText);
     currentLinkContainer.appendChild(nonLinkTextNode);
 
-    if (currentLinkContainer) {
-      if (currentLinkContainer.links.length > 0) {
-        displayCell.appendChild(currentLinkContainer);
-      }
-      currentLinkContainer = null;
-      return null;
+    if (currentLinkContainer && currentLinkContainer.links.length > 0) {
+      displayCell.appendChild(currentLinkContainer);
+      return;
     }
 
     currentIndex = match.index + match[0].length;
