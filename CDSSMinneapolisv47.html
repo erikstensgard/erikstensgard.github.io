@@ -511,6 +511,17 @@ const sortedMatchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
 );
 
+const matchingURLNames = sortedMatchingURLs.map(item => item.Name.toLowerCase());
+
+const sortedMatchingURLs = sortedMatchingURLs.sort((a, b) => {
+  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
+  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
+
+  return aIndex - bIndex;
+});
+
+let currentLinkContainer = null;
+
 sortedMatchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
@@ -521,11 +532,17 @@ sortedMatchingURLs.forEach(matchingURL => {
     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
     // Check if the link text is already added
-    if (linkContainer.links.includes(linkText)) {
+    if (currentLinkContainer.links.includes(linkText)) {
       continue;
     }
 
-    linkContainer.links.push(linkText);
+    if (!currentLinkContainer) {
+      currentLinkContainer = document.createElement('div');
+      currentLinkContainer.uniqueId = Math.random().toString(36).substr(2, 10);
+      currentLinkContainer.links = [];
+    }
+
+    currentLinkContainer.links.push(linkText);
 
     const linkElement = document.createElement('a');
     linkElement.href = URL;
@@ -533,13 +550,12 @@ sortedMatchingURLs.forEach(matchingURL => {
     linkElement.textContent = match[0]; // Use the original case for the link text
 
     const nonLinkTextNode = document.createTextNode(nonLinkText);
-    linkContainer.appendChild(nonLinkTextNode);
-    linkContainer.appendChild(linkElement);
+    currentLinkContainer.appendChild(nonLinkTextNode);
+    currentLinkContainer.appendChild(linkElement);
 
     currentIndex = match.index + match[0].length;
   }
 });
-
 
                 sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
