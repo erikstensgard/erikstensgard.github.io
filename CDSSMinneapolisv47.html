@@ -576,9 +576,13 @@ matchingURLs.forEach(matchingURL => {
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
-const uniqueMatchingURLs = matchingURLs.unique();
+const matchingURLs = abxLinkData.filter(item =>
+  contentText.toLowerCase().includes(item.Name.toLowerCase())
+);
 
-uniqueMatchingURLs.forEach(matchingURL => {
+const matchingURLsArray = Array.from(matchingURLs);
+
+matchingURLsArray.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
 
   const linkElement = document.createElement('a');
@@ -588,6 +592,7 @@ uniqueMatchingURLs.forEach(matchingURL => {
 
   linkContainer.appendChild(linkElement);
 });
+
 
           displayCell.appendChild(linkContainer);
         }
