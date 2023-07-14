@@ -580,9 +580,7 @@ const matchingURLs = abxLinkData.filter(item =>
   contentText.toLowerCase().includes(item.Name.toLowerCase())
 );
 
-const matchingURLsArray = Array.from(matchingURLs);
-
-matchingURLsArray.forEach(matchingURL => {
+matchingURLs.forEach(matchingURL => {
   const { Name, URL } = matchingURL;
 
   const linkElement = document.createElement('a');
@@ -592,7 +590,6 @@ matchingURLsArray.forEach(matchingURL => {
 
   linkContainer.appendChild(linkElement);
 });
-
 
           displayCell.appendChild(linkContainer);
         }
