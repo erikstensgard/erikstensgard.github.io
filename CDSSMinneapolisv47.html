@@ -503,14 +503,7 @@ function createOMTable(selectedData) {
                 contentText.toLowerCase().includes(item.Name.toLowerCase())
               );
 
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.indexOf(a.Name);
-                const bIndex = contentText.indexOf(b.Name);
-
-                return aIndex - bIndex;
-              });
-
-              sortedMatchingURLs.forEach(matchingURL => {
+              matchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
@@ -555,6 +548,7 @@ function createOMTable(selectedData) {
         });
 
         if (linkContainer.childNodes.length > 0) {
+          cellContentElement.innerHTML = ''; // Clear existing content
           cellContentElement.appendChild(linkContainer);
         }
       }
@@ -573,6 +567,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
     // Function to filter data based on the selected option
