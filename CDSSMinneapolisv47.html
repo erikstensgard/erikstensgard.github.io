@@ -508,11 +508,9 @@ function createOMTable(selectedData) {
                   contentText.toLowerCase().includes(item.Name.toLowerCase())
                 );
 
-                const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
-
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
-                  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
+                  const aIndex = contentText.indexOf(a.Name);
+                  const bIndex = contentText.indexOf(b.Name);
 
                   return aIndex - bIndex;
                 });
@@ -524,10 +522,10 @@ function createOMTable(selectedData) {
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
                     const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                    const linkText = match[0]; // Use the original case for the link text
 
                     // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
+                    if (linkTexts.has(linkText.toLowerCase())) {
                       continue;
                     }
 
@@ -540,7 +538,7 @@ function createOMTable(selectedData) {
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    linkTexts.add(linkText); // Store the lowercase link text
+                    linkTexts.add(linkText.toLowerCase()); // Store the lowercase link text
                     currentIndex = match.index + match[0].length;
                   }
                 });
@@ -564,19 +562,6 @@ function createOMTable(selectedData) {
           }
 
           displayCell.appendChild(cellContentElement);
-        });
-
-        // Remove duplications in bolded rows
-        const boldedLinks = displayCell.querySelectorAll('.bold a');
-        const linkTexts = new Set();
-
-        boldedLinks.forEach(link => {
-          const linkText = link.textContent.toLowerCase();
-          if (linkTexts.has(linkText)) {
-            link.remove();
-          } else {
-            linkTexts.add(linkText);
-          }
         });
       } else {
         // Add links from MinneapolisAbxLinks.json
@@ -616,6 +601,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
     // Function to filter data based on the selected option
     function filterData(event) {
