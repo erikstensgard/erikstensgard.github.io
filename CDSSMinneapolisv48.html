@@ -213,19 +213,19 @@ function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  data.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
+  const optionSet = new Set(); // Use a set to store unique options
+
+  data.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Name;
+    option.textContent = item.DisplayText || item.Name;
+    optionSet.add(option); // Add the option to the set
   });
 
-  // Sort the data by the number of matches
-  data.sort((a, b) => {
-    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-    const matchesA = getMatchCount(a, searchText);
-    const matchesB = getMatchCount(b, searchText);
-    return matchesB - matchesA;
-  });
+  // Sort the options alphabetically and add them to the dropdown
+  [...optionSet].sort((a, b) => a.textContent.localeCompare(b.textContent))
+    .forEach(option => dropdown.appendChild(option));
+}
 
   data.forEach(item => {
     const option = document.createElement('option');
