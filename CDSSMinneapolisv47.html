@@ -499,7 +499,7 @@ function createOMTable(selectedData) {
               });
               cellContentElement.textContent = cellContent;
             } else {
-              // Handle regular cells with potential links
+              // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
                 const linkTexts = new Set(); // Store unique link texts
@@ -557,6 +557,13 @@ function createOMTable(selectedData) {
               }
             }
           }
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+            displayCell.classList.add('bold');
+          }
+
+          displayCell.appendChild(cellContentElement);
         });
       } else {
         // Add links from MinneapolisAbxLinks.json
@@ -582,12 +589,6 @@ function createOMTable(selectedData) {
         }
       }
 
-      if (Header === 1) {
-        cellContentElement.classList.add('bold');
-        displayCell.classList.add('bold');
-      }
-
-      displayCell.appendChild(cellContentElement);
       bodyRow.appendChild(displayCell);
     }
 
@@ -602,7 +603,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to filter data based on the selected option
     function filterData(event) {
