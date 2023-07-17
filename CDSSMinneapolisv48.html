@@ -449,6 +449,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -463,11 +464,15 @@ function createOMTable(selectedData) {
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
-      const matchingItem = Contents.find(item => item.Row === row && item.Column === column);
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
 
       const displayCell = document.createElement('td');
 
-      if (matchingItem) {
+      if (matchingItems.length > 0) {
+        const matchingItem = matchingItems[0]; // Get the first matching item
+
         const { Text, Item, Header, DisplayText } = matchingItem;
         let cellContent = Text || '';
 
