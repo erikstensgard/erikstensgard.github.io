@@ -492,7 +492,7 @@ function createOMTable(selectedData) {
             const linkContainer = document.createElement('div');
 
             // Regular expression pattern to match link placeholders
-            const linkPattern = /\[(.*?)\]/g;
+            const linkPattern = /\[([^\]]+)\]/g;
             let match;
             let lastIndex = 0;
 
