@@ -227,13 +227,6 @@ function populateDropdown(data) {
     .forEach(option => dropdown.appendChild(option));
 }
 
-  data.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
-  });
-}
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
