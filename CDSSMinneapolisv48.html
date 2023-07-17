@@ -475,7 +475,7 @@ function createOMTable(selectedData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, DisplayText } = matchingItem;
+          const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -501,21 +501,16 @@ function createOMTable(selectedData) {
               });
               cellContentElement.textContent = cellContent;
             } else {
-              // Handle regular cells with potential links
+              // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
-                const linkTexts = new Set(); // Store unique link texts
-
                 const matchingURLs = abxLinkData.filter(item =>
                   contentText.toLowerCase().includes(item.Name.toLowerCase())
                 );
 
-                const matchingURLNames = matchingURLs.map(item => item.Name.toLowerCase());
-
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = matchingURLNames.indexOf(a.Name.toLowerCase());
-                  const bIndex = matchingURLNames.indexOf(b.Name.toLowerCase());
-
+                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
                   return aIndex - bIndex;
                 });
 
@@ -523,6 +518,7 @@ function createOMTable(selectedData) {
                   const { Name, URL } = matchingURL;
                   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                   let match;
+                  const linkTexts = new Set(); // Store unique link texts
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
                     const nonLinkText = contentText.substring(currentIndex, match.index);
@@ -560,7 +556,7 @@ function createOMTable(selectedData) {
             }
           }
 
-          if (matchingItem.Header === 1) { // Check Header property directly from matchingItem
+          if (Header === 1) {
             cellContentElement.classList.add('bold');
             displayCell.classList.add('bold');
           }
