@@ -201,8 +201,6 @@
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
-let itemLinkData = [];
-let abxLinkData = [];
 let selectedData = null; // Currently selected data
 let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
@@ -213,20 +211,27 @@ function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  const optionSet = new Set(); // Use a set to store unique options
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
+
+  // Sort the data by the number of matches
+  data.sort((a, b) => {
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const matchesA = getMatchCount(a, searchText);
+    const matchesB = getMatchCount(b, searchText);
+    return matchesB - matchesA;
+  });
 
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
-    optionSet.add(option); // Add the option to the set
+    dropdown.appendChild(option);
   });
-
-  // Sort the options alphabetically and add them to the dropdown
-  [...optionSet].sort((a, b) => a.textContent.localeCompare(b.textContent))
-    .forEach(option => dropdown.appendChild(option));
 }
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -445,6 +450,7 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
     
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -466,8 +472,6 @@ function createOMTable(selectedData) {
       const displayCell = document.createElement('td');
 
       if (matchingItems.length > 0) {
-        const cellContentElement = document.createElement('div');
-
         matchingItems.forEach(matchingItem => {
           const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
@@ -478,11 +482,14 @@ function createOMTable(selectedData) {
             cellContent = Item;
           }
 
+          const cellContentElement = document.createElement('div');
+
           // Check if cellContent consists only of underscore characters
           if (/^_+$/.test(cellContent)) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent; // Preserve original case-sensitive text
+            let currentIndex = 0;
 
             // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
@@ -492,26 +499,53 @@ function createOMTable(selectedData) {
               });
               cellContentElement.textContent = cellContent;
             } else {
-              const linkContainer = document.createElement('div');
-
+              // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
+                const linkContainer = document.createElement('div');
+                const linkTexts = new Set(); // Store unique link texts
+
                 const matchingURLs = abxLinkData.filter(item =>
                   contentText.toLowerCase().includes(item.Name.toLowerCase())
                 );
 
-                const uniqueURLs = new Set(matchingURLs.map(item => item.URL));
+                matchingURLs.forEach(matchingURL => {
+                  const { Name, URL } = matchingURL;
+                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                  let match;
 
-                uniqueURLs.forEach(url => {
-                  const linkElement = document.createElement('a');
-                  linkElement.href = url;
-                  linkElement.target = '_blank';
-                  linkElement.textContent = contentText;
+                  while ((match = nameRegex.exec(contentText)) !== null) {
+                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                  linkContainer.appendChild(linkElement);
+                    // Check if the link text is already added
+                    if (linkTexts.has(linkText)) {
+                      continue;
+                    }
+
+                    const linkElement = document.createElement('a');
+                    linkElement.href = URL;
+                    linkElement.target = '_blank';
+                    linkElement.textContent = match[0]; // Use the original case for the link text
+
+                    const nonLinkTextNode = document.createTextNode(nonLinkText);
+                    linkContainer.appendChild(nonLinkTextNode);
+                    linkContainer.appendChild(linkElement);
+
+                    linkTexts.add(linkText); // Store the lowercase link text
+                    currentIndex = match.index + match[0].length;
+                  }
                 });
-              }
 
-              cellContentElement.appendChild(linkContainer);
+                if (currentIndex < contentText.length) {
+                  const remainingText = contentText.substring(currentIndex);
+                  const remainingTextNode = document.createTextNode(remainingText);
+                  linkContainer.appendChild(remainingTextNode);
+                }
+
+                cellContentElement.appendChild(linkContainer);
+              } else {
+                cellContentElement.textContent = contentText;
+              }
             }
           }
 
@@ -560,7 +594,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
     // Function to filter data based on the selected option
     function filterData(event) {
