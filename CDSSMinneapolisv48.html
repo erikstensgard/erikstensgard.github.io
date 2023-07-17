@@ -489,57 +489,50 @@ function createOMTable(selectedData) {
             cellContentElement.textContent = cellContent;
           } else {
             const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
+            const linkContainer = document.createElement('div');
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
-            if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
-              cellContentElement.textContent = cellContent;
-            } else {
-              const linkContainer = document.createElement('div');
+            // Regular expression pattern to match link placeholders
+            const linkPattern = /\[(.*?)\]/g;
+            let match;
+            let lastIndex = 0;
 
-              // Check if there are partial string matches with links in a row
-              if (abxLinkData.length > 0) {
-                const matchingURLs = abxLinkData.filter(item =>
-                  contentText.toLowerCase().includes(item.Name.toLowerCase())
-                );
+            while ((match = linkPattern.exec(contentText)) !== null) {
+              const linkText = match[1];
 
-                matchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
-
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0];
-
-                    if (nonLinkText) {
-                      const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
-                    }
-
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.target = '_blank';
-                    linkElement.textContent = linkText;
-                    linkContainer.appendChild(linkElement);
-
-                    currentIndex = match.index + match[0].length;
-                  }
-                });
+              if (lastIndex < match.index) {
+                // Create text node for the non-link text before the link placeholder
+                const nonLinkText = contentText.slice(lastIndex, match.index);
+                const nonLinkTextNode = document.createTextNode(nonLinkText);
+                linkContainer.appendChild(nonLinkTextNode);
               }
 
-              if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
+              const matchingLink = abxLinkData.find(
+                linkItem => linkItem.Name.trim().toLowerCase() === linkText.trim().toLowerCase()
+              );
+
+              if (matchingLink) {
+                const { URL } = matchingLink;
+                const linkElement = document.createElement('a');
+                linkElement.href = URL;
+                linkElement.target = '_blank';
+                linkElement.textContent = linkText;
+                linkContainer.appendChild(linkElement);
+              } else {
+                const linkTextNode = document.createTextNode(`[${linkText}]`);
+                linkContainer.appendChild(linkTextNode);
               }
 
-              cellContentElement.appendChild(linkContainer);
+              lastIndex = match.index + match[0].length;
             }
+
+            if (lastIndex < contentText.length) {
+              // Create text node for the remaining non-link text after the last link placeholder
+              const remainingText = contentText.slice(lastIndex);
+              const remainingTextNode = document.createTextNode(remainingText);
+              linkContainer.appendChild(remainingTextNode);
+            }
+
+            cellContentElement.appendChild(linkContainer);
           }
 
           if (Header === 1) {
@@ -567,7 +560,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
