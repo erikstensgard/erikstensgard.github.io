@@ -450,6 +450,7 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -542,7 +543,9 @@ function createOMTable(selectedData) {
                 linkContainer.appendChild(remainingTextNode);
               }
 
-              cellContentElement.appendChild(linkContainer);
+              const linkDiv = document.createElement('div');
+              linkDiv.appendChild(linkContainer);
+              cellContentElement.appendChild(linkDiv);
             } else {
               cellContentElement.textContent = contentText;
             }
@@ -571,6 +574,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
   // Function to filter data based on the selected option
     function filterData(event) {
