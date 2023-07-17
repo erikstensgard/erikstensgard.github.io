@@ -497,47 +497,23 @@ function createOMTable(selectedData) {
               });
               cellContentElement.textContent = cellContent;
             } else {
-              let currentIndex = 0;
               const linkContainer = document.createElement('div');
 
               if (abxLinkData.length > 0) {
-                const linkTexts = new Set(); // Store unique link texts
+                const matchingURLs = abxLinkData.filter(item =>
+                  contentText.toLowerCase().includes(item.Name.toLowerCase())
+                );
 
-                abxLinkData.forEach(linkData => {
-                  const { Name, URL } = linkData;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
+                const uniqueURLs = new Set(matchingURLs.map(item => item.URL));
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                uniqueURLs.forEach(url => {
+                  const linkElement = document.createElement('a');
+                  linkElement.href = url;
+                  linkElement.target = '_blank';
+                  linkElement.textContent = contentText;
 
-                    if (nonLinkText !== '' && !/^_+$/.test(nonLinkText)) {
-                      const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
-                    }
-
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
-
-                    if (!linkTexts.has(linkText)) {
-                      const linkElement = document.createElement('a');
-                      linkElement.href = URL;
-                      linkElement.target = '_blank';
-                      linkElement.textContent = match[0]; // Use the original case for the link text
-
-                      linkContainer.appendChild(linkElement);
-
-                      linkTexts.add(linkText); // Store the lowercase link text
-                    }
-
-                    currentIndex = match.index + match[0].length;
-                  }
+                  linkContainer.appendChild(linkElement);
                 });
-              }
-
-              if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(currentIndex);
-                const remainingTextNode = document.createTextNode(remainingText);
-                linkContainer.appendChild(remainingTextNode);
               }
 
               cellContentElement.appendChild(linkContainer);
