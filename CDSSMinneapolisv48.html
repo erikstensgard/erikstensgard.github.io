@@ -528,9 +528,13 @@ function createOMTable(selectedData) {
                   linkElement.target = '_blank';
                   linkElement.textContent = match[0]; // Use the original case for the link text
 
+                  const linkTextContainer = document.createElement('div');
+                  linkTextContainer.textContent = match[0];
+                  linkTextContainer.appendChild(linkElement);
+
                   const nonLinkTextNode = document.createTextNode(nonLinkText);
                   linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
+                  linkContainer.appendChild(linkTextContainer);
 
                   linkTexts.add(linkText); // Store the lowercase link text
                   currentIndex = match.index + match[0].length;
@@ -543,9 +547,7 @@ function createOMTable(selectedData) {
                 linkContainer.appendChild(remainingTextNode);
               }
 
-              const linkDiv = document.createElement('div');
-              linkDiv.appendChild(linkContainer);
-              cellContentElement.appendChild(linkDiv);
+              cellContentElement.appendChild(linkContainer);
             } else {
               cellContentElement.textContent = contentText;
             }
