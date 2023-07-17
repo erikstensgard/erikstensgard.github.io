@@ -513,8 +513,14 @@ function createOMTable(selectedData) {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
+                let lastIndex = 0; // Track the last index to avoid overlapping matches
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
+                  // Check if the current match overlaps with the last match
+                  if (match.index < lastIndex) {
+                    continue;
+                  }
+
                   const nonLinkText = contentText.substring(currentIndex, match.index);
                   const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
@@ -538,6 +544,7 @@ function createOMTable(selectedData) {
 
                   linkTexts.add(linkText); // Store the lowercase link text
                   currentIndex = match.index + match[0].length;
+                  lastIndex = match.index + match[0].length;
                 }
               });
 
@@ -576,6 +583,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
   // Function to filter data based on the selected option
