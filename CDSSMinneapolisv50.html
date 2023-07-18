@@ -531,6 +531,7 @@ function createOMTable(selectedData) {
 
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
+                    linkElement.classList.add('AbxLink');
                     linkElement.target = '_blank';
                     linkElement.textContent = match[0]; // Use the original case for the link text
 
