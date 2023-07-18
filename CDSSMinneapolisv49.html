@@ -485,8 +485,7 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-
-          else {
+          
             const contentText = cellContent; // Preserve original case-sensitive text
             let currentIndex = 0;
 
@@ -551,7 +550,6 @@ function createOMTable(selectedData) {
                 cellContentElement.textContent = contentText;
               }
             }
-          }
 
           if (Header === 1) {
             cellContentElement.classList.add('bold');
