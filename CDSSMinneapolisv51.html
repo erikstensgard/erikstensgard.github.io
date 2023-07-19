@@ -514,39 +514,40 @@ function createOMTable(selectedData, abxLinkData) {
               });
 
               sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL, AltName1, AltURL1 } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                let match;
-                const linkTexts = new Set(); // Store unique link texts
+  const { Name, URL, AltName1, AltURL1 } = matchingURL;
+  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+  let match;
+  const linkTexts = new Set(); // Store unique link texts
 
-                while ((match = nameRegex.exec(contentText)) !== null) {
-                  const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+  while ((match = nameRegex.exec(contentText)) !== null) {
+    const nonLinkText = contentText.substring(currentIndex, match.index);
+    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                  // Check if the link text is already added
-                  if (linkTexts.has(linkText)) {
-                    continue;
-                  }
+    // Check if the link text is already added
+    if (linkTexts.has(linkText)) {
+      continue;
+    }
 
-                  let linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.classList.add('AbxLink');
-                  linkElement.target = '_blank';
-                  linkElement.textContent = match[0]; // Use the original case for the link text
+    let linkElement = document.createElement('a');
+    linkElement.href = URL;
+    linkElement.classList.add('AbxLink');
+    linkElement.target = '_blank';
+    linkElement.textContent = match[0]; // Use the original case for the link text
 
-                  // Check if AltName1 is not null and if AltName1 exists in the remaining text
-                  if (AltName1 && contentText.toLowerCase().includes(AltName1.toLowerCase(), currentIndex)) {
-                    linkElement.href = AltURL1; // Use AltURL1 if AltName1 is present
-                  }
+    // Check if AltName1 is not null and if AltName1 exists in the remaining text
+    const remainingText = contentText.toLowerCase().substring(currentIndex + match[0].length);
+    if (AltName1 && remainingText.includes(AltName1.toLowerCase())) {
+      linkElement.href = AltURL1; // Use AltURL1 if AltName1 is present
+    }
 
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
+    const nonLinkTextNode = document.createTextNode(nonLinkText);
+    linkContainer.appendChild(nonLinkTextNode);
+    linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText); // Store the lowercase link text
-                  currentIndex = match.index + match[0].length;
-                }
-              });
+    linkTexts.add(linkText); // Store the lowercase link text
+    currentIndex = match.index + match[0].length;
+  }
+});
 
               if (currentIndex < contentText.length) {
                 const remainingText = contentText.substring(currentIndex);
