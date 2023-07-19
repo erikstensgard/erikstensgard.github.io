@@ -466,6 +466,7 @@ function isMatchInRow(cellContent, name, altname1, altname2) {
 }
 
 // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -521,7 +522,7 @@ function createOMTable(selectedData, abxLinkData) {
             cellContentElement.textContent = cellContent;
           } else {
             // Check if there are partial string matches with links in a row
-            if (abxLinkData.length > 0) {
+            if (abxLinkData && abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
 
               // Filter matching URLs based on the new function 'isMatchInRow'
@@ -587,7 +588,7 @@ function createOMTable(selectedData, abxLinkData) {
       } else {
         // Add links from MinneapolisAbxLinks.json
         const contentText = '';
-        if (abxLinkData.length > 0) {
+        if (abxLinkData && abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
 
           // Filter matching URLs based on the new function 'isMatchInRow'
@@ -655,6 +656,7 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
+
 
   // Function to filter data based on the selected option
     function filterData(event) {
