@@ -455,7 +455,13 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to create the table with OMJSON data
+// Function to search for wild card matches
+function findWildcardMatch(text, pattern) {
+  const regexPattern = pattern.replace(/\*/g, '\\S*');
+  const regex = new RegExp(regexPattern, 'i');
+  return regex.test(text);
+}
+
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -504,16 +510,9 @@ function createOMTable(selectedData) {
               // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
-                const matchingURLs = abxLinkData.filter(item => {
-  // Convert the search pattern to a regular expression with wildcards
-  const searchPattern = item.Name.replace(/\*/g, '\\S*');
-
-  // Create a case-insensitive regular expression
-  const regex = new RegExp(searchPattern, 'i');
-
-  // Test if the contentText matches the regular expression
-  return regex.test(contentText);
-});
+               const matchingURLs = abxLinkData.filter(item =>
+  findWildcardMatch(contentText.toLowerCase(), item.Name.toLowerCase())
+);
 
 
                 const sortedMatchingURLs = matchingURLs.sort((a, b) => {
