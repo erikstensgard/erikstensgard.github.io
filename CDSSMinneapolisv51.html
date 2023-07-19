@@ -610,24 +610,26 @@ function createOMTable(selectedData, abxLinkData) {
 }
 
 
-  // Function to filter data based on the selected option
-    function filterData(event) {
+// Inside the filterData function, when calling createOMTable, pass the abxLinkData as an argument
+function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
     selectedData = matchingData;
-    createOMTable(matchingData);
+    createOMTable(matchingData, abxLinkData); // Pass abxLinkData here
     pushHistory(matchingData.Name);
   } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+
+  scrollToTop();
   adjustFontSize();
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -743,18 +745,25 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
+    abxLinkData = abxlinkjsonData;
+
+    // Populate the dropdown with OMJSON data
     populateDropdown(omData);
 
+    // Set the initial value for the dropdown
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+
+    // Initialize the history and forwardHistory arrays
+    pushHistory(dropdown.value);
+
+    // Filter the data based on the selected value in the dropdown
     filterData({ target: dropdown });
   })
   .catch(error => {
     console.error('Error:', error);
   });
-
+    
   </script>
 </body>
 
