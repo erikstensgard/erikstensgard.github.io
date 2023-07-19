@@ -410,7 +410,7 @@ function handleRowClick(item) {
 
   if (matchingItem) {
     selectedData = matchingItem;
-    createOMTable(matchingItem);
+    createOMTable(matchingItem, abxLinkData);
     pushHistory(matchingItem.Name);
   } else {
     const matchingLink = itemLinkData.find(
@@ -641,7 +641,7 @@ function createOMTable(selectedData, abxLinkData) {
 
   if (matchingData) {
     selectedData = matchingData;
-    createOMTable(matchingData);
+    createOMTable(matchingData,abxLinkData);
     pushHistory(matchingData.Name);
   } else {
       // Handle the case when selectedData is not found
