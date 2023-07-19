@@ -455,7 +455,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-function createOMTable(selectedData, abxLinkData) {
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -603,7 +603,7 @@ function createOMTable(selectedData, abxLinkData) {
 
 
   // Function to filter data based on the selected option
-    function filterData(event) {
+ function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
@@ -612,14 +612,15 @@ function createOMTable(selectedData, abxLinkData) {
     createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+  scrollToTop();
   adjustFontSize();
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
