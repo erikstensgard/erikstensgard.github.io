@@ -196,12 +196,12 @@
       const data = await response.json();
       return data;
     }
-        // Fetch AbxLink Data
-    async function fetchAbxLink() {
-      const response = await fetch('MinneapolisAbxLinks.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch AbxLink Data
+async function fetchAbxLink() {
+  const response = await fetch('MinneapolisAbxLinks.json');
+  const data = await response.json();
+  return data;
+}
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -465,8 +465,27 @@ function isMatchInRow(cellContent, name, altname1, altname2) {
   );
 }
 
-// Function to create the table with OMJSON data
-// Function to create the table with OMJSON data
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
+    omData = omjsonData;
+    odData = odjsonData;
+    itemLinkData = itemlinkjsonData;
+    abxLinkData = abxlinkjsonData;
+    populateDropdown(omData);
+
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    filterData({ target: dropdown });
+
+    // Call createOMTable after all data is fetched
+    createOMTable(selectedData, abxLinkData);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
 // Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
