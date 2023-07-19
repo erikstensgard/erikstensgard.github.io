@@ -526,6 +526,7 @@ function addAbxLinksToContent(contentText, abxLinks) {
   adjustFontSize();
 }
 // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -580,8 +581,56 @@ function createOMTable(selectedData, abxLinkData) {
                 contentText.toLowerCase().includes(item.Name.toLowerCase())
               );
 
-              const linkContainer = addAbxLinksToContent(contentText, matchingURLs);
-              cellContentElement.appendChild(linkContainer);
+              if (matchingURLs.length > 0) {
+                const linkContainer = document.createElement('div');
+                let startIndex = 0;
+
+                matchingURLs.forEach(matchingURL => {
+                  const { Name, URL, AltName1, AltURL1 } = matchingURL;
+                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                  let match;
+                  const linkTexts = new Set(); // Store unique link texts
+
+                  while ((match = nameRegex.exec(contentText)) !== null) {
+                    const nonLinkText = contentText.substring(startIndex, match.index);
+                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+
+                    // Check if the link text is already added
+                    if (linkTexts.has(linkText)) {
+                      continue;
+                    }
+
+                    let linkElement = document.createElement('a');
+                    linkElement.href = URL;
+                    linkElement.classList.add('AbxLink');
+                    linkElement.target = '_blank';
+                    linkElement.textContent = match[0]; // Use the original case for the link text
+
+                    // Check if AltName1 is not null and if AltName1 exists in the remaining text
+                    const remainingText = contentText.toLowerCase().substring(match.index + match[0].length);
+                    if (AltName1 && remainingText.includes(AltName1.toLowerCase())) {
+                      linkElement.href = AltURL1; // Use AltURL1 if AltName1 is present
+                    }
+
+                    const nonLinkTextNode = document.createTextNode(nonLinkText);
+                    linkContainer.appendChild(nonLinkTextNode);
+                    linkContainer.appendChild(linkElement);
+
+                    linkTexts.add(linkText); // Store the lowercase link text
+                    startIndex = match.index + match[0].length;
+                  }
+                });
+
+                if (startIndex < contentText.length) {
+                  const remainingText = contentText.substring(startIndex);
+                  const remainingTextNode = document.createTextNode(remainingText);
+                  linkContainer.appendChild(remainingTextNode);
+                }
+
+                cellContentElement.appendChild(linkContainer);
+              } else {
+                cellContentElement.textContent = contentText;
+              }
             } else {
               cellContentElement.textContent = contentText;
             }
@@ -597,8 +646,22 @@ function createOMTable(selectedData, abxLinkData) {
             contentText.includes(item.Name.toLowerCase())
           );
 
-          const linkContainer = addAbxLinksToContent(contentText, matchingURLs);
-          displayCell.appendChild(linkContainer);
+          if (matchingURLs.length > 0) {
+            const linkContainer = document.createElement('div');
+            matchingURLs.forEach(matchingURL => {
+              const { Name, URL } = matchingURL;
+
+              const linkElement = document.createElement('a');
+              linkElement.href = URL;
+              linkElement.classList.add('AbxLink');
+              linkElement.target = '_blank';
+              linkElement.textContent = Name;
+
+              linkContainer.appendChild(linkElement);
+            });
+
+            displayCell.appendChild(linkContainer);
+          }
         }
       }
 
@@ -616,6 +679,7 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
