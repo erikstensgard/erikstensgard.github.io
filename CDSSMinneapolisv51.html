@@ -455,7 +455,10 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-function createOMTable(selectedData) {
+// Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
+function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -489,68 +492,59 @@ function createOMTable(selectedData) {
           const cellContentElement = document.createElement('div');
 
           const contentText = cellContent; // Preserve original case-sensitive text
-          let currentIndex = 0;
 
-          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem);
-            });
-            cellContentElement.textContent = cellContent;
-          } else {
-            if (abxLinkData.length > 0) {
-              const linkContainer = document.createElement('div');
-              const matchingURLs = abxLinkData.filter(item =>
-                contentText.toLowerCase().includes(item.Name.toLowerCase()) ||
-                (item.AltName1 && contentText.toLowerCase().includes(item.AltName1.toLowerCase())) ||
-                (item.AltName2 && contentText.toLowerCase().includes(item.AltName2.toLowerCase()))
-              );
+          // New logic to check for links based on name, altname1, and altname2
+          const matchingLinks = abxLinkData.filter(item => {
+            const nameMatch = contentText.toLowerCase().includes(item.name.toLowerCase());
+            const altName1Match = item.altname1 && contentText.toLowerCase().includes(item.altname1.toLowerCase());
+            const altName2Match = item.altname2 && contentText.toLowerCase().includes(item.altname2.toLowerCase());
 
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                return aIndex - bIndex;
-              });
+            return (altName1Match && altName2Match) || (!item.altname2 && altName1Match) || (!item.altname1 && nameMatch);
+          });
 
-              sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                let match;
-                const linkTexts = new Set();
+          if (matchingLinks.length > 0) {
+            const linkContainer = document.createElement('div');
 
-                while ((match = nameRegex.exec(contentText)) !== null) {
-                  const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0].toLowerCase();
+            matchingLinks.forEach(matchingURL => {
+              const { name, URL } = matchingURL;
+              const nameRegex = new RegExp(`\\b${name}\\b`, 'gi');
+              let match;
+              const linkTexts = new Set(); // Store unique link texts
+              let currentIndex = 0;
 
-                  if (linkTexts.has(linkText)) {
-                    continue;
-                  }
+              while ((match = nameRegex.exec(contentText)) !== null) {
+                const nonLinkText = contentText.substring(currentIndex, match.index);
+                const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.classList.add('AbxLink');
-                  linkElement.target = '_blank';
-                  linkElement.textContent = match[0];
-
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
-
-                  linkTexts.add(linkText);
-                  currentIndex = match.index + match[0].length;
+                // Check if the link text is already added
+                if (linkTexts.has(linkText)) {
+                  continue;
                 }
-              });
+
+                const linkElement = document.createElement('a');
+                linkElement.href = URL;
+                linkElement.classList.add('AbxLink');
+                linkElement.target = '_blank';
+                linkElement.textContent = match[0]; // Use the original case for the link text
+
+                const nonLinkTextNode = document.createTextNode(nonLinkText);
+                linkContainer.appendChild(nonLinkTextNode);
+                linkContainer.appendChild(linkElement);
+
+                linkTexts.add(linkText); // Store the lowercase link text
+                currentIndex = match.index + match[0].length;
+              }
 
               if (currentIndex < contentText.length) {
                 const remainingText = contentText.substring(currentIndex);
                 const remainingTextNode = document.createTextNode(remainingText);
                 linkContainer.appendChild(remainingTextNode);
               }
+            });
 
-              cellContentElement.appendChild(linkContainer);
-            } else {
-              cellContentElement.textContent = contentText;
-            }
+            cellContentElement.appendChild(linkContainer);
+          } else {
+            cellContentElement.textContent = contentText;
           }
 
           if (Header === 1) {
@@ -561,23 +555,22 @@ function createOMTable(selectedData) {
           displayCell.appendChild(cellContentElement);
         });
       } else {
+        // Add links from abxLinkData when no matching items in the row
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase()) ||
-            (item.AltName1 && contentText.includes(item.AltName1.toLowerCase())) ||
-            (item.AltName2 && contentText.includes(item.AltName2.toLowerCase()))
+            contentText.includes(item.name.toLowerCase())
           );
 
           matchingURLs.forEach(matchingURL => {
-            const { Name, URL } = matchingURL;
+            const { name, URL } = matchingURL;
 
             const linkElement = document.createElement('a');
             linkElement.href = URL;
             linkElement.classList.add('AbxLink');
             linkElement.target = '_blank';
-            linkElement.textContent = Name;
+            linkElement.textContent = name;
 
             linkContainer.appendChild(linkElement);
           });
@@ -602,8 +595,9 @@ function createOMTable(selectedData) {
 }
 
 
+
   // Function to filter data based on the selected option
- function filterData(event) {
+    function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
@@ -612,15 +606,14 @@ function createOMTable(selectedData) {
     createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
-    // Handle the case when selectedData is not found
-    // For example, display an error message or clear the result container
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected data not found.';
-  }
-  scrollToTop();
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
+    }
+  scrollToTop()
   adjustFontSize();
 }
-
 
 // Function to push the current selection to the history
 function pushHistory(item) {
