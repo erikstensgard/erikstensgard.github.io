@@ -519,17 +519,7 @@ function createOMTable(selectedData, abxLinkData) {
           }
 
           const cellContentElement = document.createElement('div');
-
-          // Function to check if the required names are present in the row
-          const isMatchInRow = (name, altname1, altname2) => {
-            const lowerContentText = cellContent.toLowerCase();
-            return (
-              lowerContentText.includes(name.toLowerCase()) &&
-              (!altname1 || lowerContentText.includes(altname1.toLowerCase())) &&
-              (!altname2 || lowerContentText.includes(altname2.toLowerCase()))
-            );
-          };
-
+          
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
