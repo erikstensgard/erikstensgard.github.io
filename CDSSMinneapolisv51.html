@@ -478,7 +478,7 @@ function createOMTable(selectedData, abxLinkData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
+          const { Text, Item, Header, DisplayText, AltName1, AltName2 } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -543,7 +543,7 @@ function createOMTable(selectedData, abxLinkData) {
                 }
 
                 // Check for AltName1 and AltName2 matches in the first row
-                if ((AltName1 || AltName2) && currentIndex >= contentText.length) {
+                if (row === 1 && (AltName1 || AltName2) && currentIndex >= contentText.length) {
                   const linkText = AltName1 || AltName2;
                   const linkElement = document.createElement('a');
                   linkElement.href = URL;
@@ -575,9 +575,9 @@ function createOMTable(selectedData, abxLinkData) {
           displayCell.appendChild(cellContentElement);
         });
       } else {
-        // Add links from MinneapolisAbxLinks.json
-        const contentText = '';
-        if (abxLinkData.length > 0) {
+        // Add links from MinneapolisAbxLinks.json to the first row
+        if (row === 1 && abxLinkData.length > 0) {
+          const contentText = '';
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
             contentText.includes(item.Name.toLowerCase())
@@ -613,7 +613,6 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
-
 
   // Function to filter data based on the selected option
     function filterData(event) {
