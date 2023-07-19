@@ -582,25 +582,16 @@ function createOMTable(selectedData, abxLinkData) {
               );
 
               if (matchingURLs.length > 0) {
-                const linkContainer = document.createElement('div');
                 let startIndex = 0;
-
                 matchingURLs.forEach(matchingURL => {
                   const { Name, URL, AltName1, AltURL1 } = matchingURL;
                   const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                   let match;
-                  const linkTexts = new Set(); // Store unique link texts
-
                   while ((match = nameRegex.exec(contentText)) !== null) {
                     const nonLinkText = contentText.substring(startIndex, match.index);
                     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
-
-                    let linkElement = document.createElement('a');
+                    const linkElement = document.createElement('a');
                     linkElement.href = URL;
                     linkElement.classList.add('AbxLink');
                     linkElement.target = '_blank';
@@ -613,10 +604,9 @@ function createOMTable(selectedData, abxLinkData) {
                     }
 
                     const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+                    cellContentElement.appendChild(nonLinkTextNode);
+                    cellContentElement.appendChild(linkElement);
 
-                    linkTexts.add(linkText); // Store the lowercase link text
                     startIndex = match.index + match[0].length;
                   }
                 });
@@ -624,10 +614,8 @@ function createOMTable(selectedData, abxLinkData) {
                 if (startIndex < contentText.length) {
                   const remainingText = contentText.substring(startIndex);
                   const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
+                  cellContentElement.appendChild(remainingTextNode);
                 }
-
-                cellContentElement.appendChild(linkContainer);
               } else {
                 cellContentElement.textContent = contentText;
               }
@@ -639,30 +627,7 @@ function createOMTable(selectedData, abxLinkData) {
           displayCell.appendChild(cellContentElement);
         });
       } else {
-        // Add links from MinneapolisAbxLinks.json
-        const contentText = '';
-        if (abxLinkData && abxLinkData.length > 0) {
-          const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
-          );
-
-          if (matchingURLs.length > 0) {
-            const linkContainer = document.createElement('div');
-            matchingURLs.forEach(matchingURL => {
-              const { Name, URL } = matchingURL;
-
-              const linkElement = document.createElement('a');
-              linkElement.href = URL;
-              linkElement.classList.add('AbxLink');
-              linkElement.target = '_blank';
-              linkElement.textContent = Name;
-
-              linkContainer.appendChild(linkElement);
-            });
-
-            displayCell.appendChild(linkContainer);
-          }
-        }
+        displayCell.textContent = ''; // Clear the cell if there are no matching items
       }
 
       bodyRow.appendChild(displayCell);
