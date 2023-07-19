@@ -196,12 +196,13 @@
       const data = await response.json();
       return data;
     }
-        // Fetch AbxLink Data
-    async function fetchAbxLink() {
-      const response = await fetch('MinneapolisAbxLinks.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch AbxLink Data
+async function fetchAbxLink() {
+  const response = await fetch('MinneapolisAbxLinks.json');
+  const data = await response.json();
+  return data;
+}
+
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -455,7 +456,6 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to create the table with OMJSON data
 // Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
@@ -727,7 +727,11 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
+    abxLinkData = abxlinkjsonData;
+
+    // Call the createOMTable function with the fetched abxLinkData
+    createOMTable(selectedData, abxLinkData);
+
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
