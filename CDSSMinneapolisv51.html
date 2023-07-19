@@ -501,7 +501,7 @@ function createOMTable(selectedData, abxLinkData) {
             cellContentElement.textContent = cellContent;
           } else {
             // Check if there are partial string matches with links in a row
-            if (abxLinkData.length > 0) {
+            if (abxLinkData && abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const matchingURLs = abxLinkData.filter(item =>
                 contentText.toLowerCase().includes(item.Name.toLowerCase())
@@ -570,7 +570,7 @@ function createOMTable(selectedData, abxLinkData) {
       } else {
         // Add links from MinneapolisAbxLinks.json
         const contentText = '';
-        if (abxLinkData.length > 0) {
+        if (abxLinkData && abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
             contentText.includes(item.Name.toLowerCase())
@@ -606,7 +606,6 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
-
 
   // Function to filter data based on the selected option
     function filterData(event) {
