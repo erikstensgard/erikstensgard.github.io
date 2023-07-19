@@ -455,7 +455,6 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -549,8 +548,10 @@ function createOMTable(selectedData) {
                 if (currentIndex < contentText.length) {
                   const remainingText = contentText.substring(currentIndex);
                   const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-}
+                
+const remainingTextNode = document.createTextNode(remainingText);
+  linkContainer.appendChild(remainingTextNode);
+              }
 
           cellContentElement.appendChild(linkContainer);
         }
@@ -593,6 +594,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
   // Function to filter data based on the selected option
     function filterData(event) {
