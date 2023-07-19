@@ -456,7 +456,7 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
-function createOMTable(selectedData, abxLinkData) {
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -690,23 +690,26 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
-// Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
+    abxLinkData = abxlinkjsonData;
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
     pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
     filterData({ target: dropdown });
+
+    // Call createOMTable with the fetched abxLinkData
+    createOMTable(selectedData, abxLinkData);
   })
   .catch(error => {
     console.error('Error:', error);
   });
+
 
   </script>
 </body>
