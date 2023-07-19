@@ -275,7 +275,7 @@ function searchData() {
     const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
 
     if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+      return bDisplayTextMatches - aDisplayTextMatches; // Sort by the number of matches in DisplayText
     }
 
     const aContentMatches = (a.Contents || []).reduce((count, content) => {
@@ -288,11 +288,12 @@ function searchData() {
       return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
     }, 0);
 
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    return bContentMatches - aContentMatches; // Sort by the number of matches in Contents Text
   });
 
   populateDropdown(filteredData);
 }
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
