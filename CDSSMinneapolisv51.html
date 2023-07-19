@@ -548,8 +548,8 @@ function createOMTable(selectedData) {
 
                 if (currentIndex < contentText.length) {
                   const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remaining
-
+                  const remainingTextNode = document.createTextNode(remainingText);
+                  linkContainer.appendChild(remainingTextNode);
 }
 
           cellContentElement.appendChild(linkContainer);
@@ -593,7 +593,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
   // Function to filter data based on the selected option
     function filterData(event) {
