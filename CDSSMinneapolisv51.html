@@ -455,7 +455,6 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -478,7 +477,7 @@ function createOMTable(selectedData, abxLinkData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText, AltName1, AltName2 } = matchingItem;
+          const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -492,7 +491,6 @@ function createOMTable(selectedData, abxLinkData) {
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
-          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
           if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
             cellContentElement.classList.add('clickable');
             cellContentElement.addEventListener('click', () => {
@@ -500,11 +498,12 @@ function createOMTable(selectedData, abxLinkData) {
             });
             cellContentElement.textContent = cellContent;
           } else {
-            // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const matchingURLs = abxLinkData.filter(item =>
-                contentText.toLowerCase().includes(item.Name.toLowerCase())
+                contentText.toLowerCase().includes(item.Name.toLowerCase()) ||
+                (item.AltName1 && contentText.toLowerCase().includes(item.AltName1.toLowerCase())) ||
+                (item.AltName2 && contentText.toLowerCase().includes(item.AltName2.toLowerCase()))
               );
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
@@ -514,16 +513,15 @@ function createOMTable(selectedData, abxLinkData) {
               });
 
               sortedMatchingURLs.forEach(matchingURL => {
-                const { Name, URL, AltName1, AltName2 } = matchingURL;
+                const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
-                const linkTexts = new Set(); // Store unique link texts
+                const linkTexts = new Set();
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                  const linkText = match[0].toLowerCase();
 
-                  // Check if the link text is already added
                   if (linkTexts.has(linkText)) {
                     continue;
                   }
@@ -532,26 +530,14 @@ function createOMTable(selectedData, abxLinkData) {
                   linkElement.href = URL;
                   linkElement.classList.add('AbxLink');
                   linkElement.target = '_blank';
-                  linkElement.textContent = match[0]; // Use the original case for the link text
+                  linkElement.textContent = match[0];
 
                   const nonLinkTextNode = document.createTextNode(nonLinkText);
                   linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText); // Store the lowercase link text
+                  linkTexts.add(linkText);
                   currentIndex = match.index + match[0].length;
-                }
-
-                // Check for AltName1 and AltName2 matches in the first row
-                if (row === 1 && (AltName1 || AltName2) && currentIndex >= contentText.length) {
-                  const linkText = AltName1 || AltName2;
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.classList.add('AbxLink');
-                  linkElement.target = '_blank';
-                  linkElement.textContent = linkText;
-
-                  linkContainer.appendChild(linkElement);
                 }
               });
 
@@ -575,12 +561,13 @@ function createOMTable(selectedData, abxLinkData) {
           displayCell.appendChild(cellContentElement);
         });
       } else {
-        // Add links from MinneapolisAbxLinks.json to the first row
-        if (row === 1 && abxLinkData.length > 0) {
-          const contentText = '';
+        const contentText = '';
+        if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
+            contentText.includes(item.Name.toLowerCase()) ||
+            (item.AltName1 && contentText.includes(item.AltName1.toLowerCase())) ||
+            (item.AltName2 && contentText.includes(item.AltName2.toLowerCase()))
           );
 
           matchingURLs.forEach(matchingURL => {
@@ -613,6 +600,7 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
+
 
   // Function to filter data based on the selected option
     function filterData(event) {
