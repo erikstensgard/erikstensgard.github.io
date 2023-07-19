@@ -467,6 +467,7 @@ function isMatchInRow(cellContent, name, altname1, altname2) {
 
 // Function to create the table with OMJSON data
 // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -538,6 +539,8 @@ function createOMTable(selectedData, abxLinkData) {
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
+                if (!Name || !URL) return;
+
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
                 const linkTexts = new Set(); // Store unique link texts
@@ -604,6 +607,8 @@ function createOMTable(selectedData, abxLinkData) {
 
           sortedMatchingURLs.forEach(matchingURL => {
             const { Name, URL } = matchingURL;
+            if (!Name || !URL) return;
+
             const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
             let match;
             const linkTexts = new Set(); // Store unique link texts
