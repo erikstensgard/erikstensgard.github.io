@@ -502,21 +502,16 @@ function createOMTable(selectedData, abxLinkData) {
             cellContentElement.textContent = cellContent;
           } else {
             // Check if there are partial string matches with links in a row
-            if (abxLinkData.length > 0) {
+            if (abxLinkData && abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
-
-              // Check if altname1 and altname2 are not null
-              const altname1NotNull = matchingItem.altname1 !== null;
-              const altname2NotNull = matchingItem.altname2 !== null;
-
               const matchingURLs = abxLinkData.filter(item => {
                 const nameMatch = contentText.toLowerCase().includes(item.name.toLowerCase());
-                const altname1Match = altname1NotNull && contentText.toLowerCase().includes(item.altname1.toLowerCase());
-                const altname2Match = altname2NotNull && contentText.toLowerCase().includes(item.altname2.toLowerCase());
+                const altname1Match = matchingItem.altname1 !== null && contentText.toLowerCase().includes(matchingItem.altname1.toLowerCase());
+                const altname2Match = matchingItem.altname2 !== null && contentText.toLowerCase().includes(matchingItem.altname2.toLowerCase());
 
-                return (altname1NotNull && altname2NotNull) ? (nameMatch && altname1Match && altname2Match)
-                     : (altname1NotNull) ? (nameMatch && altname1Match)
-                     : nameMatch;
+                return (matchingItem.altname1 !== null && matchingItem.altname2 !== null) ? (nameMatch && altname1Match && altname2Match)
+                  : (matchingItem.altname1 !== null) ? (nameMatch && altname1Match)
+                  : nameMatch;
               });
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
@@ -577,7 +572,7 @@ function createOMTable(selectedData, abxLinkData) {
       } else {
         // Add links from MinneapolisAbxLinks.json
         const contentText = '';
-        if (abxLinkData.length > 0) {
+        if (abxLinkData && abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
             contentText.includes(item.name.toLowerCase())
@@ -613,7 +608,6 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
