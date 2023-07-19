@@ -542,41 +542,16 @@ function createOMTable(selectedData, abxLinkData) {
                   currentIndex = match.index + match[0].length;
                 }
 
-                // Check for AltName1 and AltName2 matches in the current row and the next row
+                // Check for AltName1 and AltName2 matches in the first row
                 if ((AltName1 || AltName2) && currentIndex >= contentText.length) {
-                  const nextRow = row + 1; // Check the next row
-                  const nextRowText = Contents.find(item => item.Row === nextRow)?.Text || '';
-                  const altName1Regex = AltName1 ? new RegExp(`\\b${AltName1}\\b`, 'gi') : null;
-                  const altName2Regex = AltName2 ? new RegExp(`\\b${AltName2}\\b`, 'gi') : null;
+                  const linkText = AltName1 || AltName2;
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.classList.add('AbxLink');
+                  linkElement.target = '_blank';
+                  linkElement.textContent = linkText;
 
-                  if (altName1Regex || altName2Regex) {
-                    let nextRowMatch;
-                    let altTextMatch;
-
-                    if (altName1Regex) {
-                      altTextMatch = altName1Regex.exec(nextRowText);
-                      if (altTextMatch) {
-                        nextRowMatch = true;
-                      }
-                    }
-
-                    if (altName2Regex && !nextRowMatch) {
-                      altTextMatch = altName2Regex.exec(nextRowText);
-                      if (altTextMatch) {
-                        nextRowMatch = true;
-                      }
-                    }
-
-                    if (nextRowMatch) {
-                      const linkElement = document.createElement('a');
-                      linkElement.href = URL;
-                      linkElement.classList.add('AbxLink');
-                      linkElement.target = '_blank';
-                      linkElement.textContent = altTextMatch[0]; // Use the original case for the link text
-
-                      linkContainer.appendChild(linkElement);
-                    }
-                  }
+                  linkContainer.appendChild(linkElement);
                 }
               });
 
@@ -640,23 +615,22 @@ function createOMTable(selectedData, abxLinkData) {
 }
 
 
-
- // Function to filter data based on the selected option
-function filterData(event) {
+  // Function to filter data based on the selected option
+    function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
     selectedData = matchingData;
-    createOMTable(matchingData, abxLinkData); // Pass abxLinkData as an argument
+    createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
-    // Handle the case when selectedData is not found
-    // For example, display an error message or clear the result container
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected data not found.';
-  }
-  scrollToTop();
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
+    }
+  scrollToTop()
   adjustFontSize();
 }
 
