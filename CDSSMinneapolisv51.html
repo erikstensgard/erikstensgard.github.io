@@ -456,7 +456,6 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
-// Function to create the table with OMJSON data
 function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -479,7 +478,7 @@ function createOMTable(selectedData, abxLinkData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText, AltName1, AltName2 } = matchingItem;
+          const { Text, Item, Header, DisplayText } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -489,63 +488,76 @@ function createOMTable(selectedData, abxLinkData) {
           }
 
           const cellContentElement = document.createElement('div');
+          
+          const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0;
 
-          const { Name } = matchingItem;
-          const hasAltName1 = AltName1 !== null;
-          const hasAltName2 = AltName2 !== null;
-          const contentText = cellContent;
+          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
+          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+            cellContentElement.textContent = cellContent;
+          } else {
+            // Check if there are partial string matches with links in a row
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+              const matchingURLs = abxLinkData.filter(item =>
+                contentText.toLowerCase().includes(item.Name.toLowerCase())
+              );
 
-          const matchingURLs = abxLinkData.filter(item => {
-            const nameMatches = contentText.toLowerCase().includes(item.Name.toLowerCase());
-            const altName1Matches = hasAltName1 && contentText.toLowerCase().includes(item.AltName1.toLowerCase());
-            const altName2Matches = hasAltName2 && contentText.toLowerCase().includes(item.AltName2.toLowerCase());
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                return aIndex - bIndex;
+              });
 
-            return (hasAltName2 && nameMatches && altName1Matches && altName2Matches) ||
-              (hasAltName1 && !hasAltName2 && nameMatches && altName1Matches) ||
-              (!hasAltName1 && !hasAltName2 && nameMatches);
-          });
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL, AltName1, AltURL1 } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
+                const linkTexts = new Set(); // Store unique link texts
 
-          const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-            const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-            const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-            return aIndex - bIndex;
-          });
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-          sortedMatchingURLs.forEach(matchingURL => {
-            const { Name, URL } = matchingURL;
-            const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-            let match;
-            const linkTexts = new Set(); // Store unique link texts
-            let currentIndex = 0;
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
+                  }
 
-            while ((match = nameRegex.exec(contentText)) !== null) {
-              const nonLinkText = contentText.substring(currentIndex, match.index);
-              const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                  let linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.classList.add('AbxLink');
+                  linkElement.target = '_blank';
+                  linkElement.textContent = match[0]; // Use the original case for the link text
 
-              // Check if the link text is already added
-              if (linkTexts.has(linkText)) {
-                continue;
+                  // Check if AltName1 is not null and if AltName1 exists in the remaining text
+                  if (AltName1 && contentText.toLowerCase().includes(AltName1.toLowerCase(), currentIndex)) {
+                    linkElement.href = AltURL1; // Use AltURL1 if AltName1 is present
+                  }
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText); // Store the lowercase link text
+                  currentIndex = match.index + match[0].length;
+                }
+              });
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
 
-              const linkElement = document.createElement('a');
-              linkElement.href = URL;
-              linkElement.classList.add('AbxLink');
-              linkElement.target = '_blank';
-              linkElement.textContent = match[0]; // Use the original case for the link text
-
-              const nonLinkTextNode = document.createTextNode(nonLinkText);
-              cellContentElement.appendChild(nonLinkTextNode);
-              cellContentElement.appendChild(linkElement);
-
-              linkTexts.add(linkText); // Store the lowercase link text
-              currentIndex = match.index + match[0].length;
+              cellContentElement.appendChild(linkContainer);
+            } else {
+              cellContentElement.textContent = contentText;
             }
-          });
-
-          if (currentIndex < contentText.length) {
-            const remainingText = contentText.substring(currentIndex);
-            const remainingTextNode = document.createTextNode(remainingText);
-            cellContentElement.appendChild(remainingTextNode);
           }
 
           if (Header === 1) {
@@ -594,7 +606,6 @@ function createOMTable(selectedData, abxLinkData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
