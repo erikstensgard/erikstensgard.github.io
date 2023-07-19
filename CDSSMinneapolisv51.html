@@ -455,7 +455,8 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-function createOMTable(selectedData) {
+// Function to create the table with OMJSON data
+function createOMTable(selectedData, abxLinkData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -477,7 +478,7 @@ function createOMTable(selectedData) {
 
       if (matchingItems.length > 0) {
         matchingItems.forEach(matchingItem => {
-          const { Text, Item, Header, DisplayText } = matchingItem;
+          const { Text, Item, Header, DisplayText, altname1, altname2 } = matchingItem;
           let cellContent = Text || '';
 
           if (cellContent === '' && DisplayText) {
@@ -487,96 +488,62 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-          
-            const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
-            if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
-              });
-              cellContentElement.textContent = cellContent;
+          // Function to check if the required names are present in the row
+          const isMatchInRow = (name, altname1, altname2) => {
+            const lowerContentText = cellContent.toLowerCase();
+            return (
+              lowerContentText.includes(name.toLowerCase()) &&
+              (!altname1 || lowerContentText.includes(altname1.toLowerCase())) &&
+              (!altname2 || lowerContentText.includes(altname2.toLowerCase()))
+            );
+          };
+
+          const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0;
+
+          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
+          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+            cellContentElement.textContent = cellContent;
+          } else {
+            // Check if there are partial string matches with links in a row
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+
+              // Filter matching URLs based on the new function 'isMatchInRow'
+              const matchingURLs = abxLinkData.filter(item =>
+                isMatchInRow(item.Name, item.altname1, item.altname2)
+              );
+
+              // ... (rest of the code remains the same)
             } else {
-              // Check if there are partial string matches with links in a row
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const matchingURLs = abxLinkData.filter(item => {
-                  const nameMatches = [item.Name, item.AltName1, item.AltName2].some(
-                    name => contentText.toLowerCase().includes(name.toLowerCase())
-                  );
-                  return nameMatches;
-                });
+              cellContentElement.textContent = contentText;
+            }
+          }
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                  return aIndex - bIndex;
-                });
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+            displayCell.classList.add('bold');
+          }
 
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
-                  const linkTexts = new Set(); // Store unique link texts
-
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
-
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
-
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.classList.add('AbxLink');
-                    linkElement.target = '_blank';
-                    linkElement.textContent = match[0]; // Use the original case for the link text
-
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
-
-                    linkTexts.add(linkText); // Store the lowercase link text
-                    currentIndex = match.index + match[0].length;
-                  }
-                });
-
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                
-const remainingTextNode = document.createTextNode(remainingText);
-  linkContainer.appendChild(remainingTextNode);
-              }
-
-          cellContentElement.appendChild(linkContainer);
-        }
+          displayCell.appendChild(cellContentElement);
+        });
       } else {
         // Add links from MinneapolisAbxLinks.json
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
+
+          // Filter matching URLs based on the new function 'isMatchInRow'
           const matchingURLs = abxLinkData.filter(item =>
-            contentText.includes(item.Name.toLowerCase())
+            isMatchInRow(item.Name, item.altname1, item.altname2)
           );
 
-          matchingURLs.forEach(matchingURL => {
-            const { Name, URL } = matchingURL;
-
-            const linkElement = document.createElement('a');
-            linkElement.href = URL;
-            linkElement.classList.add('AbxLink');
-            linkElement.target = '_blank';
-            linkElement.textContent = Name;
-
-            linkContainer.appendChild(linkElement);
-          });
-
-          displayCell.appendChild(linkContainer);
+          // ... (rest of the code remains the same)
         }
       }
 
