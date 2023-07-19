@@ -641,22 +641,22 @@ function createOMTable(selectedData, abxLinkData) {
 
 
 
-  // Function to filter data based on the selected option
-    function filterData(event) {
+ // Function to filter data based on the selected option
+function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
     selectedData = matchingData;
-    createOMTable(matchingData);
+    createOMTable(matchingData, abxLinkData); // Pass abxLinkData as an argument
     pushHistory(matchingData.Name);
   } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+  scrollToTop();
   adjustFontSize();
 }
 
