@@ -455,7 +455,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-  function createOMTable(selectedData) {
+ function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -492,6 +492,7 @@ function scrollToTop() { // Add opening curly brace here
           const cellContentElement = document.createElement('div');
 
           const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0; // Initialize currentIndex here
 
           // Check if there are partial string matches with links in a row
           if (abxLinkData.length > 0) {
@@ -594,6 +595,7 @@ function scrollToTop() { // Add opening curly brace here
     resultContainer.appendChild(table);
   }
 }
+
 
 
   // Function to filter data based on the selected option
