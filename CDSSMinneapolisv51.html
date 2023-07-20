@@ -455,13 +455,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to search for wild card matches
-function findWildcardMatch(text, pattern) {
-  const regexPattern = pattern.replace(/\*/g, '\\S*');
-  const regex = new RegExp(regexPattern, 'i');
-  return regex.test(text);
-}
-
+// Function to create the table with OMJSON data
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -512,7 +506,7 @@ function createOMTable(selectedData) {
               const linkContainer = document.createElement('div');
               const matchingURLs = abxLinkData.filter(item => {
                 const nameRegex = new RegExp(`^${item.Name.replace('*', '.*')}$`, 'i');
-                return nameRegex.test(contentText);
+                return nameRegex.test(contentText) || nameRegex.test(contentText.toLowerCase());
               });
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
@@ -523,7 +517,7 @@ function createOMTable(selectedData) {
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                const nameRegex = new RegExp(`\\b${Name.replace('*', '.*')}\\b`, 'gi');
                 let match;
                 const linkTexts = new Set(); // Store unique link texts
 
