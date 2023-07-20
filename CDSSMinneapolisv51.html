@@ -462,8 +462,8 @@ function findWildcardMatch(text, pattern) {
   return regex.test(text);
 }
 
-// Full createOMTable function
-function createOMTable(selectedData, abxLinkData) {
+// Function to create the table with OMJSON data
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -495,9 +495,8 @@ function createOMTable(selectedData, abxLinkData) {
           }
 
           const cellContentElement = document.createElement('div');
-
-          // The link generation logic should be applied to the entire cellContent
-          const contentText = cellContent;
+          
+          const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
           // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
@@ -511,9 +510,10 @@ function createOMTable(selectedData, abxLinkData) {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
-              const matchingURLs = abxLinkData.filter(item =>
-                findWildcardMatch(contentText.toLowerCase(), item.Name.toLowerCase())
-              );
+              const matchingURLs = abxLinkData.filter(item => {
+                const nameRegex = new RegExp(`^${item.Name.replace('*', '.*')}$`, 'i');
+                return nameRegex.test(contentText);
+              });
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
                 const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
@@ -572,12 +572,11 @@ function createOMTable(selectedData, abxLinkData) {
         });
       } else {
         // Add links from MinneapolisAbxLinks.json
-        // The link generation logic should be applied to the entire contentText
         const contentText = '';
         if (abxLinkData.length > 0) {
           const linkContainer = document.createElement('div');
           const matchingURLs = abxLinkData.filter(item =>
-            findWildcardMatch(contentText.toLowerCase(), item.Name.toLowerCase())
+            contentText.includes(item.Name.toLowerCase())
           );
 
           matchingURLs.forEach(matchingURL => {
