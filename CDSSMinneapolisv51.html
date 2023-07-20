@@ -488,46 +488,44 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-          
-            const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
-            if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-              cellContentElement.classList.add('clickable');
-              cellContentElement.addEventListener('click', () => {
-                handleRowClick(matchingItem);
+          const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0;
+
+          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
+          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
+            });
+            cellContentElement.textContent = cellContent;
+          } else {
+            // Check if there are partial string matches with links in a row
+            if (abxLinkData.length > 0) {
+              const linkContainer = document.createElement('div');
+              const matchingURLs = abxLinkData.filter(item =>
+                contentText.toLowerCase().includes(item.Name.toLowerCase())
+              );
+
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                return aIndex - bIndex;
               });
-              cellContentElement.textContent = cellContent;
-            } else {
-              // Check if there are partial string matches with links in a row
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const matchingURLs = abxLinkData.filter(item =>
-                  contentText.toLowerCase().includes(item.Name.toLowerCase())
-                );
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                  return aIndex - bIndex;
-                });
+              const linkTexts = new Set(); // Store unique link texts for each cell
 
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
-                  let match;
-                  const linkTexts = new Set(); // Store unique link texts
+              sortedMatchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                    // Check if the link text is already added
-                    if (linkTexts.has(linkText)) {
-                      continue;
-                    }
-
+                  // Check if the link text is already added for this cell
+                  if (!linkTexts.has(linkText)) {
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
                     linkElement.classList.add('AbxLink');
@@ -538,22 +536,24 @@ function createOMTable(selectedData) {
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    linkTexts.add(linkText); // Store the lowercase link text
-                    currentIndex = match.index + match[0].length;
+                    linkTexts.add(linkText); // Store the lowercase link text for this cell
                   }
-                });
 
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
+                  currentIndex = match.index + match[0].length;
                 }
+              });
 
-                cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
               }
+
+              cellContentElement.appendChild(linkContainer);
+            } else {
+              cellContentElement.textContent = contentText;
             }
+          }
 
           if (Header === 1) {
             cellContentElement.classList.add('bold');
