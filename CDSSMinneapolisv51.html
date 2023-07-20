@@ -456,15 +456,9 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
-  const table = document.createElement('table');
-  table.classList.add('table');
-
-  const tbody = document.createElement('tbody');
-
-  const { Contents } = selectedData;
-  const maxRow = Math.max(...Contents.map(item => item.Row));
-  const columns = Math.max(...Contents.map(item => item.Column));
+  // ...
 
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
@@ -488,7 +482,7 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-
+          
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
@@ -502,7 +496,47 @@ function createOMTable(selectedData) {
           } else {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
-              const linkContainer = generateLinks(contentText);
+              const linkContainer = document.createElement('div');
+              const matchingURLs = abxLinkData.filter(item =>
+                contentText.toLowerCase().includes(item.Name.toLowerCase())
+              );
+
+              matchingURLs.forEach(matchingURL => {
+                const { Name, URL } = matchingURL;
+                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                let match;
+                const linkTexts = new Set(); // Store unique link texts
+
+                while ((match = nameRegex.exec(contentText)) !== null) {
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
+                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+
+                  // Check if the link text is already added
+                  if (linkTexts.has(linkText)) {
+                    continue;
+                  }
+
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.classList.add('AbxLink');
+                  linkElement.target = '_blank';
+                  linkElement.textContent = match[0]; // Use the original case for the link text
+
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
+
+                  linkTexts.add(linkText); // Store the lowercase link text
+                  currentIndex = match.index + match[0].length;
+                }
+              });
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(currentIndex);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
+              }
+
               cellContentElement.appendChild(linkContainer);
             } else {
               cellContentElement.textContent = contentText;
@@ -520,7 +554,23 @@ function createOMTable(selectedData) {
         // Add links from MinneapolisAbxLinks.json
         const contentText = '';
         if (abxLinkData.length > 0) {
-          const linkContainer = generateLinks(contentText);
+          const linkContainer = document.createElement('div');
+          const matchingURLs = abxLinkData.filter(item =>
+            contentText.includes(item.Name.toLowerCase())
+          );
+
+          matchingURLs.forEach(matchingURL => {
+            const { Name, URL } = matchingURL;
+
+            const linkElement = document.createElement('a');
+            linkElement.href = URL;
+            linkElement.classList.add('AbxLink');
+            linkElement.target = '_blank';
+            linkElement.textContent = Name;
+
+            linkContainer.appendChild(linkElement);
+          });
+
           displayCell.appendChild(linkContainer);
         }
       }
@@ -531,42 +581,7 @@ function createOMTable(selectedData) {
     tbody.appendChild(bodyRow);
   }
 
-  table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
-}
-
-function generateLinks(contentText) {
-  const linkContainer = document.createElement('div');
-  const matchingURLs = abxLinkData.filter(item =>
-    contentText.includes(item.Name.toLowerCase())
-  );
-
-  matchingURLs.forEach(matchingURL => {
-    const { Name, URL } = matchingURL;
-
-    const linkElement = document.createElement('a');
-    linkElement.href = URL;
-    linkElement.classList.add('AbxLink');
-    linkElement.target = '_blank';
-    linkElement.textContent = Name;
-
-    const linkText = new RegExp(`\\b${Name.replace('*', '.*')}\\b`, 'gi');
-    const parts = contentText.split(linkText);
-    parts.forEach((part, index) => {
-      if (index > 0) {
-        const linkElementClone = linkElement.cloneNode(true);
-        linkContainer.appendChild(linkElementClone);
-      }
-      linkContainer.appendChild(document.createTextNode(part));
-    });
-  });
-
-  return linkContainer;
+  // ...
 }
 
 
@@ -698,31 +713,22 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-(async function () {
-  try {
-    const [omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData] = await Promise.all([
-      fetchOMData(),
-      fetchODData(),
-      fetchItemLink(),
-      fetchAbxLink(),
-    ]);
-
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData;
-
+    abxLinkData = abxlinkjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
     pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
     filterData({ target: dropdown });
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-})();
-
+  });
 
   </script>
 </body>
