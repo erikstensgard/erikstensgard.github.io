@@ -455,7 +455,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
- // Function to create the table with OMJSON data
+  // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
     table.classList.add('table');
@@ -565,28 +565,9 @@ function scrollToTop() { // Add opening curly brace here
             displayCell.appendChild(cellContentElement);
           });
         } else {
-          // Add links from MinneapolisAbxLinks.json
-          const contentText = '';
-          if (abxLinkData.length > 0) {
-            const linkContainer = document.createElement('div');
-            const matchingURLs = abxLinkData.filter(item =>
-              contentText.includes(item.Name.toLowerCase())
-            );
-
-            matchingURLs.forEach(matchingURL => {
-              const { Name, URL } = matchingURL;
-
-              const linkElement = document.createElement('a');
-              linkElement.href = URL;
-              linkElement.classList.add('AbxLink');
-              linkElement.target = '_blank';
-              linkElement.textContent = Name;
-
-              linkContainer.appendChild(linkElement);
-            });
-
-            displayCell.appendChild(linkContainer);
-          }
+          // If there are no matching items, create a cell with an empty div
+          const emptyCellContentElement = document.createElement('div');
+          displayCell.appendChild(emptyCellContentElement);
         }
 
         bodyRow.appendChild(displayCell);
@@ -603,8 +584,6 @@ function scrollToTop() { // Add opening curly brace here
       resultContainer.appendChild(table);
     }
   }
-
-
 
   // Function to filter data based on the selected option
     function filterData(event) {
