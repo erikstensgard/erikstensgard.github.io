@@ -513,7 +513,7 @@ function createOMTable(selectedData) {
                 return aIndex - bIndex;
               });
 
-              const linkTexts = new Set(); // Store unique link texts
+              const linkTexts = new Set(); // Store unique link texts for each cell
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
@@ -524,8 +524,9 @@ function createOMTable(selectedData) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
                   const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                  // Check if the link text is already added
+                  // Check if the link text is already added for this cell
                   if (linkTexts.has(linkText)) {
+                    currentIndex = match.index + match[0].length;
                     continue;
                   }
 
@@ -539,7 +540,7 @@ function createOMTable(selectedData) {
                   linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText); // Store the lowercase link text
+                  linkTexts.add(linkText); // Store the lowercase link text for this cell
                   currentIndex = match.index + match[0].length;
                 }
               });
@@ -602,6 +603,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
   // Function to filter data based on the selected option
