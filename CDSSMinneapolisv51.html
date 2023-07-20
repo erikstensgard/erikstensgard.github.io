@@ -9,7 +9,7 @@
     /* Common styles */
     .not-clickable-cell {
   background-color: transparent;
-  color: black;
+  color: black;c
 }
     .AbxLink {
       color: green;
@@ -521,9 +521,11 @@ function createOMTable(selectedData) {
                 let match;
                 const linkTexts = new Set(); // Store unique link texts
 
-                while ((match = nameRegex.exec(contentText)) !== null) {
+                // Process the matches without rechecking the same string
+                const contentTextLowerCase = contentText.toLowerCase();
+                while ((match = nameRegex.exec(contentTextLowerCase)) !== null) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                  const linkText = match[0]; // Use the original case for the link text
 
                   // Check if the link text is already added or processed
                   if (linkTexts.has(linkText) || processedLinks.has(linkText)) {
@@ -534,13 +536,13 @@ function createOMTable(selectedData) {
                   linkElement.href = URL;
                   linkElement.classList.add('AbxLink');
                   linkElement.target = '_blank';
-                  linkElement.textContent = match[0]; // Use the original case for the link text
+                  linkElement.textContent = linkText;
 
                   const nonLinkTextNode = document.createTextNode(nonLinkText);
                   linkContainer.appendChild(nonLinkTextNode);
                   linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText); // Store the lowercase link text
+                  linkTexts.add(linkText); // Store the link text
                   processedLinks.add(linkText); // Mark the link text as processed
                   currentIndex = match.index + match[0].length;
                 }
@@ -604,6 +606,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 
   // Function to filter data based on the selected option
