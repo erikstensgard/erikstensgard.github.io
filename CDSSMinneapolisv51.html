@@ -467,6 +467,12 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
+  const abxLinkData = [
+    // Your JSON data here
+  ];
+
+  const processedLinks = new Set(); // Keep track of processed link texts
+
   for (let row = 1; row <= maxRow; row++) {
     const bodyRow = document.createElement('tr');
 
@@ -489,7 +495,6 @@ function createOMTable(selectedData) {
           }
 
           const cellContentElement = document.createElement('div');
-          const processedLinks = new Set(); // Store processed links
 
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
@@ -532,19 +537,29 @@ function createOMTable(selectedData) {
                     continue;
                   }
 
-                  const linkElement = document.createElement('a');
-                  linkElement.href = URL;
-                  linkElement.classList.add('AbxLink');
-                  linkElement.target = '_blank';
-                  linkElement.textContent = linkText;
+                  // Ensure that we are matching the full word boundary
+                  if (
+                    contentTextLowerCase.slice(match.index - 1, match.index) === '' ||
+                    contentTextLowerCase.slice(
+                      match.index + match[0].length,
+                      match.index + match[0].length + 1
+                    ) === ''
+                  ) {
+                    // Create the link element
+                    const linkElement = document.createElement('a');
+                    linkElement.href = URL;
+                    linkElement.classList.add('AbxLink');
+                    linkElement.target = '_blank';
+                    linkElement.textContent = linkText;
 
-                  const nonLinkTextNode = document.createTextNode(nonLinkText);
-                  linkContainer.appendChild(nonLinkTextNode);
-                  linkContainer.appendChild(linkElement);
+                    const nonLinkTextNode = document.createTextNode(nonLinkText);
+                    linkContainer.appendChild(nonLinkTextNode);
+                    linkContainer.appendChild(linkElement);
 
-                  linkTexts.add(linkText); // Store the link text
-                  processedLinks.add(linkText); // Mark the link text as processed
-                  currentIndex = match.index + match[0].length;
+                    linkTexts.add(linkText); // Store the link text
+                    processedLinks.add(linkText); // Mark the link text as processed
+                    currentIndex = match.index + match[0].length;
+                  }
                 }
               });
 
@@ -606,7 +621,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
