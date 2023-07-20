@@ -455,7 +455,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
- function createOMTable(selectedData) {
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -514,10 +514,9 @@ function scrollToTop() { // Add opening curly brace here
               const linkTexts = new Set(); // Store unique link texts
 
               // Process the matches without rechecking the same string
-              const contentTextLowerCase = contentText.toLowerCase();
-              while ((match = nameRegex.exec(contentTextLowerCase)) !== null) {
+              while ((match = nameRegex.exec(contentText.toLowerCase())) !== null) {
                 const nonLinkText = contentText.substring(currentIndex, match.index);
-                const linkText = match[0]; // Use the original case for the link text
+                const linkText = contentText.substring(match.index, match.index + match[0].length);
 
                 // Check if the link text is already added or processed
                 if (linkTexts.has(linkText) || processedLinks.has(linkText)) {
@@ -530,6 +529,7 @@ function scrollToTop() { // Add opening curly brace here
                 linkElement.target = '_blank';
                 linkElement.textContent = linkText;
 
+                linkContainer.appendChild(document.createTextNode(nonLinkText));
                 linkContainer.appendChild(linkElement);
 
                 linkTexts.add(linkText); // Store the link text
@@ -540,8 +540,7 @@ function scrollToTop() { // Add opening curly brace here
 
             if (currentIndex < contentText.length) {
               const remainingText = contentText.substring(currentIndex);
-              const remainingTextNode = document.createTextNode(remainingText);
-              linkContainer.appendChild(remainingTextNode);
+              linkContainer.appendChild(document.createTextNode(remainingText));
             }
 
             cellContentElement.appendChild(linkContainer);
@@ -595,7 +594,6 @@ function scrollToTop() { // Add opening curly brace here
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
