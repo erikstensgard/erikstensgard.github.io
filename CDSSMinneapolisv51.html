@@ -513,11 +513,12 @@ function createOMTable(selectedData) {
                 return aIndex - bIndex;
               });
 
+              const linkTexts = new Set(); // Store unique link texts
+
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
-                const linkTexts = new Set(); // Store unique link texts
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
                   const nonLinkText = contentText.substring(currentIndex, match.index);
@@ -525,8 +526,7 @@ function createOMTable(selectedData) {
 
                   // Check if the link text is already added
                   if (linkTexts.has(linkText)) {
-                    // Do not continue the loop if the link text is already added
-                    break;
+                    continue;
                   }
 
                   const linkElement = document.createElement('a');
@@ -602,7 +602,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 
   // Function to filter data based on the selected option
