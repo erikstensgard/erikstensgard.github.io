@@ -220,44 +220,31 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-   // Function to populate dropdown with IndexData
-function populateDropdown(data, indexData) {
+    // Function to populate dropdown with OMJSON data
+function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  data.sort((a, b) => {
+ omData.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
     const displayTextB = b.DisplayText || b.Name;
     return displayTextA.localeCompare(displayTextB);
   });
 
   // Sort the data by the number of matches
-  data.sort((a, b) => {
+ omData.sort((a, b) => {
     const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
-  data.forEach(item => {
+ omData.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
-
-  // Append matching index terms to the dropdown
-  const selectedValue = dropdown.value;
-  const selectedData = indexData.find(item => item.name === selectedValue);
-  if (selectedData) {
-    const matchingIndexTerms = selectedData.terms || [];
-    matchingIndexTerms.forEach(term => {
-      const option = document.createElement('option');
-      option.value = term;
-      option.textContent = term;
-      dropdown.appendChild(option);
-    });
-  }
 }
 
 // Helper function to get the number of matches in an item
@@ -624,7 +611,8 @@ function createOMTable(selectedData) {
   }
 }
 
-function filterData(event) {
+// Function to filter data based on the selected option
+    function filterData(event) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
@@ -633,24 +621,15 @@ function filterData(event) {
     createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
-    const matchingIndexData = IndexData.find(item => item.name === selectedOption);
-    if (matchingIndexData) {
-      // Handle the case when an index term is selected
-      // For example, display a message or update the display accordingly
-      console.log('Selected index term:', matchingIndexData.name);
-      // Do something with the matchingIndexData...
-    } else {
       // Handle the case when selectedData is not found
       // For example, display an error message or clear the result container
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = 'Selected data not found.';
     }
-  }
-
-  scrollToTop();
+  scrollToTop()
   adjustFontSize();
 }
-
+    
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -760,14 +739,15 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexData]) => {
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) // Add fetchIndex()
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexData]) => { // Change IndexjsonData to indexData
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    IndexData = indexData;
-    populateDropdown(omData, IndexData);
+    IndexData = indexData; // Change IndexjsonData to indexData
+    populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
@@ -777,7 +757,6 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
-
   </script>
 </body>
 
