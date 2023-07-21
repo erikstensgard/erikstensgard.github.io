@@ -522,6 +522,12 @@ function createOMTable(selectedData) {
                 let linkedContent = false;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
+                  // Check if the link text is already added for this row
+                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                  if (matchedTextsForRow.has(linkText)) {
+                    continue; // Skip linking the match if it's already matched to a link for this row
+                  }
+
                   // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
                   if (currentIndex > match.index) {
                     currentIndex = match.index + match[0].length;
@@ -529,13 +535,6 @@ function createOMTable(selectedData) {
                   }
 
                   const nonLinkText = contentText.substring(currentIndex, match.index);
-                  const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
-
-                  // Check if the link text is already added for this row
-                  if (matchedTextsForRow.has(linkText)) {
-                    currentIndex = match.index + match[0].length;
-                    continue; // Skip adding the link if it's already matched to a link for this row
-                  }
 
                   const linkElement = document.createElement('a');
                   linkElement.href = URL;
