@@ -214,26 +214,38 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
 // Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
+async function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Filter out items with names that start with "ORZID3"
-  const filteredData = data.filter(item => !item.Name.startsWith('ORZID3'));
+  // Fetch the MinneapolisIndex.json data
+  const indexResponse = await fetch('MinneapolisIndex.json');
+  const indexData = await indexResponse.json();
 
-  // Sort the filtered data
-  filteredData.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
-  });
+  data.forEach(item => {
+    const itemName = item.Name.trim().toLowerCase();
 
-  // Populate the dropdown with the filtered and sorted data
-  filteredData.forEach(item => {
-    const option = document.createElement('option');
-    const displayText = item.DisplayText || item.Name;
-    option.text = displayText;
-    dropdown.add(option);
+    // Find all matching items in the index data for the current item
+    const matchingItems = indexData.filter(indexItem => indexItem.Name.trim().toLowerCase() === itemName);
+
+    if (matchingItems.length > 0) {
+      matchingItems.forEach(matchingItem => {
+        // Use all matching .Terms to populate the dropdown
+        const { Terms } = matchingItem;
+        if (Terms && Terms.length > 0) {
+          Terms.forEach(term => {
+            const option = document.createElement('option');
+            option.text = term;
+            dropdown.add(option);
+          });
+        }
+      });
+    } else {
+      // If no matches found, use the original item name to populate the dropdown
+      const option = document.createElement('option');
+      option.text = item.Name;
+      dropdown.add(option);
+    }
   });
 
   // Sort the data by the number of matches
@@ -251,6 +263,7 @@ function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
