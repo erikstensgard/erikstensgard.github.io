@@ -467,11 +467,12 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  // Before processing each row, create a Set to store the already matched texts for this row
-  const matchedTextsForRow = new Set();
+  // Before processing each row, create an array to store the last matched index for each row
+  const lastMatchedIndexes = new Array(maxRow).fill(0);
 
   for (let row = 1; row <= maxRow; row++) {
-    matchedTextsForRow.clear(); // Clear the matchedTexts Set for each row
+    // Before processing each row, create a Set to store the already matched texts for all rows
+    const matchedTexts = new Set();
 
     const bodyRow = document.createElement('tr');
 
@@ -513,53 +514,65 @@ function createOMTable(selectedData) {
                 contentText.toLowerCase().includes(item.Name.toLowerCase())
               );
 
-              let linkedContent = false; // Initialize a flag to check if the content segment has been linked
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                return aIndex - bIndex;
+              });
 
-              matchingURLs.forEach(matchingURL => {
+              // Initialize currentIndex to 0 for each row
+              currentIndex = 0;
+
+              sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
-                  // Check if the link text is already added for this row
+                  // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
+                  if (currentIndex > match.index) {
+                    currentIndex = match.index + match[0].length;
+                    continue;
+                  }
+
+                  const nonLinkText = contentText.substring(currentIndex, match.index);
                   const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
-                  if (matchedTextsForRow.has(linkText)) {
-                    break; // Skip linking the match if it's already matched to a link for this row
+
+                  // Check if the link text is already added for any row
+                  if (matchedTexts.has(linkText)) {
+                    // Append the remaining text from the last matched index to the current matched index
+                    const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
+                    const remainingTextNode = document.createTextNode(remainingText);
+                    linkContainer.appendChild(remainingTextNode);
+
+                    currentIndex = match.index + match[0].length;
+                    continue;
                   }
 
-                  if (currentIndex <= match.index) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.classList.add('AbxLink');
-                    linkElement.target = '_blank';
-                    linkElement.textContent = match[0]; // Use the original case for the link text
+                  const linkElement = document.createElement('a');
+                  linkElement.href = URL;
+                  linkElement.classList.add('AbxLink');
+                  linkElement.target = '_blank';
+                  linkElement.textContent = match[0]; // Use the original case for the link text
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+                  const nonLinkTextNode = document.createTextNode(nonLinkText);
+                  linkContainer.appendChild(nonLinkTextNode);
+                  linkContainer.appendChild(linkElement);
 
-                    // Store the link text to prevent matching it to another link for this row
-                    matchedTextsForRow.add(linkText);
-                    linkedContent = true;
-                  }
+                  // Store the link text to prevent matching it to another link for any row
+                  matchedTexts.add(linkText);
+
+                  // Store the last matched index for this row
+                  lastMatchedIndexes[row - 1] = match.index + match[0].length;
 
                   currentIndex = match.index + match[0].length;
                 }
               });
 
-              if (!linkedContent) {
-                // If no link was added for this content segment, append the remaining text
-                const remainingText = contentText.substring(currentIndex);
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
                 const remainingTextNode = document.createTextNode(remainingText);
                 linkContainer.appendChild(remainingTextNode);
-              } else {
-                // Check if there's any remaining text after the last linked match
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-                }
               }
 
               cellContentElement.appendChild(linkContainer);
@@ -590,8 +603,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
-
 
 // Function to filter data based on the selected option
     function filterData(event) {
