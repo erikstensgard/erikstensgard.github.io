@@ -471,9 +471,6 @@ function createOMTable(selectedData) {
   const lastMatchedIndexes = new Array(maxRow).fill(0);
 
   for (let row = 1; row <= maxRow; row++) {
-    // Before processing each row, create a Set to store the already matched texts for all rows
-    const matchedTexts = new Set();
-
     const bodyRow = document.createElement('tr');
 
     for (let column = 1; column <= columns; column++) {
@@ -510,6 +507,8 @@ function createOMTable(selectedData) {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
+              const matchedTexts = new Set(); // Reset the matchedTexts Set for each cell
+
               const matchingURLs = abxLinkData.filter(item =>
                 new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
               );
@@ -540,7 +539,7 @@ function createOMTable(selectedData) {
 
                   // Check if the link text is already added for any row
                   if (matchedTexts.has(linkText)) {
-                    const remainingText = contentText.substring(currentIndex, match.index);
+                    const remainingText = contentText.substring(currentIndex, match.index + match[0].length);
                     const remainingTextNode = document.createTextNode(remainingText);
                     linkContainer.appendChild(remainingTextNode);
 
