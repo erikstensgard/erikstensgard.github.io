@@ -281,6 +281,12 @@ function searchData() {
     );
   });
 
+  // Add the main menu to filteredData if not already present
+  const mainMenu = omData.find(item => item.Name === 'ORZID2 GMENU ABX INPT MAIN');
+  if (mainMenu && !filteredData.includes(mainMenu)) {
+    filteredData.push(mainMenu);
+  }
+
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   filteredData.sort((a, b) => {
@@ -309,6 +315,7 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
