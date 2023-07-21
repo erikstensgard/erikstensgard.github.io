@@ -222,7 +222,7 @@ async function populateDropdown(data) {
   const indexResponse = await fetch('MinneapolisIndex.json');
   const indexData = await indexResponse.json();
 
-  const allTerms = [];
+  const allTerms = new Set();
 
   data.forEach(item => {
     const itemName = item.Name.trim().toLowerCase();
@@ -235,23 +235,20 @@ async function populateDropdown(data) {
         // Use all matching .Terms to populate the dropdown
         const { Terms } = matchingItem;
         if (Terms && Terms.length > 0) {
-          allTerms.push(...Terms);
+          Terms.forEach(term => allTerms.add(term));
         }
       });
     } else {
       // If no matches found, use the original item name to populate the dropdown
-      allTerms.push(item.Name);
+      allTerms.add(item.Name);
     }
   });
 
-  // Remove duplicates from allTerms
-  const uniqueTerms = Array.from(new Set(allTerms));
-
   // Sort the terms alphabetically
-  uniqueTerms.sort((a, b) => a.localeCompare(b));
+  const sortedTerms = Array.from(allTerms).sort((a, b) => a.localeCompare(b));
 
-  // Populate the dropdown with the unique terms
-  uniqueTerms.forEach(term => {
+  // Populate the dropdown with the sorted terms
+  sortedTerms.forEach(term => {
     const option = document.createElement('option');
     option.text = term;
     dropdown.add(option);
@@ -272,7 +269,6 @@ async function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
-
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
