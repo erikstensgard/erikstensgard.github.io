@@ -272,7 +272,13 @@ function searchData() {
   let filteredData = omData.filter(item => {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-    return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
+
+    // Check for matches in DisplayText, Item, and the omdata.name.contents
+    return (
+      displayText.toLowerCase().includes(searchText) ||
+      contentTexts.some(text => text.includes(searchText)) ||
+      omdata.name.contents.some(content => content.toLowerCase().includes(searchText))
+    );
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
