@@ -616,34 +616,28 @@ function createOMTable(selectedData) {
   }
 }
 
+
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-  // Find the matching index item based on the selectedOption
-  const matchingIndex = omData.find(item => (item.DisplayText || item.Name) === selectedOption);
-
-  if (matchingIndex) {
-    // Set the selectedData as the matching index item
-    selectedData = matchingIndex;
-
-    // Update the dropdown's selectedOption with the matching index.name
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedData.Name; // Use the matching index.name
-
-    // Display the matching index item in the omtable
-    createOMTable(selectedData);
-    pushHistory(selectedData.Name);
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
   } else {
-    // Handle the case when the matching index item is not found
+    // Handle the case when selectedData is not found
+    // Display the selected item's value followed by "not found"
     const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected data not found.';
+    const selectedItemText = selectedOption || 'Selected item';
+    resultContainer.innerHTML = `${selectedItemText} not found.`;
+    selectedData = null; // Clear the selectedData variable
   }
 
   scrollToTop();
   adjustFontSize();
 }
-
 
     
 
