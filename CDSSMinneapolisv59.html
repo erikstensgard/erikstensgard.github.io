@@ -617,26 +617,23 @@ function createOMTable(selectedData) {
 }
 
 
-// Function to filter data based on the selected option
-function filterData(event) {
+// Function to handle dropdown change event
+function handleDropdownChange(event) {
   const selectedOption = event.target.value;
-  const matchingData = omData.find(item => item.Name === selectedOption);
+  const matchingIndexItem = omData.find(item => {
+    if (item.index && item.index.term) {
+      return item.index.term === selectedOption;
+    }
+    return false;
+  });
 
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-    // Handle the case when selectedData is not found
-    // Display the selected item's value followed by "not found"
-    const resultContainer = document.getElementById('resultContainer');
-    const selectedItemText = selectedOption || 'Selected item';
-    resultContainer.innerHTML = `${selectedItemText} not found.`;
-    selectedData = null; // Clear the selectedData variable
-  }
+  const selectedOptionName = matchingIndexItem ? matchingIndexItem.index.name : selectedOption;
 
-  scrollToTop();
-  adjustFontSize();
+  // Update the dropdown's selected value with the matching index.name or selectedOption if not found
+  event.target.value = selectedOptionName;
+
+  // Call the filterData function to update the UI
+  filterData(event);
 }
 
     
