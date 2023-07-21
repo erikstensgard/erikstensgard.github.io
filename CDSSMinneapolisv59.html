@@ -657,15 +657,15 @@ function handleGoBack() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
-    document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
-    dropdown.value = selectedItem;
+    document.getElementById('searchInput').placeholder = 'Search...';
+    dropdown.value = selectedItem; // Set the dropdown value directly
     filterData({ target: dropdown });
   }
-      scrollToTop()
-      adjustFontSize();
+  scrollToTop();
+  adjustFontSize();
 }
 
+// Function to handle the Go Forward button click event
 // Function to handle the Go Forward button click event
 function handleGoForward() {
   if (historyIndex < history.length - 1) {
@@ -673,15 +673,14 @@ function handleGoForward() {
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
-    document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
-    dropdown.value = selectedItem;
+    document.getElementById('searchInput').placeholder = 'Search...';
+    dropdown.value = selectedItem; // Set the dropdown value directly
     filterData({ target: dropdown });
   }
-      scrollToTop()
-      adjustFontSize();
+  scrollToTop();
+  adjustFontSize();
 }
-    // Function to handle the Main Menu button click event
+
   // Function to handle the Main Menu button click event
 function handleMainMenu() {
   const dropdown = document.getElementById('filterDropdown');
@@ -693,19 +692,17 @@ function handleMainMenu() {
   adjustFontSize();
 }
 
+// Function to handle the Index button click event
+function handleIndex() {
+  const dropdown = document.getElementById('filterDropdown');
+  document.getElementById('searchInput').value = null;
+  document.getElementById('searchInput').placeholder = 'Search...';
+  dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT'; // Set the dropdown value directly
+  filterData({ target: dropdown });
+  scrollToTop();
+  adjustFontSize();
+}
 
-    // Function to handle the Main Menu button click event
-    function handleIndex() {
-      const dropdown = document.getElementById('filterDropdown');
-      document.getElementById('searchInput').value = null;
-      document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
-      dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
-      filterData({ target: dropdown });
-      adjustFontSize();      
-      scrollToTop()    
-      adjustFontSize();
-    }
 
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
