@@ -403,7 +403,7 @@ function adjustFontSize() {
 // Call the function initially
 adjustFontSize();
 
- // Function to handle row click event
+// Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
     omItem => omItem.Name.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -411,8 +411,10 @@ function handleRowClick(item) {
 
   if (matchingItem) {
     selectedData = matchingItem;
-    createOMTable(matchingItem);
     pushHistory(matchingItem.Name);
+    createOMTable(matchingItem); // Move createOMTable here
+    scrollToTop(); // Move scrollToTop here
+    adjustFontSize(); // Move adjustFontSize here
   } else {
     const matchingLink = itemLinkData.find(
       linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -431,10 +433,8 @@ function handleRowClick(item) {
       console.log('No matching item found in OMJSON.json or MinneapolisItemLink.json');
     }
   }
-  scrollToTop();
-  adjustFontSize();
 }
-
+    
 // Function to check if a value is a valid URL
 function isValidURL(value) {
   try {
