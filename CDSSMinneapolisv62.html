@@ -221,32 +221,33 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-    // Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
+function populateDropdown(omData, IndexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
- IndexData.sort((a, b) => {
-    const displayTextA = a.Term
-    const displayTextB = b.Term
+  // Sort the data by the Term property
+  IndexData.sort((a, b) => {
+    const displayTextA = a.Term;
+    const displayTextB = b.Term;
     return displayTextA.localeCompare(displayTextB);
   });
 
   // Sort the data by the number of matches
- IndexData.sort((a, b) => {
-    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+  IndexData.sort((a, b) => {
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
- IndexData.forEach(IndexData.Term => {
+  IndexData.forEach((item) => {
     const option = document.createElement('option');
-    option.value = IndexData.Term;
-    option.textContent = IndexData.Term;
+    option.value = item.Term;
+    option.textContent = item.Term;
     dropdown.appendChild(option);
   });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -649,7 +650,7 @@ function handleGoBack() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
+    populateDropdown(IndexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -665,7 +666,7 @@ function handleGoForward() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(omData);
+    populateDropdown(IndexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -677,7 +678,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
+      populateDropdown(IndexData);
       dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
       filterData({ target: dropdown });
       scrollToTop()    
@@ -689,7 +690,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
+      populateDropdown(IndexData);
       dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
       filterData({ target: dropdown });
       adjustFontSize();      
