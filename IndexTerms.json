@@ -1,0 +1,2390 @@
+[
+ {
+   "Name": "ORZID GMENU ABX MRSA RISK FACTORS",
+   "Term": "MRSA risk factors"
+ },
+ {
+   "Name": "ORZID GMENU ABX MRSA RISK FACTORS",
+   "Term": "Risk factors for MRSA"
+ },
+ {
+   "Name": "ORZID2 GMENU ABSCESSES",
+   "Term": "Abscess, skin and soft tissue"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ABX RESTRICTION POLICY",
+   "Term": "Restrictions on antimicrobials"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ACUTE BACT PROSTATITIS",
+   "Term": "Prostatitis, acute"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX AEROMONAS",
+   "Term": "Aeromonas diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ANTIMICROBIAL SHORTAGES",
+   "Term": "Antimicrobial shortages updates"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ANTIMICROBIAL SHORTAGES",
+   "Term": "Shortages of antimicrobials updates"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ANTIMICROBIAL SHORTAGES",
+   "Term": "Updates on antimicrobial shortages"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX APPRO TO ENDOCARDITIS",
+   "Term": "Endocarditis, approach to"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ASPIRATION PNEUMONIA",
+   "Term": "Aspiration pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ASPIRATION PNEUMONIA",
+   "Term": "Pneumonia, aspiration"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ASSOC COLITIS",
+   "Term": "Clostridium difficile, mild to moderate disease"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BACTEREMIA",
+   "Term": "Bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BELL'S PALSY",
+   "Term": "Bell's palsy"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BRONCHITIS",
+   "Term": "Bronchitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BRONCHITIS",
+   "Term": "COPD exacerbation"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BRONCHITIS",
+   "Term": "Exacerbation of COPD"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX BRONCHITIS NOT BENEFIT",
+   "Term": "Bronchitis in otherwise healthy patient"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CAMPYLOBACTER",
+   "Term": "Campylobacter diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CANDIDA UTI",
+   "Term": "Candida urinary tract infection"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CANDIDA UTI",
+   "Term": "Urinary tract infection (UTI), candida"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CANDIDA VULVO-VAGINITIS",
+   "Term": "Candida vulvo-vaginitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CANDIDA VULVO-VAGINITIS",
+   "Term": "Vaginitis, Candida"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CANDIDA VULVO-VAGINITIS",
+   "Term": "Vulvo-vaginitis, candida"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CARDIOVASCULAR",
+   "Term": "Cardiovascular Section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CELLULITIS",
+   "Term": "Cellulitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHOLANGITIS",
+   "Term": "Cholangitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHOLECYSTITIS",
+   "Term": "Cholecystitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHOLERA",
+   "Term": "Vibrio cholerae diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHRON PROS/PELVIC PAIN SYN",
+   "Term": "Pelvic pain syndrome/prostatitis, chronic"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHRON PROS/PELVIC PAIN SYN",
+   "Term": "Prostatitis/pelvic pain syndrome, chronic"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHRONIC BACT PROSTATITIS",
+   "Term": "Prostatitis, chronic"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CHRONIC PNEUMONIA",
+   "Term": "Pneumonia, chronic"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CMV COLITIS OR ESOPHAGITIS",
+   "Term": "Colitis, cytomegalovirus (CMV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CMV ENCEPHALITIS",
+   "Term": "Encephalitis, Cytomegalovirus (CMV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CMV MAIN PAGE",
+   "Term": "Cytomegalovirus (CMV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CMV PNEUMONIA",
+   "Term": "Pneumonia, Cytomegalovirus (CMV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CMV POLYRADICULOPATHY",
+   "Term": "Polyradiculopathy, Cytomegalovirus (CMV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CNS",
+   "Term": "Abscess, brain"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CNS",
+   "Term": "Central Nervous System section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COLONIZED RESPIRATORY TRACT VENTILATOR",
+   "Term": "Colonized respiratory tract patient on a ventilator"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COLONIZED WOUNDS",
+   "Term": "Colonized wound"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COLONIZED WOUNDS",
+   "Term": "Wound, colonized"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COM-ACQ PNEUMONIA",
+   "Term": "Community-acquired pneumonia (CAP)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COM-ACQ PNEUMONIA",
+   "Term": "Pneumonia, community-acquired (CAP)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COMP CYSTITIS",
+   "Term": "Complicated cystitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX COMP CYSTITIS",
+   "Term": "Cystitis, complicated"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CRYPTOSPORIDIA",
+   "Term": "Cryptosporidium parvum diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX CYCLOSPORA",
+   "Term": "Cyclospora cayetanensis diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DERMATOLOGY MAIN",
+   "Term": "Dermatological Infections section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DERMATOLOGY MAIN",
+   "Term": "Skin Infections section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DEVICE-RELATED INFECTIONS",
+   "Term": "Device-related infections"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DIAGNOSIS OF ENDOCARDITIS",
+   "Term": "Endocarditis, diagnosis of"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DIVERTICULITIS",
+   "Term": "Diverticulitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DRUG ALLERGIES",
+   "Term": "Allergy information"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DRUG ALLERGIES",
+   "Term": "Drug allergy information"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX DRUG INFO PAGE",
+   "Term": "Drug Information"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX E COLI INFECT",
+   "Term": "Escherichia coli diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX EMPYEMA",
+   "Term": "Empyema"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ENTAMOEBA HISTOLYTICA",
+   "Term": "Entamoeba histolytica diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ENTERIC FEVER",
+   "Term": "Enteric fever"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ENTERIC FEVER",
+   "Term": "Paratyphoid fever"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ENTERIC FEVER",
+   "Term": "Typhoid fever"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX EPIDIDYMITIS",
+   "Term": "Epididymitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX EPIGLOTTITIS",
+   "Term": "Epiglottitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ESBL KPC ETC",
+   "Term": "Resistant bacteria, more about "
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ESOPHAGITIS",
+   "Term": "Esophagitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX EXCLUSIONS",
+   "Term": "Diseases and Syndromes not covered"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX FUNGUS",
+   "Term": "Fungi section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GASTROINTESTINAL",
+   "Term": "Gastrointestinal and Intraabdominal section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GENITAL HERPES",
+   "Term": "Genital herpes"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GENITAL HERPES",
+   "Term": "Herpes, genital"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GENITAL HERPES",
+   "Term": "Sexually transmitted infection, genital warts"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GENITOURINARY",
+   "Term": "Genitourinary section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX GIARDIA",
+   "Term": "Giardia lamblia diarrhea"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HEAD AND NECK",
+   "Term": "Ear, nose, throat (ENT)/Head and Neck section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HEAD AND NECK",
+   "Term": "Head and Neck/ENT section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HELP PAGE",
+   "Term": "Help"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HEPATITIS A",
+   "Term": "Hepatitis A"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HEPATITIS B",
+   "Term": "Hepatitis B"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HEPATITIS C",
+   "Term": "Hepatitis C"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HERPES KERATITIS",
+   "Term": "Herpes keratitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HERPES SIMPLEX ESOPHAGITIS",
+   "Term": "Herpes esophagitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HERPES WHITLOW",
+   "Term": "Cellulitis, herpes whitlow"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HERPES WHITLOW",
+   "Term": "Herpes whitlow (digit or hand cellulitis)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HIV-AIDS",
+   "Term": "HIV infection, general"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HOME IV AT MPLS",
+   "Term": "Home IV therapy at MVAMC"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HOME IV AT MPLS",
+   "Term": "Intravenous therapy at home, MVAMC"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX HSV ENCEPHALITIS",
+   "Term": "Encephalitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX IMMUNOCOMPROMISED PATIENT",
+   "Term": "Immunocompromised Patients section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX IMPETIGO",
+   "Term": "Impetigo"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX IMPORTANT DRUG PROPERTIES",
+   "Term": "Drug properties, important"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX IMPORTANT DRUG PROPERTIES",
+   "Term": "Important drug properties"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX INFECT INVOLVES CARD DEVICES",
+   "Term": "Cardiovascular device infections (excluding valves)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX INFECTION CTRL",
+   "Term": "Infection control department information"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX INFLUENZA 2018-2019",
+   "Term": "Flu"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX INFLUENZA 2018-2019",
+   "Term": "Influenza"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX INFLUENZA 2018-2019",
+   "Term": "Seasonal influenza"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX ISOSPORA",
+   "Term": "Isospora diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LARYNGITIS AND CROUP",
+   "Term": "Laryngitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LIVER AMEBIC ABSCESS",
+   "Term": "Amebic liver abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LIVER PYOGENIC ABSCESS",
+   "Term": "Abscess, liver"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LIVER PYOGENIC ABSCESS",
+   "Term": "Hepatic abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LIVER PYOGENIC ABSCESS",
+   "Term": "Liver abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LIVER PYOGENIC ABSCESS",
+   "Term": "Pyogenic liver abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LUNG ABSCESS",
+   "Term": "Abscess, lung"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LUNG ABSCESS",
+   "Term": "Lung abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LUNG AND MEDIASTINUM",
+   "Term": "Lungs and Mediastinum section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LUNG AND MEDIASTINUM",
+   "Term": "Mediastinum and Lung section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX LYME DISEASE",
+   "Term": "Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX MEDIASTINITIS",
+   "Term": "Mediastinitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX MICROSPORIDIA",
+   "Term": "Microsporidia diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX MYOCARDITIS",
+   "Term": "Myocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NASAL PACKING",
+   "Term": "Nasal packing"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NON-CHOLERA",
+   "Term": "Vibrio non-cholerae, diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSO PNEUMONIA NEW",
+   "Term": "Hospital-acquired pneumonia (HAP)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSO PNEUMONIA NEW",
+   "Term": "Nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSO PNEUMONIA NEW",
+   "Term": "Pneumonia, nosocomial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSO PNEUMONIA NEW",
+   "Term": "Ventilator-associated pneumonia (VAP)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSOCOMIAL A. BAUMANNII",
+   "Term": "Acinetobacter baumannii, nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSOCOMIAL ESBL ENTEROBACT",
+   "Term": "Enterobacteriaceae (ESBL+) nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSOCOMIAL L. PNEUMOPHILA",
+   "Term": "Legionella pneumophila nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSOCOMIAL P. AERUGINOSA",
+   "Term": "Pseudomonas aeruginosa nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOSOCOMIAL STAPHYLOCOCCUS PNEUMONIA",
+   "Term": "Staphylococcus aureus nosocomial pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITED PHARYNGITIS",
+   "Term": "Non-streptococcal pharyngitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITED PHARYNGITIS",
+   "Term": "Pharyngitis, non-streptococcal"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Asymptomatic bacteriuria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Asymptomatic candiduria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Asymptomatic pyuria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Bacteriuria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Candiduria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT BENEFITTED BACTERIURIA",
+   "Term": "Pyuria"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX NOT REQUIRED MAIN",
+   "Term": "Conditions not benefitted by antimicrobials"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX OROLABIAL HERPES",
+   "Term": "Herpes, orolabial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX OROLABIAL HERPES",
+   "Term": "Orolabial herpes"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PANCREATITIS",
+   "Term": "Pancreatitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PARAINFLUENZA",
+   "Term": "Parainfluenza"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PAROTITIS",
+   "Term": "Parotitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PENICILLIN DESENS PROTOCOL",
+   "Term": "Desensitization protocol, penicillin "
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PENICILLIN DESENS PROTOCOL",
+   "Term": "Penicillin desensitization protocol"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PENICILLIN DESENS PROTOCOL",
+   "Term": "Protocol for Penicillin Desensitization"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PERIANAL/ANORECTAL ABSCESS",
+   "Term": "Abscess, perianal/anorectal"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PERIANAL/ANORECTAL ABSCESS",
+   "Term": "Anorectal abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PERIANAL/ANORECTAL ABSCESS",
+   "Term": "Perianal abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PERICARDITIS",
+   "Term": "Pericarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PERTUSSIS",
+   "Term": "Pertussis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PHARYNGITIS",
+   "Term": "Pharyngitis, streptococcal"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PHARYNGITIS",
+   "Term": "Streptococcal pharyngitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PID",
+   "Term": "Pelvic inflammatory disease (PID)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PID",
+   "Term": "Sexually transmitted infection, pelvic inflammatory disease"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PNEUMOCYSTIS JIROVECII PROPHYLAXIS",
+   "Term": "Pneumocystis prophylaxis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PNEUMOCYSTIS JIROVECII PROPHYLAXIS",
+   "Term": "Prophylactic antimicrobials for Pneumocystis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PNEUMONIA",
+   "Term": "Pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX POSITIVE BLOOD CULTURE COAG NEG STAPH",
+   "Term": "Coagulase negative staphylococci, single blood culture positive"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PREVENTION OF INFECTION",
+   "Term": "Infection Prevention section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PREVENTION OF INFECTION",
+   "Term": "Prevention of Infection section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PRIM INFECT CHICKENPOX",
+   "Term": "Chickenpox, primary infection"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PRIM INFECT CHICKENPOX",
+   "Term": "Varicella"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PYELO SPECIFIC PATHOGENS",
+   "Term": "Enterococcal pyelonephritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PYELO SPECIFIC PATHOGENS",
+   "Term": "Pseudomonas aeruginosa pyelonephritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX PYELONEPHRITIS",
+   "Term": "Pyelonephritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX REACT PRIM INFECT ZOSTER",
+   "Term": "Chickenpox, reactivation of primary infection"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX REACT PRIM INFECT ZOSTER",
+   "Term": "Shingles"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX REACT PRIM INFECT ZOSTER",
+   "Term": "Zoster"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX RSV",
+   "Term": "Respiratory syncytial virus (RSV)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SALMONELLA SPECIES",
+   "Term": "Salmonella diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SECOND PERITONITIS",
+   "Term": "Peritonitis, secondary"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SECOND PERITONITIS",
+   "Term": "Secondary peritonitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SHIGELLA SPECIES",
+   "Term": "Bacillary dysentery"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SHIGELLA SPECIES",
+   "Term": "Shigella diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SOFT TISSUE, MUSCLE, BONE",
+   "Term": "Bone and Joint section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SOFT TISSUE, MUSCLE, BONE",
+   "Term": "Joint and Bone section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SOFT TISSUE, MUSCLE, BONE",
+   "Term": "Muscle and Soft Tissue section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SOFT TISSUE, MUSCLE, BONE",
+   "Term": "Soft Tissue and Muscle section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SPON BACT PERITONITIS",
+   "Term": "Liver disease, prevention of spontaneous bacterial peritonitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SPON BACT PERITONITIS",
+   "Term": "Peritonitis, acute spontaneous bacterial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SPON BACT PERITONITIS",
+   "Term": "Prophylactic antimicrobials for spontaneous bacterial peritonitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SPON BACT PERITONITIS",
+   "Term": "Spontaneous bacterial peritonitis prevention"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX STAPHYLOCOCCUS AUREUS DECOLONIZATION",
+   "Term": "Decolonization of Staphylococcus aureus"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX STAPHYLOCOCCUS AUREUS DECOLONIZATION",
+   "Term": "Staphylococcus aureus decolonization"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX STASIS DERMATITIS",
+   "Term": "Dermatitis, stasis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX STASIS DERMATITIS",
+   "Term": "Stasis dermatitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SUPPURATIVE THROMBO EMP THERAPY",
+   "Term": "Suppurative thrombophlebitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SUSCEPTIBILITIES (ANTIBIOGRAM)",
+   "Term": "Antibiogram"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SUSCEPTIBILITIES (ANTIBIOGRAM)",
+   "Term": "Antimicrobial susceptibilities"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SUSCEPTIBILITIES (ANTIBIOGRAM)",
+   "Term": "Susceptibilities, antimicrobial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SUSP BACT, BLD CX NOT YET POS",
+   "Term": "Suspected bacteremia, blood cultures not yet positive"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SYPHILIS",
+   "Term": "Sexually transmitted infection, syphilis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SYPHILIS",
+   "Term": "Syphilis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX SYSTEM INFECTIOUS DISEASES",
+   "Term": "Systemic Infections section"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX THRUSH",
+   "Term": "Thrush"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TRICH VAGINITIS",
+   "Term": "Sexually transmitted infection, trichomoniasis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TRICH VAGINITIS",
+   "Term": "Trichomonas vaginitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TRICH VAGINITIS",
+   "Term": "Vaginitis, Trichomonas"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TUBERCULOSIS",
+   "Term": "Tuberculosis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TYPHLITIS",
+   "Term": "Neutropenic enterocolitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX TYPHLITIS",
+   "Term": "Typhlitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX UNCOMP CYSTITIS",
+   "Term": "Cystitis, uncomplicated"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX UNCOMP CYSTITIS",
+   "Term": "Uncomplicated cystitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX UPPER RESPIRATORY INFECTIONS (URI)",
+   "Term": "Upper respiratory infections (URI)"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX UTI2",
+   "Term": "Urinary tract infection (UTI), bacterial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX VAGINITIS",
+   "Term": "Sexually transmitted infection, bacterial vaginitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX VAGINITIS",
+   "Term": "Vaginosis, bacterial"
+ },
+ {
+   "Name": "ORZID2 GMENU ABX VIRUSES",
+   "Term": "Viruses section"
+ },
+ {
+   "Name": "ORZID2 GMENU ACUTE SINUSITIS",
+   "Term": "Sinusitis, acute"
+ },
+ {
+   "Name": "ORZID2 GMENU ANAPLASMA PHATOCYTOPHILUM",
+   "Term": "Anaplasma phagocytophilum (human granulocytotropic anaplasmosis)"
+ },
+ {
+   "Name": "ORZID2 GMENU ANTIVIRAL PROPHYLAXIS MALIGNANCY",
+   "Term": "Antiviral prophylaxis in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU ANTIVIRAL PROPHYLAXIS MALIGNANCY",
+   "Term": "Prophylactic antivirals in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU APPENDICITIS W/O PERFORATION",
+   "Term": "Appendicitis without perforation"
+ },
+ {
+   "Name": "ORZID2 GMENU APPENDICITIS W/O PERFORATION",
+   "Term": "Non-perforated appendicitis"
+ },
+ {
+   "Name": "ORZID2 GMENU APPENDICITIS WITH PERFORATION",
+   "Term": "Appendicitis with perforation"
+ },
+ {
+   "Name": "ORZID2 GMENU APPENDICITIS WITH PERFORATION",
+   "Term": "Perforated appendicitis"
+ },
+ {
+   "Name": "ORZID2 GMENU AZITHROMYCIN FOR PREVENTION OF EXACERBATIONS COPD",
+   "Term": "COPD, prevention of exacerbations"
+ },
+ {
+   "Name": "ORZID2 GMENU AZITHROMYCIN FOR PREVENTION OF EXACERBATIONS COPD",
+   "Term": "Exacerbations of COPD, prevention of"
+ },
+ {
+   "Name": "ORZID2 GMENU AZITHROMYCIN FOR PREVENTION OF EXACERBATIONS COPD",
+   "Term": "Prevention of COPD exacerbations"
+ },
+ {
+   "Name": "ORZID2 GMENU BABESIA SPP.",
+   "Term": "Babesia infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU BAC MENING GRM POS BACILLI L. MONOCYTO",
+   "Term": "Gram-positive bacilli meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BAC MENING GRM POS BACILLI L. MONOCYTO",
+   "Term": "Gram-positive coccobacilli meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BAC MENING GRM POS BACILLI L. MONOCYTO",
+   "Term": "Meningitis with gram-positive bacilli/coccobacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING ASSOC TRAUMA",
+   "Term": "Meningitis associated with trauma or nosocomial infection"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING ASSOC TRAUMA",
+   "Term": "Trauma or nosocomial infection associated meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Escherichia coli meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Meningitis with E. coli, Pseudomonas or other organism"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Meningitis with Escherichia coli"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Meningitis with pseudomonas"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Meningitis, other organism"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING E.COLI, PSEUDOMONAS",
+   "Term": "Pseudomonas meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GNB",
+   "Term": "Gram-negative bacilli meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GNB",
+   "Term": "Meningitis with gram-negative bacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GRM NEG DIPL N. MENING",
+   "Term": "Gram-negative diplococci meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GRM NEG DIPL N. MENING",
+   "Term": "Meningitis with gram-negative diplococci"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GRM POS DIPLO S. PNEUMO",
+   "Term": "Gram-positive diplococci meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING GRM POS DIPLO S. PNEUMO",
+   "Term": "Meningitis with gram-positive diplococci"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING L. MONOCYTOGENES",
+   "Term": "Listeria monocytogenes meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING L. MONOCYTOGENES",
+   "Term": "Meningitis with Listeria monocytogenes"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING N. MENINGITIDIS",
+   "Term": "Meningitis with Neisseria meningitidis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING N. MENINGITIDIS",
+   "Term": "Neisseria meningitidis meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING S. PNEUMONIAE",
+   "Term": "Meningitis with Streptococcus pneumoniae"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING S. PNEUMONIAE",
+   "Term": "Streptococcus pneumoniae meningitis"
+ },
+ {
+   "Name": "ORZID2 GMENU BACT MENING W/O GRM STAIN RES",
+   "Term": "Meningitis without gram stain results"
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA CANDIDA SPP.",
+   "Term": "Candidemia"
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA CANDIDA SPP.",
+   "Term": "Fungemia associated with Candida spp."
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA COAG NEG STAPH",
+   "Term": "Coagulase-negative Staphylococci (CNS) bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA LISTERIA",
+   "Term": "Listeria monocytogenes bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA S. AUREUS",
+   "Term": "Staphylococcus aureus bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU BACTEREMIA S. LUGDUNENSIS",
+   "Term": "Staphylococcus lugdunensis bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU BED BUGS (HEMIPTERA)",
+   "Term": "Bed bugs"
+ },
+ {
+   "Name": "ORZID2 GMENU BED BUGS (HEMIPTERA)",
+   "Term": "Hemiptera"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS EIKENELLA CORRODENS",
+   "Term": "Eikenella corrodens, bite wound"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS P. MULTOCIDA",
+   "Term": "Pasteurella multocida bite wounds"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS S. AUREUS",
+   "Term": "Methicillin-resistant Staphylococcus aureus bite wounds"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS S. AUREUS",
+   "Term": "MRSA bite wounds"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS S. AUREUS",
+   "Term": "MSSA bite wounds "
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WNDS STREPTOCOCCI",
+   "Term": "Streptococcal bite wounds"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WOUNDS",
+   "Term": "Bite wounds"
+ },
+ {
+   "Name": "ORZID2 GMENU BITE WOUNDS",
+   "Term": "Wound, bite"
+ },
+ {
+   "Name": "ORZID2 GMENU BODY LICE (PEDICULOSIS CORPORIS)",
+   "Term": "Body lice"
+ },
+ {
+   "Name": "ORZID2 GMENU BODY LICE (PEDICULOSIS CORPORIS)",
+   "Term": "Lice, body "
+ },
+ {
+   "Name": "ORZID2 GMENU BODY LICE (PEDICULOSIS CORPORIS)",
+   "Term": "Pediculosis corporis"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC CONT HEMATO SPRD INFECT",
+   "Term": "Brain abscess from contiguous or hematogenous spread"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC CONT HEMATO SPRD INFECT",
+   "Term": "Contiguous or hematogenous spread brain abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC NOCARDIA SPP",
+   "Term": "Brain abscess with Nocardia spp."
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC NOCARDIA SPP",
+   "Term": "Nocardia spp. brain abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC POST SURG POST TRAUMATIC",
+   "Term": "Brain abscess, post-surgical or post-traumatic"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC POST SURG POST TRAUMATIC",
+   "Term": "Post-surgical or post-traumatic brain abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC PSEUDOMONAS SPP.",
+   "Term": "Brain abscess with Pseudomonas spp."
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC PSEUDOMONAS SPP.",
+   "Term": "Pseudomonas spp. brain abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC TOXOPLASMA GONDII",
+   "Term": "Brain abscess with Toxoplasma gondii"
+ },
+ {
+   "Name": "ORZID2 GMENU BRN ABSC TOXOPLASMA GONDII",
+   "Term": "Toxoplasma gondii brain abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU CAP INPATIENT TREATED SETTING",
+   "Term": "Community-acquired pneumonia (CAP), inpatient treatment setting"
+ },
+ {
+   "Name": "ORZID2 GMENU CAT-SCATCH DISEASE",
+   "Term": "Cat-scratch disease"
+ },
+ {
+   "Name": "ORZID2 GMENU CERVICITIS ASSOC STD",
+   "Term": "Cervicitis associated with sexually transmitted diseases"
+ },
+ {
+   "Name": "ORZID2 GMENU CERVICITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, cervicitis"
+ },
+ {
+   "Name": "ORZID2 GMENU CERVICITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, chlamydia cervicitis"
+ },
+ {
+   "Name": "ORZID2 GMENU CERVICITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, gonorrhea cervicitis"
+ },
+ {
+   "Name": "ORZID2 GMENU CHRONIC SINUSITIS",
+   "Term": "Sinusitis, chronic"
+ },
+ {
+   "Name": "ORZID2 GMENU CMI DEFECTS",
+   "Term": "Cell-mediated immunity (CMI) defects"
+ },
+ {
+   "Name": "ORZID2 GMENU COMM ACQ DIARRHEA",
+   "Term": "Community-acquired diarrhea"
+ },
+ {
+   "Name": "ORZID2 GMENU COMM VIRAL GASTROENTERITIS",
+   "Term": "Adenovirus diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU COMM VIRAL GASTROENTERITIS",
+   "Term": "Astrovirus diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU COMM VIRAL GASTROENTERITIS",
+   "Term": "Viral diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU CONJUNCTIVITIS",
+   "Term": "Conjunctivitis"
+ },
+ {
+   "Name": "ORZID2 GMENU CONTACT CDSS STAFF",
+   "Term": "Contact CDSS staff"
+ },
+ {
+   "Name": "ORZID2 GMENU CRANIAL EPIDURAL ABSCESS",
+   "Term": "Abscess, cranial epidural"
+ },
+ {
+   "Name": "ORZID2 GMENU CRANIAL EPIDURAL ABSCESS",
+   "Term": "Cranial epidural abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU CRANIAL EPIDURAL ABSCESS",
+   "Term": "Epidural abscess, cranial"
+ },
+ {
+   "Name": "ORZID2 GMENU CUTANEOUS ABSCESS",
+   "Term": "Abscess, cutaneous"
+ },
+ {
+   "Name": "ORZID2 GMENU CUTANEOUS CANDIDIASIS",
+   "Term": "Candidiasis"
+ },
+ {
+   "Name": "ORZID2 GMENU DECUBITUS ULCERS",
+   "Term": "Decubitus ulcers"
+ },
+ {
+   "Name": "ORZID2 GMENU DECUBITUS ULCERS",
+   "Term": "Ulcer, decubitus"
+ },
+ {
+   "Name": "ORZID2 GMENU DEEP OROPHAR INFECT",
+   "Term": "Deep oropharyngeal infections"
+ },
+ {
+   "Name": "ORZID2 GMENU DEEP OROPHAR INFECT",
+   "Term": "Oropharyngeal infections, deep"
+ },
+ {
+   "Name": "ORZID2 GMENU DISSEMINATED M. AVIUM",
+   "Term": "Disseminated Mycobacterium avium"
+ },
+ {
+   "Name": "ORZID2 GMENU DISSEMINATED M. AVIUM",
+   "Term": "Mycobacterium avium, disseminated  "
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV EMP THERA",
+   "Term": "Endocarditis, native valve empirical therapy"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV EMP THERA",
+   "Term": "Native valve endocarditis empirical therapy"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV ENTEROCOCCI",
+   "Term": "Enterococcal native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV ENTEROCOCCI",
+   "Term": "Streptococcal native valve endocarditis (highly resistant isolate)"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV FUNGI",
+   "Term": "Fungal native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV GNB",
+   "Term": "Gram-negative bacilli, non-HACEK, native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "Aggregatibacter native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "Cardiobacterium native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "Eikenella native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "HACEK bacteria native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "Haemophilus native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV HACEK",
+   "Term": "Kingella native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV SEL PATH",
+   "Term": "Endocarditis, native valve"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV SEL PATH",
+   "Term": "Native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV STAPHYLOCOCCI",
+   "Term": "Staphylococcal native valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC NV STREPTOCOCCI",
+   "Term": "Streptococcal native valve endocarditis (sensitive isolate)"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV EMP THERAPY",
+   "Term": "Endocarditis, prosthetic valve empirical therapy"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV EMP THERAPY",
+   "Term": "Prosthetic valve endocarditis empirical therapy"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV ENTEROCOCCI",
+   "Term": "Enterococcal prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV FUNGI",
+   "Term": "Fungal prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV GNB",
+   "Term": "Gram-negative bacilli, non-HACEK, prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "Aggregatibacter prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "Cardiobacterium prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "Eikenella prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "HACEK bacteria prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "Haemophilus prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV HACEK",
+   "Term": "Kingella prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV SEL PATH",
+   "Term": "Endocarditis, prosthetic valve"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV SEL PATH",
+   "Term": "Prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV STAPHYLOCOCCI",
+   "Term": "Staphylococcal prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU EC PV VGS/S. BOVIS",
+   "Term": "Streptococcal prosthetic valve endocarditis"
+ },
+ {
+   "Name": "ORZID2 GMENU ECTHYMA GANGRENOSUM",
+   "Term": "Ecthyma gangrenosum"
+ },
+ {
+   "Name": "ORZID2 GMENU EHRLICHIA CHAFFEENSIS",
+   "Term": "Ehrlichia chaffeensis (Human Monocytotropic Ehrlichiosis)"
+ },
+ {
+   "Name": "ORZID2 GMENU ENDOOPTHALMITIS",
+   "Term": "Endophthalmitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ERYSIPELAS",
+   "Term": "Erysipelas"
+ },
+ {
+   "Name": "ORZID2 GMENU ERYSIPELOID",
+   "Term": "Erysipeloid"
+ },
+ {
+   "Name": "ORZID2 GMENU ERYTHRASMA",
+   "Term": "Erythrasma"
+ },
+ {
+   "Name": "ORZID2 GMENU FOLLICULITIS",
+   "Term": "Folliculitis"
+ },
+ {
+   "Name": "ORZID2 GMENU FOOT ULCER WITH DM",
+   "Term": "Diabetic foot ulcer"
+ },
+ {
+   "Name": "ORZID2 GMENU FOOT ULCER WITH DM",
+   "Term": "Foot ulcer in patient with diabetes"
+ },
+ {
+   "Name": "ORZID2 GMENU FOOT ULCER WITH DM",
+   "Term": "Ulcer, diabetic foot"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGAL SINUSITIS",
+   "Term": "Fungal sinusitis"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGAL SINUSITIS",
+   "Term": "Sinusitis, fungal"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI ASPERGILLUS SPP.",
+   "Term": "Aspergillus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI BLASTOMYCES DERMATIDIS",
+   "Term": "Blastomycosis infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI CANDIDA ALBICANS",
+   "Term": "Candida albicans infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI CANDIDA GLABRATA",
+   "Term": "Candida glabrata infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI CANDIDA KRUSEI",
+   "Term": "Candida krusei infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI COCCIDIOIDOMYCES",
+   "Term": "Coccidioides infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI CRYPTOCOCCUS NEOFORMANS",
+   "Term": "Cryptococcus neoformans"
+ },
+ {
+   "Name": "ORZID2 GMENU FUNGI HISTOPLASMA CAPSULATUM",
+   "Term": "Histoplasma capsulatum"
+ },
+ {
+   "Name": "ORZID2 GMENU FURUNCLES AND CARBUNCLES",
+   "Term": "Carbuncles"
+ },
+ {
+   "Name": "ORZID2 GMENU FURUNCLES AND CARBUNCLES",
+   "Term": "Furuncles"
+ },
+ {
+   "Name": "ORZID2 GMENU GIARDIA LAMBLIA",
+   "Term": "Giardia lamblia infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GN INT RS GNB",
+   "Term": "Gram-negative bacilli interim culture results"
+ },
+ {
+   "Name": "ORZID2 GMENU GN INT RS GNC",
+   "Term": "Gram-negative cocci interim culture results"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM NEGATIVE BACTERIA",
+   "Term": "Bacteria, Gram-Negative section"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM NEGATIVE BACTERIA",
+   "Term": "Gram-Negative Bacteria section"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM POS BACTERIA",
+   "Term": "Bacteria, Gram-Positive section"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM POS BACTERIA",
+   "Term": "Gram-positive bacteria, section"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN BACTEROIDES SPP.",
+   "Term": "Bacteroides infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN BACTEROIDES SPP.",
+   "Term": "Porphyromonas infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN BACTEROIDES SPP.",
+   "Term": "Prevotella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN CAMPYLOBACTER SPP.",
+   "Term": "Campylobacter, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN ENTEROBACTER SPP.",
+   "Term": "Enterobacter species, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN M. CATARRHALIS",
+   "Term": "Moraxella catarrhalis infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN N. GONORRHOEAE",
+   "Term": "Neisseria gonorrhoeae infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN N. MENINGITIDIS",
+   "Term": "Neisseria meningitidis infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN P. MULTICIDA",
+   "Term": "Pasteurella multocida infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN PSEUDOMONAS SPP.",
+   "Term": "Pseudomonas infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN SALMONELLA SPP.",
+   "Term": "Salmonella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FIN SHIGELLA SPP.",
+   "Term": "Shigella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL A. BAUMANNI",
+   "Term": "Acinetobacter baumannii, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL BORDETELLA SPP.",
+   "Term": "Bordetella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL BRUCELLA SPP.",
+   "Term": "Brucella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL BRUCELLA SPP.",
+   "Term": "Brucella spp."
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL CITROBACTER SPP.",
+   "Term": "Citrobacter infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL ESCHERICHIA COLI",
+   "Term": "Escherichia coli infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL HAEMOPHILUS SPP.",
+   "Term": "Haemophilus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL KLEBSIELLA SPP.",
+   "Term": "Klebsiella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL LEGIONELLA SPP.",
+   "Term": "Legionella infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL PROTEUS SPP.",
+   "Term": "Proteus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-NEG FINAL SERRATIA SPP.",
+   "Term": "Serratia infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI ACTINOMYCES SPP.",
+   "Term": "Actinomyces infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI ANAEROBIC COCCI",
+   "Term": "Anaerobic gram-positive cocci"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI ANAEROBIC COCCI",
+   "Term": "Gram-positive cocci, anaerobic"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI ANAEROBIC COCCI",
+   "Term": "Peptostreptococcus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI BACILLUS SPP.",
+   "Term": "Bacillus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI CLOSTRIDIUM SPP.",
+   "Term": "Clostridium infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI CORYNEBACTERIUM SPP.",
+   "Term": "Corynebacterium spp."
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI ENTEROCOCCI",
+   "Term": "Enterococcal infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI LISTERIA SPP.",
+   "Term": "Listeria infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI PROPIONIBACT SPP.",
+   "Term": "Propionibacterium infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI S. ANGINOSUS",
+   "Term": "Streptococcus anginosus (formerly S. milleri)"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FI S. PNEUMONIAE",
+   "Term": "Streptococcus pneumoniae infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN COAG-NEG STAPH",
+   "Term": "Coagulase-negative staphylococci, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN COAG-NEG STAPH",
+   "Term": "Staphylococci, coagulase-negative"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN S. AUREUS",
+   "Term": "Staphylococcus aureus infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN S. BOVIS",
+   "Term": "Group D Streptococci"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN S. BOVIS",
+   "Term": "Streptococcus bovis (Group D)"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN S. PYOGENES",
+   "Term": "Group A streptococci "
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN S. PYOGENES",
+   "Term": "Streptococcus pyogenes (Group A) infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN STAPH LUGDUNENSIS",
+   "Term": "Staphylococcus lugdunensis infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN STAPHYLOCOCCI",
+   "Term": "Staphylococcal infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN STREP C,F,G",
+   "Term": "Groups C, F, G Streptococci"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN STREP C,F,G",
+   "Term": "Streptococci Groups C, F, G infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN VIRIDANS STREP",
+   "Term": "Streptococci viridans infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FIN VIRIDANS STREP",
+   "Term": "Viridans streptococci"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FINAL S. AGALACTIAE",
+   "Term": "Group B Streptococci"
+ },
+ {
+   "Name": "ORZID2 GMENU GRAM-POS FINAL S. AGALACTIAE",
+   "Term": "Streptococcus agalactiae (Group B)"
+ },
+ {
+   "Name": "ORZID2 GMENU H. PYLORI INFECT",
+   "Term": "Helicobacter pylori"
+ },
+ {
+   "Name": "ORZID2 GMENU HEAD LICE (PEDICULOSIS CAPITIS)",
+   "Term": "Head lice "
+ },
+ {
+   "Name": "ORZID2 GMENU HEAD LICE (PEDICULOSIS CAPITIS)",
+   "Term": "Lice, head"
+ },
+ {
+   "Name": "ORZID2 GMENU HIDRADENITIS SUPPURATIVA",
+   "Term": "Hidradenitis suppurativa"
+ },
+ {
+   "Name": "ORZID2 GMENU IG HIS DEFICIENCY",
+   "Term": "Immunoglobulin (Humoral immune system) deficiency"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM ALTERED MICRO FLORA",
+   "Term": "Altered microbial flora"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM BASIC CONCEPTS",
+   "Term": "Immunocompromised patients basic concepts"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM COMP DEFICIENCY",
+   "Term": "Complement deficiency"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM DIABETES MELLITUS",
+   "Term": "Diabetes Mellitus"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM HYPOCHLORHYDRIA",
+   "Term": "Hypochlorhydria"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM MALIGNANCY",
+   "Term": "Cancer"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM MALIGNANCY",
+   "Term": "Malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM MALNUTRITION",
+   "Term": "Malnutrition"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM NEUROL DYSFUNCTION",
+   "Term": "Neurological dysfunction"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM NEUT FEVER",
+   "Term": "Neutropenic fever"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM NEUTROPENIA",
+   "Term": "Neutropenia"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM STRESS",
+   "Term": "Stress"
+ },
+ {
+   "Name": "ORZID2 GMENU IMMUNOCOM TOBACCO SMOKE",
+   "Term": "Tobacco smoke"
+ },
+ {
+   "Name": "ORZID2 GMENU INFECT DIARRHEA/GASTRO",
+   "Term": "Diarrhea, infectious/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU INFECT DIARRHEA/GASTRO",
+   "Term": "Gastroenteritis/infectious diarrhea"
+ },
+ {
+   "Name": "ORZID2 GMENU INFECT DIARRHEA/GASTRO",
+   "Term": "Infectious diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG RODS ANAEROBIC BOT",
+   "Term": "Anaerobic bottle, large uniform bacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG RODS ANAEROBIC BOT",
+   "Term": "Bacilli, large uniform, anaerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG RODS ANAEROBIC BOT",
+   "Term": "Large uniform bacilli, anaerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG UNIF RDS AEROBIC BOT",
+   "Term": "Aerobic bottle, large uniform bacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG UNIF RDS AEROBIC BOT",
+   "Term": "Bacilli, large uniform, aerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT LRG UNIF RDS AEROBIC BOT",
+   "Term": "Large uniform bacilli, aerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GNB",
+   "Term": "Gram-negative bacilli bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GNC",
+   "Term": "Gram-negative cocci bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPC IN PAIRS",
+   "Term": "Gram-positive cocci in pairs bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPC IN PAIRS",
+   "Term": "Gram-positive cocci in pairs interim culture results"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPC PAIRS/CLUSTERS",
+   "Term": "Gram-positive cocci in pairs and clusters bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPC PRS/CHAINS",
+   "Term": "Gram-positive cocci in pairs and chains bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPR",
+   "Term": "Gram-positive bacilli bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT GPR",
+   "Term": "Gram-positive bacilli, interim culture results"
+ },
+ {
+   "Name": "ORZID2 GMENU INT RPT YEAST",
+   "Term": "Yeast bacteremia"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS AEROBIC BOT",
+   "Term": "Aerobic bottle, small pleomorphic bacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS AEROBIC BOT",
+   "Term": "Bacilli, small pleomorphic, aerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS AEROBIC BOT",
+   "Term": "Small pleomorphic bacilli, aerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS ANAEROBIC BOT",
+   "Term": "Anaerobic bottle, small pleomorphic bacilli"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS ANAEROBIC BOT",
+   "Term": "Bacilli, small pleomorphic, anaerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INT SM RODS ANAEROBIC BOT",
+   "Term": "Small pleomorphic bacilli, anaerobic bottle"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVAS CATH CANDIDA SPP",
+   "Term": "Candida intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVAS CATH COAG-NEG STAPH",
+   "Term": "Coagulase-negative staphylococci, intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVAS CATH ENTEROCOCCUS",
+   "Term": "Enterococcal intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVAS CATH GNB",
+   "Term": "Gram-negative bacilli intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVAS CATH S. AUREUS",
+   "Term": "Staphylococcus aureus intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVASC CATH-ASSOC INFECT",
+   "Term": "Catheter-associated infection, intravascular"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRAVASC CATH-ASSOC INFECT",
+   "Term": "Intravascular catheter-associated infection"
+ },
+ {
+   "Name": "ORZID2 GMENU INTRO SPEC PATHOGEN",
+   "Term": "Specific pathogen introduction"
+ },
+ {
+   "Name": "ORZID2 GMENU KERATITIS",
+   "Term": "Keratitis"
+ },
+ {
+   "Name": "ORZID2 GMENU LEISHMANIASIS",
+   "Term": "Leishmaniasis"
+ },
+ {
+   "Name": "ORZID2 GMENU LEUKOCYTOSIS",
+   "Term": "Leukocytosis"
+ },
+ {
+   "Name": "ORZID2 GMENU LYME ACUTE NEURO DISEASE",
+   "Term": "Neurological disease associated with Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU LYME ARTHRITIS",
+   "Term": "Arthritis associated with Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU LYME CARDIAC DISEASE",
+   "Term": "Cardiac disease associated with Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU LYME DISEASE PROPHYLAXIS",
+   "Term": "Prophylactic antimicrobials for Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU LYME ERYTHEMA MIGRANS",
+   "Term": "Erythema migrans, Lyme disease"
+ },
+ {
+   "Name": "ORZID2 GMENU M. AVIUM INTRACELLULARE",
+   "Term": "Mycobacterium avium intracellular complex (MAI or MAC)"
+ },
+ {
+   "Name": "ORZID2 GMENU M. AVIUM PNEUMONIA",
+   "Term": "Mycobacterium avium pneumonia"
+ },
+ {
+   "Name": "ORZID2 GMENU M. AVIUM PNEUMONIA",
+   "Term": "Pneumonia, Mycobacterium avium"
+ },
+ {
+   "Name": "ORZID2 GMENU M. PNEUMONIAE",
+   "Term": "Mycoplasma pneumonia infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU M. TUBERCULOSIS",
+   "Term": "Mycobacterium tuberculosis"
+ },
+ {
+   "Name": "ORZID2 GMENU MALIGNANT OTITIS EXTERNA",
+   "Term": "Malignant otitis externa"
+ },
+ {
+   "Name": "ORZID2 GMENU MALIGNANT OTITIS EXTERNA",
+   "Term": "Otitis externa, malignant"
+ },
+ {
+   "Name": "ORZID2 GMENU MASTOIDITIS",
+   "Term": "Mastoiditis"
+ },
+ {
+   "Name": "ORZID2 GMENU NECROTIZING INFECTIONS",
+   "Term": "Necrotizing infections"
+ },
+ {
+   "Name": "ORZID2 GMENU NOSOCOMIAL SINUSITIS",
+   "Term": "Nosocomial sinusitis"
+ },
+ {
+   "Name": "ORZID2 GMENU NOSOCOMIAL SINUSITIS",
+   "Term": "Sinusitis, nosocomial"
+ },
+ {
+   "Name": "ORZID2 GMENU OSTEOM WITH GNB",
+   "Term": "Gram-negative bacilli, non-pseudomonas, osteomyelitis "
+ },
+ {
+   "Name": "ORZID2 GMENU OSTEOM WITH P. AERUGINOSA",
+   "Term": "Pseudomonas aeruginosa osteomyelitis "
+ },
+ {
+   "Name": "ORZID2 GMENU OSTEOM WITH STREPTOCOCCI",
+   "Term": "Streptococcal osteomyelitis "
+ },
+ {
+   "Name": "ORZID2 GMENU OSTEOMYELITIS",
+   "Term": "Osteomyelitis"
+ },
+ {
+   "Name": "ORZID2 GMENU OSTEOMYELITIS WITH S. AUREUS",
+   "Term": "Staphylococcus aureus osteomyelitis "
+ },
+ {
+   "Name": "ORZID2 GMENU OTHER PATHOGENS",
+   "Term": "Other Pathogens section"
+ },
+ {
+   "Name": "ORZID2 GMENU OTITIS EXTERNA",
+   "Term": "Otitis externa"
+ },
+ {
+   "Name": "ORZID2 GMENU OTITIS MEDIA",
+   "Term": "Otitis media"
+ },
+ {
+   "Name": "ORZID2 GMENU PARASITES",
+   "Term": "Parasites"
+ },
+ {
+   "Name": "ORZID2 GMENU PARONYCHIA",
+   "Term": "Paronychia"
+ },
+ {
+   "Name": "ORZID2 GMENU PERIOCULAR INFECTIONS",
+   "Term": "Periocular infections"
+ },
+ {
+   "Name": "ORZID2 GMENU PERIODENTAL DISEASE",
+   "Term": "Periodontal disease"
+ },
+ {
+   "Name": "ORZID2 GMENU PNEUMOCYSTIS JIROVECII",
+   "Term": "Pneumocystis"
+ },
+ {
+   "Name": "ORZID2 GMENU POSTSEPTAL CELLULITIS",
+   "Term": "Cellulitis, postseptal (orbital)"
+ },
+ {
+   "Name": "ORZID2 GMENU POSTSEPTAL CELLULITIS",
+   "Term": "Orbital cellulitis "
+ },
+ {
+   "Name": "ORZID2 GMENU POSTSEPTAL CELLULITIS",
+   "Term": "Postseptal cellulitis"
+ },
+ {
+   "Name": "ORZID2 GMENU PRESEPTAL CELLULITIS",
+   "Term": "Cellulitis, preseptal"
+ },
+ {
+   "Name": "ORZID2 GMENU PRESEPTAL CELLULITIS",
+   "Term": "Preseptal cellulitis"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV INFECT BACT PROPHYL",
+   "Term": "Antibacterial prophylaxis in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV INFECT BACT PROPHYL",
+   "Term": "Prophylactic antibiotics in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV INFECT FUNGAL PROPHYL",
+   "Term": "Antifungal prophylaxis in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV INFECT FUNGAL PROPHYL",
+   "Term": "Prophylactic antifungals in malignancy"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV OF PERTUSSIS",
+   "Term": "Pertussis post-exposure prophylaxis"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV OF PERTUSSIS",
+   "Term": "Post-exposure prophylaxis, pertussis"
+ },
+ {
+   "Name": "ORZID2 GMENU PREV OF PERTUSSIS",
+   "Term": "Prophylactic antimicrobials for post-exposure pertussis"
+ },
+ {
+   "Name": "ORZID2 GMENU PROPHYLAXIS M. AVIUM",
+   "Term": "Mycobacterium avium prophylaxis"
+ },
+ {
+   "Name": "ORZID2 GMENU PROPHYLAXIS M. AVIUM",
+   "Term": "Prophylactic antimicrobials for Mycobacterium avium"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS B/J ENTEROCOCCI",
+   "Term": "Bone prosthesis infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS B/J ENTEROCOCCI",
+   "Term": "Enterococcal prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS B/J GNB",
+   "Term": "Gram-negative bacilli, non-pseudomonas, prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS B/J P. AERUGINOSA",
+   "Term": "Pseudomonas aeruginosa prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS B/J STREPTOCOCCI",
+   "Term": "Streptococcal prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS BONE/JOINT S. AUREUS",
+   "Term": "Staphylococcus aureus prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS JOINT BONE INFECT",
+   "Term": "Joint infection, prosthetic"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS JOINT BONE INFECT",
+   "Term": "Prosthetic bone/joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU PROS JOINT BONE INFECT",
+   "Term": "Septic arthritis, prosthetic joint"
+ },
+ {
+   "Name": "ORZID2 GMENU PUBIC LICE (PEDICULOSIS PUBIS)",
+   "Term": "Crabs"
+ },
+ {
+   "Name": "ORZID2 GMENU PUBIC LICE (PEDICULOSIS PUBIS)",
+   "Term": "Lice, pubic"
+ },
+ {
+   "Name": "ORZID2 GMENU PUBIC LICE (PEDICULOSIS PUBIS)",
+   "Term": "Pubic lice"
+ },
+ {
+   "Name": "ORZID2 GMENU PUBIC LICE (PEDICULOSIS PUBIS)",
+   "Term": "Sexually transmitted infection, pubic lice (crabs)"
+ },
+ {
+   "Name": "ORZID2 GMENU PYOMYOSITIS",
+   "Term": "Pyomyositis"
+ },
+ {
+   "Name": "ORZID2 GMENU RECURRENT/PERSIST URETHRITIS",
+   "Term": "Persistent or recurrent urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU RECURRENT/PERSIST URETHRITIS",
+   "Term": "Recurrent or persistent urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU RECURRENT/PERSIST URETHRITIS",
+   "Term": "Urethritis, recurrent or persistent"
+ },
+ {
+   "Name": "ORZID2 GMENU RETINITIS",
+   "Term": "Candida retinitis"
+ },
+ {
+   "Name": "ORZID2 GMENU RETINITIS",
+   "Term": "Herpes retinitis"
+ },
+ {
+   "Name": "ORZID2 GMENU RETINITIS",
+   "Term": "Retinitis"
+ },
+ {
+   "Name": "ORZID2 GMENU RETINITIS",
+   "Term": "Zoster retinitis"
+ },
+ {
+   "Name": "ORZID2 GMENU ROCKY MTN SPOT FEVER",
+   "Term": "Rocky mountain spotted fever"
+ },
+ {
+   "Name": "ORZID2 GMENU SCABIES",
+   "Term": "Scabies"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Clostridium difficile suspected, sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Endocarditis with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Meningitis with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Native valve endocarditis with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Neutropenic fever with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Pneumonia with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Prosthetic valve endocarditis with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Sepsis and septic shock"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPSIS AND SHOCK",
+   "Term": "Skin and soft tissue infection with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH ENTEROCOCCI",
+   "Term": "Enterococcal native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH GNB",
+   "Term": "Gram-negative bacilli, non-pseudomonas, native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH N. GONORRHOEAE",
+   "Term": "Neisseria gonorrhoeae native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH P. AERUGINOSA",
+   "Term": "Pseudomonas aeruginosa native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH S. AUREUS",
+   "Term": "Staphylococcus aureus, native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTH STREPTOCOCCI",
+   "Term": "Streptococcus native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTHRITIS (NAT JOINT)",
+   "Term": "Joint infection, native"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTHRITIS (NAT JOINT)",
+   "Term": "Native joint infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC ARTHRITIS (NAT JOINT)",
+   "Term": "Septic arthritis, native joint"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC BURSITIS",
+   "Term": "Bursitis, septic"
+ },
+ {
+   "Name": "ORZID2 GMENU SEPTIC BURSITIS",
+   "Term": "Septic bursitis"
+ },
+ {
+   "Name": "ORZID2 GMENU SPINAL EPIDURAL ABSCESS",
+   "Term": "Abscess, spinal epidural"
+ },
+ {
+   "Name": "ORZID2 GMENU SPINAL EPIDURAL ABSCESS",
+   "Term": "Epidural abscess, spinal"
+ },
+ {
+   "Name": "ORZID2 GMENU SPINAL EPIDURAL ABSCESS",
+   "Term": "Spinal epidural abscess"
+ },
+ {
+   "Name": "ORZID2 GMENU SPOROTRICHOSIS",
+   "Term": "Sporotrichosis infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU STAPH SCALDED SYNDROME",
+   "Term": "Scalded skin syndrome"
+ },
+ {
+   "Name": "ORZID2 GMENU SUBDURAL EMPYEMA",
+   "Term": "Empyema, subdural"
+ },
+ {
+   "Name": "ORZID2 GMENU SUBDURAL EMPYEMA",
+   "Term": "Subdural empyema"
+ },
+ {
+   "Name": "ORZID2 GMENU SUPP INTRACRANIAL THROMBOPH",
+   "Term": "Suppurative intracranial thrombophlebitis"
+ },
+ {
+   "Name": "ORZID2 GMENU SUPP ODONTOGENIC INFECT",
+   "Term": "Dental infections"
+ },
+ {
+   "Name": "ORZID2 GMENU SUPP ODONTOGENIC INFECT",
+   "Term": "Suppurative odontic infections"
+ },
+ {
+   "Name": "ORZID2 GMENU SUPP ODONTOGENIC INFECT",
+   "Term": "Tooth abscess and other suppurative odontic infections"
+ },
+ {
+   "Name": "ORZID2 GMENU SURG SURGICAL SITE INFECT",
+   "Term": "Post-operative wound infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SURG SURGICAL SITE INFECT",
+   "Term": "Surgical site infection"
+ },
+ {
+   "Name": "ORZID2 GMENU SURG SURGICAL SITE INFECT",
+   "Term": "Wound infection, post-op"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA CAPITIS (RINGWORM)",
+   "Term": "Ringworm"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA CAPITIS (RINGWORM)",
+   "Term": "Tinea capitis"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA PEDIS (ATHLETE'S FOOT)",
+   "Term": "Tinea corporis"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA PEDIS (ATHLETE'S FOOT)",
+   "Term": "Tinea cruris"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA PEDIS (ATHLETE'S FOOT)",
+   "Term": "Tinea pedis"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA UNGUIUM (ONYCHOMYCOSIS)",
+   "Term": "Onychomycosis"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA UNGUIUM (ONYCHOMYCOSIS)",
+   "Term": "Tinea unguium"
+ },
+ {
+   "Name": "ORZID2 GMENU TINEA VERSICOLOR",
+   "Term": "Tinea versicolor"
+ },
+ {
+   "Name": "ORZID2 GMENU TONSILLITIS",
+   "Term": "Tonsillitis"
+ },
+ {
+   "Name": "ORZID2 GMENU TOXI MEGACOLON",
+   "Term": "Clostridium difficile, severe/life-threatening disease"
+ },
+ {
+   "Name": "ORZID2 GMENU TOXIC SHOCK SYNDROME",
+   "Term": "Staphylococcal toxic shock syndrome"
+ },
+ {
+   "Name": "ORZID2 GMENU TOXIC SHOCK SYNDROME",
+   "Term": "Streptococcal toxic shock syndrome"
+ },
+ {
+   "Name": "ORZID2 GMENU TOXIC SHOCK SYNDROME",
+   "Term": "Toxic shock syndrome"
+ },
+ {
+   "Name": "ORZID2 GMENU TOXOPLASMA SPP.",
+   "Term": "Toxoplasma infections, general"
+ },
+ {
+   "Name": "ORZID2 GMENU TRANSPLANTATION",
+   "Term": "Transplantation"
+ },
+ {
+   "Name": "ORZID2 GMENU TRAVELERS DIARRHEA",
+   "Term": "Traveler’s diarrhea"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Chlamydia urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Gonococcal urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, chlamydia urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, gonorrhea urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Sexually transmitted infection, urethritis"
+ },
+ {
+   "Name": "ORZID2 GMENU URETHRITIS ASSOC STD",
+   "Term": "Urethritis associated with STIs "
+ },
+ {
+   "Name": "ORZID2 GMENU UROSEPSIS",
+   "Term": "Urinary tract infection with sepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU UROSEPSIS",
+   "Term": "Urosepsis"
+ },
+ {
+   "Name": "ORZID2 GMENU UVEITIS",
+   "Term": "Uveitis"
+ },
+ {
+   "Name": "ORZID2 GMENU VERTEBRAL (DISKITIS) OSTEOM",
+   "Term": "Diskitis and vertebral osteomyelitis"
+ },
+ {
+   "Name": "ORZID2 GMENU VERTEBRAL (DISKITIS) OSTEOM",
+   "Term": "Vertebral osteomyelitis and diskitis"
+ },
+ {
+   "Name": "ORZID2 GMENU YERSINIA ENTEROCOLITICA",
+   "Term": "Yersinia enterocolitica diarrhea/gastroenteritis"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN CHRONIC LIVER DISEASE",
+   "Term": "Hepatic disease immunizations"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN CHRONIC LIVER DISEASE",
+   "Term": "Immunization of patients with chronic liver disease"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN CHRONIC LIVER DISEASE",
+   "Term": "Liver disease immunizations"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN KIDNEY FAILURE/HD",
+   "Term": "Hemodialysis immunizations"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN KIDNEY FAILURE/HD",
+   "Term": "Immunization of patients in kidney failure/HD"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN KIDNEY FAILURE/HD",
+   "Term": "Kidney failure immunizations"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX IMMUNIZATION IN KIDNEY FAILURE/HD",
+   "Term": "Renal failure immunizations"
+ },
+ {
+   "Name": "ORZID3 GMENU ABX RESPIRATORY PAPILLOMATOSIS",
+   "Term": "Respiratory papillomatosis"
+ },
+ {
+   "Name": "ORZID3 GMENU PREGNANCY RISK INFO",
+   "Term": "Pregnancy risk factors for antimicrobials"
+ },
+ {
+   "Name": "ORZID3 GMENU WARFARIN DRUG INTERACTIONS",
+   "Term": "Antimicrobial interactions with warfarin"
+ },
+ {
+   "Name": "ORZID3 GMENU WARFARIN DRUG INTERACTIONS",
+   "Term": "Warfarin interactions with antimicrobials"
+ }
+]
