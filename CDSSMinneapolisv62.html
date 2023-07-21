@@ -615,7 +615,8 @@ function createOMTable(selectedData) {
 
 // Function to filter data based on the selected option
     function filterData(event) {
-  const selectedOption = event.target.value;
+  const selectedOption = IndexData.find(index.name => index.term === event.target.value);
+      
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
