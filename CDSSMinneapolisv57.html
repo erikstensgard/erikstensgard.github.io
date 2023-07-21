@@ -220,10 +220,11 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-// Function to populate dropdown with OMJSON data and associated terms from IndexData
 function populateDropdown(data, indexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
+
+  data = data.filter(item => indexData[item.Name] !== undefined);
 
   data.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
@@ -244,8 +245,8 @@ function populateDropdown(data, indexData) {
     option.value = item.Name;
 
     // Find the associated terms from IndexData using item.name
-    const termsData = indexData.find(indexItem => indexItem.Name === item.Name);
-    const displayText = termsData ? termsData.Term : item.DisplayText || item.Name;
+    const terms = indexData[item.Name] || [];
+    const displayText = terms.length > 0 ? terms.join(', ') : item.DisplayText || item.Name;
 
     option.textContent = displayText;
     dropdown.appendChild(option);
