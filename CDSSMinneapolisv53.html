@@ -540,8 +540,7 @@ function createOMTable(selectedData) {
 
                   // Check if the link text is already added for any row
                   if (matchedTexts.has(linkText)) {
-                    // Append the remaining text from the last matched index to the current matched index
-                    const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
+                    const remainingText = contentText.substring(currentIndex, match.index + match[0].length);
                     const remainingTextNode = document.createTextNode(remainingText);
                     linkContainer.appendChild(remainingTextNode);
 
@@ -570,7 +569,7 @@ function createOMTable(selectedData) {
               });
 
               if (currentIndex < contentText.length) {
-                const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
+                const remainingText = contentText.substring(currentIndex);
                 const remainingTextNode = document.createTextNode(remainingText);
                 linkContainer.appendChild(remainingTextNode);
               }
@@ -603,6 +602,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to filter data based on the selected option
     function filterData(event) {
