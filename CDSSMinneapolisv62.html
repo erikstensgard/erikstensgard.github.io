@@ -226,24 +226,24 @@ function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
- omData.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
+ IndexData.sort((a, b) => {
+    const displayTextA = a.Term
+    const displayTextB = b.Term
     return displayTextA.localeCompare(displayTextB);
   });
 
   // Sort the data by the number of matches
- omData.sort((a, b) => {
+ IndexData.sort((a, b) => {
     const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
- omData.forEach(item => {
+ IndexData.forEach(item => {
     const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
+    option.value = item.Term;
+    option.textContent = item.Term;
     dropdown.appendChild(option);
   });
 }
