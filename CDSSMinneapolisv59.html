@@ -203,6 +203,13 @@
       const data = await response.json();
       return data;
     }
+    
+    // Fetch Index Data
+    async function fetchIndex() {
+      const response = await fetch('MinneapolisIndex.json');
+      const data = await response.json();
+      return data;
+    }
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -213,27 +220,15 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-// Function to populate dropdown with OMJSON data
-function populateDropdown(data) {
+// Function to populate dropdown with OMJSON data and associated terms from IndexData
+function populateDropdown(data, indexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Filter out items with names that start with "ORZID3"
-  const filteredData = data.filter(item => !item.Name.startsWith('ORZID3'));
-
-  // Sort the filtered data
-  filteredData.sort((a, b) => {
+  data.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
     const displayTextB = b.DisplayText || b.Name;
     return displayTextA.localeCompare(displayTextB);
-  });
-
-  // Populate the dropdown with the filtered and sorted data
-  filteredData.forEach(item => {
-    const option = document.createElement('option');
-    const displayText = item.DisplayText || item.Name;
-    option.text = displayText;
-    dropdown.add(option);
   });
 
   // Sort the data by the number of matches
@@ -247,10 +242,16 @@ function populateDropdown(data) {
   data.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
+
+    // Find the associated terms from IndexData using item.name
+    const termsData = indexData.find(indexItem => indexItem.Name === item.Name);
+    const displayText = termsData ? termsData.Term : item.DisplayText || item.Name;
+
+    option.textContent = displayText;
     dropdown.appendChild(option);
   });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -273,12 +274,12 @@ function searchData() {
   const searchText = searchInput.value.trim().toLowerCase();
 
   let filteredData = omData.filter(item => {
-    const displayText = item.DisplayText || item.Name;
+    const itemName = item.Name.toLowerCase();
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-    return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
+    return itemName.includes(searchText) || contentTexts.some(text => text.includes(searchText));
   });
 
-  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
+  filteredData = filteredData.filter(item => !(item.Name.toLowerCase().includes('index')));
 
   filteredData.sort((a, b) => {
     const aDisplayText = a.DisplayText || a.Name;
@@ -304,8 +305,9 @@ function searchData() {
     return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
   });
 
-  populateDropdown(filteredData);
+  populateDropdown(filteredData, IndexData); // Pass IndexData to populateDropdown
 }
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -646,7 +648,6 @@ function filterData(event) {
   adjustFontSize();
 }
 
-    
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -757,17 +758,18 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) // Add fetchIndex()
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexData]) => { // Change IndexjsonData to indexData
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
-    abxLinkData = abxlinkjsonData
-    populateDropdown(omData);
+    abxLinkData = abxlinkjsonData;
+    IndexData = indexData; // Change IndexjsonData to indexData
+    populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-    pushHistory(dropdown.value); // Add this line to initialize history and forwardHistory
+    pushHistory(dropdown.value);
     filterData({ target: dropdown });
   })
   .catch(error => {
@@ -778,4 +780,3 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
 </body>
 
 </html>
-
