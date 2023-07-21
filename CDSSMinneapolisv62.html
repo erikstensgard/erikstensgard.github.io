@@ -240,10 +240,10 @@ function populateDropdown(data) {
     return matchesB - matchesA;
   });
 
- IndexData.forEach(Term => {
+ IndexData.forEach(IndexData.Term => {
     const option = document.createElement('option');
-    option.value = Term;
-    option.textContent = Term;
+    option.value = IndexData.Term;
+    option.textContent = IndexData.Term;
     dropdown.appendChild(option);
   });
 }
