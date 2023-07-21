@@ -203,6 +203,13 @@
       const data = await response.json();
       return data;
     }
+
+     // Fetch Index Data
+    async function fetchIndex() {
+      const response = await fetch('MinneapolisIndex.json');
+      const data = await response.json();
+      return data;
+    }
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
