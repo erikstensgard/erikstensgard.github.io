@@ -621,10 +621,10 @@ function createOMTable(selectedData) {
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
-  const matchingIndex = indexdata.findIndex(item => item.Term === selectedOption);
+  const matchingIndex = indexData.findIndex(item => item.Term === selectedOption); // Use "indexData" instead of "indexdata"
 
   if (matchingIndex !== -1) {
-    const selectedName = indexdata[matchingIndex].Name;
+    const selectedName = indexData[matchingIndex].Name;
     const matchingData = omData.find(item => item.Name === selectedName);
 
     if (matchingData) {
@@ -638,10 +638,10 @@ function filterData(event) {
       resultContainer.innerHTML = 'Selected data not found.';
     }
   } else {
-    // Handle the case when selectedOption is not found in indexdata.Term
+    // Handle the case when selectedOption is not found in indexData.Term
     // For example, display an error message or clear the result container
     const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected option not found in indexdata.';
+    resultContainer.innerHTML = 'Selected option not found in indexData.';
   }
 
   scrollToTop();
