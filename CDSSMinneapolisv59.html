@@ -204,12 +204,14 @@
       return data;
     }
     
-    // Fetch Index Data
-    async function fetchIndex() {
-      const response = await fetch('MinneapolisIndex.json');
-      const data = await response.json();
-      return data;
-    }
+// Fetch Index Data
+async function fetchIndex() {
+  const response = await fetch('MinneapolisIndex.json');
+  const data = await response.json();
+  console.log('Fetched IndexData:', data);
+  return data; // Make sure the returned data is an array of objects with 'Name' and 'Term' properties
+}
+
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -753,10 +755,10 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    IndexData = indexData;
+    IndexData = indexData; // Check the usage of indexData here
 
     // Populate dropdown with OMJSON data and IndexData
-    populateDropdown(omData, IndexData);
+    populateDropdown(omData, IndexData); // Check the usage of IndexData here
 
     // Initialize the dropdown with a default value
     const dropdown = document.getElementById('filterDropdown');
