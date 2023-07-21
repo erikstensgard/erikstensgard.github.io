@@ -511,7 +511,7 @@ function createOMTable(selectedData) {
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const matchingURLs = abxLinkData.filter(item =>
-                contentText.toLowerCase().includes(item.Name.toLowerCase())
+                new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
               );
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
@@ -525,7 +525,7 @@ function createOMTable(selectedData) {
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
+                const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
                 let match;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
