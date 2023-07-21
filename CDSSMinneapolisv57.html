@@ -244,8 +244,8 @@ function populateDropdown(data, indexData) {
     option.value = item.Name;
 
     // Find the associated terms from IndexData using item.name
-    const terms = indexData[item.Name] || [];
-    const displayText = terms.length > 0 ? terms.join(', ') : item.DisplayText || item.Name;
+    const termsData = indexData.find(indexItem => indexItem.Name === item.Name);
+    const displayText = termsData ? termsData.Term : item.DisplayText || item.Name;
 
     option.textContent = displayText;
     dropdown.appendChild(option);
