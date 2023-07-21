@@ -518,6 +518,9 @@ function createOMTable(selectedData) {
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
 
+                // Initialize a flag to check if the content segment has been linked
+                let linkedContent = false;
+
                 while ((match = nameRegex.exec(contentText)) !== null) {
                   // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
                   if (currentIndex > match.index) {
@@ -548,6 +551,12 @@ function createOMTable(selectedData) {
                   matchedTextsForRow.add(linkText);
 
                   currentIndex = match.index + match[0].length;
+                  linkedContent = true;
+                }
+
+                if (linkedContent) {
+                  // Skip linking other partial matches in the same content segment
+                  continue;
                 }
               });
 
