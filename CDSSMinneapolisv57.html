@@ -203,6 +203,13 @@
       const data = await response.json();
       return data;
     }
+    
+    // Fetch Index Data
+    async function fetchIndex() {
+      const response = await fetch('MinneapolisIndex.json');
+      const data = await response.json();
+      return data;
+    }
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -763,11 +770,12 @@ document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, IndexjsonData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData
+    IndexData = IndexjsonData
     populateDropdown(omData);
 
     const dropdown = document.getElementById('filterDropdown');
