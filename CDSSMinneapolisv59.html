@@ -619,32 +619,28 @@ function createOMTable(selectedData) {
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
-  const matchingIndex = omData.find(item => item.Term === selectedOption);
 
-  if (matchingIndex) {
-    // Find the corresponding index.name in omData array
-    const correspondingItem = omData.find(item => item.Name === matchingIndex.Name);
-    
-    if (correspondingItem) {
-      selectedData = correspondingItem;
-      createOMTable(correspondingItem);
-      pushHistory(correspondingItem.Name);
-    } else {
-      // Handle the case when correspondingItem is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  } else {
-    // Handle the case when selectedData is not found
-    // For example, display an error message or clear the result container
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected data not found.';
+  // Find the corresponding index.name from omData based on the selected index.term
+  const correspondingIndex = omData.find(item => item.Term === selectedOption);
+  if (!correspondingIndex) {
+    console.error(`Corresponding index.name for term "${selectedOption}" not found.`);
+    return;
   }
 
+  const matchingData = omData.find(item => item.Name === correspondingIndex.Name);
+  if (!matchingData) {
+    console.error(`Matching data for index.name "${correspondingIndex.Name}" not found.`);
+    return;
+  }
+
+  selectedData = matchingData;
+  createOMTable(matchingData);
+  pushHistory(matchingData.Name);
+  
   scrollToTop();
   adjustFontSize();
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
