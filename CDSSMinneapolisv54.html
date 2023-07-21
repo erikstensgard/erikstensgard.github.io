@@ -467,11 +467,12 @@ function createOMTable(selectedData) {
   const maxRow = Math.max(...Contents.map(item => item.Row));
   const columns = Math.max(...Contents.map(item => item.Column));
 
-  // Before processing each row, create a Set to store the already matched texts for all rows
-  const matchedTexts = new Set();
+  // Before processing each row, create an array to store the last matched index for each row
+  const lastMatchedIndexes = new Array(maxRow).fill(0);
 
   for (let row = 1; row <= maxRow; row++) {
-    matchedTexts.clear(); // Clear the matchedTexts Set for each row
+    // Before processing each row, create a Set to store the already matched texts for all rows
+    const matchedTexts = new Set();
 
     const bodyRow = document.createElement('tr');
 
@@ -519,8 +520,8 @@ function createOMTable(selectedData) {
                 return aIndex - bIndex;
               });
 
-              // Initialize currentIndex to 0 for each row
-              currentIndex = 0;
+              // Initialize currentIndex to the last matched index for this row
+              currentIndex = lastMatchedIndexes[row - 1];
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
@@ -539,8 +540,12 @@ function createOMTable(selectedData) {
 
                   // Check if the link text is already added for any row
                   if (matchedTexts.has(linkText)) {
+                    const remainingText = contentText.substring(currentIndex, match.index + match[0].length);
+                    const remainingTextNode = document.createTextNode(remainingText);
+                    linkContainer.appendChild(remainingTextNode);
+
                     currentIndex = match.index + match[0].length;
-                    continue; // Skip adding the link if it's already matched to a link for any row
+                    continue;
                   }
 
                   const linkElement = document.createElement('a');
@@ -555,6 +560,9 @@ function createOMTable(selectedData) {
 
                   // Store the link text to prevent matching it to another link for any row
                   matchedTexts.add(linkText);
+
+                  // Store the last matched index for this row
+                  lastMatchedIndexes[row - 1] = match.index + match[0].length;
 
                   currentIndex = match.index + match[0].length;
                 }
@@ -594,6 +602,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 // Function to filter data based on the selected option
     function filterData(event) {
   const selectedOption = event.target.value;
