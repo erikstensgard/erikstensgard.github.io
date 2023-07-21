@@ -525,7 +525,7 @@ function createOMTable(selectedData) {
                   // Check if the link text is already added for this row
                   const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
                   if (matchedTextsForRow.has(linkText)) {
-                    continue; // Skip linking the match if it's already matched to a link for this row
+                    break; // Skip linking the match if it's already matched to a link for this row
                   }
 
                   // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
