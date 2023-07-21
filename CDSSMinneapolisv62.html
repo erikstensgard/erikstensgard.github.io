@@ -614,24 +614,34 @@ function createOMTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-    function filterData(event) {
-  const selectedOption = IndexData.find(name => index.term === event.target.value);
-      
-  const matchingData = omData.find(item => item.Name === selectedOption);
+function filterData(event) {
+  const selectedOption = event.target.value;
+  const selectedName = IndexData.find((index) => index.Term === selectedOption)?.Name;
 
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
+  if (selectedName) {
+    const matchingData = omData.find((item) => item.Name === selectedName);
+
+    if (matchingData) {
+      selectedData = matchingData;
+      createOMTable(matchingData);
+      pushHistory(matchingData.Name);
+    } else {
       // Handle the case when selectedData is not found
       // For example, display an error message or clear the result container
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = 'Selected data not found.';
     }
-  scrollToTop()
+  } else {
+    // Handle the case when selectedName is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected option not found in IndexData.';
+  }
+
+  scrollToTop();
   adjustFontSize();
 }
+
     
 
 // Function to push the current selection to the history
