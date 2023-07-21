@@ -4,7 +4,7 @@
 {"Name":"Valganciclovir","URL":"https://dva.sanfordguide.com/drug-information/antiviral-agents/herpesvirus/valganciclovir","RouteFilter":null},
 {"Name":"Valacyclovir","URL":"https://dva.sanfordguide.com/drug-information/antiviral-agents/herpesvirus/valacyclovir","RouteFilter":null},
 {"Name":"Trimethoprim*sulfamethoxazole","URL":"https://dva.sanfordguide.com/drug-information/antibacterial-agents/trimethoprim-sulfonamides/trimethoprim-sulfamethoxazole","RouteFilter":null},
-{"Name":"Trimethoprim","URL":"https://dva.sanfordguide.com/drug-information/antibacterial-agents/trimethoprim-sulfonamides/trimethoprim","RouteFilter":null},
+{"Name":"Trimethoprim*PO","URL":"https://dva.sanfordguide.com/drug-information/antibacterial-agents/trimethoprim-sulfonamides/trimethoprim","RouteFilter":null},
 {"Name":"Tobramycin","URL":"https://dva.sanfordguide.com/drug-information/antibacterial-agents/amino-glycosides/tobramycin","RouteFilter":null},
 {"Name":"Tetracycline","URL":"https://dva.sanfordguide.com/drug-information/antibacterial-agents/tetra-cyclines/tetracycline","RouteFilter":null},
 {"Name":"Terconazole","URL":"http://www.uptodate.com/contents/search.do?unid=minmasoub&srcsys=UTD187508&eiv=2.1.0","RouteFilter":null},
