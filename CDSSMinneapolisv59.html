@@ -619,36 +619,31 @@ function createOMTable(selectedData) {
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
-  
-  // Find the matching index.name for the selected index.term
-  const matchingIndex = omData.find(item => item.Name === selectedOption);
-  const selectedName = matchingIndex ? matchingIndex.DisplayText || matchingIndex.Name : null;
 
-  if (selectedName) {
+  // Find the matching index item based on the selectedOption
+  const matchingIndex = omData.find(item => (item.DisplayText || item.Name) === selectedOption);
+
+  if (matchingIndex) {
+    // Set the selectedData as the matching index item
+    selectedData = matchingIndex;
+
     // Update the dropdown's selectedOption with the matching index.name
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = selectedName;
-    
-    // Find and set the selectedData based on the matching index.name
-    const matchingData = omData.find(item => (item.DisplayText || item.Name) === selectedName);
-    if (matchingData) {
-      selectedData = matchingData;
-      createOMTable(matchingData);
-      pushHistory(matchingData.Name);
-    } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
+    dropdown.value = selectedData.Name; // Use the matching index.name
+
+    // Display the matching index item in the omtable
+    createOMTable(selectedData);
+    pushHistory(selectedData.Name);
   } else {
-    // Handle the case when the matching index.name is not found for the selected index.term
+    // Handle the case when the matching index item is not found
     const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Matching data not found for the selected index term.';
+    resultContainer.innerHTML = 'Selected data not found.';
   }
+
   scrollToTop();
   adjustFontSize();
 }
+
 
     
 
