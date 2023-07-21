@@ -513,13 +513,7 @@ function createOMTable(selectedData) {
                 contentText.toLowerCase().includes(item.Name.toLowerCase())
               );
 
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                return aIndex - bIndex;
-              });
-
-              sortedMatchingURLs.forEach(matchingURL => {
+              matchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name}\\b`, 'gi');
                 let match;
