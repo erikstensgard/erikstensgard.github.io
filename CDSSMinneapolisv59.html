@@ -746,14 +746,13 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
-// Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) 
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()])
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexData]) => {
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    IndexData = indexData; 
+    IndexData = indexData;
 
     // Populate dropdown with OMJSON data and IndexData
     populateDropdown(omData, IndexData);
@@ -767,6 +766,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
+
 
   </script>
 </body>
