@@ -680,17 +680,20 @@ function handleGoForward() {
       scrollToTop()
       adjustFontSize();
 }
-    // Function to handle the Main Menu button click event
-    function handleMainMenu() {
-      const dropdown = document.getElementById('filterDropdown');
-      document.getElementById('searchInput').value = null;
-      document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(omData);
-      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-      filterData({ target: dropdown });
-      scrollToTop()    
-      adjustFontSize();
-    }
+   function handleMainMenu() {
+  const dropdown = document.getElementById('filterDropdown');
+  const defaultItemValue = 'ORZID2 GMENU ABX INPT MAIN';
+  
+  // Set the value of the dropdown to the default item
+  dropdown.value = defaultItemValue;
+  
+  // Trigger the filterData function to display the corresponding data
+  filterData({ target: dropdown });
+  
+  scrollToTop();
+  adjustFontSize();
+}
+
 
     // Function to handle the Main Menu button click event
     function handleIndex() {
