@@ -653,13 +653,14 @@ function handleGoBack() {
     historyIndex--;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
-    document.getElementById('searchInput').value = '';
-    populateDropdown(omData, IndexData);
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
-  scrollToTop();
-  adjustFontSize();
+      scrollToTop()
+      adjustFontSize();
 }
 
 // Function to handle the Go Forward button click event
@@ -668,38 +669,39 @@ function handleGoForward() {
     historyIndex++;
     const selectedItem = history[historyIndex];
     const dropdown = document.getElementById('filterDropdown');
-    document.getElementById('searchInput').value = '';
-    populateDropdown(omData, IndexData);
+    document.getElementById('searchInput').value = null;
+    document.getElementById('searchInput').placeholder = "Search...";
+    populateDropdown(omData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
-  scrollToTop();
-  adjustFontSize();
+      scrollToTop()
+      adjustFontSize();
 }
+    // Function to handle the Main Menu button click event
+    function handleMainMenu() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
+      document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
+      dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+      filterData({ target: dropdown });
+      scrollToTop()    
+      adjustFontSize();
+    }
 
     // Function to handle the Main Menu button click event
-   function handleMainMenu() {
-  const dropdown = document.getElementById('filterDropdown');
-  document.getElementById('searchInput').value = '';
-  populateDropdown(omData, IndexData);
-  dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
-  filterData({ target: dropdown });
-  scrollToTop();
-  adjustFontSize();
-}
-
-
-    // Function to handle the Main Menu button click event
-   function handleIndex() {
-  const dropdown = document.getElementById('filterDropdown');
-  document.getElementById('searchInput').value = '';
-  populateDropdown(omData, IndexData);
-  dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
-  filterData({ target: dropdown });
-  scrollToTop();
-  adjustFontSize();
-}
-
+    function handleIndex() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
+      document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
+      dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
+      filterData({ target: dropdown });
+      adjustFontSize();      
+      scrollToTop()    
+      adjustFontSize();
+    }
 
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
