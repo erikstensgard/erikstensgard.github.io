@@ -617,33 +617,24 @@ function createOMTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-function filterData(event) {
+   function filterData(event) {
   const selectedOption = event.target.value;
-
-  // Find the matching index.name based on the selected index.term
-  const matchingIndex = omData.find(item => item.Term === selectedOption);
-  if (!matchingIndex) {
-    console.error(`Matching index.name for term "${selectedOption}" not found.`);
-    return;
-  }
-
-  const matchingData = omData.find(item => item.Name === matchingIndex.Name);
-  if (!matchingData) {
-    console.error(`Matching data for index.name "${matchingIndex.Name}" not found.`);
-    return;
-  }
-
-  // Set the selected option in the dropdown
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.value = matchingIndex.Name;
-
-  selectedData = matchingData;
-  createOMTable(matchingData);
-  pushHistory(matchingData.Name);
-  
-  scrollToTop();
+  const matchingIndex = omData.find(item => index.Name === selectedOption);
+      
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
+    }
+  scrollToTop()
   adjustFontSize();
 }
+    
 
 // Function to push the current selection to the history
 function pushHistory(item) {
