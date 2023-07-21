@@ -221,44 +221,14 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
 // Function to populate dropdown with OMJSON data
-async function populateDropdown(data) {
+function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Fetch the MinneapolisIndex.json data
-  const indexResponse = await fetch('MinneapolisIndex.json');
-  const indexData = await indexResponse.json();
-
-  const allTerms = new Set();
-
-  data.forEach(item => {
-    const itemName = item.Name.trim().toLowerCase();
-
-    // Find all matching items in the index data for the current item
-    const matchingItems = indexData.filter(indexItem => indexItem.Name.trim().toLowerCase() === itemName);
-
-    if (matchingItems.length > 0) {
-      matchingItems.forEach(matchingItem => {
-        // Use all matching .Terms to populate the dropdown
-        const { Terms } = matchingItem;
-        if (Terms && Terms.length > 0) {
-          Terms.forEach(term => allTerms.add(term));
-        }
-      });
-    } else {
-      // If no matches found, use the original item name to populate the dropdown
-      allTerms.add(item.Name);
-    }
-  });
-
-  // Sort the terms alphabetically
-  const sortedTerms = Array.from(allTerms).sort((a, b) => a.localeCompare(b));
-
-  // Populate the dropdown with the sorted terms
-  sortedTerms.forEach(term => {
-    const option = document.createElement('option');
-    option.text = term;
-    dropdown.add(option);
+  data.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
   });
 
   // Sort the data by the number of matches
@@ -276,6 +246,7 @@ async function populateDropdown(data) {
     dropdown.appendChild(option);
   });
 }
+
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
