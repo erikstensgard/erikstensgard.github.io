@@ -212,6 +212,7 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
+let selectedIndexTerm = '';
 
 // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
@@ -307,56 +308,94 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
+// Function to open the dropdown when clicking into the search input
+function openDropdown() {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.size = dropdown.options.length;
+  dropdown.style.display = 'block';
+}
+
+// Function to check if the target element or its parent is the search input
+function isSearchInput(element) {
+  const searchInput = document.getElementById('searchInput');
+  return element === searchInput || element.parentNode === searchInput;
+}
+
+// Function to filter the dropdown options based on the search text
+function filterDropdownOptions(filterText) {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = dropdown.options;
+  const matchingOptions = [];
+
+  for (let i = 0; i < options.length; i++) {
+    const optionText = options[i].text.toLowerCase();
+    if (optionText.includes(filterText)) {
+      matchingOptions.push(options[i]);
+    }
+  }
+
+  // Update the dropdown with matching options
+  dropdown.innerHTML = '';
+  matchingOptions.forEach(option => {
+    dropdown.add(option);
+  });
+
+  // Show/hide the dropdown based on the number of matching options
+  dropdown.style.display = matchingOptions.length > 0 ? 'block' : '';
+}
+
+// Function to handle click events outside of the search input and dropdown
+function handleOutsideClick(event) {
+  const searchInput = document.getElementById('searchInput');
+  const dropdown = document.getElementById('filterDropdown');
+
+  // Check if the clicked element is outside the search input and the filter dropdown
+  if (event.target !== searchInput && event.target !== dropdown) {
+    // Close and hide the filter dropdown
+    dropdown.style.display = '';
+  }
+}
+
+// Function to search and open the dropdown
 function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
-  var dropdown = document.getElementById('filterDropdown');
-  var isDropdownOpen = false;
+  const searchInput = document.getElementById('searchInput');
+  const dropdown = document.getElementById('filterDropdown');
+  let isDropdownOpen = false;
 
+  // Function to filter the dropdown options based on the search input
   function filterDropdownOptions(filterText) {
-    var options = dropdown.options;
-    var matchFound = false;
+    const options = dropdown.options;
+    const matchingOptions = [];
 
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
-
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
+    for (let i = 0; i < options.length; i++) {
+      const optionText = options[i].text.toLowerCase();
+      if (optionText.includes(filterText)) {
+        matchingOptions.push(options[i]);
       }
     }
 
-    dropdown.size = options.length;
+    // Update the dropdown with matching options
+    dropdown.innerHTML = '';
+    matchingOptions.forEach(option => {
+      dropdown.add(option);
+    });
 
-    if (matchFound) {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      isDropdownOpen = true;
-    } else {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
+    // Show/hide the dropdown based on the number of matching options
+    dropdown.style.display = matchingOptions.length > 0 ? 'block' : '';
   }
 
+  // Add event listener to filter options when typing in the search input
   searchInput.addEventListener('input', function (event) {
-    var filterText = searchInput.value.trim().toLowerCase();
+    const filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
-  });
-  
-    // Function to handle click events outside of the search input and dropdown
-function handleOutsideClick(event) {
-  const searchInput = document.getElementById('searchInput');
-  const filterDropdown = document.getElementById('filterDropdown');
 
-  // Check if the clicked element is outside the search input and the filter dropdown
-  if (event.target !== searchInput && event.target !== filterDropdown) {
-    // Close and hide the filter dropdown
-   
-    filterDropdown.style.display = ''; 
-  }
-}
-  // Add event listener to close the dropdown when clicking outside the search input
+    // Check if the selectedIndexTerm matches the filter text and select it in the dropdown
+    if (selectedIndexTerm.toLowerCase().includes(filterText)) {
+      dropdown.value = selectedIndexTerm;
+    }
+  });
+
+  // Add event listener to close the dropdown when clicking outside the search input and dropdown
   document.addEventListener('click', handleOutsideClick);
 
   // Add event listener to allow tapping into the dropdown on mobile
@@ -616,24 +655,23 @@ function createOMTable(selectedData) {
   }
 }
 
-
-// Function to handle dropdown change event
-function handleDropdownChange(event) {
+// Function to filter data based on the selected option
+    function filterData(event) {
   const selectedOption = event.target.value;
-  const matchingIndexItem = omData.find(item => {
-    if (item.index && item.index.term) {
-      return item.index.term === selectedOption;
-    }
-    return false;
-  });
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-  const selectedOptionName = matchingIndexItem ? matchingIndexItem.index.name : selectedOption;
-
-  // Update the dropdown's selected value with the matching index.name or selectedOption if not found
-  event.target.value = selectedOptionName;
-
-  // Call the filterData function to update the UI
-  filterData(event);
+  if (matchingData) {
+    selectedIndexTerm = matchingData.Name; // Store the selected index term
+    createOMTable(matchingData); // Call the createOMTable function with the selected data
+    pushHistory(matchingData.Name);
+  } else {
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+  scrollToTop();
+  adjustFontSize();
 }
 
     
