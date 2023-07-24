@@ -278,7 +278,11 @@ function searchData() {
   let filteredData = omData.filter(item => {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-    return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
+    return (
+      displayText.toLowerCase().includes(searchText) ||
+      contentTexts.some(text => text.includes(searchText)) ||
+      displayText.toLowerCase() === searchText // Include exact match of the displayText
+    );
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
@@ -309,6 +313,7 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
