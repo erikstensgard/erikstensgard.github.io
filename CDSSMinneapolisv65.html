@@ -741,8 +741,8 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    indexData = indexjsonData; // Assign indexjsonData to indexData variable
-    populateDropdown(indexData); // Pass indexData to populateDropdown
+    indexData = indexjsonData; // Ensure the correct assignment of indexjsonData to indexData
+    populateDropdown(indexData); 
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
