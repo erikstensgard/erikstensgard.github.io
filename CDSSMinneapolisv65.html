@@ -250,9 +250,9 @@ function populateDropdown(omData, IndexData) {
 
 
 // Helper function to get the number of matches in an item
-function getMatchCount(item, searchText) {
+function getMatchCount(omData, searchText) {
   let matchCount = 0;
-  const contents = item.Contents || [];
+  const contents = omData.Name.Contents || [];
 
   contents.forEach(content => {
     const text = content.Text || '';
