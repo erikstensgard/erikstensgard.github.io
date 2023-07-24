@@ -247,19 +247,22 @@ function populateDropdown(data, indexData) {
     dropdown.appendChild(option);
   });
 
-  // Add IndexData terms to the dropdown if they match with OMJSON data names
-  indexData.forEach(indexItem => {
-    const matchingOmData = omData.find(
-      omItem => omItem.Name.trim().toLowerCase() === indexItem.Name.trim().toLowerCase()
-    );
+  // Check if indexData is available and not empty
+  if (indexData && indexData.length > 0) {
+    // Add IndexData terms to the dropdown if they match with OMJSON data names
+    indexData.forEach(indexItem => {
+      const matchingOmData = omData.find(
+        omItem => omItem.Name.trim().toLowerCase() === indexItem.Name.trim().toLowerCase()
+      );
 
-    if (matchingOmData) {
-      const option = document.createElement('option');
-      option.value = indexItem.Name;
-      option.textContent = indexItem.Terms;
-      dropdown.appendChild(option);
-    }
-  });
+      if (matchingOmData) {
+        const option = document.createElement('option');
+        option.value = indexItem.Name;
+        option.textContent = indexItem.Terms;
+        dropdown.appendChild(option);
+      }
+    });
+  }
 }
 
 
@@ -773,6 +776,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
+
 
   </script>
 </body>
