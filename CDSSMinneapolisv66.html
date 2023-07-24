@@ -277,21 +277,25 @@ function searchData() {
 
   let filteredData = omData.filter(item => {
     const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+    const contentTexts = (item.Contents || []).map(content => content.Text || '');
 
     // Check for matches in "DisplayText," "Name," and "Term" values
     return (
       displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText)) ||
-      Object.values(item).some(value => typeof value === 'string' && value.toLowerCase().includes(searchText))
+      contentTexts.some(text => text.toLowerCase().includes(searchText)) ||
+      Object.values(item).some(value => {
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchText);
+        }
+        return false;
+      })
     );
   });
 
   // Include exact match of the search text with "Term" values
   filteredData = filteredData.filter(item => {
-    const termValues = Object.values(item).filter(value => value && value.startsWith('Term'));
-    return termValues.some(term => term.toString().toLowerCase().startsWith(searchText));
-
+    const termValues = Object.values(item).filter(value => typeof value === 'string' && value.startsWith('Term'));
+    return termValues.some(term => term.toLowerCase() === searchText);
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
@@ -322,7 +326,6 @@ function searchData() {
 
   populateDropdown(filteredData);
 }
-
 
 
 function searchAndOpenDropdown() {
