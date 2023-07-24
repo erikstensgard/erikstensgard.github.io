@@ -241,7 +241,7 @@ function populateDropdown(data) {
       // Create separate dropdown options for each "Term" value
       terms.forEach(term => {
         const option = document.createElement('option');
-        option.value = item.Name;
+        option.value = item.Name + ' - ' + term;
         option.textContent = term;
         dropdown.appendChild(option);
       });
@@ -254,7 +254,7 @@ function populateDropdown(data) {
     }
   });
 }
-
+    
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
@@ -271,26 +271,14 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
+// Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
   let filteredData = omData.filter(item => {
-    const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-
-    // Check for matches in "DisplayText," "Name," and "Term" values
-    return (
-      displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText)) ||
-      Object.values(item).some(value => value && value.toLowerCase().includes(searchText))
-    );
-  });
-
-  // Include exact match of the search text with "Term" values
-  filteredData = filteredData.filter(item => {
-    const termValues = Object.values(item).filter(value => value && value.startsWith('Term'));
-    return termValues.some(term => term.toLowerCase() === searchText);
+    // Check for exact matches in any field of the item
+    return Object.values(item).some(value => value && value.toLowerCase() === searchText);
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
@@ -306,23 +294,14 @@ function searchData() {
       return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
     }
 
-    const aContentMatches = (a.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
+    const aTermMatches = (a.Term1 || '').toLowerCase().includes(searchText) ? 1 : 0;
+    const bTermMatches = (b.Term1 || '').toLowerCase().includes(searchText) ? 1 : 0;
 
-    const bContentMatches = (b.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    return bTermMatches - aTermMatches; // Sort by number of matches in "Term1"
   });
 
   populateDropdown(filteredData);
 }
-
-
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
