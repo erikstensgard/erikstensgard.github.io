@@ -315,25 +315,46 @@ function searchData() {
   populateDropdown(filteredData);
 }
 
+// Function to filter the dropdown options based on the search text
+function filterDropdownOptions(filterText) {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = dropdown.options;
+  const matchFound = [];
+
+  for (let i = 0; i < options.length; i++) {
+    const option = options[i];
+    const optionText = option.textContent.toLowerCase();
+
+    if (optionText.includes(filterText)) {
+      matchFound.push(optionText);
+      option.style.display = 'block';
+    } else {
+      option.style.display = 'none';
+    }
+  }
+
+  if (matchFound.length === 0) {
+    // Display a message when no matches are found
+    const noMatchOption = document.createElement('option');
+    noMatchOption.value = '';
+    noMatchOption.textContent = 'No matches found';
+    noMatchOption.disabled = true;
+    dropdown.appendChild(noMatchOption);
+  }
+}
+
+// Attach the event listener for search input
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function (event) {
+  const filterText = event.target.value.trim().toLowerCase();
+  filterDropdownOptions(filterText);
+  searchData(); // Call the function to filter data based on the search input
+});
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
   var isDropdownOpen = false;
-
-  function filterDropdownOptions(filterText) {
-    var options = dropdown.options;
-    var matchFound = false;
-
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
-
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
-      }
-    }
 
     dropdown.size = options.length;
 
