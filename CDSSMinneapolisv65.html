@@ -619,7 +619,7 @@ function createOMTable(selectedData) {
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
-  const selectedName = IndexData.find((index) => index.Term === selectedOption)?.Name;
+  const selectedName = indexData.find((index) => index.Term === selectedOption)?.Name;
 
   if (selectedName) {
     const matchingData = omData.find((item) => item.Name === selectedName);
@@ -638,7 +638,7 @@ function filterData(event) {
     // Handle the case when selectedName is not found
     // For example, display an error message or clear the result container
     const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected option not found in IndexData.';
+    resultContainer.innerHTML = 'Selected option not found in indexData.';
   }
 
   scrollToTop();
@@ -664,7 +664,7 @@ function handleGoBack() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(IndexData);
+    populateDropdown(indexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -680,7 +680,7 @@ function handleGoForward() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(IndexData);
+    populateDropdown(indexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -692,7 +692,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(IndexData);
+      populateDropdown(indexData);
       dropdown.value = 'Main Menu';
       filterData({ target: dropdown });
       scrollToTop()    
@@ -704,7 +704,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(IndexData);
+      populateDropdown(indexData);
       dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
       filterData({ target: dropdown });
       adjustFontSize();      
@@ -760,7 +760,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    indexData = indexjsonData; // Use indexData instead of IndexData
+    indexData = indexjsonData; 
     populateDropdown(omData, indexData); // Pass indexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
