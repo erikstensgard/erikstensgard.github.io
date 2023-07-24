@@ -221,65 +221,47 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-  // Helper function to get the index data for a given name
-  function getIndexData(name) {
-    return indexData.find(indexItem => indexItem.Name === name);
-  }
+   // Function to populate dropdown with OMJSON data
+function populateDropdown(data, indexData) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
 
-  // Function to populate dropdown with OMJSON data
-  function populateDropdown(data) {
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.innerHTML = '';
-
-    data.sort((a, b) => {
-      const displayTextA = a.DisplayText || a.Name;
-      const displayTextB = b.DisplayText || b.Name;
-      return displayTextA.localeCompare(displayTextB);
-    });
-
-    data.sort((a, b) => {
-      const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-      const matchesA = getMatchCount(a, searchText);
-      const matchesB = getMatchCount(b, searchText);
-      return matchesB - matchesA;
-    });
-
-    // Additional entries when multiple terms match
-    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-    const matchingIndexes = indexData.filter(indexItem =>
-      indexItem.Terms.some(term => term.toLowerCase() === searchTerm)
-    );
-
-    matchingIndexes.forEach(indexItem => {
-      const option = document.createElement('option');
-      option.value = indexItem.Name;
-      option.textContent = indexItem.Terms.join(', '); // Display multiple terms
-      dropdown.appendChild(option);
-    });
-
-    data.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = item.DisplayText || item.Name;
-      dropdown.appendChild(option);
-    });
-  }
+  omData.sort((a, b) => {
+    const displayTextA = a.DisplayText || a.Name;
+    const displayTextB = b.DisplayText || b.Name;
+    return displayTextA.localeCompare(displayTextB);
+  });
 
   // Sort the data by the number of matches
- omData.sort((a, b) => {
+  omData.sort((a, b) => {
     const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
- omData.forEach(item => {
+  omData.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
     dropdown.appendChild(option);
   });
+
+  // Add IndexData terms to the dropdown if they match with OMJSON data names
+  indexData.forEach(indexItem => {
+    const matchingOmData = omData.find(
+      omItem => omItem.Name.trim().toLowerCase() === indexItem.Name.trim().toLowerCase()
+    );
+
+    if (matchingOmData) {
+      const option = document.createElement('option');
+      option.value = indexItem.Name;
+      option.textContent = indexItem.Terms;
+      dropdown.appendChild(option);
+    }
+  });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -372,7 +354,6 @@ function searchAndOpenDropdown() {
     var filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
   });
-}
   
     // Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
@@ -781,7 +762,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    IndexData = indexjsonData; //
+    IndexData = indexjsonData;
     populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
@@ -792,6 +773,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
+
   </script>
 </body>
 
