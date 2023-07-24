@@ -241,7 +241,7 @@ function populateDropdown(data) {
       // Create separate dropdown options for each "Term" value
       terms.forEach(term => {
         const option = document.createElement('option');
-        option.value = item.Name + ' - ' + term;
+        option.value = item.Name;
         option.textContent = term;
         dropdown.appendChild(option);
       });
@@ -254,7 +254,7 @@ function populateDropdown(data) {
     }
   });
 }
-    
+
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
@@ -271,14 +271,18 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-// Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
   let filteredData = omData.filter(item => {
-    // Check for exact matches in any field of the item
-    return Object.values(item).some(value => value && value.toLowerCase() === searchText);
+    const displayText = item.DisplayText || item.Name;
+    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+    return (
+      displayText.toLowerCase().includes(searchText) ||
+      contentTexts.some(text => text.includes(searchText)) ||
+      displayText.toLowerCase() === searchText // Include exact match of the displayText
+    );
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
@@ -294,14 +298,22 @@ function searchData() {
       return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
     }
 
-    const aTermMatches = (a.Term1 || '').toLowerCase().includes(searchText) ? 1 : 0;
-    const bTermMatches = (b.Term1 || '').toLowerCase().includes(searchText) ? 1 : 0;
+    const aContentMatches = (a.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+    }, 0);
 
-    return bTermMatches - aTermMatches; // Sort by number of matches in "Term1"
+    const bContentMatches = (b.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+    }, 0);
+
+    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
   });
 
   populateDropdown(filteredData);
 }
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -613,45 +625,24 @@ function createOMTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-function filterData(event, indexData) {
-  const searchText = event.target.value.trim().toLowerCase();
+    function filterData(event) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
 
-  // Filter matching data from both omData and indexData
-  let filteredData = [...omData, ...indexData].filter(item => {
-    const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-    return displayText.toLowerCase().includes(searchText) || contentTexts.some(text => text.includes(searchText));
-  });
-
-  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
-
-  filteredData.sort((a, b) => {
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
-
-    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-    if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+      // Handle the case when selectedData is not found
+      // For example, display an error message or clear the result container
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = 'Selected data not found.';
     }
-
-    const aContentMatches = (a.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    const bContentMatches = (b.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
-  });
-
-  populateDropdown(filteredData);
+  scrollToTop()
+  adjustFontSize();
 }
-
+    
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -762,30 +753,23 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexjsonData]) => {
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) // Add fetchIndex()
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexjsonData]) => { 
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    indexData = [indexjsonData]; // Convert indexData object to an array with a single item
-
-    populateDropdown([...omData, ...indexData]); // Concatenate omData and indexData arrays
+    IndexData = indexjsonData; //
+    populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
     pushHistory(dropdown.value);
-    filterData({ target: dropdown }, indexData); // Pass indexData to filterData
+    filterData({ target: dropdown });
   })
   .catch(error => {
     console.error('Error:', error);
   });
-
-// Event listener for the filter dropdown change event
-document.getElementById('filterDropdown').addEventListener('change', event => {
-  filterData(event, indexData); // Pass indexData to filterData
-});
-
   </script>
 </body>
 
