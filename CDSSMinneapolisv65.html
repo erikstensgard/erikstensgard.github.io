@@ -222,36 +222,28 @@ let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
     // Function to populate dropdown with OMJSON data
-function populateDropdown(omData, indexData) {
+function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  omData.sort((a, b) => {
+ omData.sort((a, b) => {
     const displayTextA = a.DisplayText || a.Name;
     const displayTextB = b.DisplayText || b.Name;
     return displayTextA.localeCompare(displayTextB);
   });
 
   // Sort the data by the number of matches
-  omData.sort((a, b) => {
+ omData.sort((a, b) => {
     const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
-  omData.forEach(item => {
+ omData.forEach(item => {
     const option = document.createElement('option');
     option.value = item.Name;
     option.textContent = item.DisplayText || item.Name;
-
-    // Find matching IndexData
-    const matchingIndexData = indexData.find(indexItem => indexItem.Name === item.Name);
-    if (matchingIndexData) {
-      const terms = matchingIndexData.terms || [];
-      option.textContent += ` (${terms.join(', ')})`;
-    }
-
     dropdown.appendChild(option);
   });
 }
