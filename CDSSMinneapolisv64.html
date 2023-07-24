@@ -221,10 +221,6 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-function populateDropdown(omData, IndexData) {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
-
   // Sort the data by the Term property
   IndexData.sort((a, b) => {
     const TermA = a.Term;
