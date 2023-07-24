@@ -240,7 +240,7 @@ function populateDropdown(omData, IndexData) {
     return matchesB - matchesA;
   });
 
-  IndexData.forEach(Name) => {
+  IndexData.forEach((Name) => {
     const option = document.createElement('option');
     option.value = Name.Term;
     option.textContent = Name.Term;
