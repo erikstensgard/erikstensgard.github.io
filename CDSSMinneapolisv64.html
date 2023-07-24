@@ -264,88 +264,73 @@ function getMatchCount(Item, searchText) {
   return matchCount;
 }
 
-// Function to search
+// Function to search and update dropdown
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  let filteredData = omData.filter(Name => {
-    const displayText = Item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+  // Filter data based on search query
+  let filteredData = indexData.filter(item => {
+    const name = item.Name;
+    const omJsonMatches = omData.filter(omItem => omItem.Name === name);
 
-    // Check for matches in DisplayText, Item, and the omdata.name.contents
-    return (
-      displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText)) ||
-      omdata.name.contents.some(content => content.toLowerCase().includes(searchText))
-    );
+    // Check for matches in omjsondata contents
+    return omJsonMatches.some(omItem => {
+      const contents = omItem.Contents || [];
+      return contents.some(content => content.Text.toLowerCase().includes(searchText));
+    });
   });
 
-  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
-
+  // Sort the data by the number of matches in omjsondata contents
   filteredData.sort((a, b) => {
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
-
-    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-    if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
-    }
-
-    const aContentMatches = (a.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    const bContentMatches = (b.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    const matchesA = getMatchCount(a.Name, searchText);
+    const matchesB = getMatchCount(b.Name, searchText);
+    return matchesB - matchesA;
   });
 
   populateDropdown(filteredData);
 }
 
-function searchAndOpenDropdown() {
-  var searchInput = document.getElementById('searchInput');
-  var dropdown = document.getElementById('filterDropdown');
-  var isDropdownOpen = false;
+// Helper function to get the number of matches in omjsondata contents
+function getMatchCount(name, searchText) {
+  let matchCount = 0;
+  const omJsonMatches = omData.filter(omItem => omItem.Name === name);
 
-  function filterDropdownOptions(filterText) {
-    var options = dropdown.options;
-    var matchFound = false;
-
-    for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var optionText = option.text.toLowerCase();
-
-      if (optionText.indexOf(filterText) !== -1) {
-        option.selected = true;
-        matchFound = true;
+  omJsonMatches.forEach(omItem => {
+    const contents = omItem.Contents || [];
+    contents.forEach(content => {
+      const text = content.Text || '';
+      if (text.toLowerCase().includes(searchText)) {
+        matchCount++;
       }
-    }
-
-    dropdown.size = options.length;
-
-    if (matchFound) {
-      // Open the dropdown by setting its display property
-      dropdown.style.display = 'block';
-      isDropdownOpen = true;
-    } else {
-      // Close the dropdown by hiding it
-      dropdown.style.display = '';
-      isDropdownOpen = false;
-    }
-  }
-
-  searchInput.addEventListener('input', function (event) {
-    var filterText = searchInput.value.trim().toLowerCase();
-    filterDropdownOptions(filterText);
+    });
   });
+
+  return matchCount;
+}
+
+function populateDropdown(IndexData) {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
+
+  // Sort the data by the Term property
+  IndexData.sort((a, b) => {
+    const TermA = a.Term;
+    const TermB = b.Term;
+    return TermA.localeCompare(TermB);
+  });
+
+  IndexData.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.Term;
+    option.textContent = item.Term;
+    dropdown.appendChild(option);
+  });
+}
+
+// Event listener for search input
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', searchData);
   
     // Function to handle click events outside of the search input and dropdown
 function handleOutsideClick(event) {
