@@ -768,7 +768,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    indexData = indexjsonData; // Correct the variable name to lowercase "indexData"
+    indexData = [indexjsonData]; // Convert indexData object to an array with a single item
 
     populateDropdown([...omData, ...indexData]); // Concatenate omData and indexData arrays
 
