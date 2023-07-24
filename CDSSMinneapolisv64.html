@@ -204,12 +204,20 @@
       return data;
     }
 
-     // Fetch Index Data
-    async function fetchIndex() {
-      const response = await fetch('MinneapolisIndex.json');
-      const data = await response.json();
-      return data;
-    }
+async function fetchIndex() {
+  const response = await fetch('MinneapolisIndex.json');
+  const data = await response.json();
+
+  // Sort the data by the Term property
+  data.sort((a, b) => {
+    const TermA = a.Term;
+    const TermB = b.Term;
+    return TermA.localeCompare(TermB);
+  });
+
+  return data;
+}
+
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
