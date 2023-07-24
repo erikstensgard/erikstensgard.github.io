@@ -238,10 +238,13 @@ function populateDropdown(data) {
     }
 
     if (terms.length > 0) {
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = terms.join(' - '); // Use "Term1" through "Term99" as the display text
-      dropdown.appendChild(option);
+      // Create separate dropdown options for each "Term" value
+      terms.forEach(term => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = term;
+        dropdown.appendChild(option);
+      });
     } else {
       // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
       const option = document.createElement('option');
@@ -251,7 +254,6 @@ function populateDropdown(data) {
     }
   });
 }
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
