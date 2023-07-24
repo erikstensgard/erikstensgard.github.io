@@ -227,35 +227,35 @@ function populateDropdown(omData, IndexData) {
 
   // Sort the data by the Term property
   IndexData.sort((a, b) => {
-    const displayTextA = a.Term;
-    const displayTextB = b.Term;
-    return displayTextA.localeCompare(displayTextB);
+    const TermA = a.Term;
+    const TermB = b.Term;
+    return TermA.localeCompare(TermB);
   });
 
   // Sort the data by the number of matches
   const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
   IndexData.sort((a, b) => {
-    const matchesA = getMatchCount(a, searchText);
-    const matchesB = getMatchCount(b, searchText);
+    const matchesA = getMatchCount(a.Name = Item.Name, searchText);
+    const matchesB = getMatchCount(b.Name = Item.Name, searchText);
     return matchesB - matchesA;
   });
 
-  IndexData.forEach((item) => {
+  IndexData.forEach((Name) => {
     const option = document.createElement('option');
-    option.value = item.Term;
-    option.textContent = item.Term;
+    option.value = name.Term;
+    option.textContent = name.Term;
     dropdown.appendChild(option);
   });
 }
 
 
 // Helper function to get the number of matches in an item
-function getMatchCount(item, searchText) {
+function getMatchCount(Item, searchText) {
   let matchCount = 0;
-  const contents = item.Contents || [];
+  const contents = omData.Item.Contents || [];
 
   contents.forEach(content => {
-    const text = content.Text || '';
+    const text = omData.Item.content.Text || '';
     if (text.toLowerCase().includes(searchText)) {
       matchCount++;
     }
@@ -269,8 +269,8 @@ function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  let filteredData = omData.filter(item => {
-    const displayText = item.DisplayText || item.Name;
+  let filteredData = omData.filter(Name => {
+    const displayText = Item.DisplayText || item.Name;
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
 
     // Check for matches in DisplayText, Item, and the omdata.name.contents
