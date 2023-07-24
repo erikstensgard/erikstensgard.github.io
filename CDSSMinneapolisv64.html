@@ -221,8 +221,8 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-  // Sort the data by the Term property
-  IndexData.sort((a, b) => {
+// Sort the data by the Term property
+  data.sort((a, b) => {
     const TermA = a.Term;
     const TermB = b.Term;
     return TermA.localeCompare(TermB);
@@ -230,34 +230,15 @@ let indexData = []; // AbxLink data
 
   // Sort the data by the number of matches
   const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  IndexData.sort((a, b) => {
-    const matchesA = getMatchCount(a.Name = Item.Name, searchText);
-    const matchesB = getMatchCount(b.Name = Item.Name, searchText);
+  data.sort((a, b) => {
+    const matchesA = getMatchCount(a.Name, searchText);
+    const matchesB = getMatchCount(b.Name, searchText);
     return matchesB - matchesA;
   });
 
-  IndexData.forEach((Name) => {
-    const option = document.createElement('option');
-    option.value = name.Term;
-    option.textContent = name.Term;
-    dropdown.appendChild(option);
-  });
-}
+  populateDropdown(data);
 
-
-// Helper function to get the number of matches in an item
-function getMatchCount(Item, searchText) {
-  let matchCount = 0;
-  const contents = omData.Item.Contents || [];
-
-  contents.forEach(content => {
-    const text = omData.Item.content.Text || '';
-    if (text.toLowerCase().includes(searchText)) {
-      matchCount++;
-    }
-  });
-
-  return matchCount;
+  return data;
 }
 
 // Function to search and update dropdown
