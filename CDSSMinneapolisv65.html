@@ -273,11 +273,11 @@ function searchData() {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
 
-    // Check for matches in DisplayText, Item, and the omdata.name.contents
+    // Check for matches in DisplayText, Item, and the omData.name.contents
     return (
       displayText.toLowerCase().includes(searchText) ||
       contentTexts.some(text => text.includes(searchText)) ||
-      omdata.name.contents.some(content => content.toLowerCase().includes(searchText))
+      omData.name.contents.some(content => content.toLowerCase().includes(searchText))
     );
   });
 
