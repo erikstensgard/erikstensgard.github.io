@@ -226,40 +226,29 @@ function populateDropdown(data) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Filter items with "Term" values
-  const itemsWithTerm = data.filter(item => item.Term && item.Term.length > 0);
+  data.forEach(item => {
+    const terms = [];
 
-  // Sort the items with "Term" values
-  itemsWithTerm.sort((a, b) => {
-    const termA = a.Term.join(', ').toLowerCase();
-    const termB = b.Term.join(', ').toLowerCase();
-    return termA.localeCompare(termB);
-  });
+    // Check for "Term1" through "Term99" in the item
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        terms.push(item[termKey]);
+      }
+    }
 
-  // Add options with "Term" values to the dropdown
-  itemsWithTerm.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.Term.join(', '); // Use the "Term" values as the display text
-    dropdown.appendChild(option);
-  });
-
-  // Filter items without "Term" values
-  const itemsWithoutTerm = data.filter(item => !item.Term || item.Term.length === 0);
-
-  // Sort the items without "Term" values by "DisplayText" or "Name"
-  itemsWithoutTerm.sort((a, b) => {
-    const displayTextA = a.DisplayText || a.Name;
-    const displayTextB = b.DisplayText || b.Name;
-    return displayTextA.localeCompare(displayTextB);
-  });
-
-  // Add options with "DisplayText" or "Name" to the dropdown for items without "Term" values
-  itemsWithoutTerm.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.Name;
-    option.textContent = item.DisplayText || item.Name;
-    dropdown.appendChild(option);
+    if (terms.length > 0) {
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = terms.join(' - '); // Use "Term1" through "Term99" as the display text
+      dropdown.appendChild(option);
+    } else {
+      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = item.DisplayText || item.Name;
+      dropdown.appendChild(option);
+    }
   });
 }
 
