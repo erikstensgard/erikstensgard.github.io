@@ -221,12 +221,12 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-function populateDropdown(omData, indexData) {
+function populateDropdown(omData, IndexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
   // Sort the data by the Term property
-  indexData.sort((a, b) => {
+  IndexData.sort((a, b) => {
     const displayTextA = a.Term;
     const displayTextB = b.Term;
     return displayTextA.localeCompare(displayTextB);
@@ -234,19 +234,20 @@ function populateDropdown(omData, indexData) {
 
   // Sort the data by the number of matches
   const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  indexData.sort((a, b) => {
+  IndexData.sort((a, b) => {
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
-  indexData.forEach((item) => {
+  IndexData.forEach((item) => {
     const option = document.createElement('option');
     option.value = item.Term;
     option.textContent = item.Term;
     dropdown.appendChild(option);
   });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -262,27 +263,30 @@ function getMatchCount(item, searchText) {
 
   return matchCount;
 }
-// Function to search
+
+// Function to search in omdata
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  let filteredData = indexData.filter(item => {
-    const displayText = item.Term;
+  let filteredData = omData.filter(item => {
+    const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
 
-    // Check for matches in DisplayText and Contents Text
+    // Check for matches in DisplayText, Item, and the omdata.name.contents
     return (
       displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText))
+      contentTexts.some(text => text.includes(searchText)) ||
+      item.Name.toLowerCase().includes(searchText) ||
+      (item.Name.Contents || []).some(content => content.toLowerCase().includes(searchText))
     );
   });
 
-  filteredData = filteredData.filter(item => !(item.Term.toLowerCase().includes('index')));
+  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   filteredData.sort((a, b) => {
-    const aDisplayText = a.Term;
-    const bDisplayText = b.Term;
+    const aDisplayText = a.DisplayText || a.Name;
+    const bDisplayText = b.DisplayText || b.Name;
 
     const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
     const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
@@ -619,7 +623,7 @@ function createOMTable(selectedData) {
 // Function to filter data based on the selected option
 function filterData(event) {
   const selectedOption = event.target.value;
-  const selectedName = indexData.find((index) => index.Term === selectedOption)?.Name;
+  const selectedName = IndexData.find((index) => index.Term === selectedOption)?.Name;
 
   if (selectedName) {
     const matchingData = omData.find((item) => item.Name === selectedName);
@@ -638,7 +642,7 @@ function filterData(event) {
     // Handle the case when selectedName is not found
     // For example, display an error message or clear the result container
     const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected option not found in indexData.';
+    resultContainer.innerHTML = 'Selected option not found in IndexData.';
   }
 
   scrollToTop();
@@ -664,7 +668,7 @@ function handleGoBack() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(indexData);
+    populateDropdown(IndexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -680,7 +684,7 @@ function handleGoForward() {
     const dropdown = document.getElementById('filterDropdown');
     document.getElementById('searchInput').value = null;
     document.getElementById('searchInput').placeholder = "Search...";
-    populateDropdown(indexData);
+    populateDropdown(IndexData);
     dropdown.value = selectedItem;
     filterData({ target: dropdown });
   }
@@ -692,7 +696,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(indexData);
+      populateDropdown(IndexData);
       dropdown.value = 'Main Menu';
       filterData({ target: dropdown });
       scrollToTop()    
@@ -704,7 +708,7 @@ function handleGoForward() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
       document.getElementById('searchInput').placeholder = "Search...";
-      populateDropdown(indexData);
+      populateDropdown(IndexData);
       dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
       filterData({ target: dropdown });
       adjustFontSize();      
@@ -754,14 +758,16 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()])
+
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) // Add fetchIndex()
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexjsonData]) => { 
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    indexData = indexjsonData; 
-    populateDropdown(omData, indexData); // Pass indexData to populateDropdown
+    IndexData = indexjsonData; //
+    populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
@@ -771,7 +777,6 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
-
   </script>
 </body>
 
