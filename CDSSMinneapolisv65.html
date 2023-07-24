@@ -265,50 +265,34 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-function searchData() {
-  const searchInput = document.getElementById('searchInput');
-  const searchText = searchInput.value.trim().toLowerCase();
+  function searchData() {
+    const searchInput = document.getElementById('searchInput');
+    const searchText = searchInput.value.trim().toLowerCase();
 
-  let filteredData = omData.filter(item => {
-    const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+    let filteredData = indexData.filter(item => {
+      const displayText = item.Term;
+      const omJsonData = omData.find(data => data.Name === item.Name); // Find corresponding omData based on Name
 
-    // Check for matches in DisplayText, Item, and the omdata.name.contents
-    return (
-      displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText)) ||
-      omdata.name.contents.some(content => content.toLowerCase().includes(searchText))
-    );
-  });
+      if (!omJsonData) return false; // If omJsonData is not found, exclude this item
 
-  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
+      // Check for matches in DisplayText and omJsonData contents
+      return (
+        displayText.toLowerCase().includes(searchText) ||
+        omJsonData.Contents.some(content => content.Text.toLowerCase().includes(searchText))
+      );
+    });
 
-  filteredData.sort((a, b) => {
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
+    filteredData = filteredData.filter(item => !(item.Term.toLowerCase().includes('index')));
 
-    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+    filteredData.sort((a, b) => {
+      const matchesA = getMatchCount(a, searchText);
+      const matchesB = getMatchCount(b, searchText);
+      return matchesB - matchesA;
+    });
 
-    if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
-    }
+    populateDropdown(filteredData);
+  }
 
-    const aContentMatches = (a.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    const bContentMatches = (b.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
-  });
-
-  populateDropdown(filteredData);
-}
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
