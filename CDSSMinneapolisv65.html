@@ -221,12 +221,12 @@ let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 let indexData = []; // AbxLink data
 
-function populateDropdown(omData, IndexData) {
+function populateDropdown(omData, indexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
   // Sort the data by the Term property
-  IndexData.sort((a, b) => {
+  indexData.sort((a, b) => {
     const displayTextA = a.Term;
     const displayTextB = b.Term;
     return displayTextA.localeCompare(displayTextB);
@@ -234,19 +234,20 @@ function populateDropdown(omData, IndexData) {
 
   // Sort the data by the number of matches
   const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  IndexData.sort((a, b) => {
+  indexData.sort((a, b) => {
     const matchesA = getMatchCount(a, searchText);
     const matchesB = getMatchCount(b, searchText);
     return matchesB - matchesA;
   });
 
-  IndexData.forEach((item) => {
+  indexData.forEach((item) => {
     const option = document.createElement('option');
     option.value = item.Term;
     option.textContent = item.Term;
     dropdown.appendChild(option);
   });
 }
+
 
 
 // Helper function to get the number of matches in an item
@@ -755,7 +756,6 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetchIndex()]) // Add fetchIndex()
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexjsonData]) => { 
@@ -763,8 +763,8 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    IndexData = indexjsonData; //
-    populateDropdown(omData, IndexData); // Pass IndexData to populateDropdown
+    indexData = indexjsonData; // Update the variable name to indexData
+    populateDropdown(omData, indexData); // Pass omData and indexData to populateDropdown
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
@@ -774,6 +774,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink(), fetc
   .catch(error => {
     console.error('Error:', error);
   });
+
   </script>
 </body>
 
