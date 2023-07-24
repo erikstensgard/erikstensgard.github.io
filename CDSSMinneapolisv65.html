@@ -225,27 +225,25 @@ function populateDropdown(omData, IndexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Sort the data by the Term property if IndexData is available
-  if (IndexData) {
-    IndexData.sort((a, b) => {
-      const displayTextA = a.Term;
-      const displayTextB = b.Term;
-      return displayTextA.localeCompare(displayTextB);
-    });
+  // Sort the data by the Term property
+  IndexData.sort((a, b) => {
+    const displayTextA = a.Term;
+    const displayTextB = b.Term;
+    return displayTextA.localeCompare(displayTextB);
+  });
 
-    // Sort the data by the number of matches if search input is not empty
-    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-    IndexData.sort((a, b) => {
-      const matchesA = getMatchCount(a, searchText);
-      const matchesB = getMatchCount(b, searchText);
-      return matchesB - matchesA;
-    });
-  }
+  // Sort the data by the number of matches
+  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+  IndexData.sort((a, b) => {
+    const matchesA = getMatchCount(a, searchText);
+    const matchesB = getMatchCount(b, searchText);
+    return matchesB - matchesA;
+  });
 
-  IndexData.forEach((item) => {
+  IndexData.forEach(Name) => {
     const option = document.createElement('option');
-    option.value = item.Term;
-    option.textContent = item.Term;
+    option.value = Name.Term;
+    option.textContent = Name.Term;
     dropdown.appendChild(option);
   });
 }
@@ -266,7 +264,7 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
-// Function to search in omdata
+// Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
@@ -279,8 +277,7 @@ function searchData() {
     return (
       displayText.toLowerCase().includes(searchText) ||
       contentTexts.some(text => text.includes(searchText)) ||
-      item.Name.toLowerCase().includes(searchText) ||
-      (item.Name.Contents || []).some(content => content.toLowerCase().includes(searchText))
+      omdata.name.contents.some(content => content.toLowerCase().includes(searchText))
     );
   });
 
