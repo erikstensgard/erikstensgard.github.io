@@ -204,7 +204,12 @@
       return data;
     }
 
-
+     // Fetch Index Data
+    async function fetchIndex() {
+      const response = await fetch('MinneapolisIndex.json');
+      const data = await response.json();
+      return data;
+    }
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
@@ -214,6 +219,7 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
+let indexData = []; // AbxLink data
 
     // Function to populate dropdown with OMJSON data
 function populateDropdown(data) {
@@ -249,6 +255,7 @@ function populateDropdown(data) {
   });
 }
 
+
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
@@ -271,25 +278,12 @@ function searchData() {
 
   let filteredData = omData.filter(item => {
     const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text || '');
-
-    // Check for matches in "DisplayText," "Name," and "Term" values
+    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
     return (
       displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.toLowerCase().includes(searchText)) ||
-      Object.values(item).some(value => {
-        if (typeof value === 'string') {
-          return value.toLowerCase().includes(searchText);
-        }
-        return false;
-      })
+      contentTexts.some(text => text.includes(searchText)) ||
+      displayText.toLowerCase() === searchText // Include exact match of the displayText
     );
-  });
-
-  // Include exact match of the search text with "Term" values
-  filteredData = filteredData.filter(item => {
-    const termValues = Object.values(item).filter(value => typeof value === 'string' && value.startsWith('Term'));
-    return termValues.some(term => term.toLowerCase() === searchText);
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
@@ -760,13 +754,13 @@ document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData, indexjsonData]) => { 
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Remove fetchIndex()
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => { // Remove indexjsonData from here
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    populateDropdown(omData); 
+    populateDropdown(omData); // Remove IndexData from here
 
     const dropdown = document.getElementById('filterDropdown');
     dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
@@ -775,6 +769,8 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   })
   .catch(error => {
     console.error('Error:', error);
+  });
+
   });
   </script>
 </body>
