@@ -290,7 +290,7 @@ function getMatchCount(item, searchText) {
       return matchesB - matchesA;
     });
 
-    populateDropdown(filteredData);
+    populateDropdown(omData, filteredData); // Pass omData and filteredData to populateDropdown
   }
 
 
