@@ -225,20 +225,22 @@ function populateDropdown(omData, IndexData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Sort the data by the Term property
-  IndexData.sort((a, b) => {
-    const displayTextA = a.Term;
-    const displayTextB = b.Term;
-    return displayTextA.localeCompare(displayTextB);
-  });
+  // Sort the data by the Term property if IndexData is available
+  if (IndexData) {
+    IndexData.sort((a, b) => {
+      const displayTextA = a.Term;
+      const displayTextB = b.Term;
+      return displayTextA.localeCompare(displayTextB);
+    });
 
-  // Sort the data by the number of matches
-  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  IndexData.sort((a, b) => {
-    const matchesA = getMatchCount(a, searchText);
-    const matchesB = getMatchCount(b, searchText);
-    return matchesB - matchesA;
-  });
+    // Sort the data by the number of matches if search input is not empty
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    IndexData.sort((a, b) => {
+      const matchesA = getMatchCount(a, searchText);
+      const matchesB = getMatchCount(b, searchText);
+      return matchesB - matchesA;
+    });
+  }
 
   IndexData.forEach((item) => {
     const option = document.createElement('option');
