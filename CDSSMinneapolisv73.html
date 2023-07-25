@@ -311,7 +311,7 @@ function searchData() {
       relevanceScore, // Add relevance score to the item
     };
   })
-  .filter(item => item.terms.some(term => term.includes(searchText))) // Filter out items with no matches in terms
+  .filter(item => item.terms.length > 0) // Filter out items with no matches in terms
   .sort((a, b) => {
     // Sort based on relevance score, descending
     if (a.relevanceScore !== b.relevanceScore) {
