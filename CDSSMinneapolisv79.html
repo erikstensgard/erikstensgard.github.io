@@ -217,8 +217,7 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
     
-const linkRegexWithAsterisk = new RegExp(`\\b${escapeRegExp(Item.replace(/\*/g, '.*'))}\\b`, 'gi');
-const linkRegexWithoutAsterisk = new RegExp(`\\b${escapeRegExp(Item)}\\b`, 'gi');
+
 function escapeRegExp(text) {
   return text.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
 }
@@ -525,9 +524,12 @@ function scrollToTop() { // Add opening curly brace here
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
+  const linkRegexWithAsterisk = new RegExp(`\\b${escapeRegExp(Item.replace(/\*/g, '.*'))}\\b`, 'gi');
+  const linkRegexWithoutAsterisk = new RegExp(`\\b${escapeRegExp(Item)}\\b`, 'gi');
+  
   const table = document.createElement('table');
   table.classList.add('table');
-
+    
   const tbody = document.createElement('tbody');
 
   const { Contents } = selectedData;
