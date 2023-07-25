@@ -693,7 +693,18 @@ function filterData(event, sortByTerm = false) {
       const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
       const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
 
-      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+      if (aTermMatch && bTermMatch) {
+        // If both have term matches, prioritize the one with more content matches
+        if (aContentMatches !== bContentMatches) {
+          return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+        }
+      } else {
+        // If one has a term match and the other doesn't, prioritize the one with the term match
+        return bTermMatch - aTermMatch;
+      }
+
+      // If no term matches or same number of content matches, sort alphabetically
+      return aText.localeCompare(bText, undefined, { sensitivity: 'base' });
     });
 
     dropdown.innerHTML = ''; // Clear existing options
