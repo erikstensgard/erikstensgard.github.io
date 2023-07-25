@@ -556,8 +556,8 @@ function createOMTable(selectedData) {
           }
 
           // Check if the matching item has a link and construct it if necessary
-          if (abxLinkData.length > 0 && Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-            const matchingLink = abxLinkData.find(linkItem => linkItem.Item.trim().toLowerCase() === Item.trim().toLowerCase());
+          if (abxLinkData && abxLinkData.length > 0 && Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            const matchingLink = abxLinkData.find(linkItem => linkItem.Item && linkItem.Item.trim().toLowerCase() === Item.trim().toLowerCase());
             if (matchingLink) {
               const { Name, URL } = matchingLink;
               const linkRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
@@ -596,6 +596,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
