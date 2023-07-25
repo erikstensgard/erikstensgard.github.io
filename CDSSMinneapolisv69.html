@@ -222,8 +222,6 @@ function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  const termsMap = new Map();
-
   omData.forEach(item => {
     const terms = [];
 
@@ -235,42 +233,24 @@ function populateDropdown(omData) {
       }
     }
 
-    if (terms.length > 0) {
-      // Create separate dropdown options for each "Term" value
-      terms.forEach(term => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = term;
-        dropdown.appendChild(option);
+    // Create separate dropdown options for each "Term" value
+    terms.forEach(term => {
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = term;
+      dropdown.appendChild(option);
+    });
 
-        // Add the term to the termsMap for sorting later
-        if (!termsMap.has(term)) {
-          termsMap.set(term, []);
-        }
-        termsMap.get(term).push(option);
-      });
-    } else {
+    if (terms.length === 0) {
       // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
       const option = document.createElement('option');
       option.value = item.Name;
       option.textContent = item.DisplayText || item.Name;
+      option.classList.add('no-term'); // Add a CSS class to hide this option
       dropdown.appendChild(option);
     }
   });
-
-  // Sort the dropdown alphabetically by terms
-  const sortedTerms = [...termsMap.keys()].sort((a, b) => a.localeCompare(b));
-  dropdown.innerHTML = ''; // Clear the current dropdown items
-
-  // Repopulate the dropdown with sorted terms
-  sortedTerms.forEach(term => {
-    const options = termsMap.get(term);
-    options.forEach(option => {
-      dropdown.appendChild(option);
-    });
-  });
 }
-
 
 
 // Helper function to get the number of matches in an item
