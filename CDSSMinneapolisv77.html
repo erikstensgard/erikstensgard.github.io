@@ -531,133 +531,144 @@ function createOMTable(selectedData) {
   // Before processing each row, create an array to store the last matched index for each row
   const lastMatchedIndexes = new Array(maxRow).fill(0);
 
-     for (let row = 1; row <= maxRow; row++) {
-        // Create a Set to store the already matched texts for each row
-        const matchedTexts = new Set();
+     Apologies for the oversight. It seems the issue lies in how we were processing the links in a row with multiple matches from abxLinkData. We need to adjust how we track and display the links to ensure all matches are accounted for.
 
-        const bodyRow = document.createElement('tr');
+Here's the updated code to correctly display all abxLinkData links in a row:
 
-        for (let column = 1; column <= columns; column++) {
-          const matchingItems = Contents.filter(
-            item => item.Row === row && item.Column === column
-          );
+javascript
+Copy code
+// Inside the createOMTable function
 
-          const displayCell = document.createElement('td');
+function createOMTable(selectedData) {
+  // ... (existing code)
 
-          if (matchingItems.length > 0) {
-            matchingItems.forEach(matchingItem => {
-              const { Text, Item, Header, DisplayText } = matchingItem;
-              let cellContent = Text || '';
+  for (let row = 1; row <= maxRow; row++) {
+    // Create a Set to store the already matched texts for each row
+    const matchedTexts = new Set();
+    // Create an array to store the matching links for each row
+    const matchingLinks = [];
 
-              if (cellContent === '' && DisplayText) {
-                cellContent = DisplayText;
-              } else if (cellContent === '' && Item) {
-                cellContent = Item;
-              }
+    const bodyRow = document.createElement('tr');
 
-              const cellContentElement = document.createElement('div');
+    for (let column = 1; column <= columns; column++) {
+      const matchingItems = Contents.filter(
+        item => item.Row === row && item.Column === column
+      );
 
-              const contentText = cellContent; // Preserve original case-sensitive text
-              let currentIndex = 0;
+      const displayCell = document.createElement('td');
 
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                const matchingURLs = abxLinkData.filter(item =>
-                  new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
-                );
+      if (matchingItems.length > 0) {
+        matchingItems.forEach(matchingItem => {
+          const { Text, Item, Header, DisplayText } = matchingItem;
+          let cellContent = Text || '';
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                  return aIndex - bIndex;
-                });
+          if (cellContent === '' && DisplayText) {
+            cellContent = DisplayText;
+          } else if (cellContent === '' && Item) {
+            cellContent = Item;
+          }
 
-                sortedMatchingURLs.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
-                  let match;
+          const cellContentElement = document.createElement('div');
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
-                    if (currentIndex > match.index) {
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
+          const contentText = cellContent; // Preserve original case-sensitive text
+          let currentIndex = 0;
 
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+          if (abxLinkData.length > 0) {
+            const matchingURLs = abxLinkData.filter(item =>
+              new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
+            );
 
-                    // Check if the link text is already added for any row
-                    if (matchedTexts.has(linkText)) {
-                      // Append the remaining text from the last matched index to the current matched index
-                      const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
-                      const remainingTextNode = document.createTextNode(remainingText);
-                      linkContainer.appendChild(remainingTextNode);
+            const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+              const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+              const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+              return aIndex - bIndex;
+            });
 
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
+            sortedMatchingURLs.forEach(matchingURL => {
+              const { Name, URL } = matchingURL;
+              const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
+              let match;
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.classList.add('AbxLink');
-                    linkElement.target = '_blank';
-                    linkElement.textContent = match[0]; // Use the original case for the link text
-
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
-
-                    // Store the link text to prevent matching it to another link for any row
-                    matchedTexts.add(linkText);
-
-                    // Store the last matched index for this row
-                    lastMatchedIndexes[row - 1] = match.index + match[0].length;
-
-                    currentIndex = match.index + match[0].length;
-                  }
-                });
-
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
+              while ((match = nameRegex.exec(contentText)) !== null) {
+                // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
+                if (currentIndex > match.index) {
+                  currentIndex = match.index + match[0].length;
+                  continue;
                 }
 
-                cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
-              }
+                const nonLinkText = contentText.substring(currentIndex, match.index);
+                const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-              if (Header === 1) {
-                cellContentElement.classList.add('bold');
-                displayCell.classList.add('bold');
-              }
+                // Check if the link text is already added for any row
+                if (matchedTexts.has(linkText)) {
+                  // Append the remaining text from the last matched index to the current matched index
+                  const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
+                  matchingLinks[row - 1] += remainingText; // Add the remaining text to the existing link text for this row
 
-              if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-                cellContentElement.classList.add('clickable');
-                cellContentElement.addEventListener('click', () => {
-                  handleRowClick(matchingItem);
-                });
-              }
+                  currentIndex = match.index + match[0].length;
+                  continue;
+                }
 
-              displayCell.appendChild(cellContentElement);
+                const linkElement = document.createElement('a');
+                linkElement.href = URL;
+                linkElement.classList.add('AbxLink');
+                linkElement.target = '_blank';
+                linkElement.textContent = match[0]; // Use the original case for the link text
+
+                const nonLinkTextNode = document.createTextNode(nonLinkText);
+                cellContentElement.appendChild(nonLinkTextNode);
+                cellContentElement.appendChild(linkElement);
+
+                // Store the link text to prevent matching it to another link for any row
+                matchedTexts.add(linkText);
+
+                // Store the last matched index for this row
+                lastMatchedIndexes[row - 1] = match.index + match[0].length;
+
+                currentIndex = match.index + match[0].length;
+              }
+            });
+
+            if (currentIndex < contentText.length) {
+              const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
+              matchingLinks[row - 1] += remainingText; // Add the remaining text to the existing link text for this row
+            }
+
+            // Add the final link text to the cell content element
+            cellContentElement.innerHTML += matchingLinks[row - 1];
+          } else {
+            cellContentElement.textContent = contentText;
+          }
+
+          if (Header === 1) {
+            cellContentElement.classList.add('bold');
+            displayCell.classList.add('bold');
+          }
+
+          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            cellContentElement.classList.add('clickable');
+            cellContentElement.addEventListener('click', () => {
+              handleRowClick(matchingItem);
             });
           }
-          bodyRow.appendChild(displayCell);
-        }
 
-        tbody.appendChild(bodyRow);
+          displayCell.appendChild(cellContentElement);
+        });
       }
-
-      table.appendChild(tbody);
-
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = '';
-      if (selectedData) {
-        resultContainer.appendChild(table);
-      }
+      bodyRow.appendChild(displayCell);
     }
+
+    tbody.appendChild(bodyRow);
+  }
+
+  table.appendChild(tbody);
+
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = '';
+  if (selectedData) {
+    resultContainer.appendChild(table);
+  }
+}
 
 
 // Function to filter data based on the selected option
