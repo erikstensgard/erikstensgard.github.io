@@ -254,38 +254,50 @@ function populateDropdown(omData) {
   });
 }
 
-// Function to sort dropdown options
-function sortDropdownOptions(options, searchText) {
+// Function to sort dropdown options by term
+function sortDropdownByTerm() {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = Array.from(dropdown.options);
+
   options.sort((a, b) => {
-    if (searchText !== '') {
-      // When searching, sort by number of matches in both DisplayText and Term values
-      const aDisplayTextMatches = (a.displayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-      const bDisplayTextMatches = (b.displayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-      if (aDisplayTextMatches !== bDisplayTextMatches) {
-        return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
-      }
-
-      const aTerms = a.terms.map(term => term.toLowerCase());
-      const bTerms = b.terms.map(term => term.toLowerCase());
-
-      // Sort by number of matches in the "Term" values
-      const aTermMatches = aTerms.reduce((count, term) => {
-        return count + (term.includes(searchText) ? 1 : 0);
-      }, 0);
-
-      const bTermMatches = bTerms.reduce((count, term) => {
-        return count + (term.includes(searchText) ? 1 : 0);
-      }, 0);
-
-      return bTermMatches - aTermMatches;
-    } else {
-      // When not searching, sort by term alphabetically
-      const aTerm = (a.terms.length > 0) ? a.terms[0].toLowerCase() : a.displayText.toLowerCase();
-      const bTerm = (b.terms.length > 0) ? b.terms[0].toLowerCase() : b.displayText.toLowerCase();
-      return aTerm.localeCompare(bTerm);
-    }
+    const termA = a.textContent.toLowerCase();
+    const termB = b.textContent.toLowerCase();
+    return termA.localeCompare(termB);
   });
+
+  dropdown.innerHTML = '';
+  options.forEach(option => dropdown.appendChild(option));
+}
+
+// Function to sort dropdown options when searching
+function sortDropdownByMatches(searchText) {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = Array.from(dropdown.options);
+
+  options.sort((a, b) => {
+    const aDisplayTextMatches = (a.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+    const bDisplayTextMatches = (b.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+
+    if (aDisplayTextMatches !== bDisplayTextMatches) {
+      return bDisplayTextMatches - aDisplayTextMatches;
+    }
+
+    const aTerms = (a.classList.contains('no-term') ? [] : [a.textContent.toLowerCase()]);
+    const bTerms = (b.classList.contains('no-term') ? [] : [b.textContent.toLowerCase()]);
+
+    const aTermMatches = aTerms.reduce((count, term) => {
+      return count + (term.includes(searchText) ? 1 : 0);
+    }, 0);
+
+    const bTermMatches = bTerms.reduce((count, term) => {
+      return count + (term.includes(searchText) ? 1 : 0);
+    }, 0);
+
+    return bTermMatches - aTermMatches;
+  });
+
+  dropdown.innerHTML = '';
+  options.forEach(option => dropdown.appendChild(option));
 }
 
 // Function to search
@@ -309,15 +321,14 @@ function searchData() {
     return (
       displayText.toLowerCase().includes(searchText) ||
       contentTexts.some(text => text.includes(searchText)) ||
-      terms.some(term => term.toLowerCase().includes(searchText)) || // Include search in Term1 to Term99
-      displayText.toLowerCase() === searchText // Include exact match of the displayText
+      terms.some(term => term.toLowerCase().includes(searchText)) ||
+      displayText.toLowerCase() === searchText
     );
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   const dropdownOptions = filteredData.map(item => {
-    const displayText = item.DisplayText || item.Name;
     const terms = [];
 
     // Check for "Term1" through "Term99" in the item
@@ -329,34 +340,16 @@ function searchData() {
     }
 
     return {
-      displayText,
+      displayText: item.DisplayText || item.Name,
       terms,
     };
   });
 
-  sortDropdownOptions(dropdownOptions, searchText);
-
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
-
-  dropdownOptions.forEach(optionData => {
-    if (optionData.terms.length > 0) {
-      // Create separate dropdown options for each "Term" value
-      optionData.terms.forEach(term => {
-        const option = document.createElement('option');
-        option.value = optionData.displayText;
-        option.textContent = term;
-        dropdown.appendChild(option);
-      });
-    } else {
-      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
-      const option = document.createElement('option');
-      option.value = optionData.displayText;
-      option.textContent = optionData.displayText;
-      option.classList.add('no-term'); // Add a CSS class to hide this option
-      dropdown.appendChild(option);
-    }
-  });
+  if (searchText === '') {
+    sortDropdownByTerm();
+  } else {
+    sortDropdownByMatches(searchText);
+  }
 }
 
 // Add event listeners
@@ -366,22 +359,8 @@ document.getElementById('mainMenuButton').addEventListener('click', function () 
 });
 document.getElementById('indexButton').addEventListener('click', searchData);
 
-
-// Helper function to get the number of matches in an item
-function getMatchCount(item, searchText) {
-  let matchCount = 0;
-  const contents = item.Contents || [];
-
-  contents.forEach(content => {
-    const text = content.Text || '';
-    if (text.toLowerCase().includes(searchText)) {
-      matchCount++;
-    }
-  });
-
-  return matchCount;
-}
-
+// Call this when you first load your OMJSON data
+populateDropdown(omData);
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
