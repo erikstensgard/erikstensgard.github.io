@@ -810,6 +810,13 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   .catch(error => {
     console.error('Error:', error);
   });
+
+      // Wrap the script inside the DOMContentLoaded event listener
+  document.addEventListener('DOMContentLoaded', () => {
+    // Call the filterData function and pass the data to createOMTable
+    const selectedData = filterData(/* Your data for filtering here */);
+    createOMTable(selectedData);
+    
   </script>
 </body>
 
