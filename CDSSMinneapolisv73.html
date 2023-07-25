@@ -268,16 +268,27 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
-// Function to search
+// Function to handle input change event on the search input
+function handleSearchInputChange(event) {
+  const searchInput = event.target;
+  const searchText = searchInput.value.trim().toLowerCase();
+  
+  // Repopulate and sort the dropdown if the search input is empty
+  if (searchText === '') {
+    populateDropdown(omData);
+    sortDropdownByTerm();
+  }
+}
+
+// Add event listener to handle input change on the search input
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', handleSearchInputChange);
+
 // Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
- 
-  if (searchText === '') {
-    searchAndOpenDropdown(omData);
-    return;
-    
+
   // Filter data based on search text and prioritize items with matches in terms
   let filteredData = omData.map(item => {
     const displayText = item.DisplayText || item.Name;
@@ -651,9 +662,19 @@ function createOMTable(selectedData) {
   }
 }
 
-// Function to filter data based on the selected option
+// Function to filter data based on the selected option or search input
 function filterData(event, sortByTerm = false) {
+  const dropdown = document.getElementById('filterDropdown');
   const selectedOption = event.target.value;
+  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+  
+  // Use the selected option if the search input is empty
+  if (searchText === '') {
+    populateDropdown(omData);
+    sortDropdownByTerm();
+    return;
+  }
+
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
