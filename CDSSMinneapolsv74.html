@@ -268,8 +268,10 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
+// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
+  const dropdown = document.getElementById('filterDropdown');
   const searchText = searchInput.value.trim().toLowerCase();
 
   // Check if the search text is empty
@@ -288,68 +290,63 @@ function searchData() {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
     const terms = [];
-    let termMatches = 0; // Count the number of term matches
+
+    // Check for "Term1" through "Term99" in the item and calculate relevance score
     let relevanceScore = 0;
-
-    for (let termIndex = 0; termIndex < searchTerms.length; termIndex++) {
-      const searchTerm = searchTerms[termIndex];
-
-      // Check for "Term1" through "Term99" in the item and calculate relevance score for each term
-      for (let i = 1; i <= 99; i++) {
-        const termKey = `Term${i}`;
-        if (item[termKey]) {
-          const termText = item[termKey].toLowerCase();
-          terms.push(termText);
-          if (termText === searchTerm) {
-            relevanceScore += 1000; // Increase relevance score for exact term match significantly
-            termMatches++; // Increment the term matches count
-          } else if (termText.includes(searchTerm)) {
-            relevanceScore += 100; // Increase relevance score if search text is found in terms
-            termMatches++; // Increment the term matches count
-          }
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        const termText = item[termKey].toLowerCase();
+        terms.push(termText);
+        if (termText === searchText) {
+          relevanceScore += 1000; // Increase relevance score for exact term match significantly
+        } else if (termText.includes(searchText)) {
+          relevanceScore += 100; // Increase relevance score if search text is found in terms
         }
       }
+    }
 
-      // Calculate relevance score based on displayText and contentTexts for each term
-      if (displayText.toLowerCase().includes(searchTerm)) {
-        relevanceScore += 50; // Increase relevance score if search text is found in displayText
+    // Check if any of the search terms are present in the item's displayText or contentTexts
+    searchTerms.forEach(term => {
+      if (displayText.toLowerCase().includes(term)) {
+        relevanceScore += 50; // Increase relevance score if search term is found in displayText
       }
       contentTexts.forEach(text => {
-        if (text.includes(searchTerm)) {
-          relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
+        if (text.includes(term)) {
+          relevanceScore += 1; // Increase relevance score if search term is found in contentTexts
         }
       });
-    }
+    });
 
     return {
       ...item,
       relevanceScore, // Add relevance score to the item
-      termMatches, // Add the number of term matches to the item
     };
   })
-    .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
-    .sort((a, b) => {
-      // Sort based on relevance score and term matches count, descending
-      if (a.relevanceScore !== b.relevanceScore) {
-        return b.relevanceScore - a.relevanceScore;
-      }
+  .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+  .sort((a, b) => {
+    // Sort based on relevance score, descending
+    if (a.relevanceScore !== b.relevanceScore) {
+      return b.relevanceScore - a.relevanceScore;
+    }
 
-      // If relevance score is the same, prioritize items with more term matches
-      if (a.termMatches !== b.termMatches) {
-        return b.termMatches - a.termMatches;
-      }
-
-      // If term matches count is the same, sort alphabetically by displayText
-      const aDisplayText = a.DisplayText || a.Name;
-      const bDisplayText = b.DisplayText || b.Name;
-      return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
-    });
+    // If relevance score is the same, sort alphabetically by displayText
+    const aDisplayText = a.DisplayText || a.Name;
+    const bDisplayText = b.DisplayText || b.Name;
+    return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+  });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
+
+  // Scroll to the top of the dropdown
+  dropdown.scrollTop = 0;
 }
+
+// Add event listener to the search input to trigger searchData() on input change
+document.getElementById('searchInput').addEventListener('input', searchData);
 
 
 
