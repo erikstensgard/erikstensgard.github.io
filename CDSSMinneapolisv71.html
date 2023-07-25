@@ -274,27 +274,42 @@ function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  // Filter data based on search text
-let filteredData = omData.filter(item => {
+  // Filter data based on search text and prioritize items with matches in terms
+let filteredData = omData.map(item => {
   const displayText = item.DisplayText || item.Name;
   const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
   const terms = [];
 
-  // Check for "Term1" through "Term99" in the item
+  // Check for "Term1" through "Term99" in the item and calculate relevance score
+  let relevanceScore = 0;
   for (let i = 1; i <= 99; i++) {
     const termKey = `Term${i}`;
     if (item[termKey]) {
-      terms.push(item[termKey]);
+      const termText = item[termKey].toLowerCase();
+      terms.push(termText);
+      if (termText.includes(searchText)) {
+        relevanceScore += 10; // Increase relevance score if search text is found in terms
+      }
     }
   }
 
-  return (
-    displayText.toLowerCase().includes(searchText) ||
-    contentTexts.some(text => text.includes(searchText)) ||
-    terms.some(term => term.toLowerCase().includes(searchText)) ||
-    displayText.toLowerCase() === searchText
-  );
-});
+  // Calculate relevance score based on displayText and contentTexts
+  if (displayText.toLowerCase().includes(searchText)) {
+    relevanceScore += 5; // Increase relevance score if search text is found in displayText
+  }
+  contentTexts.forEach(text => {
+    if (text.includes(searchText)) {
+      relevanceScore += 2; // Increase relevance score if search text is found in contentTexts
+    }
+  });
+
+  return {
+    ...item,
+    relevanceScore, // Add relevance score to the item
+  };
+})
+.filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+.sort((a, b) => b.relevanceScore - a.relevanceScore); // Sort based on relevance score, descending
 
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
