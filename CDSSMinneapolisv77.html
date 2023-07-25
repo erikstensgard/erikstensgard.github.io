@@ -523,6 +523,12 @@ function scrollToTop() { // Add opening curly brace here
   }
 
   // Function to create the table with OMJSON data
+  // Function to escape special characters in a string to use in a regular expression
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
     table.classList.add('table');
@@ -533,8 +539,11 @@ function scrollToTop() { // Add opening curly brace here
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
 
+    // Before processing each row, create an array to store the last matched index for each row
+    const lastMatchedIndexes = new Array(maxRow).fill(0);
+
     for (let row = 1; row <= maxRow; row++) {
-      // Create a Set to store the already matched texts for the current row
+      // Before processing each row, create a Set to store the already matched texts for the current row
       const matchedTexts = new Set();
 
       const bodyRow = document.createElement('tr');
@@ -618,12 +627,15 @@ function scrollToTop() { // Add opening curly brace here
                     // Store the link text for the current row
                     matchedTexts.add(linkText);
 
+                    // Store the last matched index for this row
+                    lastMatchedIndexes[row - 1] = match.index + match[0].length;
+
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
                 if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
+                  const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
                   const remainingTextNode = document.createTextNode(remainingText);
                   linkContainer.appendChild(remainingTextNode);
                 }
