@@ -532,7 +532,7 @@ function createOMTable(selectedData) {
   const lastMatchedIndexes = new Array(maxRow).fill(0);
 
   for (let row = 1; row <= maxRow; row++) {
-    // Before processing each row, create a Set to store the already matched texts for all rows
+    // Before processing each row, create a Set to store the already matched texts for this row
     const matchedTexts = new Set();
 
     const bodyRow = document.createElement('tr');
@@ -664,6 +664,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
