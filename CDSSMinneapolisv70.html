@@ -222,6 +222,9 @@ function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
+  // Create an array to store all the options
+  const options = [];
+
   omData.forEach(item => {
     const terms = [];
 
@@ -237,21 +240,27 @@ function populateDropdown(omData) {
       // Sort terms alphabetically and create separate dropdown options for each "Term" value
       terms.sort();
       terms.forEach(term => {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = term;
-        dropdown.appendChild(option);
+        options.push({ text: term, value: item.Name });
       });
     } else {
       // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = item.DisplayText || item.Name;
-      option.classList.add('no-term'); // Add a CSS class to hide this option
-      dropdown.appendChild(option);
+      const option = { text: item.DisplayText || item.Name, value: item.Name };
+      options.push(option);
     }
   });
+
+  // Sort the options alphabetically by term
+  options.sort((a, b) => a.text.localeCompare(b.text));
+
+  // Append the sorted options to the dropdown
+  options.forEach(option => {
+    const element = document.createElement('option');
+    element.textContent = option.text;
+    element.value = option.value;
+    dropdown.appendChild(element);
+  });
 }
+
 
 // Function to sort dropdown options by term
 function sortDropdownByTerm() {
