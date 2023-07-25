@@ -521,7 +521,7 @@ function scrollToTop() { // Add opening curly brace here
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
-  // Function to create the table with OMJSON data
+   // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
     table.classList.add('table');
@@ -553,8 +553,6 @@ function scrollToTop() { // Add opening curly brace here
 
             const cellContentElement = document.createElement('div');
 
-            const contentText = cellContent; // Preserve original case-sensitive text
-
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
@@ -562,23 +560,25 @@ function scrollToTop() { // Add opening curly brace here
               });
               cellContentElement.textContent = cellContent;
             } else {
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                let currentIndex = 0;
+              const linkContainer = document.createElement('div');
+              let remainingContent = cellContent;
 
-                // Search for links without "*"
-                const matchingURLsExact = abxLinkData.filter(
-                  item => new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(contentText)
+              if (abxLinkData.length > 0) {
+                // Search for links with "*" and without "*" in the text
+                const matchingURLs = abxLinkData.filter(
+                  item =>
+                    new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(remainingContent) ||
+                    new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(remainingContent)
                 );
 
-                // Process links without "*"
-                matchingURLsExact.forEach(matchingURL => {
+                // Process links with "*" and without "*" in the text
+                matchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
+                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b|\\b${escapeRegExp(Name)}\\b`, 'gi');
                   let match;
 
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                  while ((match = nameRegex.exec(remainingContent)) !== null) {
+                    const nonLinkText = remainingContent.substring(0, match.index);
                     const linkText = match[0].toLowerCase();
 
                     const linkElement = document.createElement('a');
@@ -591,51 +591,17 @@ function scrollToTop() { // Add opening curly brace here
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    currentIndex = match.index + match[0].length;
+                    remainingContent = remainingContent.substring(match.index + match[0].length);
                   }
                 });
+              }
 
-                // Search for links with "*"
-                const matchingURLsWildcard = abxLinkData.filter(
-                  item => new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(contentText)
-                );
+              if (remainingContent.length > 0) {
+                cellContentElement.textContent = remainingContent;
+              }
 
-                // Process links with "*"
-                matchingURLsWildcard.forEach(matchingURL => {
-                  const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b`, 'gi');
-                  let match;
-
-                  while ((match = nameRegex.exec(contentText)) !== null) {
-                    const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase();
-
-                    const linkIsAlreadyAdded = linkContainer.querySelector(`a[href="${URL}"]`);
-                    if (!linkIsAlreadyAdded) {
-                      const linkElement = document.createElement('a');
-                      linkElement.href = URL;
-                      linkElement.classList.add('AbxLink');
-                      linkElement.target = '_blank';
-                      linkElement.textContent = match[0];
-
-                      const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
-                      linkContainer.appendChild(linkElement);
-                    }
-
-                    currentIndex = match.index + match[0].length;
-                  }
-                });
-
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-                }
-
+              if (linkContainer.childNodes.length > 0) {
                 cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
               }
             }
 
