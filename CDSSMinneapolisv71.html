@@ -664,8 +664,7 @@ function filterData(event, sortByTerm = false) {
   }
 }
 
-// Function to sort the dropdown options alphabetically by term
-function sortDropdownByTerm() {// Function to sort the dropdown options with matches to "Term" at the top and other matches at the bottom
+// Function to sort the dropdown options with matches to "Term" at the top and other matches at the bottom
 function sortDropdownByTerm() {
   const dropdown = document.getElementById('filterDropdown');
   const options = Array.from(dropdown.options);
@@ -703,8 +702,6 @@ function sortDropdownByTerm() {
     dropdown.appendChild(option);
   }
 }
-
-
 // Function to push the current selection to the history
 function pushHistory(item) {
   if (item !== history[historyIndex]) {
