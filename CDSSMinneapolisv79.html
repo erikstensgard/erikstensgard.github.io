@@ -523,7 +523,7 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
-function createOMTable(selectedData) {
+function createOMTable(selectedData, item) {
   const linkRegexWithAsterisk = new RegExp(`\\b${escapeRegExp(Item.replace(/\*/g, '.*'))}\\b`, 'gi');
   const linkRegexWithoutAsterisk = new RegExp(`\\b${escapeRegExp(Item)}\\b`, 'gi');
   
