@@ -521,7 +521,7 @@ function scrollToTop() { // Add opening curly brace here
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
-   // Function to create the table with OMJSON data
+    // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
     table.classList.add('table');
@@ -534,6 +534,9 @@ function scrollToTop() { // Add opening curly brace here
 
     for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
+
+      // Keep track of link names already added in this row
+      const addedLinksInRow = new Set();
 
       for (let column = 1; column <= columns; column++) {
         const matchingItems = Contents.filter(item => item.Row === row && item.Column === column);
@@ -567,31 +570,42 @@ function scrollToTop() { // Add opening curly brace here
                 // Search for links with "*" and without "*" in the text
                 const matchingURLs = abxLinkData.filter(
                   item =>
-                    new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(remainingContent) ||
-                    new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(remainingContent)
+                    new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b|\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(
+                      remainingContent
+                    )
                 );
 
                 // Process links with "*" and without "*" in the text
                 matchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b|\\b${escapeRegExp(Name)}\\b`, 'gi');
-                  let match;
 
-                  while ((match = nameRegex.exec(remainingContent)) !== null) {
-                    const nonLinkText = remainingContent.substring(0, match.index);
-                    const linkText = match[0].toLowerCase();
+                  // Check if the link name has already been added in this row
+                  if (!addedLinksInRow.has(Name.toLowerCase())) {
+                    const nameRegex = new RegExp(
+                      `\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b|\\b${escapeRegExp(Name)}\\b`,
+                      'gi'
+                    );
+                    let match;
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.classList.add('AbxLink');
-                    linkElement.target = '_blank';
-                    linkElement.textContent = match[0];
+                    while ((match = nameRegex.exec(remainingContent)) !== null) {
+                      const nonLinkText = remainingContent.substring(0, match.index);
+                      const linkText = match[0].toLowerCase();
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+                      const linkElement = document.createElement('a');
+                      linkElement.href = URL;
+                      linkElement.classList.add('AbxLink');
+                      linkElement.target = '_blank';
+                      linkElement.textContent = match[0];
 
-                    remainingContent = remainingContent.substring(match.index + match[0].length);
+                      const nonLinkTextNode = document.createTextNode(nonLinkText);
+                      linkContainer.appendChild(nonLinkTextNode);
+                      linkContainer.appendChild(linkElement);
+
+                      remainingContent = remainingContent.substring(match.index + match[0].length);
+                    }
+
+                    // Add the link name to the set of added links for this row
+                    addedLinksInRow.add(Name.toLowerCase());
                   }
                 });
               }
@@ -627,7 +641,6 @@ function scrollToTop() { // Add opening curly brace here
       resultContainer.appendChild(table);
     }
   }
-
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
