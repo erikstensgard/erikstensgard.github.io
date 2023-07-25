@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+zzzzzzz<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -274,64 +274,59 @@ function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  // Check if the search bar is empty, then repopulate and sort the dropdown
-  if (searchText === '') {
-    populateDropdown(omData);
-  } else {
-    // Filter data based on search text and prioritize items with matches in terms
-    let filteredData = omData.map(item => {
-      const displayText = item.DisplayText || item.Name;
-      const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
-      const terms = [];
+  // Filter data based on search text and prioritize items with matches in terms
+  let filteredData = omData.map(item => {
+    const displayText = item.DisplayText || item.Name;
+    const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
+    const terms = [];
 
-      // Check for "Term1" through "Term99" in the item and calculate relevance score
-      let relevanceScore = 0;
-      for (let i = 1; i <= 99; i++) {
-        const termKey = `Term${i}`;
-        if (item[termKey]) {
-          const termText = item[termKey].toLowerCase();
-          terms.push(termText);
-          if (termText === searchText) {
-            relevanceScore += 1000; // Increase relevance score for exact term match significantly
-          } else if (termText.includes(searchText)) {
-            relevanceScore += 100; // Increase relevance score if search text is found in terms
-          }
+    // Check for "Term1" through "Term99" in the item and calculate relevance score
+    let relevanceScore = 0;
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        const termText = item[termKey].toLowerCase();
+        terms.push(termText);
+        if (termText === searchText) {
+          relevanceScore += 1000; // Increase relevance score for exact term match significantly
+        } else if (termText.includes(searchText)) {
+          relevanceScore += 100; // Increase relevance score if search text is found in terms
         }
       }
+    }
 
-      // Calculate relevance score based on displayText and contentTexts
-      if (displayText.toLowerCase().includes(searchText)) {
-        relevanceScore += 50; // Increase relevance score if search text is found in displayText
+    // Calculate relevance score based on displayText and contentTexts
+    if (displayText.toLowerCase().includes(searchText)) {
+      relevanceScore += 50; // Increase relevance score if search text is found in displayText
+    }
+    contentTexts.forEach(text => {
+      if (text.includes(searchText)) {
+        relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
       }
-      contentTexts.forEach(text => {
-        if (text.includes(searchText)) {
-          relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
-        }
-      });
+    });
 
-      return {
-        ...item,
-        relevanceScore, // Add relevance score to the item
-      };
-    })
-      .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
-      .sort((a, b) => {
-        // Sort based on relevance score, descending
-        if (a.relevanceScore !== b.relevanceScore) {
-          return b.relevanceScore - a.relevanceScore;
-        }
+    return {
+      ...item,
+      relevanceScore, // Add relevance score to the item
+    };
+  })
+    .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+    .sort((a, b) => {
+      // Sort based on relevance score, descending
+      if (a.relevanceScore !== b.relevanceScore) {
+        return b.relevanceScore - a.relevanceScore;
+      }
 
-        // If relevance score is the same, sort alphabetically by displayText
-        const aDisplayText = a.DisplayText || a.Name;
-        const bDisplayText = b.DisplayText || b.Name;
-        return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
-      });
+      // If relevance score is the same, sort alphabetically by displayText
+      const aDisplayText = a.DisplayText || a.Name;
+      const bDisplayText = b.DisplayText || b.Name;
+      return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+    });
 
-    filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
+  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
-    // Call the function to populate the dropdown with filtered and sorted data
-    populateDropdown(filteredData);
-  }
+  // Call the function to populate the dropdown with filtered and sorted data
+  populateDropdown(filteredData);
 }
 
 
@@ -785,7 +780,13 @@ function handleGoForward() {
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-  
+      // Function to repopulate and sort the dropdown
+    function repopulateAndSortDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = ''; // Clear the search input
+      populateDropdown(omData);
+      sortDropdownByTerm();
+    }
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -798,6 +799,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
+
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
