@@ -275,26 +275,27 @@ function searchData() {
   const searchText = searchInput.value.trim().toLowerCase();
 
   // Filter data based on search text
-  let filteredData = omData.filter(item => {
-    const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
-    const terms = [];
+let filteredData = omData.filter(item => {
+  const displayText = item.DisplayText || item.Name;
+  const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
+  const terms = [];
 
-    // Check for "Term1" through "Term99" in the item
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        terms.push(item[termKey]);
-      }
+  // Check for "Term1" through "Term99" in the item
+  for (let i = 1; i <= 99; i++) {
+    const termKey = `Term${i}`;
+    if (item[termKey]) {
+      terms.push(item[termKey]);
     }
+  }
 
-    return (
-      displayText.toLowerCase().includes(searchText) ||
-      contentTexts.some(text => text.includes(searchText)) ||
-      terms.some(term => term.toLowerCase().includes(searchText)) || // Include search in Term1 to Term99
-      displayText.toLowerCase() === searchText // Include exact match of the displayText
-    );
-  });
+  return (
+    displayText.toLowerCase().includes(searchText) ||
+    contentTexts.some(text => text.includes(searchText)) ||
+    terms.some(term => term.toLowerCase().includes(searchText)) ||
+    displayText.toLowerCase() === searchText
+  );
+});
+
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
