@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to escape special characters in a string to use in a regular expression
+  // Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -533,20 +533,24 @@ function scrollToTop() { // Add opening curly brace here
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
 
-    // Before processing each row, create an array to store the last matched index for each row
-    const lastMatchedIndexes = new Array(maxRow).fill(0);
-
+    // Loop through each row
     for (let row = 1; row <= maxRow; row++) {
-      // Before processing each row, create a Set to store the already matched texts for all rows
+      // Create a Set to store the already matched texts for the current row
       const matchedTexts = new Set();
 
+      // Create an array to store the last matched index for each column in the current row
+      const lastMatchedIndexes = new Array(columns).fill(0);
+
+      // Create a new row for the table
       const bodyRow = document.createElement('tr');
 
+      // Loop through each column in the row
       for (let column = 1; column <= columns; column++) {
         const matchingItems = Contents.filter(item => item.Row === row && item.Column === column);
 
         const displayCell = document.createElement('td');
 
+        // If there are matching items in the current cell
         if (matchingItems.length > 0) {
           matchingItems.forEach(matchingItem => {
             const { Text, Item, Header, DisplayText } = matchingItem;
@@ -602,10 +606,10 @@ function scrollToTop() { // Add opening curly brace here
                     const nonLinkText = contentText.substring(currentIndex, match.index);
                     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
-                    // Check if the link text is already added for any row
+                    // Check if the link text is already added for the current row
                     if (matchedTexts.has(linkText)) {
                       // Append the remaining text from the last matched index to the current matched index
-                      const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
+                      const remainingText = contentText.substring(lastMatchedIndexes[column - 1], match.index);
                       const remainingTextNode = document.createTextNode(remainingText);
                       linkContainer.appendChild(remainingTextNode);
 
@@ -623,18 +627,18 @@ function scrollToTop() { // Add opening curly brace here
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    // Store the link text to prevent matching it to another link for any row
+                    // Store the link text to prevent matching it to another link for the current row
                     matchedTexts.add(linkText);
 
-                    // Store the last matched index for this row
-                    lastMatchedIndexes[row - 1] = match.index + match[0].length;
+                    // Store the last matched index for this column in the current row
+                    lastMatchedIndexes[column - 1] = match.index + match[0].length;
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
                 if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
+                  const remainingText = contentText.substring(lastMatchedIndexes[column - 1]);
                   const remainingTextNode = document.createTextNode(remainingText);
                   linkContainer.appendChild(remainingTextNode);
                 }
