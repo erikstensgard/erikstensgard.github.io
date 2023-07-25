@@ -216,8 +216,9 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
+let omData = []; // Your OMJSON data array
 
- // Function to populate dropdown with OMJSON data
+// Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -253,20 +254,38 @@ function populateDropdown(omData) {
   });
 }
 
+// Function to sort dropdown options
+function sortDropdownOptions(options, searchText) {
+  options.sort((a, b) => {
+    if (searchText !== '') {
+      // When searching, sort by number of matches in both DisplayText and Term values
+      const aDisplayTextMatches = (a.displayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+      const bDisplayTextMatches = (b.displayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
 
-// Helper function to get the number of matches in an item
-function getMatchCount(item, searchText) {
-  let matchCount = 0;
-  const contents = item.Contents || [];
+      if (aDisplayTextMatches !== bDisplayTextMatches) {
+        return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+      }
 
-  contents.forEach(content => {
-    const text = content.Text || '';
-    if (text.toLowerCase().includes(searchText)) {
-      matchCount++;
+      const aTerms = a.terms.map(term => term.toLowerCase());
+      const bTerms = b.terms.map(term => term.toLowerCase());
+
+      // Sort by number of matches in the "Term" values
+      const aTermMatches = aTerms.reduce((count, term) => {
+        return count + (term.includes(searchText) ? 1 : 0);
+      }, 0);
+
+      const bTermMatches = bTerms.reduce((count, term) => {
+        return count + (term.includes(searchText) ? 1 : 0);
+      }, 0);
+
+      return bTermMatches - aTermMatches;
+    } else {
+      // When not searching, sort by term alphabetically
+      const aTerm = (a.terms.length > 0) ? a.terms[0].toLowerCase() : a.displayText.toLowerCase();
+      const bTerm = (b.terms.length > 0) ? b.terms[0].toLowerCase() : b.displayText.toLowerCase();
+      return aTerm.localeCompare(bTerm);
     }
   });
-
-  return matchCount;
 }
 
 // Function to search
@@ -297,52 +316,70 @@ function searchData() {
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
-  filteredData.sort((a, b) => {
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
+  const dropdownOptions = filteredData.map(item => {
+    const displayText = item.DisplayText || item.Name;
+    const terms = [];
 
-    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-    if (searchText !== '') {
-      // When searching, sort by number of matches in both DisplayText and Term values
-      if (aDisplayTextMatches !== bDisplayTextMatches) {
-        return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+    // Check for "Term1" through "Term99" in the item
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        terms.push(item[termKey]);
       }
+    }
 
-      const aTerms = [];
-      const bTerms = [];
+    return {
+      displayText,
+      terms,
+    };
+  });
 
-      // Check for "Term1" through "Term99" in the item
-      for (let i = 1; i <= 99; i++) {
-        const termKey = `Term${i}`;
-        if (a[termKey]) {
-          aTerms.push(a[termKey].toLowerCase());
-        }
-        if (b[termKey]) {
-          bTerms.push(b[termKey].toLowerCase());
-        }
-      }
+  sortDropdownOptions(dropdownOptions, searchText);
 
-      // Sort by number of matches in the "Term" values
-      const aTermMatches = aTerms.reduce((count, term) => {
-        return count + (term.includes(searchText) ? 1 : 0);
-      }, 0);
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.innerHTML = '';
 
-      const bTermMatches = bTerms.reduce((count, term) => {
-        return count + (term.includes(searchText) ? 1 : 0);
-      }, 0);
-
-      return bTermMatches - aTermMatches;
+  dropdownOptions.forEach(optionData => {
+    if (optionData.terms.length > 0) {
+      // Create separate dropdown options for each "Term" value
+      optionData.terms.forEach(term => {
+        const option = document.createElement('option');
+        option.value = optionData.displayText;
+        option.textContent = term;
+        dropdown.appendChild(option);
+      });
     } else {
-      // When not searching, sort by term alphabetically
-      const aTerm = (terms.length > 0) ? terms[0].toLowerCase() : (aDisplayText || a.Name).toLowerCase();
-      const bTerm = (terms.length > 0) ? terms[0].toLowerCase() : (bDisplayText || b.Name).toLowerCase();
-      return aTerm.localeCompare(bTerm);
+      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+      const option = document.createElement('option');
+      option.value = optionData.displayText;
+      option.textContent = optionData.displayText;
+      option.classList.add('no-term'); // Add a CSS class to hide this option
+      dropdown.appendChild(option);
+    }
+  });
+}
+
+// Add event listeners
+document.getElementById('searchInput').addEventListener('input', searchData);
+document.getElementById('mainMenuButton').addEventListener('click', function () {
+  populateDropdown(omData);
+});
+document.getElementById('indexButton').addEventListener('click', searchData);
+
+
+// Helper function to get the number of matches in an item
+function getMatchCount(item, searchText) {
+  let matchCount = 0;
+  const contents = item.Contents || [];
+
+  contents.forEach(content => {
+    const text = content.Text || '';
+    if (text.toLowerCase().includes(searchText)) {
+      matchCount++;
     }
   });
 
-  populateDropdown(filteredData);
+  return matchCount;
 }
 
 
