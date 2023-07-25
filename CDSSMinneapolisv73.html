@@ -268,14 +268,12 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
-// Function to search
-// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
   if (searchText === '') {
-    // Sort the omData array and then populate the dropdown
+    // Sort the omData array alphabetically and then populate the dropdown
     const sortedData = omData.slice().sort((a, b) => {
       const aDisplayText = a.DisplayText || a.Name;
       const bDisplayText = b.DisplayText || b.Name;
