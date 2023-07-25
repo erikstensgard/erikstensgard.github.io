@@ -287,10 +287,10 @@ function searchData() {
         const termText = item[termKey].toLowerCase();
         if (termText === searchText) {
           relevanceScore += 1000; // Increase relevance score for exact term match significantly
-          terms.push(termText);
+          terms.push(item[termKey]); // Only add the exact matched term to the list
         } else if (termText.includes(searchText)) {
           relevanceScore += 100; // Increase relevance score if search text is found in terms
-          terms.push(termText);
+          terms.push(item[termKey]); // Only add the matched term to the list
         }
       }
     }
@@ -331,6 +331,7 @@ function searchData() {
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
 }
+
 
 
 function searchAndOpenDropdown() {
