@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-   // Function to escape special characters in a string to use in a regular expression
+     // Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -564,7 +564,8 @@ function scrollToTop() { // Add opening curly brace here
               cellContentElement.textContent = cellContent;
             } else {
               if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
+                const exactLinkContainer = document.createElement('div');
+                const wildcardLinkContainer = document.createElement('div');
                 let currentIndex = 0;
 
                 // Search for links without "*"
@@ -591,8 +592,8 @@ function scrollToTop() { // Add opening curly brace here
                       linkElement.textContent = match[0];
 
                       const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
-                      linkContainer.appendChild(linkElement);
+                      exactLinkContainer.appendChild(nonLinkTextNode);
+                      exactLinkContainer.appendChild(linkElement);
                     }
 
                     currentIndex = match.index + match[0].length;
@@ -628,21 +629,20 @@ function scrollToTop() { // Add opening curly brace here
                       linkElement.textContent = match[0];
 
                       const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
-                      linkContainer.appendChild(linkElement);
+                      wildcardLinkContainer.appendChild(nonLinkTextNode);
+                      wildcardLinkContainer.appendChild(linkElement);
                     }
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-                }
+                // Combine the results from exact and wildcard matches
+                const combinedLinkContainer = document.createElement('div');
+                combinedLinkContainer.appendChild(exactLinkContainer);
+                combinedLinkContainer.appendChild(wildcardLinkContainer);
 
-                cellContentElement.appendChild(linkContainer);
+                cellContentElement.appendChild(combinedLinkContainer);
               } else {
                 cellContentElement.textContent = contentText;
               }
@@ -670,7 +670,6 @@ function scrollToTop() { // Add opening curly brace here
       resultContainer.appendChild(table);
     }
   }
-
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
