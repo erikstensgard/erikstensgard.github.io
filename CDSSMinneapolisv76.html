@@ -269,7 +269,6 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search and sort data based on the input
-// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const dropdown = document.getElementById('filterDropdown');
@@ -280,6 +279,7 @@ function searchData() {
     // Populate and sort the dropdown with the original data when the search text is blank
     populateDropdown(omData);
     sortDropdownByTerm();
+    dropdown.scrollTop = 0;
     return;
   }
 
@@ -347,16 +347,9 @@ function searchData() {
 }
 
 // Add event listener to the search input to trigger searchData() on input change
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', searchData);
+document.getElementById('searchInput').addEventListener('input', searchData);
 
-// Add another event listener to handle the case when all text is deleted from the input
-searchInput.addEventListener('input', function () {
-  if (searchInput.value.trim() === '') {
-    // When the input is empty, trigger searchData() to reset the dropdown
-    searchData();
-  }
-});
+
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
