@@ -560,7 +560,6 @@ function createOMTable(selectedData) {
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
-          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
           if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
             cellContentElement.classList.add('clickable');
             cellContentElement.addEventListener('click', () => {
@@ -571,20 +570,26 @@ function createOMTable(selectedData) {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
-              const matchingURLs = abxLinkData.filter(item =>
-                new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
+
+              // Separate regular expressions for links with "*" and without "*"
+              const linkRegexWithAsterisk = new RegExp(`\\b${Item.replace(/\*/g, '.*')}\\b`, 'gi');
+              const linkRegexWithoutAsterisk = new RegExp(`\\b${Item}\\b`, 'gi');
+
+              const matchingURLsWithAsterisk = abxLinkData.filter(item =>
+                linkRegexWithAsterisk.test(contentText)
               );
 
-              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                return aIndex - bIndex;
-              });
+              const matchingURLsWithoutAsterisk = abxLinkData.filter(item =>
+                linkRegexWithoutAsterisk.test(contentText)
+              );
+
+              // Combine the results from both regex searches
+              const matchingURLs = [...matchingURLsWithAsterisk, ...matchingURLsWithoutAsterisk];
 
               // Initialize currentIndex to 0 for each row
               currentIndex = 0;
 
-              sortedMatchingURLs.forEach(matchingURL => {
+              matchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
                 let match;
@@ -664,6 +669,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
