@@ -242,6 +242,43 @@ let abxLinkData = []; // AbxLink data
     return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
   }
 
+  // Function to update the dropdown based on the search term
+  function updateFilter() {
+    const searchInput = document.getElementById('searchInput');
+    const filterDropdown = document.getElementById('filterDropdown');
+
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    // Filter the original omData based on the search term
+    const filteredData = omData.filter(item => {
+      const displayText = item.DisplayText || item.Name;
+      const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+      const terms = [];
+
+      // Check for "Term1" through "Term99" in the item
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]) {
+          terms.push(item[termKey].toLowerCase());
+        }
+      }
+
+      return (
+        displayText.includes(searchTerm) ||
+        contentTexts.some(text => text.includes(searchTerm)) ||
+        terms.some(term => term.includes(searchTerm)) ||
+        displayText === searchTerm
+      );
+    });
+
+    // Sort the filtered items by the number of matches using the custom sort function
+    filteredData.sort((a, b) => sortByMatches(a, b, searchTerm));
+
+    // Repopulate the dropdown with the sorted filtered items
+    populateDropdown(filteredData);
+  }
+
+
     // Function to populate dropdown with OMJSON data
     function populateDropdown(omData, searchTerm) {
       const dropdown = document.getElementById('filterDropdown');
@@ -333,8 +370,6 @@ let abxLinkData = []; // AbxLink data
     // Event listener for search input changes
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', searchData);
-
-
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
