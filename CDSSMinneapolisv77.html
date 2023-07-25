@@ -531,7 +531,7 @@ function createOMTable(selectedData) {
   // Before processing each row, create an array to store the last matched index for each row
   const lastMatchedIndexes = new Array(maxRow).fill(0);
 
-  for (let row = 1; row <= maxRow; row++) {
+     for (let row = 1; row <= maxRow; row++) {
         // Create a Set to store the already matched texts for each row
         const matchedTexts = new Set();
 
@@ -634,6 +634,13 @@ function createOMTable(selectedData) {
                 displayCell.classList.add('bold');
               }
 
+              if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+                cellContentElement.classList.add('clickable');
+                cellContentElement.addEventListener('click', () => {
+                  handleRowClick(matchingItem);
+                });
+              }
+
               displayCell.appendChild(cellContentElement);
             });
           }
@@ -651,6 +658,7 @@ function createOMTable(selectedData) {
         resultContainer.appendChild(table);
       }
     }
+
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
