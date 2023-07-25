@@ -267,7 +267,6 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-// Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
@@ -329,7 +328,11 @@ function searchData() {
       return count + (term.includes(searchText) ? 1 : 0);
     }, 0);
 
+    return bTermMatches - aTermMatches;
+  });
 
+  populateDropdown(filteredData);
+}
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
