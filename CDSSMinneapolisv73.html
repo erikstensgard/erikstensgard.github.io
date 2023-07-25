@@ -273,9 +273,11 @@ function getMatchCount(item, searchText) {
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
-  if searchText = '' {
-    populateDropdown()
-  };
+
+  if (searchText === '') {
+    populateDropdown(omData);
+    return; // Early return if the search input is empty
+  }
   
   // Filter data based on search text and prioritize items with matches in terms
   let filteredData = omData.map(item => {
