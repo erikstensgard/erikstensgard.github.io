@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
- // Function to escape special characters in a string to use in a regular expression
+// Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -671,6 +671,46 @@ function scrollToTop() { // Add opening curly brace here
     }
   }
 
+
+
+// Function to filter data based on the selected option
+function filterData(event, sortByTerm = false) {
+  const selectedOption = event.target.value;
+  const matchingData = omData.find(item => item.Name === selectedOption);
+
+  if (matchingData) {
+    selectedData = matchingData;
+    createOMTable(matchingData);
+    pushHistory(matchingData.Name);
+  } else {
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+  scrollToTop();
+  adjustFontSize();
+
+  if (sortByTerm) {
+    sortDropdownByTerm();
+  }
+}
+
+// Function to sort the dropdown options alphabetically by term
+function sortDropdownByTerm() {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = Array.from(dropdown.options);
+  const sortedOptions = options.sort((a, b) => {
+    return a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' });
+  });
+
+  dropdown.innerHTML = ''; // Clear existing options
+
+  // Add sorted options back to the dropdown
+  for (const option of sortedOptions) {
+    dropdown.appendChild(option);
+  }
+}
 
 // Function to push the current selection to the history
 function pushHistory(item) {
