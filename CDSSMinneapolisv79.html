@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-// Function to create the table with OMJSON data
+  // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
     table.classList.add('table');
@@ -527,6 +527,9 @@ function scrollToTop() { // Add opening curly brace here
     const { Contents } = selectedData;
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
+
+    // Before processing each row, create an array to store the Set of matched links for each row
+    const matchedLinksPerRow = new Array(maxRow).fill(null).map(() => new Set());
 
     // Before processing each row, create an array to store the last matched index for each row
     const lastMatchedIndexes = new Array(maxRow).fill(0);
@@ -598,7 +601,7 @@ function scrollToTop() { // Add opening curly brace here
                     const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
                     // Check if the link text is already added for any row
-                    if (matchedTexts.has(linkText)) {
+                    if (matchedTexts.has(linkText) || matchedLinksPerRow[row - 1].has(linkText)) {
                       // Append the remaining text from the last matched index to the current matched index
                       const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
                       const remainingTextNode = document.createTextNode(remainingText);
@@ -620,6 +623,7 @@ function scrollToTop() { // Add opening curly brace here
 
                     // Store the link text to prevent matching it to another link for any row
                     matchedTexts.add(linkText);
+                    matchedLinksPerRow[row - 1].add(linkText);
 
                     // Store the last matched index for this row
                     lastMatchedIndexes[row - 1] = match.index + match[0].length;
@@ -636,18 +640,14 @@ function scrollToTop() { // Add opening curly brace here
 
                 cellContentElement.appendChild(linkContainer);
               } else {
-                cellContentElement.textContent = contentText;
+                cellContentElement.textContent = cellContent;
               }
-            }
-
-            if (Header === 1) {
-              cellContentElement.classList.add('bold');
-              displayCell.classList.add('bold');
             }
 
             displayCell.appendChild(cellContentElement);
           });
         }
+
         bodyRow.appendChild(displayCell);
       }
 
@@ -656,13 +656,11 @@ function scrollToTop() { // Add opening curly brace here
 
     table.appendChild(tbody);
 
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = '';
-    if (selectedData) {
-      resultContainer.appendChild(table);
-    }
+    // Append the table to a container element in your HTML
+    const container = document.getElementById('tableContainer');
+    container.innerHTML = '';
+    container.appendChild(table);
   }
-
 
 
 // Function to filter data based on the selected option
