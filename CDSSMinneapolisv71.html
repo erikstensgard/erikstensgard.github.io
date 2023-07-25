@@ -670,13 +670,13 @@ function filterData(event, sortByTerm = false) {
       const aText = a.textContent.toLowerCase();
       const bText = b.textContent.toLowerCase();
 
-      const aTermMatch = aText.includes(searchText) && aText.indexOf(searchText) === aText.lastIndexOf(searchText);
-      const bTermMatch = bText.includes(searchText) && bText.indexOf(searchText) === bText.lastIndexOf(searchText);
+      const aTermMatch = aText.includes(searchText);
+      const bTermMatch = bText.includes(searchText);
 
       if (aTermMatch && !bTermMatch) {
-        return -1; // Prioritize the option with the exact term match
+        return -1; // Prioritize the option with the term match
       } else if (!aTermMatch && bTermMatch) {
-        return 1; // Prioritize the option with the exact term match
+        return 1; // Prioritize the option with the term match
       }
 
       const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
@@ -688,14 +688,7 @@ function filterData(event, sortByTerm = false) {
     dropdown.innerHTML = ''; // Clear existing options
 
     // Append term matches first, followed by other matches
-    const termMatches = sortedOptions.filter(option => option.textContent.toLowerCase().includes(searchText));
-    const otherMatches = sortedOptions.filter(option => !option.textContent.toLowerCase().includes(searchText));
-
-    for (const option of termMatches) {
-      dropdown.appendChild(option);
-    }
-
-    for (const option of otherMatches) {
+    for (const option of sortedOptions) {
       dropdown.appendChild(option);
     }
   }
