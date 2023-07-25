@@ -275,7 +275,7 @@ function searchData() {
   const searchText = searchInput.value.trim().toLowerCase();
  
   if (searchText === '') {
-    searchAndOpenDropdown();
+    searchAndOpenDropdown(omData);
     return;
     
   // Filter data based on search text and prioritize items with matches in terms
