@@ -523,7 +523,7 @@ function scrollToTop() { // Add opening curly brace here
   }
 
   // Function to create the table with OMJSON data
- // Function to create the table with OMJSON data
+// Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
@@ -555,6 +555,16 @@ function createOMTable(selectedData) {
             cellContent = Item;
           }
 
+          // Check if the matching item has a link and construct it if necessary
+          if (abxLinkData.length > 0 && Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
+            const matchingLink = abxLinkData.find(linkItem => linkItem.Item.trim().toLowerCase() === Item.trim().toLowerCase());
+            if (matchingLink) {
+              const { Name, URL } = matchingLink;
+              const linkRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
+              cellContent = cellContent.replace(linkRegex, `<a href="${URL}" target="_blank" class="AbxLink">${Name}</a>`);
+            }
+          }
+
           // Keep track of the original content for each cell
           originalContent += cellContent;
 
@@ -563,14 +573,7 @@ function createOMTable(selectedData) {
             displayCell.classList.add('bold');
           }
 
-          if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
-            cellContentElement.classList.add('clickable');
-            cellContentElement.addEventListener('click', () => {
-              handleRowClick(matchingItem);
-            });
-          }
-
-          cellContentElement.textContent = cellContent;
+          cellContentElement.innerHTML = originalContent; // Use innerHTML to render the links
           displayCell.appendChild(cellContentElement);
         });
       }
