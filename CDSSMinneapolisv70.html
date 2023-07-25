@@ -180,21 +180,12 @@
   </div>
 
   <script>
-async function fetchOMData() {
-  const response = await fetch('MinneapolisOMJSON.json');
-  const data = await response.json();
-  sortDataByTerm(data); // Sort the data by term
-  return data;
-}
-
-function sortDataByTerm(omData) {
-  omData.sort((a, b) => {
-    const aTerm = (a.Term1 || '').toLowerCase();
-    const bTerm = (b.Term1 || '').toLowerCase();
-    return aTerm.localeCompare(bTerm);
-  });
-}
-
+// Fetch OMJSON Data
+    async function fetchOMData() {
+      const response = await fetch('MinneapolisOMJSON.json');
+      const data = await response.json();
+      return data;
+    }
 
     // Fetch ODJSON Data
     async function fetchODData() {
@@ -226,16 +217,10 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
- function populateDropdown(omData) {
+  // Function to populate dropdown with OMJSON data
+function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
-
-  // Add the "Sort by Term" option as the first option and set it as the default selected option
-  const sortByTermOption = document.createElement('option');
-  sortByTermOption.value = 'sort_by_term';
-  sortByTermOption.textContent = 'Sort by Term';
-  dropdown.appendChild(sortByTermOption);
-  sortByTermOption.selected = true; // Set the "Sort by Term" option as the default selected option
 
   omData.forEach(item => {
     const terms = [];
@@ -413,6 +398,14 @@ function handleOutsideClick(event) {
 
 // Call the searchAndOpenDropdown function initially
 searchAndOpenDropdown();
+
+// Add event listener to sort the dropdown alphabetically when the search box is clicked but no text has been entered
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('click', function () {
+  if (searchInput.value.trim() === '') {
+    filterData({ target: document.getElementById('filterDropdown') }, true);
+  }
+});
 
 
 // Function to adjust the font size based on column number and window/screen size
@@ -649,7 +642,7 @@ function createOMTable(selectedData) {
 }
 
 // Function to filter data based on the selected option
-    function filterData(event) {
+function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
 
@@ -658,15 +651,34 @@ function createOMTable(selectedData) {
     createOMTable(matchingData);
     pushHistory(matchingData.Name);
   } else {
-      // Handle the case when selectedData is not found
-      // For example, display an error message or clear the result container
-      const resultContainer = document.getElementById('resultContainer');
-      resultContainer.innerHTML = 'Selected data not found.';
-    }
-  scrollToTop()
+    // Handle the case when selectedData is not found
+    // For example, display an error message or clear the result container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = 'Selected data not found.';
+  }
+  scrollToTop();
   adjustFontSize();
+
+  if (sortByTerm) {
+    sortDropdownByTerm();
+  }
 }
-    
+
+// Function to sort the dropdown options alphabetically by term
+function sortDropdownByTerm() {
+  const dropdown = document.getElementById('filterDropdown');
+  const options = Array.from(dropdown.options);
+  const sortedOptions = options.sort((a, b) => {
+    return a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' });
+  });
+
+  dropdown.innerHTML = ''; // Clear existing options
+
+  // Add sorted options back to the dropdown
+  for (const option of sortedOptions) {
+    dropdown.appendChild(option);
+  }
+}
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -776,23 +788,23 @@ document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
 
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()])
-  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => {
+// Fetch data and initialize the dropdown
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
+  .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => { 
     omData = omjsonData;
     odData = odjsonData;
     itemLinkData = itemlinkjsonData;
     abxLinkData = abxlinkjsonData;
-    
+    populateDropdown(omData); 
+
     const dropdown = document.getElementById('filterDropdown');
-    dropdown.value = 'sort_by_term'; // Set "Sort by Term" as the default selected option
-    
-    populateDropdown(omData.filter(item => item.Term1)); // Filter data by "Term1" to exclude items without terms
-    filterData({ target: dropdown }); // Call filterData to handle the selected option
+    dropdown.value = 'ORZID2 GMENU ABX INPT MAIN';
+    pushHistory(dropdown.value);
+    filterData({ target: dropdown });
   })
   .catch(error => {
     console.error('Error:', error);
   });
-
   </script>
 </body>
 
