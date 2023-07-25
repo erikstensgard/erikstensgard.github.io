@@ -217,18 +217,15 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-// Function to populate dropdown with OMJSON data
+// Function to populate dropdown with term items only
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Create an array to store all the options
-  const options = [];
+  const termOptions = [];
 
   omData.forEach(item => {
     const terms = [];
-
-    // Check for "Term1" through "Term99" in the item
     for (let i = 1; i <= 99; i++) {
       const termKey = `Term${i}`;
       if (item[termKey]) {
@@ -237,75 +234,20 @@ function populateDropdown(omData) {
     }
 
     if (terms.length > 0) {
-      // Sort terms alphabetically and create separate dropdown options for each "Term" value
-      terms.sort();
       terms.forEach(term => {
-        options.push({ text: term, value: item.Name });
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = term;
+        termOptions.push(option);
       });
-    } else {
-      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
-      const option = { text: item.DisplayText || item.Name, value: item.Name };
-      options.push(option);
     }
   });
 
-  // Sort the options alphabetically by term
-  options.sort((a, b) => a.text.localeCompare(b.text));
+  termOptions.sort((a, b) => a.textContent.localeCompare(b.textContent));
 
-  // Append the sorted options to the dropdown
-  options.forEach(option => {
-    const element = document.createElement('option');
-    element.textContent = option.text;
-    element.value = option.value;
-    dropdown.appendChild(element);
+  termOptions.forEach(option => {
+    dropdown.appendChild(option);
   });
-}
-
-
-// Function to sort dropdown options by term
-function sortDropdownByTerm() {
-  const dropdown = document.getElementById('filterDropdown');
-  const options = Array.from(dropdown.options);
-
-  options.sort((a, b) => {
-    const termA = a.textContent.toLowerCase();
-    const termB = b.textContent.toLowerCase();
-    return termA.localeCompare(termB);
-  });
-
-  dropdown.innerHTML = '';
-  options.forEach(option => dropdown.appendChild(option));
-}
-
-// Function to sort dropdown options when searching
-function sortDropdownByMatches(searchText) {
-  const dropdown = document.getElementById('filterDropdown');
-  const options = Array.from(dropdown.options);
-
-  options.sort((a, b) => {
-    const aDisplayTextMatches = (a.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (b.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-    if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches;
-    }
-
-    const aTerms = (a.classList.contains('no-term') ? [] : [a.textContent.toLowerCase()]);
-    const bTerms = (b.classList.contains('no-term') ? [] : [b.textContent.toLowerCase()]);
-
-    const aTermMatches = aTerms.reduce((count, term) => {
-      return count + (term.includes(searchText) ? 1 : 0);
-    }, 0);
-
-    const bTermMatches = bTerms.reduce((count, term) => {
-      return count + (term.includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bTermMatches - aTermMatches;
-  });
-
-  dropdown.innerHTML = '';
-  options.forEach(option => dropdown.appendChild(option));
 }
 
 // Function to search
@@ -329,46 +271,43 @@ function searchData() {
     return (
       displayText.toLowerCase().includes(searchText) ||
       contentTexts.some(text => text.includes(searchText)) ||
-      terms.some(term => term.toLowerCase().includes(searchText)) ||
-      displayText.toLowerCase() === searchText
+      terms.some(term => term.toLowerCase().includes(searchText)) || // Include search in Term1 to Term99
+      displayText.toLowerCase() === searchText // Include exact match of the displayText
     );
   });
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
-  const dropdownOptions = filteredData.map(item => {
-    const terms = [];
+  // Check if searching is active and sort accordingly
+  if (searchText !== '') {
+    filteredData.sort((a, b) => {
+      const aDisplayText = a.DisplayText || a.Name;
+      const bDisplayText = b.DisplayText || b.Name;
 
-    // Check for "Term1" through "Term99" in the item
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        terms.push(item[termKey]);
+      const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+      const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+
+      if (aDisplayTextMatches !== bDisplayTextMatches) {
+        return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
       }
-    }
 
-    return {
-      displayText: item.DisplayText || item.Name,
-      terms,
-    };
-  });
+      const aContentMatches = (a.Contents || []).reduce((count, content) => {
+        const text = content.Text || '';
+        return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+      }, 0);
 
-  if (searchText === '') {
-    sortDropdownByTerm();
-  } else {
-    sortDropdownByMatches(searchText);
+      const bContentMatches = (b.Contents || []).reduce((count, content) => {
+        const text = content.Text || '';
+        return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+      }, 0);
+
+      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    });
   }
+
+  populateDropdown(filteredData);
 }
 
-// Add event listeners
-document.getElementById('searchInput').addEventListener('input', searchData);
-document.getElementById('mainMenuButton').addEventListener('click', function () {
-  populateDropdown(omData);
-});
-document.getElementById('indexButton').addEventListener('click', searchData);
-
-// Call this when you first load your OMJSON data
-populateDropdown(omData);
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
