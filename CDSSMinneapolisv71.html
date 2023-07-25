@@ -670,8 +670,19 @@ function filterData(event, sortByTerm = false) {
       const aText = a.textContent.toLowerCase();
       const bText = b.textContent.toLowerCase();
 
-      const aTermMatch = aText.includes(searchText);
-      const bTermMatch = bText.includes(searchText);
+      // Function to check for term matches in the item
+      function hasTermMatch(item, searchText) {
+        for (let i = 1; i <= 99; i++) {
+          const termKey = `Term${i}`;
+          if (item[termKey]?.toLowerCase().includes(searchText)) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      const aTermMatch = hasTermMatch(omData.find(item => item.Name === a.value), searchText);
+      const bTermMatch = hasTermMatch(omData.find(item => item.Name === b.value), searchText);
 
       if (aTermMatch && !bTermMatch) {
         return -1; // Prioritize the option with the term match
@@ -693,7 +704,6 @@ function filterData(event, sortByTerm = false) {
     }
   }
 }
-
 
 
 // Function to sort the dropdown options alphabetically by term
