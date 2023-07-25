@@ -217,44 +217,38 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
- // Function to populate dropdown with OMJSON data
-function populateDropdown(omData) {
-  const dropdown = document.getElementById('filterDropdown');
-  dropdown.innerHTML = '';
+  // Function to populate dropdown with term items only
+    function populateDropdown(omData) {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.innerHTML = '';
 
-  const termOptions = [];
+      const termOptions = [];
 
-  omData.forEach(item => {
-    const terms = [];
+      omData.forEach(item => {
+        const terms = [];
+        for (let i = 1; i <= 99; i++) {
+          const termKey = `Term${i}`;
+          if (item[termKey]) {
+            terms.push(item[termKey]);
+          }
+        }
 
-    // Check for "Term1" through "Term99" in the item
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        terms.push(item[termKey]);
-      }
-    }
+        if (terms.length > 0) {
+          terms.forEach(term => {
+            const option = document.createElement('option');
+            option.value = item.Name;
+            option.textContent = term;
+            termOptions.push(option);
+          });
+        }
+      });
 
-    if (terms.length > 0) {
-      terms.forEach(term => {
-        // Create separate dropdown options for each "Term" value
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = term;
-        termOptions.push(option);
+      termOptions.sort((a, b) => a.textContent.localeCompare(b.textContent));
+
+      termOptions.forEach(option => {
+        dropdown.appendChild(option);
       });
     }
-  });
-
-  // Sort the term options alphabetically by the term text
-  termOptions.sort((a, b) => a.textContent.localeCompare(b.textContent));
-
-  // Add the sorted term options to the dropdown
-  termOptions.forEach(option => {
-    dropdown.appendChild(option);
-  });
-}
-
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
   let matchCount = 0;
