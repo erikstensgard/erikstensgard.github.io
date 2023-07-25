@@ -280,40 +280,46 @@ function searchData() {
     return;
   }
 
+  // Split the search text by space to handle multiple search terms
+  const searchTerms = searchText.split(' ');
+
   // Filter data based on search text and prioritize items with matches in terms
   let filteredData = omData.map(item => {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
     const terms = [];
-
-    // Check for "Term1" through "Term99" in the item and calculate relevance score
     let termMatches = 0; // Count the number of term matches
     let relevanceScore = 0;
 
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        const termText = item[termKey].toLowerCase();
-        terms.push(termText);
-        if (termText === searchText) {
-          relevanceScore += 1000; // Increase relevance score for exact term match significantly
-          termMatches++; // Increment the term matches count
-        } else if (termText.includes(searchText)) {
-          relevanceScore += 100; // Increase relevance score if search text is found in terms
-          termMatches++; // Increment the term matches count
+    for (let termIndex = 0; termIndex < searchTerms.length; termIndex++) {
+      const searchTerm = searchTerms[termIndex];
+
+      // Check for "Term1" through "Term99" in the item and calculate relevance score for each term
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]) {
+          const termText = item[termKey].toLowerCase();
+          terms.push(termText);
+          if (termText === searchTerm) {
+            relevanceScore += 1000; // Increase relevance score for exact term match significantly
+            termMatches++; // Increment the term matches count
+          } else if (termText.includes(searchTerm)) {
+            relevanceScore += 100; // Increase relevance score if search text is found in terms
+            termMatches++; // Increment the term matches count
+          }
         }
       }
-    }
 
-    // Calculate relevance score based on displayText and contentTexts
-    if (displayText.toLowerCase().includes(searchText)) {
-      relevanceScore += 50; // Increase relevance score if search text is found in displayText
-    }
-    contentTexts.forEach(text => {
-      if (text.includes(searchText)) {
-        relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
+      // Calculate relevance score based on displayText and contentTexts for each term
+      if (displayText.toLowerCase().includes(searchTerm)) {
+        relevanceScore += 50; // Increase relevance score if search text is found in displayText
       }
-    });
+      contentTexts.forEach(text => {
+        if (text.includes(searchTerm)) {
+          relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
+        }
+      });
+    }
 
     return {
       ...item,
@@ -344,6 +350,7 @@ function searchData() {
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
 }
+
 
 
 function searchAndOpenDropdown() {
