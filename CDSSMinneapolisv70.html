@@ -217,44 +217,29 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-  // Function to populate dropdown with term items only
-  function populateDropdown(omData) {
-    const dropdown = document.getElementById('filterDropdown');
-    dropdown.innerHTML = '';
-
-    const termOptions = [];
-
-    omData.forEach(item => {
-      const terms = [];
-      for (let i = 1; i <= 99; i++) {
-        const termKey = `Term${i}`;
-        if (item[termKey]) {
-          terms.push(item[termKey]);
-        }
-      }
-
-      if (terms.length > 0) {
-        terms.forEach(term => {
-          const option = document.createElement('option');
-          option.value = item.Name;
-          option.textContent = term;
-          termOptions.push(option);
-        });
-      }
-    });
-
-    termOptions.sort((a, b) => a.textContent.localeCompare(b.textContent));
-
-    termOptions.forEach(option => {
-      dropdown.appendChild(option);
-    });
-  }
-
   // Custom sort function to sort items based on the number of matches
   function sortByMatches(a, b, searchTerm) {
-    const aMatches = (a.DisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-    const bMatches = (b.DisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-    return bMatches - aMatches;
+    const aDisplayText = a.DisplayText || a.Name;
+    const bDisplayText = b.DisplayText || b.Name;
+
+    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+
+    if (aDisplayTextMatches !== bDisplayTextMatches) {
+      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+    }
+
+    const aContentMatches = (a.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchTerm) ? 1 : 0);
+    }, 0);
+
+    const bContentMatches = (b.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchTerm) ? 1 : 0);
+    }, 0);
+
+    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
   }
 
   // Function to update the dropdown based on the search term
@@ -266,7 +251,7 @@ let abxLinkData = []; // AbxLink data
 
     // Filter the original omData based on the search term
     const filteredData = omData.filter(item => {
-      const displayText = item.DisplayText.toLowerCase();
+      const displayText = item.DisplayText || item.Name;
       const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
       const terms = [];
 
@@ -292,6 +277,7 @@ let abxLinkData = []; // AbxLink data
     // Repopulate the dropdown with the sorted filtered items
     populateDropdown(filteredData);
   }
+
 // Function to search
 function searchData() {
   const searchInput = document.getElementById('searchInput');
@@ -797,7 +783,6 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-document.getElementById('searchInput').addEventListener('input', updateFilter); // Updated event listener
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
