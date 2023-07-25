@@ -290,6 +290,7 @@ function searchData() {
     const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
 
     let totalRelevanceScore = 0;
+    let termMatch = false;
 
     searchTerms.forEach(searchTerm => {
       // Check for exact matches in displayText
@@ -309,6 +310,7 @@ function searchData() {
         const termKey = `Term${i}`;
         if (item[termKey]?.toLowerCase() === searchTerm) {
           totalRelevanceScore += 1000;
+          termMatch = true;
           break;
         }
       }
@@ -317,9 +319,10 @@ function searchData() {
     return {
       ...item,
       relevanceScore: totalRelevanceScore,
+      hasTermMatch: termMatch,
     };
   })
-  .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+  .filter(item => item.hasTermMatch || item.relevanceScore > 0) // Include items with term matches or any relevance score
   .sort((a, b) => {
     // Sort based on relevance score, descending
     if (a.relevanceScore !== b.relevanceScore) {
