@@ -682,18 +682,20 @@ function filterData(event, sortByTerm = false) {
       const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
       const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
 
-      if (aContentMatches !== bContentMatches) {
-        return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
-      }
-
-      // If no exact term match and equal number of content matches, sort alphabetically
-      return aText.localeCompare(bText, undefined, { sensitivity: 'base' });
+      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
     });
 
     dropdown.innerHTML = ''; // Clear existing options
 
-    // Add sorted options back to the dropdown
-    for (const option of sortedOptions) {
+    // Append term matches first, followed by other matches
+    const termMatches = sortedOptions.filter(option => option.textContent.toLowerCase().includes(searchText));
+    const otherMatches = sortedOptions.filter(option => !option.textContent.toLowerCase().includes(searchText));
+
+    for (const option of termMatches) {
+      dropdown.appendChild(option);
+    }
+
+    for (const option of otherMatches) {
       dropdown.appendChild(option);
     }
   }
