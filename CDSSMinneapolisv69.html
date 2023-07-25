@@ -7,6 +7,9 @@
   <title>Minneapolis Antimicrobial CDSS</title>
   <style>
     /* Common styles */
+    .no-term {
+    display: none;
+  }
     .not-clickable-cell {
   background-color: transparent;
   color: black;
@@ -214,7 +217,7 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-    // Function to populate dropdown with OMJSON data
+  // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -230,11 +233,20 @@ function populateDropdown(omData) {
       }
     }
 
-    if (terms.length > 0) {
-      // Only add dropdown options if "Term1" through "Term99" exist in the item
+    // Create separate dropdown options for each "Term" value
+    terms.forEach(term => {
       const option = document.createElement('option');
       option.value = item.Name;
-      option.textContent = terms.join(', '); // Join multiple terms with a comma or any appropriate separator
+      option.textContent = term;
+      dropdown.appendChild(option);
+    });
+
+    if (terms.length === 0) {
+      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = item.DisplayText || item.Name;
+      option.classList.add('no-term'); // Add a CSS class to hide this option
       dropdown.appendChild(option);
     }
   });
