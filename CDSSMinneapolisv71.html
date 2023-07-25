@@ -670,19 +670,21 @@ function filterData(event, sortByTerm = false) {
       const aText = a.textContent.toLowerCase();
       const bText = b.textContent.toLowerCase();
 
-      const aTermMatch = aText.includes(searchText) && aText.indexOf(searchText) === aText.lastIndexOf(searchText);
-      const bTermMatch = bText.includes(searchText) && bText.indexOf(searchText) === bText.lastIndexOf(searchText);
+      // Check if the option has an exact term match
+      const aTermMatch = (aText === searchText) || (aText.includes(' ' + searchText) || aText.startsWith(searchText + ' '));
+      const bTermMatch = (bText === searchText) || (bText.includes(' ' + searchText) || bText.startsWith(searchText + ' '));
 
       if (aTermMatch && !bTermMatch) {
-        return -1; // Prioritize the option with the term match
+        return -1; // Prioritize the option with the exact term match
       } else if (!aTermMatch && bTermMatch) {
-        return 1; // Prioritize the option with the term match
+        return 1; // Prioritize the option with the exact term match
       }
 
+      // If no exact term match, sort by the number of matches in Contents Text
       const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
       const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
 
-      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+      return bContentMatches - aContentMatches;
     });
 
     dropdown.innerHTML = ''; // Clear existing options
@@ -693,6 +695,7 @@ function filterData(event, sortByTerm = false) {
     }
   }
 }
+
 
 // Function to sort the dropdown options alphabetically by term
 function sortDropdownByTerm() {
