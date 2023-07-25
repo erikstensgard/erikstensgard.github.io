@@ -640,6 +640,7 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
+    
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
@@ -681,7 +682,12 @@ function filterData(event, sortByTerm = false) {
       const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
       const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
 
-      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+      if (aContentMatches !== bContentMatches) {
+        return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+      }
+
+      // If no exact term match and equal number of content matches, sort alphabetically
+      return aText.localeCompare(bText, undefined, { sensitivity: 'base' });
     });
 
     dropdown.innerHTML = ''; // Clear existing options
@@ -692,6 +698,7 @@ function filterData(event, sortByTerm = false) {
     }
   }
 }
+
 
 
 // Function to sort the dropdown options alphabetically by term
