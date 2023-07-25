@@ -276,68 +276,30 @@ function searchData() {
 
   // Check if the search text is empty
   if (searchText === '') {
-    // Populate and sort the dropdown with the original data when the search text is blank
-    populateDropdown(omData);
-    sortDropdownByTerm();
+    // Sort the original data and populate the dropdown when the search text is blank
+    const sortedData = omData.slice().sort((a, b) => {
+      // Sort based on displayText or Name, alphabetically
+      const aDisplayText = a.DisplayText || a.Name;
+      const bDisplayText = b.DisplayText || b.Name;
+      return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+    });
+    
+    // Clear the dropdown and scroll to the top
+    dropdown.innerHTML = '';
     dropdown.scrollTop = 0;
+
+    // Populate the dropdown with the sorted data
+    sortedData.forEach(item => {
+      const option = document.createElement('option');
+      option.text = item.DisplayText || item.Name;
+      option.value = item.Name;
+      dropdown.add(option);
+    });
+    
     return;
   }
 
-  // Split the search text by space to handle multiple search terms
-  const searchTerms = searchText.split(' ');
-
-  // Filter data based on search text and prioritize items with matches in terms
-  let filteredData = omData.map(item => {
-    const displayText = item.DisplayText || item.Name;
-    const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
-    const terms = [];
-
-    // Check for "Term1" through "Term99" in the item and calculate relevance score
-    let relevanceScore = 0;
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        const termText = item[termKey].toLowerCase();
-        terms.push(termText);
-        if (termText === searchText) {
-          relevanceScore += 1000; // Increase relevance score for exact term match significantly
-        } else if (termText.includes(searchText)) {
-          relevanceScore += 100; // Increase relevance score if search text is found in terms
-        }
-      }
-    }
-
-    // Check if any of the search terms are present in the item's displayText or contentTexts
-    searchTerms.forEach(term => {
-      if (displayText.toLowerCase().includes(term)) {
-        relevanceScore += 50; // Increase relevance score if search term is found in displayText
-      }
-      contentTexts.forEach(text => {
-        if (text.includes(term)) {
-          relevanceScore += 1; // Increase relevance score if search term is found in contentTexts
-        }
-      });
-    });
-
-    return {
-      ...item,
-      relevanceScore, // Add relevance score to the item
-    };
-  })
-  .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
-  .sort((a, b) => {
-    // Sort based on relevance score, descending
-    if (a.relevanceScore !== b.relevanceScore) {
-      return b.relevanceScore - a.relevanceScore;
-    }
-
-    // If relevance score is the same, sort alphabetically by displayText
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
-    return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
-  });
-
-  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
+  // ... rest of the code ...
 
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
@@ -348,7 +310,6 @@ function searchData() {
 
 // Add event listener to the search input to trigger searchData() on input change
 document.getElementById('searchInput').addEventListener('input', searchData);
-
 
 
 function searchAndOpenDropdown() {
