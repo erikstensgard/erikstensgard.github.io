@@ -296,33 +296,24 @@ function searchData() {
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
+   // Sort the filteredData based on the number of matches in "DisplayText" and "Contents"
   filteredData.sort((a, b) => {
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
+    const aMatchCount = getMatchCount(a, searchText);
+    const bMatchCount = getMatchCount(b, searchText);
 
-    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-
-    if (aDisplayTextMatches !== bDisplayTextMatches) {
-      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
+    if (aMatchCount !== bMatchCount) {
+      return bMatchCount - aMatchCount; // Sort by number of matches
     }
 
-    const aContentMatches = (a.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
+    // If the number of matches is the same, sort alphabetically
+    const aDisplayText = a.DisplayText || '';
+    const bDisplayText = b.DisplayText || '';
 
-    const bContentMatches = (b.Contents || []).reduce((count, content) => {
-      const text = content.Text || '';
-      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
-    }, 0);
-
-    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    return aDisplayText.localeCompare(bDisplayText, 'en', { sensitivity: 'base' });
   });
 
   populateDropdown(filteredData);
 }
-
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
@@ -640,7 +631,8 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-    
+
+// Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
@@ -660,69 +652,28 @@ function filterData(event, sortByTerm = false) {
 
   if (sortByTerm) {
     sortDropdownByTerm();
-  } else {
-    // Sort the dropdown options based on the new search criteria
-    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-    const dropdown = document.getElementById('filterDropdown');
-    const options = Array.from(dropdown.options);
-
-    const sortedOptions = options.sort((a, b) => {
-      const aText = a.textContent.toLowerCase();
-      const bText = b.textContent.toLowerCase();
-
-      // Function to check for term matches in the item
-      function hasTermMatch(item, searchText) {
-        for (let i = 1; i <= 99; i++) {
-          const termKey = `Term${i}`;
-          if (item[termKey]?.toLowerCase().includes(searchText)) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      const aTermMatch = hasTermMatch(omData.find(item => item.Name === a.value), searchText);
-      const bTermMatch = hasTermMatch(omData.find(item => item.Name === b.value), searchText);
-
-      if (aTermMatch && !bTermMatch) {
-        return -1; // Prioritize the option with the term match
-      } else if (!aTermMatch && bTermMatch) {
-        return 1; // Prioritize the option with the term match
-      }
-
-      const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
-      const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
-
-      if (aTermMatch && bTermMatch) {
-        // If both have term matches, prioritize the one with more content matches
-        if (aContentMatches !== bContentMatches) {
-          return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
-        }
-      } else {
-        // If one has a term match and the other doesn't, prioritize the one with the term match
-        return bTermMatch - aTermMatch;
-      }
-
-      // If no term matches or same number of content matches, sort alphabetically
-      return aText.localeCompare(bText, undefined, { sensitivity: 'base' });
-    });
-
-    dropdown.innerHTML = ''; // Clear existing options
-
-    // Append term matches first, followed by other matches
-    for (const option of sortedOptions) {
-      dropdown.appendChild(option);
-    }
   }
 }
 
-
-// Function to sort the dropdown options alphabetically by term
+// Modify the sortDropdownByTerm() function to sort based on match counts
 function sortDropdownByTerm() {
   const dropdown = document.getElementById('filterDropdown');
   const options = Array.from(dropdown.options);
+
+  // Helper function to get the number of matches in a term
+  function getTermMatchCount(term, searchText) {
+    return (term.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+  }
+
   const sortedOptions = options.sort((a, b) => {
-    return a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' });
+    const aTermMatchCount = getTermMatchCount(a.textContent, searchInput.value.trim().toLowerCase());
+    const bTermMatchCount = getTermMatchCount(b.textContent, searchInput.value.trim().toLowerCase());
+
+    if (aTermMatchCount !== bTermMatchCount) {
+      return bTermMatchCount - aTermMatchCount; // Sort by number of matches in "Term" values
+    }
+
+    return a.textContent.localeCompare(b.textContent, 'en', { sensitivity: 'base' });
   });
 
   dropdown.innerHTML = ''; // Clear existing options
@@ -732,6 +683,7 @@ function sortDropdownByTerm() {
     dropdown.appendChild(option);
   }
 }
+
 
 // Function to push the current selection to the history
 function pushHistory(item) {
