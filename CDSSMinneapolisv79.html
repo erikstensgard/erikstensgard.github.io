@@ -516,9 +516,8 @@ function scrollToTop() { // Add opening curly brace here
     behavior: 'smooth'
   });
 } // Add closing curly brace here
-
 // Function to create the table with OMJSON data
-function createOMTable(selectedData, abxLinkData) {
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -572,7 +571,7 @@ function createOMTable(selectedData, abxLinkData) {
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
               const matchingURLs = abxLinkData.filter(item =>
-                new RegExp(`\\b${item.Name.replace(/\\*/g, '.*')}\\b`, 'gi').test(contentText)
+                new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
               );
 
               const sortedMatchingURLs = matchingURLs.sort((a, b) => {
@@ -586,7 +585,7 @@ function createOMTable(selectedData, abxLinkData) {
 
               sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
-                const nameRegex = new RegExp(`\\b${Name.replace(/\\*/g, '.*')}\\b`, 'gi'); // Escape the "*" character
+                const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
                 let match;
 
                 while ((match = nameRegex.exec(contentText)) !== null) {
