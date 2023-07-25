@@ -277,7 +277,7 @@ function searchData() {
   let filteredData = omData.map(item => {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
-    const terms = [];
+    const matchedTerms = [];
 
     // Check for "Term1" through "Term99" in the item and calculate relevance score
     let relevanceScore = 0;
@@ -285,11 +285,12 @@ function searchData() {
       const termKey = `Term${i}`;
       if (item[termKey]) {
         const termText = item[termKey].toLowerCase();
-        terms.push(termText);
         if (termText === searchText) {
           relevanceScore += 1000; // Increase relevance score for exact term match significantly
+          matchedTerms.push(termText); // Add the matched term to the list
         } else if (termText.includes(searchText)) {
           relevanceScore += 100; // Increase relevance score if search text is found in terms
+          matchedTerms.push(termText); // Add the matched term to the list
         }
       }
     }
@@ -306,11 +307,11 @@ function searchData() {
 
     return {
       ...item,
-      terms, // Add terms array to the item
+      matchedTerms, // Add matched terms array to the item
       relevanceScore, // Add relevance score to the item
     };
   })
-  .filter(item => item.terms.length > 0 || item.relevanceScore > 0) // Keep items with matches in terms or relevance score greater than 0
+  .filter(item => item.matchedTerms.length > 0 || item.relevanceScore > 0) // Keep items with matches in terms or relevance score greater than 0
   .sort((a, b) => {
     // Sort based on relevance score, descending
     if (a.relevanceScore !== b.relevanceScore) {
