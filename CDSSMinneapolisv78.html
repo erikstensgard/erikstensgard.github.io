@@ -533,11 +533,16 @@ function scrollToTop() { // Add opening curly brace here
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
 
+    // Before processing each row, create an array to store the last matched index for each row
+    const lastMatchedIndexes = new Array(maxRow).fill(0);
+
     for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
 
       for (let column = 1; column <= columns; column++) {
-        const matchingItems = Contents.filter(item => item.Row === row && item.Column === column);
+        const matchingItems = Contents.filter(
+          item => item.Row === row && item.Column === column
+        );
 
         const displayCell = document.createElement('td');
 
@@ -555,7 +560,9 @@ function scrollToTop() { // Add opening curly brace here
             const cellContentElement = document.createElement('div');
 
             const contentText = cellContent; // Preserve original case-sensitive text
+            let currentIndex = 0;
 
+            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
@@ -563,52 +570,63 @@ function scrollToTop() { // Add opening curly brace here
               });
               cellContentElement.textContent = cellContent;
             } else {
-              if (abxLinkData.length > 0) {
-                const linkContainer = document.createElement('div');
-                let currentIndex = 0;
+              const linkContainer = document.createElement('div');
 
-                // Search for links without "*"
-                const matchingURLsExact = abxLinkData.filter(
-                  item => new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(contentText)
+              // Check if there are partial string matches with links in a row
+              if (abxLinkData.length > 0) {
+                const matchingURLs = abxLinkData.filter(item =>
+                  new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
                 );
 
-                // Process links without "*"
-                matchingURLsExact.forEach(matchingURL => {
+                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                  return aIndex - bIndex;
+                });
+
+                // Initialize currentIndex to 0 for each row
+                currentIndex = 0;
+
+                sortedMatchingURLs.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
+                  const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-                    if (currentIndex < match.index) {
-                      // Append the non-link text before the link
-                      const nonLinkText = contentText.substring(currentIndex, match.index);
-                      const nonLinkTextNode = document.createTextNode(nonLinkText);
-                      linkContainer.appendChild(nonLinkTextNode);
+                    // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
+                    if (currentIndex > match.index) {
+                      currentIndex = match.index + match[0].length;
+                      continue;
                     }
+
+                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
                     linkElement.classList.add('AbxLink');
                     linkElement.target = '_blank';
-                    linkElement.textContent = match[0];
+                    linkElement.textContent = match[0]; // Use the original case for the link text
 
+                    const nonLinkTextNode = document.createTextNode(nonLinkText);
+                    linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
+
+                    // Store the last matched index for this row
+                    lastMatchedIndexes[row - 1] = match.index + match[0].length;
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
-
-                // Append the remaining non-link text after the last link
-                if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(currentIndex);
-                  const remainingTextNode = document.createTextNode(remainingText);
-                  linkContainer.appendChild(remainingTextNode);
-                }
-
-                cellContentElement.appendChild(linkContainer);
-              } else {
-                cellContentElement.textContent = contentText;
               }
+
+              if (currentIndex < contentText.length) {
+                const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
+                const remainingTextNode = document.createTextNode(remainingText);
+                linkContainer.appendChild(remainingTextNode);
+              }
+
+              cellContentElement.appendChild(linkContainer);
             }
 
             if (Header === 1) {
@@ -633,29 +651,6 @@ function scrollToTop() { // Add opening curly brace here
       resultContainer.appendChild(table);
     }
   }
-
-// Function to filter data based on the selected option
-function filterData(event, sortByTerm = false) {
-  const selectedOption = event.target.value;
-  const matchingData = omData.find(item => item.Name === selectedOption);
-
-  if (matchingData) {
-    selectedData = matchingData;
-    createOMTable(matchingData);
-    pushHistory(matchingData.Name);
-  } else {
-    // Handle the case when selectedData is not found
-    // For example, display an error message or clear the result container
-    const resultContainer = document.getElementById('resultContainer');
-    resultContainer.innerHTML = 'Selected data not found.';
-  }
-  scrollToTop();
-  adjustFontSize();
-
-  if (sortByTerm) {
-    sortDropdownByTerm();
-  }
-}
 
 // Function to sort the dropdown options alphabetically by term
 function sortDropdownByTerm() {
