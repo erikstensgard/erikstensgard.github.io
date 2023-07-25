@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -324,12 +325,16 @@ function searchData() {
   });
 
   // Filter out items without matches in contents
-  filteredData = filteredData.filter(item => item.Contents.some(content => content.Text.toLowerCase().includes(searchText)));
+  filteredData = filteredData.filter(item => {
+    if (item.Contents) {
+      return item.Contents.some(content => content.Text.toLowerCase().includes(searchText));
+    }
+    return false; // Exclude items without Contents from the filtered data
+  });
 
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
 }
-
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
