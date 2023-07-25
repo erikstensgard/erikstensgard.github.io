@@ -217,7 +217,7 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
- // Function to populate dropdown with OMJSON data
+  // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
@@ -260,6 +260,9 @@ function populateDropdown(omData) {
 
   // Sort the dropdown alphabetically by terms
   const sortedTerms = [...termsMap.keys()].sort((a, b) => a.localeCompare(b));
+  dropdown.innerHTML = ''; // Clear the current dropdown items
+
+  // Repopulate the dropdown with sorted terms
   sortedTerms.forEach(term => {
     const options = termsMap.get(term);
     options.forEach(option => {
@@ -267,6 +270,8 @@ function populateDropdown(omData) {
     });
   });
 }
+
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
