@@ -517,6 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
+ 
   // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
@@ -528,16 +529,7 @@ function scrollToTop() { // Add opening curly brace here
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
 
-    // Before processing each row, create an array to store the Set of matched links for each row
-    const matchedLinksPerRow = new Array(maxRow).fill(null).map(() => new Set());
-
-    // Before processing each row, create an array to store the last matched index for each row
-    const lastMatchedIndexes = new Array(maxRow).fill(0);
-
     for (let row = 1; row <= maxRow; row++) {
-      // Before processing each row, create a Set to store the already matched texts for all rows
-      const matchedTexts = new Set();
-
       const bodyRow = document.createElement('tr');
 
       for (let column = 1; column <= columns; column++) {
@@ -559,9 +551,7 @@ function scrollToTop() { // Add opening curly brace here
             const cellContentElement = document.createElement('div');
 
             const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
@@ -569,85 +559,91 @@ function scrollToTop() { // Add opening curly brace here
               });
               cellContentElement.textContent = cellContent;
             } else {
-              // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
-                const matchingURLs = abxLinkData.filter(item =>
-                  new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
+                let currentIndex = 0;
+
+                // Search for links without "*"
+                const matchingURLsExact = abxLinkData.filter(
+                  item => new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(contentText)
                 );
 
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                  return aIndex - bIndex;
-                });
-
-                // Initialize currentIndex to 0 for each row
-                currentIndex = 0;
-
-                sortedMatchingURLs.forEach(matchingURL => {
+                // Process links without "*"
+                matchingURLsExact.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
+                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-                    // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
-                    if (currentIndex > match.index) {
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
-
                     const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
-
-                    // Check if the link text is already added for any row
-                    if (matchedTexts.has(linkText) || matchedLinksPerRow[row - 1].has(linkText)) {
-                      // Append the remaining text from the last matched index to the current matched index
-                      const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
-                      const remainingTextNode = document.createTextNode(remainingText);
-                      linkContainer.appendChild(remainingTextNode);
-
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
+                    const linkText = match[0].toLowerCase();
 
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
                     linkElement.classList.add('AbxLink');
                     linkElement.target = '_blank';
-                    linkElement.textContent = match[0]; // Use the original case for the link text
+                    linkElement.textContent = match[0];
 
                     const nonLinkTextNode = document.createTextNode(nonLinkText);
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    // Store the link text to prevent matching it to another link for any row
-                    matchedTexts.add(linkText);
-                    matchedLinksPerRow[row - 1].add(linkText);
+                    currentIndex = match.index + match[0].length;
+                  }
+                });
 
-                    // Store the last matched index for this row
-                    lastMatchedIndexes[row - 1] = match.index + match[0].length;
+                // Search for links with "*"
+                const matchingURLsWildcard = abxLinkData.filter(
+                  item => new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(contentText)
+                );
+
+                // Process links with "*"
+                matchingURLsWildcard.forEach(matchingURL => {
+                  const { Name, URL } = matchingURL;
+                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b`, 'gi');
+                  let match;
+
+                  while ((match = nameRegex.exec(contentText)) !== null) {
+                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                    const linkText = match[0].toLowerCase();
+
+                    const linkIsAlreadyAdded = linkContainer.querySelector(`a[href="${URL}"]`);
+                    if (!linkIsAlreadyAdded) {
+                      const linkElement = document.createElement('a');
+                      linkElement.href = URL;
+                      linkElement.classList.add('AbxLink');
+                      linkElement.target = '_blank';
+                      linkElement.textContent = match[0];
+
+                      const nonLinkTextNode = document.createTextNode(nonLinkText);
+                      linkContainer.appendChild(nonLinkTextNode);
+                      linkContainer.appendChild(linkElement);
+                    }
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
                 if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(lastMatchedIndexes[row - 1]);
+                  const remainingText = contentText.substring(currentIndex);
                   const remainingTextNode = document.createTextNode(remainingText);
                   linkContainer.appendChild(remainingTextNode);
                 }
 
                 cellContentElement.appendChild(linkContainer);
               } else {
-                cellContentElement.textContent = cellContent;
+                cellContentElement.textContent = contentText;
               }
+            }
+
+            if (Header === 1) {
+              cellContentElement.classList.add('bold');
+              displayCell.classList.add('bold');
             }
 
             displayCell.appendChild(cellContentElement);
           });
         }
-
         bodyRow.appendChild(displayCell);
       }
 
@@ -656,10 +652,11 @@ function scrollToTop() { // Add opening curly brace here
 
     table.appendChild(tbody);
 
-    // Append the table to a container element in your HTML
-    const container = document.getElementById('tableContainer');
-    container.innerHTML = '';
-    container.appendChild(table);
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+    if (selectedData) {
+      resultContainer.appendChild(table);
+    }
   }
 
 
