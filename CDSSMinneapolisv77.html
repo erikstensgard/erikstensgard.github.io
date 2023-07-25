@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-  // Function to escape special characters in a string to use in a regular expression
+   // Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -533,24 +533,17 @@ function scrollToTop() { // Add opening curly brace here
     const maxRow = Math.max(...Contents.map(item => item.Row));
     const columns = Math.max(...Contents.map(item => item.Column));
 
-    // Loop through each row
     for (let row = 1; row <= maxRow; row++) {
       // Create a Set to store the already matched texts for the current row
       const matchedTexts = new Set();
 
-      // Create an array to store the last matched index for each column in the current row
-      const lastMatchedIndexes = new Array(columns).fill(0);
-
-      // Create a new row for the table
       const bodyRow = document.createElement('tr');
 
-      // Loop through each column in the row
       for (let column = 1; column <= columns; column++) {
         const matchingItems = Contents.filter(item => item.Row === row && item.Column === column);
 
         const displayCell = document.createElement('td');
 
-        // If there are matching items in the current cell
         if (matchingItems.length > 0) {
           matchingItems.forEach(matchingItem => {
             const { Text, Item, Header, DisplayText } = matchingItem;
@@ -567,7 +560,6 @@ function scrollToTop() { // Add opening curly brace here
             const contentText = cellContent; // Preserve original case-sensitive text
             let currentIndex = 0;
 
-            // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
               cellContentElement.addEventListener('click', () => {
@@ -575,7 +567,6 @@ function scrollToTop() { // Add opening curly brace here
               });
               cellContentElement.textContent = cellContent;
             } else {
-              // Check if there are partial string matches with links in a row
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
                 const matchingURLs = abxLinkData.filter(item =>
@@ -588,7 +579,6 @@ function scrollToTop() { // Add opening curly brace here
                   return aIndex - bIndex;
                 });
 
-                // Initialize currentIndex to 0 for each row
                 currentIndex = 0;
 
                 sortedMatchingURLs.forEach(matchingURL => {
@@ -597,19 +587,17 @@ function scrollToTop() { // Add opening curly brace here
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-                    // If currentIndex is ahead of the current match index, update currentIndex to the end of this match
                     if (currentIndex > match.index) {
                       currentIndex = match.index + match[0].length;
                       continue;
                     }
 
                     const nonLinkText = contentText.substring(currentIndex, match.index);
-                    const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
+                    const linkText = match[0].toLowerCase();
 
                     // Check if the link text is already added for the current row
                     if (matchedTexts.has(linkText)) {
-                      // Append the remaining text from the last matched index to the current matched index
-                      const remainingText = contentText.substring(lastMatchedIndexes[column - 1], match.index);
+                      const remainingText = contentText.substring(currentIndex, match.index + match[0].length);
                       const remainingTextNode = document.createTextNode(remainingText);
                       linkContainer.appendChild(remainingTextNode);
 
@@ -621,24 +609,21 @@ function scrollToTop() { // Add opening curly brace here
                     linkElement.href = URL;
                     linkElement.classList.add('AbxLink');
                     linkElement.target = '_blank';
-                    linkElement.textContent = match[0]; // Use the original case for the link text
+                    linkElement.textContent = match[0];
 
                     const nonLinkTextNode = document.createTextNode(nonLinkText);
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    // Store the link text to prevent matching it to another link for the current row
+                    // Store the link text for the current row
                     matchedTexts.add(linkText);
-
-                    // Store the last matched index for this column in the current row
-                    lastMatchedIndexes[column - 1] = match.index + match[0].length;
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
                 if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(lastMatchedIndexes[column - 1]);
+                  const remainingText = contentText.substring(currentIndex);
                   const remainingTextNode = document.createTextNode(remainingText);
                   linkContainer.appendChild(remainingTextNode);
                 }
