@@ -522,6 +522,11 @@ function scrollToTop() { // Add opening curly brace here
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
+// Function to escape special characters in a string to use in a regular expression
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   // Function to create the table with OMJSON data
   function createOMTable(selectedData) {
     const table = document.createElement('table');
@@ -611,8 +616,8 @@ function scrollToTop() { // Add opening curly brace here
                     const nonLinkText = contentText.substring(currentIndex, match.index);
                     const linkText = match[0].toLowerCase();
 
-                    if (!matchingURLsExact.some(item => item.Name.toLowerCase() === linkText)) {
-                      // Check if the link text is not added from the links without "*"
+                    const linkIsAlreadyAdded = linkContainer.querySelector(`a[href="${URL}"]`);
+                    if (!linkIsAlreadyAdded) {
                       const linkElement = document.createElement('a');
                       linkElement.href = URL;
                       linkElement.classList.add('AbxLink');
