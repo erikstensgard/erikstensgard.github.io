@@ -217,7 +217,7 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-// Function to populate dropdown with term items only and hide items without terms
+  // Function to populate dropdown with term items only
   function populateDropdown(omData) {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.innerHTML = '';
@@ -240,12 +240,6 @@ let abxLinkData = []; // AbxLink data
           option.textContent = term;
           termOptions.push(option);
         });
-      } else {
-        const option = document.createElement('option');
-        option.value = item.Name;
-        option.textContent = item.DisplayText || item.Name;
-        option.classList.add('no-term'); // Add class "no-term" to items without terms
-        termOptions.push(option);
       }
     });
 
@@ -256,6 +250,45 @@ let abxLinkData = []; // AbxLink data
     });
   }
 
+  // Function to update the dropdown based on the search term
+  function updateFilter() {
+    const searchInput = document.getElementById('searchInput');
+    const filterDropdown = document.getElementById('filterDropdown');
+
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    // Filter the original omData based on the search term
+    const filteredData = omData.filter(item => {
+      const displayText = item.DisplayText.toLowerCase();
+      const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
+      const terms = [];
+
+      // Check for "Term1" through "Term99" in the item
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]) {
+          terms.push(item[termKey].toLowerCase());
+        }
+      }
+
+      return (
+        displayText.includes(searchTerm) ||
+        contentTexts.some(text => text.includes(searchTerm)) ||
+        terms.some(term => term.includes(searchTerm)) ||
+        displayText === searchTerm
+      );
+    });
+
+    // Sort the filtered items by the number of matches (descending order)
+    filteredData.sort((a, b) => {
+      const aMatches = (a.DisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+      const bMatches = (b.DisplayText.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+      return bMatches - aMatches;
+    });
+
+    // Repopulate the dropdown with the sorted filtered items
+    populateDropdown(filteredData);
+  }
 
 // Function to search
 function searchData() {
@@ -762,6 +795,7 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
+document.getElementById('searchInput').addEventListener('input', updateFilter); // Updated event listener
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
