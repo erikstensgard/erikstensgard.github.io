@@ -222,74 +222,36 @@ function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
-  // Define a helper function to append an option to the dropdown
-  function appendOption(text, value) {
-    const option = document.createElement('option');
-    option.textContent = text;
-    option.value = value;
-    dropdown.appendChild(option);
-  }
+  omData.forEach(item => {
+    const terms = [];
 
-  // Define a helper function to append terms first, sorted by number of matches and then alphabetically
-  function appendTermsFirst(sortedItems) {
-    sortedItems.forEach(item => {
-      item.terms.forEach(term => {
-        appendOption(term, item.Name);
-      });
-    });
-  }
-
-  // Get the filtered items with matches in terms
-  const itemsWithTermMatches = omData.filter(item =>
-    item.terms.some(term => term.toLowerCase().includes(searchText))
-  );
-
-  // Sort items with matches in terms first, by the number of matches and then alphabetically
-  const sortedItemsWithTermMatches = itemsWithTermMatches.sort((a, b) => {
-    const aMatches = a.terms.reduce((count, term) => (term.toLowerCase().includes(searchText) ? count + 1 : count), 0);
-    const bMatches = b.terms.reduce((count, term) => (term.toLowerCase().includes(searchText) ? count + 1 : count), 0);
-
-    if (aMatches !== bMatches) {
-      return bMatches - aMatches;
-    }
-
-    return a.DisplayText.localeCompare(b.DisplayText);
-  });
-
-  // Append options with terms first
-  appendTermsFirst(sortedItemsWithTermMatches);
-
-  // Get the filtered items with matches in displayText or contents
-  const itemsWithDisplayTextOrContentMatches = omData.filter(item =>
-    !item.terms.some(term => term.toLowerCase().includes(searchText))
-  );
-
-  // Sort items with matches in displayText or contents, by the number of matches and then alphabetically
-  const sortedItemsWithDisplayTextOrContentMatches = itemsWithDisplayTextOrContentMatches.sort(
-    (a, b) => {
-      const aDisplayTextMatches = (a.DisplayText || '').toLowerCase().split(searchText).length - 1;
-      const bDisplayTextMatches = (b.DisplayText || '').toLowerCase().split(searchText).length - 1;
-
-      const aContentMatches = (a.Contents || []).reduce(
-        (count, content) => (content.Text.toLowerCase().includes(searchText) ? count + 1 : count),
-        0
-      );
-      const bContentMatches = (b.Contents || []).reduce(
-        (count, content) => (content.Text.toLowerCase().includes(searchText) ? count + 1 : count),
-        0
-      );
-
-      if (aDisplayTextMatches + aContentMatches !== bDisplayTextMatches + bContentMatches) {
-        return (bDisplayTextMatches + bContentMatches) - (aDisplayTextMatches + aContentMatches);
+    // Check for "Term1" through "Term99" in the item
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        terms.push(item[termKey]);
       }
-
-      return a.DisplayText.localeCompare(b.DisplayText);
     }
-  );
 
-  // Append options with displayText or contents next
-  appendTermsFirst(sortedItemsWithDisplayTextOrContentMatches);
+    // Create separate dropdown options for each "Term" value
+    terms.forEach(term => {
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = term;
+      dropdown.appendChild(option);
+    });
+
+    if (terms.length === 0) {
+      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+      const option = document.createElement('option');
+      option.value = item.Name;
+      option.textContent = item.DisplayText || item.Name;
+      option.classList.add('no-term'); // Add a CSS class to hide this option
+      dropdown.appendChild(option);
+    }
+  });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -307,11 +269,15 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
+// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
+  // Filter data based on search text
   let filteredData = omData.filter(item => {
+    const displayText = item.DisplayText || item.Name;
+    const contentTexts = (item.Contents || []).map(content => content.Text.toLowerCase());
     const terms = [];
 
     // Check for "Term1" through "Term99" in the item
@@ -323,53 +289,42 @@ function searchData() {
     }
 
     return (
-      terms.some(term => term.toLowerCase().includes(searchText)) || // Check for matches in terms
-      (item.DisplayText && item.DisplayText.toLowerCase().includes(searchText)) || // Check for matches in displayText
-      (item.Contents && item.Contents.some(content => content.Text.toLowerCase().includes(searchText))) // Check for matches in contents
+      displayText.toLowerCase().includes(searchText) ||
+      contentTexts.some(text => text.includes(searchText)) ||
+      terms.some(term => term.toLowerCase().includes(searchText)) || // Include search in Term1 to Term99
+      displayText.toLowerCase() === searchText // Include exact match of the displayText
     );
   });
 
-  // Sort the filtered data by the number of matches in terms and displayText/contents
+  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
+
+  // Sort data based on the number of matches in displayText and contents
   filteredData.sort((a, b) => {
-    const aTermMatches = a.item.terms.reduce(
-      (count, term) => (term.toLowerCase().includes(searchText) ? count + 1 : count),
-      0
-    );
-    const bTermMatches = b.item.terms.reduce(
-      (count, term) => (term.toLowerCase().includes(searchText) ? count + 1 : count),
-      0
-    );
+    const aDisplayText = a.DisplayText || a.Name;
+    const bDisplayText = b.DisplayText || b.Name;
 
-    const aDisplayTextMatches = (a.DisplayText || '').toLowerCase().split(searchText).length - 1;
-    const bDisplayTextMatches = (b.DisplayText || '').toLowerCase().split(searchText).length - 1;
+    const aDisplayTextMatches = (aDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
+    const bDisplayTextMatches = (bDisplayText.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
 
-    const aContentMatches = (a.Contents || []).reduce(
-      (count, content) => (content.Text.toLowerCase().includes(searchText) ? count + 1 : count),
-      0
-    );
-    const bContentMatches = (b.Contents || []).reduce(
-      (count, content) => (content.Text.toLowerCase().includes(searchText) ? count + 1 : count),
-      0
-    );
-
-    // First, sort by the number of matches in terms
-    if (aTermMatches !== bTermMatches) {
-      return bTermMatches - aTermMatches;
+    if (aDisplayTextMatches !== bDisplayTextMatches) {
+      return bDisplayTextMatches - aDisplayTextMatches; // Sort by number of matches in DisplayText
     }
 
-    // If the number of term matches is the same, sort by the number of matches in displayText/contents
-    if (aDisplayTextMatches + aContentMatches !== bDisplayTextMatches + bContentMatches) {
-      return (bDisplayTextMatches + bContentMatches) - (aDisplayTextMatches + aContentMatches);
-    }
+    const aContentMatches = (a.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+    }, 0);
 
-    // If the number of matches in both terms and displayText/contents is the same,
-    // sort alphabetically by the displayText
-    return a.DisplayText.localeCompare(b.DisplayText);
+    const bContentMatches = (b.Contents || []).reduce((count, content) => {
+      const text = content.Text || '';
+      return count + (text.toLowerCase().includes(searchText) ? 1 : 0);
+    }, 0);
+
+    return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
   });
 
   populateDropdown(filteredData);
 }
-
 
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
