@@ -641,7 +641,6 @@ function createOMTable(selectedData) {
   }
 }
 
-// Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
   const matchingData = omData.find(item => item.Name === selectedOption);
@@ -661,47 +660,56 @@ function filterData(event, sortByTerm = false) {
 
   if (sortByTerm) {
     sortDropdownByTerm();
+  } else {
+    // Sort the dropdown options based on the new search criteria
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const dropdown = document.getElementById('filterDropdown');
+    const options = Array.from(dropdown.options);
+
+    const sortedOptions = options.sort((a, b) => {
+      const aText = a.textContent.toLowerCase();
+      const bText = b.textContent.toLowerCase();
+
+      const aTermMatch = aText.includes(searchText) && aText.indexOf(searchText) === aText.lastIndexOf(searchText);
+      const bTermMatch = bText.includes(searchText) && bText.indexOf(searchText) === bText.lastIndexOf(searchText);
+
+      if (aTermMatch && !bTermMatch) {
+        return -1; // Prioritize the option with the term match
+      } else if (!aTermMatch && bTermMatch) {
+        return 1; // Prioritize the option with the term match
+      }
+
+      const aContentMatches = getMatchCount(omData.find(item => item.Name === a.value), searchText);
+      const bContentMatches = getMatchCount(omData.find(item => item.Name === b.value), searchText);
+
+      return bContentMatches - aContentMatches; // Sort by number of matches in Contents Text
+    });
+
+    dropdown.innerHTML = ''; // Clear existing options
+
+    // Add sorted options back to the dropdown
+    for (const option of sortedOptions) {
+      dropdown.appendChild(option);
+    }
   }
 }
 
-// Function to sort the dropdown options with matches to "Term" at the top and other matches at the bottom
+// Function to sort the dropdown options alphabetically by term
 function sortDropdownByTerm() {
   const dropdown = document.getElementById('filterDropdown');
   const options = Array.from(dropdown.options);
-
-  const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-  const matchingTermOptions = options.filter(option => option.textContent.toLowerCase().includes(searchText) && !option.classList.contains('no-term'));
-  const matchingOtherOptions = options.filter(option => option.textContent.toLowerCase().includes(searchText) && option.classList.contains('no-term'));
-  const remainingOptions = options.filter(option => !option.textContent.toLowerCase().includes(searchText));
-
-  // Sort the matching options with "Term" at the top and other matches below
-  matchingTermOptions.sort((a, b) => {
-    const aMatches = (a.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    const bMatches = (b.textContent.toLowerCase().match(new RegExp(searchText, 'g')) || []).length;
-    return bMatches - aMatches;
+  const sortedOptions = options.sort((a, b) => {
+    return a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' });
   });
-
-  // Sort the remaining options alphabetically
-  matchingOtherOptions.sort((a, b) => a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' }));
-  remainingOptions.sort((a, b) => a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' }));
 
   dropdown.innerHTML = ''; // Clear existing options
 
-  // Add sorted matching options with "Term" at the top first
-  for (const option of matchingTermOptions) {
-    dropdown.appendChild(option);
-  }
-
-  // Add sorted matching options with "Term" at the bottom
-  for (const option of matchingOtherOptions) {
-    dropdown.appendChild(option);
-  }
-
-  // Add sorted remaining options to the dropdown
-  for (const option of remainingOptions) {
+  // Add sorted options back to the dropdown
+  for (const option of sortedOptions) {
     dropdown.appendChild(option);
   }
 }
+
 // Function to push the current selection to the history
 function pushHistory(item) {
   if (item !== history[historyIndex]) {
