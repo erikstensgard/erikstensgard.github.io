@@ -517,12 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-   // Function to escape special characters in a string to use in a regular expression
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
-   // Function to escape special characters in a string to use in a regular expression
+  // Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -540,12 +535,6 @@ function scrollToTop() { // Add opening curly brace here
 
     for (let row = 1; row <= maxRow; row++) {
       const bodyRow = document.createElement('tr');
-
-      // Create a Set to store the already matched texts for the current row
-      const matchedTexts = new Set();
-
-      // Before processing each row, create an array to store the last matched index for each column in the current row
-      const lastMatchedIndexes = new Array(columns).fill(0);
 
       for (let column = 1; column <= columns; column++) {
         const matchingItems = Contents.filter(item => item.Row === row && item.Column === column);
@@ -566,7 +555,6 @@ function scrollToTop() { // Add opening curly brace here
             const cellContentElement = document.createElement('div');
 
             const contentText = cellContent; // Preserve original case-sensitive text
-            let currentIndex = 0;
 
             if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
               cellContentElement.classList.add('clickable');
@@ -577,50 +565,22 @@ function scrollToTop() { // Add opening curly brace here
             } else {
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
+                let currentIndex = 0;
 
                 // Search for links without "*"
                 const matchingURLsExact = abxLinkData.filter(
                   item => new RegExp(`\\b${escapeRegExp(item.Name)}\\b`, 'gi').test(contentText)
                 );
 
-                // Search for links with "*"
-                const matchingURLsWildcard = abxLinkData.filter(
-                  item => new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(contentText)
-                );
-
-                const matchingURLs = [...matchingURLsExact, ...matchingURLsWildcard];
-
-                const sortedMatchingURLs = matchingURLs.sort((a, b) => {
-                  const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
-                  const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
-                  return aIndex - bIndex;
-                });
-
-                currentIndex = 0;
-
-                sortedMatchingURLs.forEach(matchingURL => {
+                // Process links without "*"
+                matchingURLsExact.forEach(matchingURL => {
                   const { Name, URL } = matchingURL;
-                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b`, 'gi');
+                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name)}\\b`, 'gi');
                   let match;
 
                   while ((match = nameRegex.exec(contentText)) !== null) {
-                    if (currentIndex > match.index) {
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
-
                     const nonLinkText = contentText.substring(currentIndex, match.index);
                     const linkText = match[0].toLowerCase();
-
-                    // Check if the link text is already added for the current row
-                    if (matchedTexts.has(linkText)) {
-                      const remainingText = contentText.substring(currentIndex, match.index + match[0].length);
-                      const remainingTextNode = document.createTextNode(remainingText);
-                      linkContainer.appendChild(remainingTextNode);
-
-                      currentIndex = match.index + match[0].length;
-                      continue;
-                    }
 
                     const linkElement = document.createElement('a');
                     linkElement.href = URL;
@@ -632,18 +592,44 @@ function scrollToTop() { // Add opening curly brace here
                     linkContainer.appendChild(nonLinkTextNode);
                     linkContainer.appendChild(linkElement);
 
-                    // Store the link text for the current row
-                    matchedTexts.add(linkText);
+                    currentIndex = match.index + match[0].length;
+                  }
+                });
 
-                    // Store the last matched index for this column in the current row
-                    lastMatchedIndexes[column - 1] = match.index + match[0].length;
+                // Search for links with "*"
+                const matchingURLsWildcard = abxLinkData.filter(
+                  item => new RegExp(`\\b${escapeRegExp(item.Name).replace(/\\\*/g, '.*')}\\b`, 'gi').test(contentText)
+                );
+
+                // Process links with "*"
+                matchingURLsWildcard.forEach(matchingURL => {
+                  const { Name, URL } = matchingURL;
+                  const nameRegex = new RegExp(`\\b${escapeRegExp(Name).replace(/\\\*/g, '.*')}\\b`, 'gi');
+                  let match;
+
+                  while ((match = nameRegex.exec(contentText)) !== null) {
+                    const nonLinkText = contentText.substring(currentIndex, match.index);
+                    const linkText = match[0].toLowerCase();
+
+                    if (!matchingURLsExact.some(item => item.Name.toLowerCase() === linkText)) {
+                      // Check if the link text is not added from the links without "*"
+                      const linkElement = document.createElement('a');
+                      linkElement.href = URL;
+                      linkElement.classList.add('AbxLink');
+                      linkElement.target = '_blank';
+                      linkElement.textContent = match[0];
+
+                      const nonLinkTextNode = document.createTextNode(nonLinkText);
+                      linkContainer.appendChild(nonLinkTextNode);
+                      linkContainer.appendChild(linkElement);
+                    }
 
                     currentIndex = match.index + match[0].length;
                   }
                 });
 
                 if (currentIndex < contentText.length) {
-                  const remainingText = contentText.substring(lastMatchedIndexes[column - 1]);
+                  const remainingText = contentText.substring(currentIndex);
                   const remainingTextNode = document.createTextNode(remainingText);
                   linkContainer.appendChild(remainingTextNode);
                 }
