@@ -216,11 +216,6 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
-    
-
-function escapeRegExp(text) {
-  return text.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
-}
 
   // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
@@ -523,13 +518,10 @@ function scrollToTop() { // Add opening curly brace here
 } // Add closing curly brace here
 
 // Function to create the table with OMJSON data
-function createOMTable(selectedData, item) {
-  const linkRegexWithAsterisk = new RegExp(`\\b${escapeRegExp(Item.replace(/\*/g, '.*'))}\\b`, 'gi');
-  const linkRegexWithoutAsterisk = new RegExp(`\\b${escapeRegExp(Item)}\\b`, 'gi');
-  
+function createOMTable(selectedData) {
   const table = document.createElement('table');
   table.classList.add('table');
-    
+
   const tbody = document.createElement('tbody');
 
   const { Contents } = selectedData;
@@ -568,6 +560,7 @@ function createOMTable(selectedData, item) {
           const contentText = cellContent; // Preserve original case-sensitive text
           let currentIndex = 0;
 
+          // Check if the row click item starts with 'ORZID' or 'ORZ GTX'
           if (Item && (Item.startsWith('ORZID') || Item.startsWith('ORZ GTX'))) {
             cellContentElement.classList.add('clickable');
             cellContentElement.addEventListener('click', () => {
@@ -578,26 +571,20 @@ function createOMTable(selectedData, item) {
             // Check if there are partial string matches with links in a row
             if (abxLinkData.length > 0) {
               const linkContainer = document.createElement('div');
-
-              // Separate regular expressions for links with "*" and without "*"
-              const linkRegexWithAsterisk = new RegExp(`\\b${Item.replace(/\*/g, '.*')}\\b`, 'gi');
-              const linkRegexWithoutAsterisk = new RegExp(`\\b${Item}\\b`, 'gi');
-
-              const matchingURLsWithAsterisk = abxLinkData.filter(item =>
-                linkRegexWithAsterisk.test(contentText)
+              const matchingURLs = abxLinkData.filter(item =>
+                new RegExp(`\\b${item.Name.replace(/\*/g, '.*')}\\b`, 'gi').test(contentText)
               );
 
-              const matchingURLsWithoutAsterisk = abxLinkData.filter(item =>
-                linkRegexWithoutAsterisk.test(contentText)
-              );
-
-              // Combine the results from both regex searches
-              const matchingURLs = [...matchingURLsWithAsterisk, ...matchingURLsWithoutAsterisk];
+              const sortedMatchingURLs = matchingURLs.sort((a, b) => {
+                const aIndex = contentText.toLowerCase().indexOf(a.Name.toLowerCase());
+                const bIndex = contentText.toLowerCase().indexOf(b.Name.toLowerCase());
+                return aIndex - bIndex;
+              });
 
               // Initialize currentIndex to 0 for each row
-              currentIndex = 0;
+              let matchedTextsInRow = new Set(); // Store the matched link texts for each row
 
-              matchingURLs.forEach(matchingURL => {
+              sortedMatchingURLs.forEach(matchingURL => {
                 const { Name, URL } = matchingURL;
                 const nameRegex = new RegExp(`\\b${Name.replace(/\*/g, '.*')}\\b`, 'gi');
                 let match;
@@ -613,7 +600,7 @@ function createOMTable(selectedData, item) {
                   const linkText = match[0].toLowerCase(); // Convert linkText to lowercase for case-insensitive comparison
 
                   // Check if the link text is already added for any row
-                  if (matchedTexts.has(linkText)) {
+                  if (matchedTexts.has(linkText) || matchedTextsInRow.has(linkText)) {
                     // Append the remaining text from the last matched index to the current matched index
                     const remainingText = contentText.substring(lastMatchedIndexes[row - 1], match.index);
                     const remainingTextNode = document.createTextNode(remainingText);
@@ -635,6 +622,7 @@ function createOMTable(selectedData, item) {
 
                   // Store the link text to prevent matching it to another link for any row
                   matchedTexts.add(linkText);
+                  matchedTextsInRow.add(linkText);
 
                   // Store the last matched index for this row
                   lastMatchedIndexes[row - 1] = match.index + match[0].length;
@@ -663,6 +651,7 @@ function createOMTable(selectedData, item) {
           displayCell.appendChild(cellContentElement);
         });
       }
+
       bodyRow.appendChild(displayCell);
     }
 
@@ -670,14 +659,8 @@ function createOMTable(selectedData, item) {
   }
 
   table.appendChild(tbody);
-
-  const resultContainer = document.getElementById('resultContainer');
-  resultContainer.innerHTML = '';
-  if (selectedData) {
-    resultContainer.appendChild(table);
-  }
+  document.body.appendChild(table);
 }
-
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
