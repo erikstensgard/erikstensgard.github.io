@@ -280,59 +280,66 @@ function searchData() {
     return;
   }
 
-  // Split the search input into separate search terms whenever a space is detected
-  const searchTerms = searchText.split(' ');
-
-  // Filter data based on each search term separately and calculate relevance scores
-  const filteredData = omData.map(item => {
+  // Filter data based on search text and prioritize items with matches in terms
+  let filteredData = omData.map(item => {
     const displayText = item.DisplayText || item.Name;
     const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
+    const terms = [];
 
-    let totalRelevanceScore = 0;
-    let termMatch = false;
+    // Check for "Term1" through "Term99" in the item and calculate relevance score
+    let termMatches = 0; // Count the number of term matches
+    let relevanceScore = 0;
 
-    searchTerms.forEach(searchTerm => {
-      // Check for exact matches in displayText
-      if (displayText.toLowerCase().includes(searchTerm)) {
-        totalRelevanceScore += 50;
+    for (let i = 1; i <= 99; i++) {
+      const termKey = `Term${i}`;
+      if (item[termKey]) {
+        const termText = item[termKey].toLowerCase();
+        terms.push(termText);
+        if (termText === searchText) {
+          relevanceScore += 1000; // Increase relevance score for exact term match significantly
+          termMatches++; // Increment the term matches count
+        } else if (termText.includes(searchText)) {
+          relevanceScore += 100; // Increase relevance score if search text is found in terms
+          termMatches++; // Increment the term matches count
+        }
       }
+    }
 
-      // Check for partial matches in contentTexts
-      contentTexts.forEach(text => {
-        if (text.includes(searchTerm)) {
-          totalRelevanceScore += 1;
-        }
-      });
-
-      // Check for exact matches in terms
-      for (let i = 1; i <= 99; i++) {
-        const termKey = `Term${i}`;
-        if (item[termKey]?.toLowerCase() === searchTerm) {
-          totalRelevanceScore += 1000;
-          termMatch = true;
-          break;
-        }
+    // Calculate relevance score based on displayText and contentTexts
+    if (displayText.toLowerCase().includes(searchText)) {
+      relevanceScore += 50; // Increase relevance score if search text is found in displayText
+    }
+    contentTexts.forEach(text => {
+      if (text.includes(searchText)) {
+        relevanceScore += 1; // Increase relevance score if search text is found in contentTexts
       }
     });
 
     return {
       ...item,
-      relevanceScore: totalRelevanceScore,
-      hasTermMatch: termMatch,
+      relevanceScore, // Add relevance score to the item
+      termMatches, // Add the number of term matches to the item
     };
   })
-  .filter(item => item.hasTermMatch || item.relevanceScore > 0) // Include items with term matches or any relevance score
-  .sort((a, b) => {
-    // Sort based on relevance score, descending
-    if (a.relevanceScore !== b.relevanceScore) {
-      return b.relevanceScore - a.relevanceScore;
-    }
+    .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+    .sort((a, b) => {
+      // Sort based on relevance score and term matches count, descending
+      if (a.relevanceScore !== b.relevanceScore) {
+        return b.relevanceScore - a.relevanceScore;
+      }
 
-    // If relevance score is the same, sort alphabetically by displayText
-    const aDisplayText = a.DisplayText || a.Name;
-    const bDisplayText = b.DisplayText || b.Name;
-    return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
-  });
+      // If relevance score is the same, prioritize items with more term matches
+      if (a.termMatches !== b.termMatches) {
+        return b.termMatches - a.termMatches;
+      }
+
+      // If term matches count is the same, sort alphabetically by displayText
+      const aDisplayText = a.DisplayText || a.Name;
+      const bDisplayText = b.DisplayText || b.Name;
+      return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+    });
+
+  filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
