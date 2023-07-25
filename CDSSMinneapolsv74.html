@@ -269,45 +269,7 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-// Function to search and sort data based on the input
-function searchData() {
-  const searchInput = document.getElementById('searchInput');
-  const searchText = searchInput.value.trim().toLowerCase();
-
-  // Check if the search text is empty
-  if (searchText === '') {
-    // Populate and sort the dropdown with the original data when the search text is blank
-    populateDropdown(omData);
-    sortDropdownByTerm();
-    return;
-  }
-
-  // Split the search input by spaces to get individual search terms
-  const searchTerms = searchText.split(' ');
-
-  // Filter data based on each individual search term
-  const filteredData = omData.filter(item => {
-    for (const term of searchTerms) {
-      // Check for a match in the item's display text or content texts
-      const displayText = (item.DisplayText || item.Name).toLowerCase();
-      const contents = item.Contents || [];
-      const contentTexts = contents.map(content => content.Text.toLowerCase());
-
-      if (
-        displayText.includes(term) ||
-        contentTexts.some(contentText => contentText.includes(term))
-      ) {
-        // Return true if any of the search terms match the display text or content texts
-        return true;
-      }
-    }
-    // Return false if none of the search terms match the display text or content texts
-    return false;
-  });
-
-  // Sort the filtered data based on relevance score and populate the dropdown
-  populateDropdown(filteredData);
-}
+https://github.com/erikstensgard/erikstensgard.github.io/blob/59e25403e72e643c29f610be7e1e0ee4b3eefb93/CDSSMinneapolsv74.html
 
 
 function searchAndOpenDropdown() {
