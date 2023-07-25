@@ -275,7 +275,13 @@ function searchData() {
   const searchText = searchInput.value.trim().toLowerCase();
 
   if (searchText === '') {
-    populateDropdown(omData);
+    // Sort the omData array and then populate the dropdown
+    const sortedData = omData.slice().sort((a, b) => {
+      const aDisplayText = a.DisplayText || a.Name;
+      const bDisplayText = b.DisplayText || b.Name;
+      return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+    });
+    populateDropdown(sortedData);
     return; // Early return if the search input is empty
   }
   
