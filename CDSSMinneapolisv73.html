@@ -1,4 +1,4 @@
-zzzzzzz<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -269,11 +269,17 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
 
+  // Check if the search text is empty
+  if (searchText === '') {
+    // Populate and sort the dropdown with the original data when the search text is blank
+    populateDropdown(omData);
+    sortDropdownByTerm();
+    return;
+  }
   // Filter data based on search text and prioritize items with matches in terms
   let filteredData = omData.map(item => {
     const displayText = item.DisplayText || item.Name;
@@ -780,13 +786,7 @@ function handleGoForward() {
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-      // Function to repopulate and sort the dropdown
-    function repopulateAndSortDropdown() {
-      const dropdown = document.getElementById('filterDropdown');
-      document.getElementById('searchInput').value = ''; // Clear the search input
-      populateDropdown(omData);
-      sortDropdownByTerm();
-    }
+  
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -799,7 +799,6 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-
 
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
