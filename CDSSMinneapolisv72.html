@@ -269,7 +269,6 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-// Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput.value.trim().toLowerCase();
@@ -286,11 +285,12 @@ function searchData() {
       const termKey = `Term${i}`;
       if (item[termKey]) {
         const termText = item[termKey].toLowerCase();
-        terms.push(termText);
         if (termText === searchText) {
           relevanceScore += 1000; // Increase relevance score for exact term match significantly
+          terms.push(termText);
         } else if (termText.includes(searchText)) {
           relevanceScore += 100; // Increase relevance score if search text is found in terms
+          terms.push(termText);
         }
       }
     }
@@ -308,6 +308,7 @@ function searchData() {
     return {
       ...item,
       relevanceScore, // Add relevance score to the item
+      terms, // Add matched terms to the item
     };
   })
     .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
@@ -322,6 +323,8 @@ function searchData() {
       const bDisplayText = b.DisplayText || b.Name;
       return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
     });
+
+  filteredData = filteredData.filter(item => item.terms.length > 0); // Filter out items without matched terms
 
   filteredData = filteredData.filter(item => !(item.DisplayText || item.Name).toLowerCase().includes('index'));
 
