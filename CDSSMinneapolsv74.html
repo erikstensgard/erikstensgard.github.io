@@ -269,7 +269,72 @@ function getMatchCount(item, searchText) {
 }
 
 // Function to search
-https://github.com/erikstensgard/erikstensgard.github.io/blob/59e25403e72e643c29f610be7e1e0ee4b3eefb93/CDSSMinneapolsv74.html
+function searchData() {
+  const searchInput = document.getElementById('searchInput');
+  const searchText = searchInput.value.trim().toLowerCase();
+
+  // Check if the search text is empty
+  if (searchText === '') {
+    // Populate and sort the dropdown with the original data when the search text is blank
+    populateDropdown(omData);
+    sortDropdownByTerm();
+    return;
+  }
+
+  // Split the search input into separate search terms whenever a space is detected
+  const searchTerms = searchText.split(' ');
+
+  // Filter data based on each search term separately and calculate relevance scores
+  const filteredData = omData.map(item => {
+    const displayText = item.DisplayText || item.Name;
+    const contentTexts = (item.Contents?.map(content => content.Text.toLowerCase()) || []);
+
+    let totalRelevanceScore = 0;
+
+    searchTerms.forEach(searchTerm => {
+      // Check for exact matches in displayText
+      if (displayText.toLowerCase().includes(searchTerm)) {
+        totalRelevanceScore += 50;
+      }
+
+      // Check for partial matches in contentTexts
+      contentTexts.forEach(text => {
+        if (text.includes(searchTerm)) {
+          totalRelevanceScore += 1;
+        }
+      });
+
+      // Check for exact matches in terms
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]?.toLowerCase() === searchTerm) {
+          totalRelevanceScore += 1000;
+          break;
+        }
+      }
+    });
+
+    return {
+      ...item,
+      relevanceScore: totalRelevanceScore,
+    };
+  })
+  .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+  .sort((a, b) => {
+    // Sort based on relevance score, descending
+    if (a.relevanceScore !== b.relevanceScore) {
+      return b.relevanceScore - a.relevanceScore;
+    }
+
+    // If relevance score is the same, sort alphabetically by displayText
+    const aDisplayText = a.DisplayText || a.Name;
+    const bDisplayText = b.DisplayText || b.Name;
+    return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
+  });
+
+  // Call the function to populate the dropdown with filtered and sorted data
+  populateDropdown(filteredData);
+}
 
 
 function searchAndOpenDropdown() {
