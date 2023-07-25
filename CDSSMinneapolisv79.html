@@ -517,7 +517,7 @@ function scrollToTop() { // Add opening curly brace here
   });
 } // Add closing curly brace here
 
-    // Function to escape special characters in a string to use in a regular expression
+ // Function to escape special characters in a string to use in a regular expression
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -568,6 +568,7 @@ function scrollToTop() { // Add opening curly brace here
             } else {
               if (abxLinkData.length > 0) {
                 const linkContainer = document.createElement('div');
+                let currentIndex = 0;
 
                 // Search for links without "*"
                 const matchingURLsExact = abxLinkData.filter(
@@ -584,18 +585,19 @@ function scrollToTop() { // Add opening curly brace here
                     const nonLinkText = contentText.substring(currentIndex, match.index);
                     const linkText = match[0].toLowerCase();
 
-                    const linkElement = document.createElement('a');
-                    linkElement.href = URL;
-                    linkElement.classList.add('AbxLink');
-                    linkElement.target = '_blank';
-                    linkElement.textContent = match[0];
+                    if (!matchedTexts.has(linkText)) {
+                      const linkElement = document.createElement('a');
+                      linkElement.href = URL;
+                      linkElement.classList.add('AbxLink');
+                      linkElement.target = '_blank';
+                      linkElement.textContent = match[0];
 
-                    const nonLinkTextNode = document.createTextNode(nonLinkText);
-                    linkContainer.appendChild(nonLinkTextNode);
-                    linkContainer.appendChild(linkElement);
+                      const nonLinkTextNode = document.createTextNode(nonLinkText);
+                      linkContainer.appendChild(nonLinkTextNode);
+                      linkContainer.appendChild(linkElement);
 
-                    // Store the link text for the current row
-                    matchedTexts.add(linkText);
+                      matchedTexts.add(linkText);
+                    }
 
                     currentIndex = match.index + match[0].length;
                   }
@@ -617,7 +619,6 @@ function scrollToTop() { // Add opening curly brace here
                     const linkText = match[0].toLowerCase();
 
                     if (!matchedTexts.has(linkText)) {
-                      // Check if the link text is not added from the links without "*"
                       const linkElement = document.createElement('a');
                       linkElement.href = URL;
                       linkElement.classList.add('AbxLink');
@@ -627,6 +628,8 @@ function scrollToTop() { // Add opening curly brace here
                       const nonLinkTextNode = document.createTextNode(nonLinkText);
                       linkContainer.appendChild(nonLinkTextNode);
                       linkContainer.appendChild(linkElement);
+
+                      matchedTexts.add(linkText);
                     }
 
                     currentIndex = match.index + match[0].length;
@@ -668,22 +671,6 @@ function scrollToTop() { // Add opening curly brace here
     }
   }
 
-
-// Function to sort the dropdown options alphabetically by term
-function sortDropdownByTerm() {
-  const dropdown = document.getElementById('filterDropdown');
-  const options = Array.from(dropdown.options);
-  const sortedOptions = options.sort((a, b) => {
-    return a.textContent.localeCompare(b.textContent, undefined, { sensitivity: 'base' });
-  });
-
-  dropdown.innerHTML = ''; // Clear existing options
-
-  // Add sorted options back to the dropdown
-  for (const option of sortedOptions) {
-    dropdown.appendChild(option);
-  }
-}
 
 // Function to push the current selection to the history
 function pushHistory(item) {
@@ -810,13 +797,6 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   .catch(error => {
     console.error('Error:', error);
   });
-
-      // Wrap the script inside the DOMContentLoaded event listener
-  document.addEventListener('DOMContentLoaded', () => {
-    // Call the filterData function and pass the data to createOMTable
-    const selectedData = filterData(/* Your data for filtering here */);
-    createOMTable(selectedData);
-    });
   </script>
 </body>
 
