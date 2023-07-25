@@ -306,10 +306,11 @@ function searchData() {
 
     return {
       ...item,
+      terms, // Add terms array to the item
       relevanceScore, // Add relevance score to the item
     };
   })
-  .filter(item => item.relevanceScore > 0) // Filter out items with relevance score of 0
+  .filter(item => item.terms.some(term => term.includes(searchText))) // Filter out items with no matches in terms
   .sort((a, b) => {
     // Sort based on relevance score, descending
     if (a.relevanceScore !== b.relevanceScore) {
@@ -322,17 +323,12 @@ function searchData() {
     return aDisplayText.localeCompare(bDisplayText, undefined, { sensitivity: 'base' });
   });
 
-  // Filter out items without matches in either terms or contents
-  filteredData = filteredData.filter(item => {
-    const hasMatchInTerms = item.terms.some(term => term.includes(searchText));
-    const hasMatchInContents = item.Contents.some(content => content.Text.toLowerCase().includes(searchText));
-    return hasMatchInTerms || hasMatchInContents;
-  });
+  // Filter out items without matches in contents
+  filteredData = filteredData.filter(item => item.Contents.some(content => content.Text.toLowerCase().includes(searchText)));
 
   // Call the function to populate the dropdown with filtered and sorted data
   populateDropdown(filteredData);
 }
-
 
 
 function searchAndOpenDropdown() {
