@@ -59,9 +59,10 @@
     justify-content: space-between;
   }
   
-  .search-container{
-    display: flex;
+  .search-container, .dropbox-container {
+    flex-basis: 100%;
     align-items: Left;
+    margin-bottom: 10px
   }
   
   .dropbox-container{
@@ -122,11 +123,67 @@
 
   
   #searchInput {
-    width: 100%;
+    width: 90%;
     text-align: left;
     font-size: 24px;
   }
+ /* Media queries for responsive design */
+    @media screen and (max-width: 1024px) {
+      button,
+      select {
+        font-size: 12px;
+      }
+      #filterDropdown {
+         width: 440px;
+    }
+      #searchInput {
+        font-size: 12px; 
+        width: 150px;
+    }
+    }
+    
+    @media screen and (max-width: 768px) {
+      button,
+      select {
+        font-size: 10px;
+      }
+      #filterDropdown  {
+         width: 400px;
+    }
+       #searchInput {
+        font-size: 10px; 
+        width: 150px;
+    }
+    }
 
+    @media screen and (max-width: 480px) {
+      button,
+      select {
+        font-size: 8px;
+      }
+      #filterDropdown {
+         width: 360px;
+    } 
+      #searchInput {
+        font-size: 8px; 
+        width: 100px;
+    }
+    }
+    
+    @media screen and (max-width: 320px) {
+      button,
+      select {
+        font-size: 6px;
+      }
+      #filterDropdown {
+         width: 320px;
+    }
+       #searchInput {
+        font-size: 6px; 
+        width: 50px;
+    }
+    }
+    
   </style>
 </head>
 <body>
