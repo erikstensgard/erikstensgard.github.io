@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minneapolis Antimicrobial CDSS</title>
   <style>
-    /* Common styles */
+    /* Common styles /*
     .no-term {
-    display: none;
-  }
+      display: none;
+    }
     .not-clickable-cell {
-  background-color: transparent;
-  color: black;
-}
+      background-color: transparent;
+      color: black;
+    }
     .AbxLink {
       color: green;
       cursor: pointer;
@@ -41,92 +41,144 @@
       background-color: lightblue; /* Set your desired background color here */
     }
 
-    /* Header styles */
- #header {
-  position: sticky;
-  top: 0;
-  background-color: #1E90FF; /* Dodgerblue */
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  flex-direction: column
-}
+/* Header styles */
+  #header {
+    position: sticky;
+    top: 0;
+    background-color: #1E90FF; /* Dodgerblue */
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-direction: column
+  }
 
-.buttons-container {
-  display: flex;
- align-items: center;
-justify-content: space-between;
-
-}
-
-.search-container{
+  .buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .search-container{
     display: flex;
     align-items: Left;
-}
-
-
-#goBackButton {
-background-color: #1E90FF; /* Dodgerblue */
-border: none;
-color: white;
-padding: 10px 10px;
-text-align: center;
-text-decoration: none;
-font-size: 40px;
-}
-
-
-#mainMenuButton {
- background-color: #1E90FF; /* Dodgerblue */
-border: none;
-color: white;
-padding: 10px 10px;
-text-align: center;
-text-decoration: none;
-font-size: 30px;
-}
-
-#indexButton {
- background-color: #1E90FF; /* Dodgerblue */
-border: none;
-color: white;
-padding: 10px 10px;
-text-align: center;
-text-decoration: none;
-font-size: 30px;
-}
-
-#goForwardButton {
-  background-color: #1E90FF; /* Dodgerblue */
-border: none;
-color: white;
-padding: 10px 10px;
-text-align: center;
-text-decoration: none;
-font-size: 40px;
-}
-
-#filterDropdown {
-margin-right: 20px;
-width: 560px;
-z-index: 2;
-top: 100%;
-display: none; /* Hide the dropdown by default */
-max-height: 200px; /* Set the maximum height for the dropdown */
-overflow-y: auto; /* Enable vertical scrolling for the dropdown */
-}
-
-#searchInput {
+  }
+  
+  .dropbox-container{
+    display: flex;
+    align-items: Left;
+  }
+      
+  #goBackButton {
+    background-color: #1E90FF; /* Dodgerblue */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 40px;
+  }
+  
+  #mainMenuButton {
+    background-color: #1E90FF; /* Dodgerblue */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 30px;
+  }
+  
+  #indexButton {
+   background-color: #1E90FF; /* Dodgerblue */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 30px;
+  }
+  
+  #goForwardButton {
+    background-color: #1E90FF; /* Dodgerblue */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 40px;
+  }
+  
+  #filterDropdown {
+    z-index: 2;
+    display: none; /* Hide the dropdown by default */
+    Height: 100%;
+    width: 100%;
+    overflow-y: auto; /* Enable vertical scrolling for the dropdown */
+    text-align: left;
+    font-size: 20px;
+  }
+  
+  #searchInput {
     width: 100%;
     text-align: left;
     font-size: 24px;
-}
+  }
+    
+/* Media queries for responsive design */
+  @media screen and (max-width: 1024px) {
+  button,
+      select {
+        font-size: 12px;
+      }
+      #filterDropdown {
+        font-size: 10px; 
+      }
+      #searchInput {
+        font-size: 12px; 
+      }
+  }
+    
+  @media screen and (max-width: 768px) {
+    button,
+      select {
+        font-size: 10px;
+      }
+      #filterDropdown  {
+        font-size: 8px; 
+      }
+       #searchInput {
+        font-size: 10px; 
+      }
+    }
 
+  @media screen and (max-width: 480px) {
+    button,
+      select {
+        font-size: 8px;
+      }
+      #filterDropdown {
+         font-size: 6px; 
+      } 
+      #searchInput {
+        font-size: 8px; 
+      }
+    }
+    
+  @media screen and (max-width: 320px) {
+    button,
+      select {
+        font-size: 6px;
+      }
+      #filterDropdown {
+         font-size: 4px;
+      }
+       #searchInput {
+        font-size: 6px; 
+      }
+    }
   </style>
-
 </head>
-
 <body>
   <div id="header">
     <div class ="buttons-container">
