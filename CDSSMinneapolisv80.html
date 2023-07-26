@@ -48,15 +48,13 @@
     background-color: #1E90FF; /* Dodgerblue */
     z-index: 1;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    flex-direction: column
+    justify-content: space-between;
+    align-items: Center
   }
 
   .buttons-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: left;
   }
   
   .search-container, .dropbox-container {
@@ -129,60 +127,25 @@
   }
  /* Media queries for responsive design */
     @media screen and (max-width: 1024px) {
-      button,
-      select {
-        font-size: 12px;
-      }
-      #filterDropdown {
-         width: 440px;
-    }
-      #searchInput {
-        font-size: 12px; 
-        width: 150px;
-    }
-    }
-    
+  .buttons-container {
+    align-items: center;
+  }
+  {    
     @media screen and (max-width: 768px) {
-      button,
-      select {
-        font-size: 10px;
-      }
-      #filterDropdown  {
-         width: 400px;
-    }
-       #searchInput {
-        font-size: 10px; 
-        width: 150px;
-    }
-    }
-
+      .buttons-container {
+    align-items: center;
+  }
+  {    
     @media screen and (max-width: 480px) {
-      button,
-      select {
-        font-size: 8px;
-      }
-      #filterDropdown {
-         width: 360px;
-    } 
-      #searchInput {
-        font-size: 8px; 
-        width: 100px;
-    }
-    }
-    
+  .buttons-container {
+    align-items: center;
+  }
+  {    
     @media screen and (max-width: 320px) {
-      button,
-      select {
-        font-size: 6px;
-      }
-      #filterDropdown {
-         width: 320px;
-    }
-       #searchInput {
-        font-size: 6px; 
-        width: 50px;
-    }
-    }
+.buttons-container {
+    align-items: center;
+  }
+  {    
     
   </style>
 </head>
