@@ -124,59 +124,7 @@
     text-align: left;
     font-size: 24px;
   }
-    
-/* Media queries for responsive design */
-  @media screen and (max-width: 1024px) {
-  button,
-      select {
-        font-size: 12px;
-      }
-      #filterDropdown {
-        font-size: 10px; 
-      }
-      #searchInput {
-        font-size: 12px; 
-      }
-  }
-    
-  @media screen and (max-width: 768px) {
-    button,
-      select {
-        font-size: 10px;
-      }
-      #filterDropdown  {
-        font-size: 8px; 
-      }
-       #searchInput {
-        font-size: 10px; 
-      }
-    }
 
-  @media screen and (max-width: 480px) {
-    button,
-      select {
-        font-size: 8px;
-      }
-      #filterDropdown {
-         font-size: 6px; 
-      } 
-      #searchInput {
-        font-size: 8px; 
-      }
-    }
-    
-  @media screen and (max-width: 320px) {
-    button,
-      select {
-        font-size: 6px;
-      }
-      #filterDropdown {
-         font-size: 4px;
-      }
-       #searchInput {
-        font-size: 6px; 
-      }
-    }
   </style>
 </head>
 <body>
@@ -288,7 +236,6 @@ function getMatchCount(item, searchText) {
   return matchCount;
 }
 
-// Function to search and sort data based on the input
 // Function to search and sort data based on the input
 function searchData() {
   const searchInput = document.getElementById('searchInput');
