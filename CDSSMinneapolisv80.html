@@ -208,7 +208,17 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
+// Get a reference to the header element
+const header = document.getElementById('header');
 
+// Function to handle flexbox resizing
+function handleFlexboxResize() {
+  // Add your custom logic to resize the flexbox as needed
+  // For example, you can update the styles or perform any specific actions
+}
+
+// Attach the event listener for the resize event
+window.addEventListener('resize', handleFlexboxResize);
   // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
