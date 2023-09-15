@@ -41,17 +41,26 @@
       background-color: lightblue; /* Set your desired background color here */
     }
 
+/* Add a container to limit the max-width of the header */
+.container {
+  max-width: 1200px; /* Adjust this value as needed */
+  margin: 0 auto; /* Center the container */
+}
+
 /* Header styles */
-  #header {
-    position: sticky;
-    top: 0;
-    background-color: #1E90FF; /* Dodgerblue */
-    z-index: 1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    flex-direction: column
-  }
+#header {
+  position: sticky;
+  top: 0;
+  background-color: #1E90FF; /* Dodgerblue */
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-direction: column;
+  /* Set a width to limit the header */
+  width: 100%; /* Header will take up 100% of its container */
+  box-sizing: border-box; /* Include padding and borders in the width calculation */
+}
 
   .buttons-container {
     display: flex;
