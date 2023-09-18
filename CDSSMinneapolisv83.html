@@ -452,116 +452,28 @@ searchInput.addEventListener('click', function () {
   }
 });
 
-
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const fontSizeLookup = {
+    1: ['14px', '16px', '16px', '18px', '20px'],
+    2: ['12px', '14px', '14px', '16px', '18px'],
+    3: ['10px', '12px', '12px', '14px', '16px'],
+    4: ['8px', '10px', '10px', '12px', '14px'],
+  };
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = columns.length;
+    const maxColumns = Math.min(columns.length, 4); // Limit to 4 columns
 
     columns.forEach((column, index) => {
-      let fontSize;
-
-      if (screenWidth <= 320) {
-        fontSize = 
-        if (maxColumns === 1) {
-          // Adjust font size for one column
-          fontSize = `14px`;
-        } else
-          if (maxColumns === 2) {
-          // Adjust font size for one column
-          fontSize = `12px`;
-        }
-        if (maxColumns === 3) {
-          // Adjust font size for one column
-          fontSize = `10px`;
-        }
-        if (maxColumns === 4) {
-          // Adjust font size for one column
-          fontSize = `8px`;
-        }
-      } else if (screenWidth <= 480) {
-        fontSize = 
-        if (maxColumns === 1) {
-          // Adjust font size for one column
-          fontSize = `16px`;
-        } else
-          if (maxColumns === 2) {
-          // Adjust font size for one column
-          fontSize = `14px`;
-        }
-        if (maxColumns === 3) {
-          // Adjust font size for one column
-          fontSize = `12px`;
-        }
-        if (maxColumns === 4) {
-          // Adjust font size for one column
-          fontSize = `10px`;
-        }// Mobile (iPhone)
-      } else if (screenWidth <= 768) {
-                fontSize = 
-        if (maxColumns === 1) {
-          // Adjust font size for one column
-          fontSize = `16px`;
-        } else
-          if (maxColumns === 2) {
-          // Adjust font size for one column
-          fontSize = `14px`;
-        }
-        if (maxColumns === 3) {
-          // Adjust font size for one column
-          fontSize = `12px`;
-        }
-        if (maxColumns === 4) {
-          // Adjust font size for one column
-          fontSize = `10px`;
-        } // Mobile (iPad)
-      } else if (screenWidth <= 1024) {
-              fontSize = 
-        if (maxColumns === 1) {
-          // Adjust font size for one column
-          fontSize = `18px`;
-        } else
-          if (maxColumns === 2) {
-          // Adjust font size for one column
-          fontSize = `16px`;
-        }
-        if (maxColumns === 3) {
-          // Adjust font size for one column
-          fontSize = `14px`;
-        }
-        if (maxColumns === 4) {
-          // Adjust font size for one column
-          fontSize = `12px`;
-        }
-      } else {
-          fontSize = 
-        if (maxColumns === 1) {
-          // Adjust font size for one column
-          fontSize = `20px`;
-        } else
-          if (maxColumns === 2) {
-          // Adjust font size for one column
-          fontSize = `18px`;
-        }
-        if (maxColumns === 3) {
-          // Adjust font size for one column
-          fontSize = `16px`;
-        }
-        if (maxColumns === 4) {
-          // Adjust font size for one column
-          fontSize = `10px`;
-        }// Desktop
-      }
-
+      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
     });
   });
 }
-
+    
 // Call the function initially
 adjustFontSize();
 
