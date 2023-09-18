@@ -43,24 +43,30 @@
     }
 
 /* Header styles */
-#header {
-  position: sticky;
-  top: 0;
-  background-color: #0099ff;
-  z-index: 1;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  box-sizing: border-box; /* Include padding and borders in the width calculation */
-}
+   .container {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid #ccc; /* Add a border as a visual separator */
+    }
 
-.buttons-container {
-  margin: 10px; /* Add the desired margin value */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: #0099ff;
+      z-index: 1;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      box-sizing: border-box; /* Include padding and borders in the width calculation */
+    }
 
+    .buttons-container {
+      margin: 10px; /* Add the desired margin value */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
   .search-container{
     flex-basis: 100%;
     align-items: Left;
@@ -160,6 +166,7 @@
   </style>
 </head>
 <body>
+ <div class="container">
   <div id="header">
     <div class ="buttons-container">
         <button id="goBackButton">&#9664; </button>
@@ -176,7 +183,8 @@
   </div>
   
   <div id="resultContainer"></div>
-
+ </div>
+  
   <div id="footer">
     <button id="downloadJSONButton">Download JSON</button>
   </div>
