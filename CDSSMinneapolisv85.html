@@ -53,21 +53,23 @@
   justify-content: flex-start;
   flex-direction: column;
   /* Set a width to limit the header */
-  max-width: 837px;
+  /*max-width: 837px;*/
   box-sizing: border-box; /* Include padding and borders in the width calculation */
 }
 
 .buttons-container {
   margin: 10px; /* Add the desired margin value */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start; 
+  gap: 60px;
+  justify-content: flex-start;
 }
 
   .search-container{
+    display: flex;
     flex-basis: 100%;
     align-items: Left;
-    max-width: 820px; 
+    /*max-width: 820px;*/
     margin-bottom: 10px;
     margin-right: 10px;
     margin-left: 10px;
@@ -440,30 +442,24 @@ searchInput.addEventListener('click', function () {
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const fontSizeLookup = {
+    1: ['16px', '18px', '20px', '22px', '24px'],
+    2: ['12px', '14px', '16px', '18px', '22px'],
+    3: ['8px', '10px', '12px', '14px', '16px'],
+    4: ['6px', '8px', '10px', '12px', '14px'],
+  };/*object that maps the number of columns (1-4) to an array of font sizes for different screen widths.*/
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = columns.length;
+    const maxColumns = Math.min(columns.length, 4); // Limit to 4 columns
 
     columns.forEach((column, index) => {
-      let fontSize;
-
-      if (screenWidth <= 320) {
-        fontSize = `calc(10px - ${(maxColumns - 1) * 2}px)`; // Mobile (small)
-      } else if (screenWidth <= 480) {
-        fontSize = `calc(12px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPhone)
-      } else if (screenWidth <= 768) {
-        fontSize = `calc(14px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPad)
-      } else if (screenWidth <= 1024) {
-        fontSize = `calc(16px - ${(maxColumns - 1) * 2}px)`; // Tablet (iPad Pro)
-      } else {
-        fontSize = `calc(18px - ${(maxColumns - 1) * 2}px)`; // Desktop
-      }
-
+      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
     });
   });
 }
+
 
 // Call the function initially
 adjustFontSize();
