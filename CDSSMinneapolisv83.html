@@ -452,37 +452,7 @@ searchInput.addEventListener('click', function () {
   }
 });
 
-// Function to adjust the font size based on the number of columns
-function adjustFontSizeBasedOnColumns() {
-  const table = document.querySelector('.table');
-  if (!table) return; // Exit if table is not found
 
-  const columns = table.rows[0].cells.length; // Get the number of columns
-
-  let fontSize;
-
-  if (columns === 1) {
-    fontSize = '16px'; // Adjust font size for one column
-  } else if (columns <= 4) {
-    fontSize = '14px'; // Adjust font size for 2 to 4 columns
-  } else {
-    fontSize = '12px'; // Default font size for more than 4 columns
-  }
-
-  // Apply the calculated font size to all table cells
-  const cells = document.querySelectorAll('.table td');
-  cells.forEach(cell => {
-    cell.style.fontSize = fontSize;
-  });
-}    
-
-// Call the function initially and whenever the window is resized
-window.addEventListener('resize', adjustFontSizeBasedOnColumns);
-window.addEventListener('DOMContentLoaded', adjustFontSizeBasedOnColumns);
-
-// Function to create the table with OMJSON data
-function createOMTable(selectedData) {
-  
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
@@ -496,15 +466,15 @@ function adjustFontSize() {
       let fontSize;
 
       if (screenWidth <= 320) {
-        fontSize = `calc(10px - ${(maxColumns - 1) * 2}px)`; // Mobile (small)
+        fontSize = `calc(10px - ${(maxColumns - 1) * 4}px)`; // Mobile (small)
       } else if (screenWidth <= 480) {
-        fontSize = `calc(12px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPhone)
+        fontSize = `calc(12px - ${(maxColumns - 1) * 4}px)`; // Mobile (iPhone)
       } else if (screenWidth <= 768) {
-        fontSize = `calc(14px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPad)
+        fontSize = `calc(14px - ${(maxColumns - 1) * 4}px)`; // Mobile (iPad)
       } else if (screenWidth <= 1024) {
-        fontSize = `calc(16px - ${(maxColumns - 1) * 2}px)`; // Tablet (iPad Pro)
+        fontSize = `calc(16px - ${(maxColumns - 1) * 4}px)`; // Tablet (iPad Pro)
       } else {
-        fontSize = `calc(18px - ${(maxColumns - 1) * 2}px)`; // Desktop
+        fontSize = `calc(18px - ${(maxColumns - 1) * 4}px)`; // Desktop
       }
 
       column.style.fontSize = fontSize;
@@ -514,7 +484,6 @@ function adjustFontSize() {
 
 // Call the function initially
 adjustFontSize();
-adjustFontSizeBasedOnColumns();
 
 // Function to handle row click event
 function handleRowClick(item) {
@@ -528,7 +497,6 @@ function handleRowClick(item) {
     createOMTable(matchingItem); // Move createOMTable here
     scrollToTop(); // Move scrollToTop here
     adjustFontSize(); // Move adjustFontSize here
-    adjustFontSizeBasedOnColumns();
   } else {
     const matchingLink = itemLinkData.find(
       linkItem => linkItem.Item.trim().toLowerCase() === item.Item.trim().toLowerCase()
@@ -722,7 +690,6 @@ function createOMTable(selectedData) {
   if (selectedData) {
     resultContainer.appendChild(table);
   }
- 
 }
 
 // Function to filter data based on the selected option
@@ -742,7 +709,7 @@ function filterData(event, sortByTerm = false) {
   }
   scrollToTop();
   adjustFontSize();
-  adjustFontSizeBasedOnColumns();
+
   if (sortByTerm) {
     sortDropdownByTerm();
   }
@@ -787,7 +754,6 @@ function handleGoBack() {
   }
       scrollToTop()
       adjustFontSize();
-      adjustFontSizeBasedOnColumns();
 }
 
 // Function to handle the Go Forward button click event
@@ -804,7 +770,6 @@ function handleGoForward() {
   }
       scrollToTop()
       adjustFontSize();
-      adjustFontSizeBasedOnColumns();
 }
     // Function to handle the Main Menu button click event
     function handleMainMenu() {
@@ -816,7 +781,6 @@ function handleGoForward() {
       filterData({ target: dropdown });
       scrollToTop()    
       adjustFontSize();
-      adjustFontSizeBasedOnColumns();
     }
 
     // Function to handle the Main Menu button click event
@@ -829,7 +793,7 @@ function handleGoForward() {
       filterData({ target: dropdown });
       adjustFontSize();      
       scrollToTop()    
-      adjustFontSizeBasedOnColumns();
+      adjustFontSize();
     }
 
     // Function to handle the Download JSON button click event
@@ -869,8 +833,8 @@ document.getElementById('goForwardButton').addEventListener('click', handleGoFor
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
 document.getElementById('indexButton').addEventListener('click', handleIndex);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
-window.addEventListener('resize', adjustFontSize, adjustFontSizeBasedOnColumns);
-window.addEventListener('DOMContentLoaded', adjustFontSize, adjustFontSizeBasedOnColumns);
+window.addEventListener('resize', adjustFontSize);
+window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
