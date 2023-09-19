@@ -445,10 +445,10 @@ function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
   const fontSizeLookup = {
-    1: ['10px', '14px', '18px', '22px', '24px'],
-    2: ['8px', '12px', '16px', '18px', '22px'],
-    3: ['7px', '9px', '10px', '12px', '14px'],
-    4: ['6px', '8px', '9px', '10px', '12px'],
+    1: ['10px', '18px', '20px', '22px', '24px'],
+    2: ['8px', '14px', '16px', '18px', '22px'],
+    3: ['7px', '10px', '12px', '14px', '16px'],
+    4: ['6px', '8px', '10px', '12px', '14px'],
   };/*object that maps the number of columns (1-4) to an array of font sizes for different screen widths.*/
 
   tableRows.forEach(row => {
@@ -458,11 +458,6 @@ function adjustFontSize() {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
-      
-// Calculate and set the minimum table width
-   const minTableWidthInPx = parseInt(fontSize) * 80 * maxColumns; 
-  table.style.minWidth = `${minTableWidthInPx}px`;
-      
     });
   });
 }
