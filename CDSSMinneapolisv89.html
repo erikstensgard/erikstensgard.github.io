@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap"><!DOCTYPE html>
+<html lang="en">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap">
   
 <head>
@@ -137,6 +139,30 @@
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
+ /* Media queries for responsive design */
+    @media screen and (max-width: 1024px) {
+    table {
+      width: 1019px;
+    }
+    }
+    
+    @media screen and (max-width: 768px) {
+      table {
+      width: 763px;
+    }
+    }
+
+    @media screen and (max-width: 480px) {
+      table {
+      width: 475px;
+    }
+    }
+    
+    @media screen and (max-width: 320px) {
+      table {
+      width: 315px;
+    }
+    }
   </style>
 </head>
 <body>
@@ -415,50 +441,25 @@ searchInput.addEventListener('click', function () {
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
-  const screenWidth = window.innerWidth;
-  const columnCount = 4; // Maximum number of columns
-  let fontSize;
-  let tableWidth;
-
-  // Determine font size based on screen width
-  if (screenWidth <= 320) {
-    fontSize = '6px';
-  } else if (screenWidth <= 480) {
-    fontSize = '8px';
-  } else if (screenWidth <= 768) {
-    fontSize = '12px';
-  } else if (screenWidth <= 1024) {
-    fontSize = '14px';
-  } else {
-    fontSize = '16px';
-  }
-
-  // Determine table width based on screen width
-  if (screenWidth <= 320) {
-    tableWidth = '315px';
-  } else if (screenWidth <= 480) {
-    tableWidth = '475px';
-  } else if (screenWidth <= 768) {
-    tableWidth = '763px';
-  } else if (screenWidth <= 1024) {
-    tableWidth = '1019px';
-  } else {
-    tableWidth = '100%';
-  }
-
-  // Apply the font size and table width to all columns and the table
   const tableRows = document.querySelectorAll('.table tr');
+  const screenWidth = window.innerWidth;
+  const fontSizeLookup = {
+    1: ['10px', '18px', '20px', '22px', '24px'],
+    2: ['8px', '14px', '16px', '18px', '22px'],
+    3: ['7px', '10px', '12px', '14px', '16px'],
+    4: ['6px', '8px', '10px', '12px', '14px'],
+  };/*object that maps the number of columns (1-4) to an array of font sizes for different screen widths.*/
+
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
+    const maxColumns = Math.min(columns.length, 4); // Limit to 4 columns
+
     columns.forEach((column, index) => {
+      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
     });
   });
-
-  const table = document.querySelector('.table');
-  table.style.width = tableWidth;
 }
-
 
 
 // Call the function initially
