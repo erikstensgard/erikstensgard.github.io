@@ -434,6 +434,11 @@ function adjustFontSize() {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
+      
+      // Set min-width for the column based on the font size
+      const minWidthInPx = parseInt(fontSize) * 80;
+      column.style.minWidth = `${minWidthInPx}px`;
+      
     });
   });
 }
