@@ -414,23 +414,10 @@ searchInput.addEventListener('click', function () {
   }
 });
 
-function adjustFontSize() {
-  const table = document.querySelector('.table');
+
+function adjustFontSize(columnWidthMultiplier) {
+  const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
-
-  // Define the table width based on screen width
-  let tableWidth = '1000px'; // Default width, adjust as needed
-  if (screenWidth < 768) {
-    // Set a narrower width for smaller screens
-    tableWidth = '300px'; // Adjust this value as needed
-  }
-
-  // Apply the table width to the table element
-  table.style.width = tableWidth;
-
-  // Rest of your code to adjust font size
-  const tableCells = document.querySelectorAll('.table td'); // Select all table cells
-
   const fontSizeLookup = {
     1: ['10px', '18px', '20px', '22px', '24px'],
     2: ['8px', '14px', '16px', '18px', '22px'],
@@ -438,16 +425,20 @@ function adjustFontSize() {
     4: ['6px', '8px', '10px', '12px', '14px'],
   };
 
-  tableCells.forEach((cell, index) => {
-    const maxColumns = Math.min(cell.parentElement.children.length, 4);
-    const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
-    cell.style.fontSize = fontSize;
+  tableRows.forEach(row => {
+    const columns = row.querySelectorAll('td');
+    const maxColumns = Math.min(columns.length, 4);
+
+    columns.forEach((column, index) => {
+      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
+      column.style.fontSize = fontSize;
+      column.style.width = (parseInt(fontSize) * columnWidthMultiplier) + 'px'; // Set the column width as an integer in pixels
+    });
   });
 }
 
-
-// Call the function initially
-adjustFontSize();
+// Example usage with a column width multiplier of 2:
+adjustFontSize(1);
 
 // Function to handle row click event
 function handleRowClick(item) {
