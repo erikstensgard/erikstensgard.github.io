@@ -27,7 +27,7 @@
       border-collapse: collapse;
       padding: 2; /* Reduce table padding */
       table-layout: fixed; /* This ensures that the table's layout is fixed */
-      /*width: 100%; /* Set the table width to 100% */
+      width: 100%; /* Set the table width to 100% */
       /*min-width: 750px;*/
 }
 
@@ -139,6 +139,7 @@
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
+
   </style>
 </head>
 <body>
@@ -435,8 +436,7 @@ function adjustFontSize() {
       column.style.fontSize = fontSize;
     });
   });
-
-      // Determine table width based on screen width
+    // Determine table width based on screen width
   if (screenWidth <= 320) {
     tableWidth = '315px';
   } else if (screenWidth <= 480) {
@@ -448,9 +448,10 @@ function adjustFontSize() {
   } else {
     tableWidth = '100%';
   }
+
+const table = document.querySelector('.table');
+  table.style.width = tableWidth;  
   
-    const table = document.querySelector('.table');
-    table.style.width = tableWidth;
 }
 
 
