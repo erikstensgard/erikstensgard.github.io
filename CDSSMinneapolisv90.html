@@ -475,9 +475,56 @@ function scrollToTop() { // Add opening curly brace here
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
+// Function to adjust the font size based on column number and window/screen size
+function adjustFontSize() {
+  const table = document.querySelector('.table');
+  if (!table) {
+    // If the table element is not defined, exit the function
+    return;
+  }
+
+  const tableRows = table.querySelectorAll('tr');
+  const screenWidth = window.innerWidth;
+  const maxColumns = 4; // Maximum number of columns you want to support
+  const fontSizeLookup = {
+    1: ['10px', '18px', '20px', '22px', '24px'],
+    2: ['8px', '14px', '16px', '18px', '22px'],
+    3: ['7px', '10px', '12px', '14px', '16px'],
+    4: ['6px', '8px', '10px', '12px', '14px'],
+  };
+
+  tableRows.forEach(row => {
+    const columns = row.querySelectorAll('td');
+    const maxColumnsInRow = Math.min(columns.length, maxColumns);
+
+    columns.forEach((column, index) => {
+      const fontSize = fontSizeLookup[maxColumnsInRow][Math.min(screenWidth / 320, 4) | 0];
+      column.style.fontSize = fontSize;
+    });
+  });
+
+  // Determine table width based on screen width
+  let tableWidth = '';
+  if (screenWidth <= 320) {
+    tableWidth = '315px';
+  } else if (screenWidth <= 480) {
+    tableWidth = '475px';
+  } else if (screenWidth <= 768) {
+    tableWidth = '763px';
+  } else if (screenWidth <= 1024) {
+    tableWidth = '1019px';
+  } else {
+    tableWidth = '1200px';
+  }
+
+  table.style.width = tableWidth;
+}
 
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
+  const resultContainer = document.getElementById('resultContainer');
+  resultContainer.innerHTML = ''; // Clear existing content
+
   const table = document.createElement('table');
   table.classList.add('table');
 
@@ -627,51 +674,7 @@ function createOMTable(selectedData) {
   }
 }
 
-    // Function to adjust the font size based on column number and window/screen size
-function adjustFontSize() {
-  if (!table) {
-    // If the table element is not defined, exit the function
-    return;
-  }
-
-  const tableRows = document.querySelectorAll('.table tr');
-  const screenWidth = window.innerWidth;
-  const fontSizeLookup = {
-    1: ['10px', '18px', '20px', '22px', '24px'],
-    2: ['8px', '14px', '16px', '18px', '22px'],
-    3: ['7px', '10px', '12px', '14px', '16px'],
-    4: ['6px', '8px', '10px', '12px', '14px'],
-  };/*object that maps the number of columns (1-4) to an array of font sizes for different screen widths.*/
-
-  tableRows.forEach(row => {
-    const columns = row.querySelectorAll('td');
-    const maxColumns = Math.min(columns.length, 4); // Limit to 4 columns
-
-    columns.forEach((column, index) => {
-      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
-      column.style.fontSize = fontSize;
-    });
-  });
-    // Determine table width based on screen width
-  if (screenWidth <= 320) {
-    tableWidth = '315px';
-  } else if (screenWidth <= 480) {
-    tableWidth = '475px';
-  } else if (screenWidth <= 768) {
-    tableWidth = '763px';
-  } else if (screenWidth <= 1024) {
-    tableWidth = '1019px';
-  } else {
-    tableWidth = '1200px';
-  }
-
- table.style.width = tableWidth;
-  
-}
-    // Call the adjustFontSize function initially
-    adjustFontSize();
-
-
+ 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
