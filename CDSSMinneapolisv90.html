@@ -201,7 +201,8 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
-
+let table = null;
+    
   // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
