@@ -414,10 +414,22 @@ searchInput.addEventListener('click', function () {
   }
 });
 
-
-function adjustFontSize() {
-  const tableRows = document.querySelectorAll('.table tr');
+function adjustTableWidth() {
+  const table = document.querySelector('.table');
   const screenWidth = window.innerWidth;
+
+  // Define the table width based on screen width
+  let tableWidth = '100%'; // Default width, adjust as needed
+  if (screenWidth < 768) {
+    // Set a narrower width for smaller screens
+    tableWidth = '80%'; // Adjust this value as needed
+  }
+
+  // Apply the table width to the table element
+  table.style.width = tableWidth;
+
+  // Rest of your code to adjust font size
+  const tableRows = document.querySelectorAll('.table tr');
   const fontSizeLookup = {
     1: ['10', '18', '20', '22', '24'],
     2: ['8', '14', '16', '18', '22'],
@@ -435,6 +447,13 @@ function adjustFontSize() {
     });
   });
 }
+
+// Call the adjustTableWidth function when the page loads
+window.addEventListener('load', adjustTableWidth);
+
+// Call the adjustTableWidth function when the window is resized
+window.addEventListener('resize', adjustTableWidth);
+
 
 // Call the function initially
 adjustFontSize();
