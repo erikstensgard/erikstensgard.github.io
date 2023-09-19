@@ -474,7 +474,9 @@ function scrollToTop() { // Add opening curly brace here
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  // Function to create the table with OMJSON data
+// Declare a global variable to store the table element
+let table = null;
+
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
@@ -620,11 +622,19 @@ function createOMTable(selectedData) {
   resultContainer.innerHTML = '';
   if (selectedData) {
     resultContainer.appendChild(table);
+
+    // Call the adjustFontSize function here after the table has been created
+    adjustFontSize();
   }
 }
 
 // Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
+  if (!table) {
+    // If the table element is not defined, exit the function
+    return;
+  }
+
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
   const fontSizeLookup = {
@@ -660,8 +670,6 @@ function adjustFontSize() {
   
 }
 
-// Call the function initially
-adjustFontSize();
 
 // Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
