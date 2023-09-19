@@ -435,9 +435,9 @@ function adjustFontSize() {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
       
-      // Set min-width for the column based on the font size
-      const minWidthInPx = parseInt(fontSize) * 150;
-      column.style.minWidth = `${minWidthInPx}px`;
+// Calculate and set the minimum table width
+   const minTableWidthInPx = parseInt(fontSize) * 80 * maxColumns; 
+  table.style.minWidth = `${minTableWidthInPx}px`;
       
     });
   });
