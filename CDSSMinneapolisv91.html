@@ -42,44 +42,34 @@
       background-color: lightblue; /* Set your desired background color here */
     }
 
-   /* Header styles */
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Center horizontally within the container */
-    }
+  /* Header styles */
+#header {
+  position: sticky;
+  top: 0;
+  background-color: #0099ff;
+  z-index: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  flex-direction: column;
+  /* Set a width to limit the header */
+  /*max-width: 837px;*/
+  box-sizing: border-box; /* Include padding and borders in the width calculation */
+}
 
-    #header-container {
-      display: inline-block; /* Display header inline */
-      width: 100%; /* Take up the full width of the container */
-      overflow-x: auto; /* Enable horizontal scrolling */
-    }
+.buttons-container {
+  margin: 10px; /* Add the desired margin value */
+  display: flex;
+  align-items: flex-start; 
+  gap: 50px;
+  justify-content: flex-start;
+}
 
-    #header {
-      position: sticky;
-      top: 0;
-      background-color: #0099ff;
-      z-index: 1;
-      box-sizing: border-box; /* Include padding and borders in the width calculation */
-    }
-
-    #result-container {
-      display: inline-block; /* Display table inline */
-      width: 100%; /* Take up the full width of the container */
-    }
-
-
-    .buttons-container {
-      margin: 10px; /* Add the desired margin value */
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    
   .search-container{
+    display: flex;
     flex-basis: 100%;
     align-items: Left;
-    max-width: 820px; 
+    /*max-width: 820px;*/
     margin-bottom: 10px;
     margin-right: 10px;
     margin-left: 10px;
@@ -99,7 +89,7 @@
   border-radius: 10px; /* Adjust border-radius for rounded corners */
   text-align: center;
   text-decoration: none;
-  font-size: 30px;
+  font-size: 26px;
   font-family: "Times New Roman", serif;
   cursor: pointer;
   color: white;
@@ -130,47 +120,36 @@
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
- /* Media queries for responsive design */
-    @media screen and (max-width: 1024px) {
-      button,
-      select {
-        font-size: 12px;
-      }
-      #header {
-        max-width: 728px;
-      }
-    }
-    
-    @media screen and (max-width: 768px) {
-      button,
-      select {
-        font-size: 10px;
-      }
-            #header {
-        max-width: 632px;
-            }
-    }
 
-    @media screen and (max-width: 480px) {
-      button,
-      select {
-        font-size: 8px;
-      }
-            #header {
-        max-width: 480px;
-            }
-    }
-    
-    @media screen and (max-width: 320px) {
-      button,
-      select {
-        font-size: 6px;
-      }
-            #header {
-        max-width: 320px;
-            }
-      
-    }
+/*Media queries for responsive design*/ 
+@media screen and (min-width: 1025px) {
+  table {
+    width: 1400px; 
+  }
+}
+@media screen and (max-width: 1024px) {
+  table {
+    width: 900px; 
+  }
+}
+
+@media screen and (max-width: 768px) {
+  table {
+    width: 850px; 
+  }
+}
+
+@media screen and (max-width: 480px) {
+  table {
+    width: 800px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  table {
+    width: 750px; 
+  }
+}
     
   </style>
 </head>
