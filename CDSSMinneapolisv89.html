@@ -415,7 +415,6 @@ searchInput.addEventListener('click', function () {
 });
 
 
-// Function to adjust the font size based on column number and window/screen size
 function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
@@ -424,21 +423,19 @@ function adjustFontSize() {
     2: ['8px', '14px', '16px', '18px', '22px'],
     3: ['7px', '10px', '12px', '14px', '16px'],
     4: ['6px', '8px', '10px', '12px', '14px'],
-  };/*object that maps the number of columns (1-4) to an array of font sizes for different screen widths.*/
+  };
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = Math.min(columns.length, 4); // Limit to 4 columns
+    const maxColumns = Math.min(columns.length, 4);
 
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
-      column.style.width = fontSize * 3
+      column.style.width = (parseInt(fontSize) * 3) + 'px'; // Set the column width as an integer in pixels
     });
   });
- 
 }
-
 
 // Call the function initially
 adjustFontSize();
