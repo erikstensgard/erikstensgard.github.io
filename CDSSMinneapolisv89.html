@@ -415,7 +415,7 @@ searchInput.addEventListener('click', function () {
 });
 
 
-function adjustFontSize() {
+function adjustFontSize(columnWidthMultiplier) {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
   const fontSizeLookup = {
@@ -432,13 +432,13 @@ function adjustFontSize() {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
-      column.style.width = (parseInt(fontSize) * 1) + 'px'; // Set the column width as an integer in pixels
+      column.style.width = (parseInt(fontSize) * columnWidthMultiplier) + 'px'; // Set the column width as an integer in pixels
     });
   });
 }
 
-// Call the function initially
-adjustFontSize();
+// Example usage with a column width multiplier of 2:
+adjustFontSize(2);
 
 // Function to handle row click event
 function handleRowClick(item) {
