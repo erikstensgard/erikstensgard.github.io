@@ -432,36 +432,28 @@ searchInput.addEventListener('click', function () {
 });
 
 
-// Function to adjust the font size based on column number and window/screen size
-function adjustFontSize() {
+function adjustFontSize(columnWidthMultiplier) {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const fontSizeLookup = {
+    1: ['12px', '18px', '20px', '22px', '24px'],
+    2: ['10px', '14px', '16px', '18px', '22px'],
+    3: ['9px', '12px', '14px', '16px', '18px'],
+    4: ['8px', '10px', '12px', '14px', '16px'],
+  };
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = columns.length;
+    const maxColumns = Math.min(columns.length, 4);
 
     columns.forEach((column, index) => {
-      let fontSize;
-
-      if (screenWidth <= 320) {
-        fontSize = `calc(10px - ${(maxColumns - 1) * 2}px)`; // Mobile (small)
-      } else if (screenWidth <= 480) {
-        fontSize = `calc(12px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPhone)
-      } else if (screenWidth <= 768) {
-        fontSize = `calc(14px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPad)
-      } else if (screenWidth <= 1024) {
-        fontSize = `calc(16px - ${(maxColumns - 1) * 2}px)`; // Tablet (iPad Pro)
-      } else {
-        fontSize = `calc(18px - ${(maxColumns - 1) * 2}px)`; // Desktop
-      }
-
+      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
     });
   });
 }
 
-// Call the function initially
+// Example usage with a column width multiplier of 2:
 adjustFontSize();
 
 // Function to handle row click event
