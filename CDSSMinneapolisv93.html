@@ -454,6 +454,7 @@ function adjustFontSize(columnWidthMultiplier) {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
+      column.style.width = '500px';
     });
   });
 }
