@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap">
   
@@ -162,28 +163,23 @@
   </style>
 </head>
 <body>
-   <div class="container">
-     <div id="header-container"> 
-     <div id="header">
-        <div class ="buttons-container">
-            <button id="goBackButton">&#9664; </button>
-            <button id="mainMenuButton">Main Page</button>
-            <button id="indexButton">Index</button>
-            <button id="goForwardButton"> &#9654;</button>
-        </div>
-        <div class ="search-container">
-            <input type="text" id="searchInput" placeholder="Search...">
-        </div>
-        <div class ="dropbox-container">
-            <select id="filterDropdown"></select>
-        </div>
-      </div>
-     </div> 
+  <div id="header">
+    <div class ="buttons-container">
+        <button id="goBackButton">&#9664; </button>
+        <button id="mainMenuButton">Main Page</button>
+        <button id="indexButton">Index</button>
+        <button id="goForwardButton"> &#9654;</button>
+    </div>
+    <div class ="search-container">
+        <input type="text" id="searchInput" placeholder="Search...">
+    </div>
+    <div class ="dropbox-container">
+        <select id="filterDropdown"></select>
+    </div>
+  </div>
   
-      <div id="resultContainer">
-      </div>
-   </div>
-  
+  <div id="resultContainer"></div>
+
   <div id="footer">
     <button id="downloadJSONButton">Download JSON</button>
   </div>
@@ -440,28 +436,36 @@ searchInput.addEventListener('click', function () {
 });
 
 
-function adjustFontSize(columnWidthMultiplier) {
+// Function to adjust the font size based on column number and window/screen size
+function adjustFontSize() {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
-  const fontSizeLookup = {
-    1: ['12px', '18px', '20px', '22px', '24px'],
-    2: ['10px', '14px', '16px', '18px', '22px'],
-    3: ['9px', '12px', '14px', '16px', '18px'],
-    4: ['8px', '10px', '12px', '14px', '16px'],
-  };
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = Math.min(columns.length, 4);
+    const maxColumns = columns.length;
 
     columns.forEach((column, index) => {
-      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
+      let fontSize;
+
+      if (screenWidth <= 320) {
+        fontSize = `calc(10px - ${(maxColumns - 1) * 2}px)`; // Mobile (small)
+      } else if (screenWidth <= 480) {
+        fontSize = `calc(12px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPhone)
+      } else if (screenWidth <= 768) {
+        fontSize = `calc(14px - ${(maxColumns - 1) * 2}px)`; // Mobile (iPad)
+      } else if (screenWidth <= 1024) {
+        fontSize = `calc(16px - ${(maxColumns - 1) * 2}px)`; // Tablet (iPad Pro)
+      } else {
+        fontSize = `calc(18px - ${(maxColumns - 1) * 2}px)`; // Desktop
+      }
+
       column.style.fontSize = fontSize;
     });
   });
 }
 
-// Example usage with a column width multiplier of 2:
+// Call the function initially
 adjustFontSize();
 
 // Function to handle row click event
