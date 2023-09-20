@@ -442,10 +442,16 @@ searchInput.addEventListener('click', function () {
 });
 
 
-// Function to adjust the font size based on column number and window/screen size
+// Function to adjust font size and column width based on column number and window/screen size
 function adjustFontSize(columnWidthMultiplier) {
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const columnWidthLookup = {
+    1: ['30%'],
+    2: ['25%', '25%'],
+    3: ['20%', '30%', '30%'],
+    4: ['15%', '20%', '30%', '35%'],
+  };
   const fontSizeLookup = {
     1: ['12px', '15px', '18px', '19px', '24px'],
     2: ['10px', '14px', '17px', '18px', '22px'],
@@ -460,7 +466,7 @@ function adjustFontSize(columnWidthMultiplier) {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
-      /*column.style.width = '500px';*/
+      column.style.width = columnWidthLookup[maxColumns][index];
     });
   });
 }
