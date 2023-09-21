@@ -432,20 +432,18 @@ function adjustFontSize() {
 
     columns.forEach((column, index) => {
       const fontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
-      const fontSize = fontSizeLookup[maxColumnsInRow][fontSizeIndex]; // Use maxColumnsInRow here
+      const fontSize = fontSizeLookup[maxColumnsInRow][fontSizeIndex];
       column.style.fontSize = fontSize;
     });
   });
 
   // Calculate and set the table width based on the adjusted font size
   const maxFontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
-  const maxFontSize = fontSizeLookup[maxColumns][maxFontSizeIndex]; // Use maxColumns here
+  const maxFontSize = fontSizeLookup[maxColumns][maxFontSizeIndex];
   const maxFontSizeValue = parseInt(maxFontSize, 10);
   const tableWidth = maxFontSizeValue * maxColumns * 10; // Adjust as needed
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
-
-    
 // Function to handle row click event
 function handleRowClick(item) {
   const matchingItem = omData.find(
