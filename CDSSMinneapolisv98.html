@@ -410,7 +410,9 @@ searchInput.addEventListener('click', function () {
     filterData({ target: document.getElementById('filterDropdown') }, true);
   }
 });
-
+    
+// Function to adjust the font size based on column number and window/screen size
+function adjustFontSize() {
 const table = document.querySelector('.table');
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
