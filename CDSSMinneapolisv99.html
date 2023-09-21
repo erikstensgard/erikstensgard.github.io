@@ -200,6 +200,7 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
+document.addEventListener('DOMContentLoaded', function() {    
   // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
@@ -440,7 +441,7 @@ function adjustFontSize() {
   const maxFontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
   const maxFontSize = fontSizeLookup[maxColumns][maxFontSizeIndex]; // Use maxColumns here
   const maxFontSizeValue = parseInt(maxFontSize, 10);
-  const tableWidth = maxFontSizeValue * columnCount * 10; // Adjust as needed
+  const tableWidth = maxFontSizeValue * maxColumns * 10; // Adjust as needed
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
 
@@ -785,7 +786,7 @@ function handleGoForward() {
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-  
+  {  
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -794,16 +795,9 @@ document.getElementById('mainMenuButton').addEventListener('click', handleMainMe
 document.getElementById('indexButton').addEventListener('click', handleIndex);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
-window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-// Call the adjustFontSize function when the DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-  adjustFontSize();
-});
-// Call the adjustFontSize function when the window is resized
-window.addEventListener('resize', adjustFontSize);
     
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
