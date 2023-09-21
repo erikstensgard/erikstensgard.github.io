@@ -143,13 +143,14 @@
     top: 100%;
     display: none; /* Hide the dropdown by default */
     max-height: 200px; /* Set the maximum height for the dropdown */
+    max-width: 400px;
     overflow-y: auto; /* Enable vertical scrolling for the dropdown */
     }
   
   #searchInput {
     width: 100%;
     text-align: left;
-    max-width: 300px;
+    max-width: 400px;
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
@@ -229,40 +230,50 @@ function populateDropdown(omData) {
   // Count the number of matches
   const matchCount = omData.length;
 
-  // Create an option for the match count
-  const matchCountOption = document.createElement('option');
-  matchCountOption.textContent = `Matches: ${matchCount}`;
-  matchCountOption.disabled = true; // Disable the option so it can't be selected
-  dropdown.appendChild(matchCountOption);
+  if (matchCount === 0) {
+    // If there are no matches, create an option with red text
+    const noMatchesOption = document.createElement('option');
+    noMatchesOption.textContent = 'No Matches';
+    noMatchesOption.style.color = 'red'; // Set the text color to red
+    noMatchesOption.disabled = true; // Disable the option so it can't be selected
+    dropdown.appendChild(noMatchesOption);
+  } else {
+    // If there are matches, create an option for the match count with green text
+    const matchCountOption = document.createElement('option');
+    matchCountOption.textContent = `Matches: ${matchCount}`;
+    matchCountOption.style.color = 'green'; // Set the text color to green
+    matchCountOption.disabled = true; // Disable the option so it can't be selected
+    dropdown.appendChild(matchCountOption);
 
-  omData.forEach(item => {
-    const terms = [];
+    omData.forEach(item => {
+      const terms = [];
 
-    // Check for "Term1" through "Term99" in the item
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        terms.push(item[termKey]);
+      // Check for "Term1" through "Term99" in the item
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]) {
+          terms.push(item[termKey]);
+        }
       }
-    }
 
-    // Create separate dropdown options for each "Term" value
-    terms.forEach(term => {
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = term;
-      dropdown.appendChild(option);
+      // Create separate dropdown options for each "Term" value
+      terms.forEach(term => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = term;
+        dropdown.appendChild(option);
+      });
+
+      if (terms.length === 0) {
+        // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = item.DisplayText || item.Name;
+        option.classList.add('no-term'); // Add a CSS class to hide this option
+        dropdown.appendChild(option);
+      }
     });
-
-    if (terms.length === 0) {
-      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = item.DisplayText || item.Name;
-      option.classList.add('no-term'); // Add a CSS class to hide this option
-      dropdown.appendChild(option);
-    }
-  });
+  }
 }
 
 // Helper function to get the number of matches in an item
