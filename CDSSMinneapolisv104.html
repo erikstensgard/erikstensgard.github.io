@@ -379,7 +379,7 @@ function searchAndOpenDropdown() {
       isDropdownOpen = true;
     } else {
       // Close the dropdown by hiding it
-      dropdown.style.display = '';
+      dropdown.style.display = 'none';
       isDropdownOpen = false;
     }
   }
@@ -398,28 +398,28 @@ function handleOutsideClick(event) {
   if (event.target !== searchInput && event.target !== filterDropdown) {
     // Close and hide the filter dropdown
    
-    filterDropdown.style.display = ''; 
+    filterDropdown.style.display = 'none'; 
   }
 }
   // Add event listener to close the dropdown when clicking outside the search input
   document.addEventListener('click', handleOutsideClick);
 
-  // Add event listener to allow tapping into the dropdown on mobile
+  /* // Add event listener to allow tapping into the dropdown on mobile
   searchInput.addEventListener('click', function (event) {
     if (isDropdownOpen) {
       // Close the dropdown by hiding it
-      dropdown.style.display = '';
+      dropdown.style.display = 'none';
       isDropdownOpen = false;
     } else {
       // Open the dropdown by setting its display property
       dropdown.style.display = 'block';
       isDropdownOpen = true;
     }
-  });
+  }); */
 
   // Add event listener to close the dropdown when an option is selected
   dropdown.addEventListener('change', function (event) {
-    dropdown.style.display = '';
+    dropdown.style.display = 'none';
     isDropdownOpen = false;
   });
 }
