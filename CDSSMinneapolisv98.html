@@ -410,40 +410,49 @@ searchInput.addEventListener('click', function () {
     filterData({ target: document.getElementById('filterDropdown') }, true);
   }
 });
-// Function to adjust font size, column width, and table width based on column number and window/screen size
+
+I see your point. If you want the table width to be based solely on font size and not on the number of columns, you can adjust the code as follows:
+
+javascript
+Copy code
+// Function to adjust font size, column width, and table width based on font size and screen size
 function adjustFontSize() {
   const table = document.querySelector('.table');
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
-  const columnWidthLookup = {
-    1: ['100%'],
-    2: ['50%', '50%'],
-    3: ['34%', '33%', '33%'],
-    4: ['25%', '25%', '35%', '25%'],
+
+  // Define your font sizes based on the screen width
+  const fontSizes = {
+    320: ['12px', '15px', '18px', '19px', '24px'],
+    480: ['10px', '14px', '17px', '18px', '22px'],
+    768: ['9px', '12px', '14px', '15px', '18px'],
+    1024: ['8px', '10px', '12px', '13px', '16px'],
   };
-  const fontSizeLookup = {
-    1: ['12px', '15px', '18px', '19px', '24px'],
-    2: ['10px', '14px', '17px', '18px', '22px'],
-    3: ['9px', '12px', '14px', '15px', '18px'],
-    4: ['8px', '10px', '12px', '13px', '16px'],
-  };
+
+  const screenWidths = Object.keys(fontSizes).map(Number).sort((a, b) => a - b);
+
+  // Determine the appropriate font size based on screen width
+  let fontSize = '12px'; // Default font size
+  for (const width of screenWidths) {
+    if (screenWidth >= width) {
+      fontSize = fontSizes[width][4];
+    } else {
+      break;
+    }
+  }
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
-    const maxColumns = Math.min(columns.length, 4);
 
-    columns.forEach((column, index) => {
-      const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
+    columns.forEach(column => {
       column.style.fontSize = fontSize;
-      column.style.width = columnWidthLookup[maxColumns][index];
     });
   });
 
-  // Set the table width based on the number of columns
-  const maxColumns = Math.min(tableRows[0].querySelectorAll('td').length, 4);
-  table.style.width = columnWidthLookup[maxColumns].reduce((sum, width) => sum + parseFloat(width), 0) + '%';
+  // Set the table width based on the font size
+  table.style.width = 'auto'; // Reset table width
+  table.style.fontSize = fontSize;
 }
-
     
 // Function to handle row click event
 function handleRowClick(item) {
