@@ -410,30 +410,37 @@ searchInput.addEventListener('click', function () {
     filterData({ target: document.getElementById('filterDropdown') }, true);
   }
 });
-    
-// Function to adjust font size, column width, and table width based on column number and window/screen size
+ // Function to adjust the font size and table width based on column number and window/screen size:
 function adjustFontSize() {
   const table = document.querySelector('.table');
-  const tableRows = document.querySelectorAll('.table tr');
+  const tableRows = table.querySelectorAll('tr');
   const screenWidth = window.innerWidth;
-  const maxColumns = Math.min(tableRows[0].querySelectorAll('td').length, 4);
-
-  // Calculate font size based on available width and number of columns
-  const availableWidth = 100; // Adjust this value as needed
-  const fontSize = availableWidth / maxColumns / 5; // Adjust the divisor for desired scaling
+  const fontSizeLookup = {
+    1: ['13px', '15px', '17px', '20px', '24px'],
+    2: ['10px', '12px', '14px', '16px', '22px'],
+    3: ['9px', '11px', '13px', '14px', '18px'],
+    4: ['8px', '10px', '12px', '13px', '16px'],
+  };
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
+    const maxColumns = Math.min(columns.length, 4);
 
     columns.forEach((column, index) => {
-      column.style.fontSize = fontSize + 'px';
-      column.style.width = (100 / maxColumns) + '%';
+      const fontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
+      const fontSize = fontSizeLookup[maxColumns][fontSizeIndex];
+      column.style.fontSize = fontSize;
     });
   });
 
-  // Set the table width based on the number of columns
-  table.style.width = (100 / maxColumns) * maxColumns + '%';
+  // Calculate and set the table width based on the adjusted font size
+  const columnCount = Math.min(tableRows[0].querySelectorAll('td').length, 4);
+  const maxFontSize = fontSizeLookup[columnCount][4];
+  const maxFontSizeValue = parseInt(maxFontSize, 10);
+  const tableWidth = maxFontSizeValue * columnCount * 10; // Adjust as needed
+  table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
+
 adjustFontSize()
     
 // Function to handle row click event
