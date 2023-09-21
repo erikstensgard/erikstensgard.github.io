@@ -443,7 +443,6 @@ function adjustFontSize() {
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
 
-adjustFontSize()
     
 // Function to handle row click event
 function handleRowClick(item) {
@@ -798,7 +797,13 @@ window.addEventListener('DOMContentLoaded', adjustFontSize);
 document.getElementById('searchInput').addEventListener('input', searchData);
 document.getElementById('searchInput').addEventListener('click', openDropdown);
 document.getElementById('searchInput').addEventListener('input', openDropdown);
-
+// Call the adjustFontSize function when the DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  adjustFontSize();
+});
+// Call the adjustFontSize function when the window is resized
+window.addEventListener('resize', adjustFontSize);
+    
 // Fetch data and initialize the dropdown
 Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => { 
