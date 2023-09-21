@@ -417,10 +417,10 @@ function adjustFontSize() {
   const tableRows = table.querySelectorAll('tr');
   const screenWidth = window.innerWidth;
   const fontSizeLookup = {
-    1: ['13em', '15em', '17em', '20em', '24em'],
-    2: ['10em', '12em', '14em', '16em', '22em'],
-    3: ['9em', '11em', '13em', '14em', '18em'],
-    4: ['8em', '10em', '12em', '13em', '16em'],
+    1: ['.5em', '.75em', '1em', '2em', '3em'],
+    2: ['.25em', '.5em', '.75em', '1em', '2em'],
+    3: ['.15em', '.25em', '.5em', '.75em', '1em'],
+    4: ['.1em', '.15em', '.25em', '.5em', '.75em'],
   };
 
   tableRows.forEach(row => {
