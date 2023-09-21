@@ -426,6 +426,11 @@ function adjustFontSize() {
     4: ['8px', '10px', '12px', '13px', '16px'],
   };
 
+  // Calculate maxColumns based on the number of columns in the first row
+  const firstRow = tableRows[0];
+  const columnsInFirstRow = firstRow ? firstRow.querySelectorAll('td').length : 0;
+  const maxColumns = Math.min(columnsInFirstRow, 4);
+
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
     const maxColumnsInRow = Math.min(columns.length, 4); // Calculate maxColumns for this row
@@ -437,17 +442,18 @@ function adjustFontSize() {
     });
   });
 
-  // Calculate and set the table width based on the adjusted font size and columnCount
-  const columnCount = Math.min(tableRows[0].querySelectorAll('td').length, 4);
-  const maxFontSize = fontSizeLookup[4][4]; // Use maxColumns = 4 for font size lookup
+  // Ensure that maxColumns is within the valid range (1 to 4) for table width calculation
+  const columnCount = columnsInFirstRow;
+  const validMaxColumns = Math.min(Math.max(maxColumns, 1), 4);
+  const maxFontSize = fontSizeLookup[validMaxColumns][4]; // Use validMaxColumns for table width calculation
   const maxFontSizeValue = parseInt(maxFontSize, 10);
-
+  
   let tableWidth;
 
   if (columnCount === 1) {
     tableWidth = maxFontSizeValue * 10;
   } else if (columnCount === 2) {
-    tableWidth = maxFontSizeValue * 5;
+    tableWidth = maxFontSizeValue * 12;
   } else {
     // Default value if columnCount is not 1 or 2
     tableWidth = maxFontSizeValue * 10; // You can adjust this default value as needed
