@@ -438,7 +438,7 @@ function adjustFontSize() {
 
   // Calculate and set the table width based on the adjusted font size
   /*const columnCount = Math.min(tableRows[0].querySelectorAll('td').length, 4);*/
-  const maxFontSize = fontSizeLookup[maxColumns][4];
+  const maxFontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
   const maxFontSizeValue = parseInt(maxFontSize, 10);
   const tableWidth = maxFontSizeValue * columnCount * 10; // Adjust as needed
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
