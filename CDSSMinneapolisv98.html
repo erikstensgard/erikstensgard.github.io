@@ -29,7 +29,7 @@
     th,
     td {
       border: none;
-      padding: 2px; /* Reduce cell padding */
+      padding: 4px; /* Reduce cell padding */
     }
 
     .clickable {
@@ -42,22 +42,18 @@
       background-color: lightblue; /* Set your desired background color here */
     }
         /* Table styles */
-   .table {
+    .table {
       table-layout: fixed;
-      /*width: 100%;*/
-      /*max-width: 1400px;*/
+      width: 100%;
     }
 
-    .td {
+    .table td {
       font-family: "Times New Roman", serif;
       white-space: wrap; 
       overflow: hidden;
       text-overflow: ellipsis;
     } /* Disable text wrapping within a cell */
     
-    .tr {
-    } /* Disable text wrapping within a cell */
-     
 /* Header styles */
 #header {
   position: sticky;
@@ -74,7 +70,7 @@
 }
 
 .buttons-container {
-  margin: 5px; /* Add the desired margin value */
+  margin: 10px; /* Add the desired margin value */
   display: flex;
   align-items: flex-start; 
   gap: 15px;
@@ -85,16 +81,14 @@
     flex-basis: 100%;
     align-items: Left;
     max-width: 300px; 
-    margin-right: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
   }
   
   .dropbox-container{
     display: flex;
     align-items: Left;
-    margin-left: 5px;
-    margin-right: 5px;
   }
       
 #goBackButton,
@@ -110,7 +104,7 @@
   font-family: "Times New Roman", serif;
   cursor: pointer;
   color: white;
-  padding: 5px 5px; /* Adjust the values to your desired padding */
+  padding: 10px 10px; /* Adjust the values to your desired padding */
 }
 
 /* Add a darker shade of blue on hover */
@@ -121,7 +115,8 @@
   background-color: #4db8ff; /* lighter shade of blue */
 }
   #filterDropdown {
-    width: 300px;
+    margin-right: 20px;
+    width: 100%;
     z-index: 2;
     position: absolute;
     top: 100%;
@@ -137,7 +132,7 @@
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
-    
+   
   </style>
 </head>
 <body>
