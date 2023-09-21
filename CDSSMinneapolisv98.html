@@ -411,42 +411,28 @@ searchInput.addEventListener('click', function () {
   }
 });
     
-// Function to adjust the font size based on column number and window/screen size
+// Function to adjust font size, column width, and table width based on column number and window/screen size
 function adjustFontSize() {
-const table = document.querySelector('.table');
+  const table = document.querySelector('.table');
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const maxColumns = Math.min(tableRows[0].querySelectorAll('td').length, 4);
 
-  // Define your font sizes based on the screen width
-  const fontSizes = {
-    320: ['24px', '19px', '18px', '15px', '12px'],
-    480: ['22px', '18px', '17px', '14px', '10px'],
-    768: ['18px', '15px', '14px', '12px', '9px'],
-    1024: ['16px', '13px', '12px', '10px', '8px'],
-  };
-
-  const screenWidths = Object.keys(fontSizes).map(Number).sort((a, b) => b - a);
-
-  // Determine the appropriate font size based on screen width
-  let fontSize = '12px'; // Default font size
-  for (const width of screenWidths) {
-    if (screenWidth >= width) {
-      fontSize = fontSizes[width][4];
-      break; // Exit loop once we find a matching size
-    }
-  }
+  // Calculate font size based on available width and number of columns
+  const availableWidth = 100; // Adjust this value as needed
+  const fontSize = availableWidth / maxColumns / 5; // Adjust the divisor for desired scaling
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
 
-    columns.forEach(column => {
-      column.style.fontSize = fontSize;
+    columns.forEach((column, index) => {
+      column.style.fontSize = fontSize + 'px';
+      column.style.width = (100 / maxColumns) + '%';
     });
   });
 
-  // Set the table width based on the font size
-  table.style.width = 'auto'; // Reset table width
-  table.style.fontSize = fontSize;
+  // Set the table width based on the number of columns
+  table.style.width = (100 / maxColumns) * maxColumns + '%';
 }
 
     
