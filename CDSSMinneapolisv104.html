@@ -227,11 +227,16 @@ function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
 
+  // Create "Search..." option for initial state
+  const searchOption = document.createElement('option');
+  searchOption.textContent = 'Search...';
+  dropdown.appendChild(searchOption);
+
   // Count the number of matches
   const matchCount = omData.length;
 
   if (matchCount === 0) {
-    // If there are no matches, create an option with red text
+    // If there are no matches, create the "No Matches" option with red text
     const noMatchesOption = document.createElement('option');
     noMatchesOption.textContent = 'No Matches';
     noMatchesOption.style.color = 'red'; // Set the text color to red
