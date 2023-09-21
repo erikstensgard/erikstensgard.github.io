@@ -77,7 +77,13 @@
   gap: 15px;
   justify-content: flex-start;
 }
-
+.picture-container {
+  margin: 10px; /* Add the desired margin value */
+  display: flex;
+  align-items: flex-start; 
+  gap: 0px;
+  justify-content: flex-start;
+}
   .search-container{
     flex-basis: 100%;
     align-items: Left;
@@ -94,13 +100,13 @@
     
   /* Add styles for the CDSS banner image */
 #cdssBanner {
-  width: 450px; /* Set the maximum width for the image */
+  width: 500px; /* Set the maximum width for the image */
   height: auto;
   margin-top: 10px; /* Adjust the margin as needed */
   float: Left; /* Float the image to the right */
 }
 #vaSealBanner {
-  width: 450px; /* Set the maximum width for the image */
+  width: 400px; /* Set the maximum width for the image */
   height: auto;
   margin-top: 10px; /* Adjust the margin as needed */
   float: Left; /* Float the image to the right */
@@ -171,6 +177,7 @@
   <div id="resultContainer"></div>
 </table>
   <div id="footer">
+    <div class ="picture-container">
     <img src="CDSSBanner.png" alt="CDSS Banner" id="cdssBanner">
     <img src="VASeal.jpg" alt="VA Seal Banner" id="vaSealBanner">
     <button id="downloadJSONButton">Download JSON</button>
