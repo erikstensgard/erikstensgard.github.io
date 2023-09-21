@@ -425,11 +425,6 @@ function adjustFontSize() {
     4: ['8px', '10px', '12px', '13px', '16px'],
   };
 
-  // Calculate maxColumns based on the number of columns in the first row
-  const firstRow = tableRows[0];
-  const columnsInFirstRow = firstRow ? firstRow.querySelectorAll('td').length : 0;
-  const maxColumns = Math.min(columnsInFirstRow, 4);
-
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
     const maxColumnsInRow = Math.min(columns.length, 4); // Calculate maxColumns for this row
@@ -438,25 +433,25 @@ function adjustFontSize() {
       const fontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
       const fontSize = fontSizeLookup[maxColumnsInRow][fontSizeIndex];
       column.style.fontSize = fontSize;
-
-      // Calculate and set the table width based on the adjusted font size and columnCount
-      const columnCount = Math.min(columns.length, 4);
-      const maxFontSize = fontSizeLookup[maxColumns][4]; // Use maxColumns = 4 for font size lookup
-      const maxFontSizeValue = parseInt(maxFontSize, 10);
-
-      let tableWidth;
-
-      if (columnCount === 1) {
-        tableWidth = maxFontSizeValue * 10;
-      } else if (columnCount === 2) {
-        tableWidth = maxFontSizeValue * 5;
-      } else {
-        // Default value if columnCount is not 1 or 2
-        tableWidth = maxFontSizeValue * 10; // You can adjust this default value as needed
-      }
-
-      table.style.width = Math.min(screenWidth, tableWidth) + 'px';
     });
+
+    // Calculate and set the table width based on the adjusted font size and columnCount
+    const columnCount = Math.min(columns.length, 4);
+    const maxFontSize = fontSizeLookup[maxColumnsInRow][4]; // Use maxColumnsInRow for font size lookup
+    const maxFontSizeValue = parseInt(maxFontSize, 10);
+
+    let tableWidth;
+
+    if (columnCount === 1) {
+      tableWidth = maxFontSizeValue * 10;
+    } else if (columnCount === 2) {
+      tableWidth = maxFontSizeValue * 5;
+    } else {
+      // Default value if columnCount is not 1 or 2
+      tableWidth = maxFontSizeValue * 10; // You can adjust this default value as needed
+    }
+
+    table.style.width = Math.min(screenWidth, tableWidth) + 'px';
   });
 }
 
