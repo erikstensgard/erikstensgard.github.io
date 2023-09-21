@@ -419,13 +419,6 @@ function adjustFontSize() {
   const table = document.querySelector('.table');
   const tableRows = table.querySelectorAll('tr');
   const screenWidth = window.innerWidth;
-  
-  // Calculate the total number of columns in the table
-  const columnCount = Math.min(tableRows[0].querySelectorAll('td').length, 4);
-
-  // Calculate the maxColumns based on the columnCount
-  maxColumns = Math.min(columnCount, 4);
-  
   const fontSizeLookup = {
     1: ['13px', '15px', '17px', '20px', '24px'],
     2: ['10px', '12px', '14px', '16px', '22px'],
@@ -435,20 +428,23 @@ function adjustFontSize() {
 
   tableRows.forEach(row => {
     const columns = row.querySelectorAll('td');
+    const maxColumnsInRow = Math.min(columns.length, 4); // Calculate maxColumns for this row
 
     columns.forEach((column, index) => {
       const fontSizeIndex = Math.min(screenWidth / 320, 4) | 0;
-      const fontSize = fontSizeLookup[maxColumns][fontSizeIndex];
+      const fontSize = fontSizeLookup[maxColumnsInRow][fontSizeIndex];
       column.style.fontSize = fontSize;
     });
   });
 
   // Calculate and set the table width based on the adjusted font size
-  const maxFontSize = fontSizeLookup[maxColumns][4];
+  const columnCount = Math.min(tableRows[0].querySelectorAll('td').length, 4);
+  const maxFontSize = fontSizeLookup[4][4]; // Use maxColumns = 4 for table width calculation
   const maxFontSizeValue = parseInt(maxFontSize, 10);
   const tableWidth = maxFontSizeValue * columnCount * 10; // Adjust as needed
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
+
 
 // Call the adjustFontSize function when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
