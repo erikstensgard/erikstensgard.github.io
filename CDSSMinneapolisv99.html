@@ -199,8 +199,7 @@ let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
-
-document.addEventListener('DOMContentLoaded', function() {    
+ 
   // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
@@ -784,7 +783,7 @@ function handleGoForward() {
       const searchInput = document.getElementById('searchInput');
       return element === searchInput || element.parentNode === searchInput;
     }
-  {  
+
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
@@ -814,7 +813,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   .catch(error => {
     console.error('Error:', error);
   });
-  
+    
   </script>
 </body>
 
