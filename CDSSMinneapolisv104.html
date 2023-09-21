@@ -222,10 +222,18 @@ let historyIndex = -1; // Index of the current selection in the history
 let itemLinkData = []; // ItemLink data
 let abxLinkData = []; // AbxLink data
 
-  // Function to populate dropdown with OMJSON data
 function populateDropdown(omData) {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.innerHTML = '';
+
+  // Count the number of matches
+  const matchCount = omData.length;
+
+  // Create an option for the match count
+  const matchCountOption = document.createElement('option');
+  matchCountOption.textContent = `Matches: ${matchCount}`;
+  matchCountOption.disabled = true; // Disable the option so it can't be selected
+  dropdown.appendChild(matchCountOption);
 
   omData.forEach(item => {
     const terms = [];
@@ -256,7 +264,6 @@ function populateDropdown(omData) {
     }
   });
 }
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
