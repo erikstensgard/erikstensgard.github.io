@@ -442,14 +442,14 @@ function adjustFontSize() {
     });
   });
 
-  // Calculate and set the table width based on the adjusted font size
+  // Ensure that maxColumns is within the valid range (1 to 4) for table width calculation
   const columnCount = columnsInFirstRow;
-  const maxFontSize = fontSizeLookup[maxColumns][4]; // Use maxColumns for table width calculation
+  const validMaxColumns = Math.min(Math.max(maxColumns, 1), 4);
+  const maxFontSize = fontSizeLookup[validMaxColumns][4]; // Use validMaxColumns for table width calculation
   const maxFontSizeValue = parseInt(maxFontSize, 10);
   const tableWidth = maxFontSizeValue * columnCount * 10; // Adjust as needed
   table.style.width = Math.min(screenWidth, tableWidth) + 'px';
 }
-
 
 
 // Call the adjustFontSize function when the DOM is ready
