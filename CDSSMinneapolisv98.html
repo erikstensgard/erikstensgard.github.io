@@ -29,7 +29,7 @@
     th,
     td {
       border: none;
-      padding: 4px; /* Reduce cell padding */
+      padding: 2px; /* Reduce cell padding */
     }
 
     .clickable {
@@ -42,9 +42,10 @@
       background-color: lightblue; /* Set your desired background color here */
     }
         /* Table styles */
-    .table {
+   .table {
       table-layout: fixed;
-      width: 100%;
+      /*width: 100%;*/
+      /*max-width: 1400px;*/
     }
 
     .table td {
@@ -53,6 +54,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     } /* Disable text wrapping within a cell */
+    
     
 /* Header styles */
 #header {
@@ -70,7 +72,7 @@
 }
 
 .buttons-container {
-  margin: 10px; /* Add the desired margin value */
+  margin: 5px; /* Add the desired margin value */
   display: flex;
   align-items: flex-start; 
   gap: 15px;
@@ -81,14 +83,16 @@
     flex-basis: 100%;
     align-items: Left;
     max-width: 300px; 
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
   }
   
   .dropbox-container{
     display: flex;
     align-items: Left;
+    margin-left: 5px;
+    margin-right: 5px;
   }
       
 #goBackButton,
@@ -104,7 +108,7 @@
   font-family: "Times New Roman", serif;
   cursor: pointer;
   color: white;
-  padding: 10px 10px; /* Adjust the values to your desired padding */
+  padding: 5px 5px; /* Adjust the values to your desired padding */
 }
 
 /* Add a darker shade of blue on hover */
@@ -115,8 +119,7 @@
   background-color: #4db8ff; /* lighter shade of blue */
 }
   #filterDropdown {
-    margin-right: 20px;
-    width: 100%;
+    width: 300px;
     z-index: 2;
     position: absolute;
     top: 100%;
@@ -132,7 +135,7 @@
     font-size: 12px;
     font-family: "Times New Roman", serif;
   }
-   
+    
   </style>
 </head>
 <body>
@@ -407,16 +410,21 @@ searchInput.addEventListener('click', function () {
     filterData({ target: document.getElementById('filterDropdown') }, true);
   }
 });
-
-
-// Function to adjust the font size based on column number and window/screen size
-function adjustFontSize(columnWidthMultiplier) {
+// Function to adjust font size, column width, and table width based on column number and window/screen size
+function adjustFontSize() {
+  const table = document.querySelector('.table');
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
+  const columnWidthLookup = {
+    1: ['100%'],
+    2: ['50%', '50%'],
+    3: ['34%', '33%', '33%'],
+    4: ['25%', '25%', '35%', '25%'],
+  };
   const fontSizeLookup = {
-    1: ['13', '15x', '17px', '20px', '24px'],
-    2: ['10px', '12px', '14px', '16px', '22px'],
-    3: ['9px', '11px', '13px', '14px', '18px'],
+    1: ['12px', '15px', '18px', '19px', '24px'],
+    2: ['10px', '14px', '17px', '18px', '22px'],
+    3: ['9px', '12px', '14px', '15px', '18px'],
     4: ['8px', '10px', '12px', '13px', '16px'],
   };
 
@@ -427,10 +435,15 @@ function adjustFontSize(columnWidthMultiplier) {
     columns.forEach((column, index) => {
       const fontSize = fontSizeLookup[maxColumns][Math.min(screenWidth / 320, 4) | 0];
       column.style.fontSize = fontSize;
-      /*column.style.width = '500px';*/
+      column.style.width = columnWidthLookup[maxColumns][index];
     });
   });
+
+  // Set the table width based on the number of columns
+  const maxColumns = Math.min(tableRows[0].querySelectorAll('td').length, 4);
+  table.style.width = columnWidthLookup[maxColumns].reduce((sum, width) => sum + parseFloat(width), 0) + '%';
 }
+
     
 // Function to handle row click event
 function handleRowClick(item) {
