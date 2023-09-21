@@ -94,9 +94,10 @@
     
   /* Add styles for the CDSS banner image */
 #cdssBanner {
-  max-width: 100%; /* Set the maximum width to 100% of its container (the header) */
-  max-height: 100px; /* Set the maximum height to your desired value (e.g., 100px) */
+  max-width: 100px; /* Set the maximum width for the image */
+  height: auto;
   margin-top: 10px; /* Adjust the margin as needed */
+  float: right; /* Float the image to the right */
 }
 
 #goBackButton,
@@ -155,13 +156,16 @@
     <div class ="search-container">
         <input type="text" id="searchInput" placeholder="Search...">
     </div>
-    <img src="CDSSBanner.png" alt="CDSS Banner" id="cdssBanner">
+    
     <div class ="dropbox-container">
         <select id="filterDropdown"></select>
     </div>
+    <img src="CDSSBanner.png" alt="CDSS Banner" id="cdssBanner">
   </div>
   
+
  <table class="table">
+   
   <!-- Your table content here -->
 
 
