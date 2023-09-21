@@ -416,6 +416,8 @@ function adjustFontSize() {
   const table = document.querySelector('.table');
   const tableRows = table.querySelectorAll('tr');
   const screenWidth = window.innerWidth;
+  const columns = row.querySelectorAll('td');
+  const maxColumns = Math.min(columns.length, 4);
   const fontSizeLookup = {
     1: ['13px', '15px', '17px', '20px', '24px'],
     2: ['10px', '12px', '14px', '16px', '22px'],
