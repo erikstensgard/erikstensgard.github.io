@@ -411,29 +411,26 @@ searchInput.addEventListener('click', function () {
   }
 });
 
-// Function to adjust font size, column width, and table width based on font size and screen size
-function adjustFontSize() {
-  const table = document.querySelector('.table');
+const table = document.querySelector('.table');
   const tableRows = document.querySelectorAll('.table tr');
   const screenWidth = window.innerWidth;
 
   // Define your font sizes based on the screen width
   const fontSizes = {
-    320: ['12px', '15px', '18px', '19px', '24px'],
-    480: ['10px', '14px', '17px', '18px', '22px'],
-    768: ['9px', '12px', '14px', '15px', '18px'],
-    1024: ['8px', '10px', '12px', '13px', '16px'],
+    320: ['24px', '19px', '18px', '15px', '12px'],
+    480: ['22px', '18px', '17px', '14px', '10px'],
+    768: ['18px', '15px', '14px', '12px', '9px'],
+    1024: ['16px', '13px', '12px', '10px', '8px'],
   };
 
-  const screenWidths = Object.keys(fontSizes).map(Number).sort((a, b) => a - b);
+  const screenWidths = Object.keys(fontSizes).map(Number).sort((a, b) => b - a);
 
   // Determine the appropriate font size based on screen width
   let fontSize = '12px'; // Default font size
   for (const width of screenWidths) {
     if (screenWidth >= width) {
       fontSize = fontSizes[width][4];
-    } else {
-      break;
+      break; // Exit loop once we find a matching size
     }
   }
 
@@ -449,6 +446,7 @@ function adjustFontSize() {
   table.style.width = 'auto'; // Reset table width
   table.style.fontSize = fontSize;
 }
+
     
 // Function to handle row click event
 function handleRowClick(item) {
