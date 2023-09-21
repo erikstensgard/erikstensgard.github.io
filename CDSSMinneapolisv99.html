@@ -417,10 +417,10 @@ function adjustFontSize() {
   const tableRows = table.querySelectorAll('tr');
   const screenWidth = window.innerWidth;
   const fontSizeLookup = {
-    1: ['.5em', '.75em', '1em', '2em', '3em'],
-    2: ['.25em', '.5em', '.75em', '1em', '2em'],
-    3: ['.15em', '.25em', '.5em', '.75em', '1em'],
-    4: ['.1em', '.15em', '.25em', '.5em', '.75em'],
+    1: ['13px', '15px', '17px', '20px', '24px'],
+    2: ['10px', '12px', '14px', '16px', '22px'],
+    3: ['9px', '11px', '13px', '14px', '18px'],
+    4: ['8px', '10px', '12px', '13px', '16px'],
   };
 
   tableRows.forEach(row => {
@@ -820,6 +820,7 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   .catch(error => {
     console.error('Error:', error);
   });
+  
   </script>
 </body>
 
