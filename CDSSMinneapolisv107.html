@@ -728,8 +728,9 @@ function createOMTable(selectedData) {
       bodyRow.appendChild(displayCell);
     }
 
-    if (allUpperCase) {
-      // If all text in the row is in uppercase, set the background color to light blue
+    // Check if the row meets all conditions
+    if (allUpperCase && row <= 5 && row.trim() !== '') {
+      // If all text in the row is in uppercase, it's in the top 5 rows, and the trimmed value is not blank, set the background color to light blue
       bodyRow.style.backgroundColor = 'lightblue';
     }
 
@@ -744,7 +745,6 @@ function createOMTable(selectedData) {
     resultContainer.appendChild(table);
   }
 }
-
 
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
