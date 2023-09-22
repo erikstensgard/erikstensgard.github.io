@@ -115,7 +115,8 @@
 #goBackButton,
 #mainMenuButton,
 #indexButton,
-#goForwardButton {
+#goForwardButton,
+#CNS, {
   background-color: transparent; /* Make the background transparent */
   border: none; /* Remove the border */
   border-radius: 10px; /* Adjust border-radius for rounded corners */
@@ -132,7 +133,8 @@
 #goBackButton:hover,
 #mainMenuButton:hover,
 #indexButton:hover,
-#goForwardButton:hover {
+#goForwardButton:hover,
+#CNS:hover, {
   background-color: #4db8ff; /* lighter shade of blue */
 }
   #filterDropdown {
@@ -160,10 +162,11 @@
 <body>
   <div id="header">
     <div class ="buttons-container">
-        <button id="goBackButton">&#9664; </button>
+        <button id="goBackButton">&#9664;</button>
         <button id="mainMenuButton">CDSS</button>
         <button id="indexButton">Index</button>
-        <button id="goForwardButton"> &#9654;</button>  
+        <button id="goForwardButton">&#9654;</button>  
+        <button id="goForwardButton">CNS</button>  
     </div>
     
     <div class ="search-container">
@@ -493,7 +496,7 @@ function adjustFontSize() {
     if (columnCount === 1) {
       tableWidth = maxFontSizeValue * 42;
     } else if (columnCount === 2) {
-      tableWidth = maxFontSizeValue * 47;
+      tableWidth = maxFontSizeValue * 45;
     } else {
       // Default value if columnCount is not 1 or 2
       tableWidth = maxFontSizeValue * 57; // You can adjust this default value as needed
@@ -808,7 +811,7 @@ function handleGoForward() {
       adjustFontSize();
     }
 
-    // Function to handle the Main Menu button click event
+    // Function to handle the Index button click event
     function handleIndex() {
       const dropdown = document.getElementById('filterDropdown');
       document.getElementById('searchInput').value = null;
@@ -816,11 +819,23 @@ function handleGoForward() {
       populateDropdown(omData);
       dropdown.value = 'ORZID2 GMENU ABX INDEX INPATIENT';
       filterData({ target: dropdown });
-      adjustFontSize();      
-      scrollToTop()    
+      scrollToTop();    
       adjustFontSize();
     }
 
+    // Function to handle the Index button click event
+    function handleCNS() {
+      const dropdown = document.getElementById('filterDropdown');
+      document.getElementById('searchInput').value = null;
+      document.getElementById('searchInput').placeholder = "Search...";
+      populateDropdown(omData);
+      dropdown.value = 'ORZID2 GMENU ABX CNS';
+      filterData({ target: dropdown });  
+      scrollToTop();    
+      adjustFontSize();
+    }
+
+    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
