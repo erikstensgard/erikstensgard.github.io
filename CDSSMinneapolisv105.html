@@ -78,12 +78,18 @@
   justify-content: flex-start;
 }
 .picture-container {
-  margin: 10px; /* Add the desired margin value */
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
-  align-items: flex-start; 
-  gap: 0px;
+  align-items: flex-start;
   justify-content: flex-start;
+  gap: 0px;
+  flex-direction: column;
+  width: 900px;
+  box-sizing: border-box;  
 }
+    
   .search-container{
     flex-basis: 100%;
     align-items: Left;
