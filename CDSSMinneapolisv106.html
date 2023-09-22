@@ -734,9 +734,14 @@ function createOMTable(selectedData) {
   }
 }
 
-// Function to filter data based on the selected option
 function filterData(event, sortByTerm = false) {
   const selectedOption = event.target.value;
+
+  // Check if the selected option matches the pattern "Matches: " followed by any number
+  if (/^Matches: \d+$/.test(selectedOption) || selectedOption === "No Matches") {
+    return; // Do nothing if the selected option matches the pattern or is "No Matches"
+  }
+
   const matchingData = omData.find(item => item.Name === selectedOption);
 
   if (matchingData) {
@@ -756,6 +761,8 @@ function filterData(event, sortByTerm = false) {
     sortDropdownByTerm();
   }
 }
+
+
 
 // Function to sort the dropdown options alphabetically by term
 function sortDropdownByTerm() {
