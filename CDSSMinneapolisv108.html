@@ -261,6 +261,7 @@ function populateDropdown(omData) {
     const noMatchesOption = document.createElement('option');
     noMatchesOption.textContent = 'No Matches';
     dropdown.appendChild(noMatchesOption);
+    dropdown.scrollTop = 0;
   } else {
     // If there are matches, create an option for the match count with green text
     const matchCountOption = document.createElement('option');
@@ -295,6 +296,7 @@ function populateDropdown(omData) {
         dropdown.appendChild(option);
       }
     });
+  dropdown.scrollTop = 0;
   }
 
   // Add an event listener to the dropdown to prevent selection of specific options
