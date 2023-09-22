@@ -116,7 +116,7 @@
 #mainMenuButton,
 #indexButton,
 #goForwardButton,
-#CNS {
+#CNSButton {
   background-color: transparent; /* Make the background transparent */
   border: none; /* Remove the border */
   border-radius: 10px; /* Adjust border-radius for rounded corners */
@@ -134,7 +134,7 @@
 #mainMenuButton:hover,
 #indexButton:hover,
 #goForwardButton:hover,
-#CNS:hover {
+#CNSButton:hover {
   background-color: #4db8ff; /* lighter shade of blue */
 }
   #filterDropdown {
@@ -166,7 +166,7 @@
         <button id="mainMenuButton">CDSS</button>
         <button id="indexButton">Index</button>
         <button id="goForwardButton">&#9654;</button>  
-        <button id="goForwardButton">CNS</button>  
+        <button id="CNSButton">CNS</button>  
     </div>
     
     <div class ="search-container">
@@ -835,7 +835,6 @@ function handleGoForward() {
       adjustFontSize();
     }
 
-    
     // Function to handle the Download JSON button click event
     function handleDownloadJSON() {
       const displayText = selectedData.DisplayText || selectedData.Name;
@@ -847,9 +846,7 @@ function handleGoForward() {
       element.setAttribute('download', filename);
       element.style.display = 'none';
       document.body.appendChild(element);
-
       element.click();
-
       document.body.removeChild(element);
     }
 
@@ -871,6 +868,7 @@ document.getElementById('downloadJSONButton').addEventListener('click', handleDo
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
 document.getElementById('goForwardButton').addEventListener('click', handleGoForward);
 document.getElementById('mainMenuButton').addEventListener('click', handleMainMenu);
+document.getElementById('CNSButton').addEventListener('click', handleCNS);
 document.getElementById('indexButton').addEventListener('click', handleIndex);
 document.getElementById('filterDropdown').addEventListener('change', filterData);
 window.addEventListener('resize', adjustFontSize);
