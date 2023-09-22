@@ -74,7 +74,7 @@
   position: sticky;
   bottom: 0;
   /*background-color: #0099ff;*/
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -124,6 +124,12 @@
   width: 225px; /* Set the maximum width for the image */
   height: auto;
   float: Left; /* Float the image to the right */
+}
+
+#vaSealBanner {
+  width: 100%; /* Set the maximum width for the image */
+  height: auto;
+  float: center; /* Float the image to the right */
 }
 
 #goBackButton,
@@ -177,7 +183,7 @@
   <div id="header">
     <div class ="buttons-container">
         <button id="goBackButton">&#9664;</button>
-        <button id="mainMenuButton">CDSS</button>
+        <button id="mainMenuButton"><img src="CDSSLogo.png" alt="CDSS Logo" id="cdssLogo"></button>
         <button id="indexButton">Index</button>
         <button id="goForwardButton">&#9654;</button>  
         <button id="CNSButton">CNS</button>  
