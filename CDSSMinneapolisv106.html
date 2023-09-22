@@ -261,7 +261,7 @@ function populateDropdown(omData) {
     const noMatchesOption = document.createElement('option');
     noMatchesOption.textContent = 'No Matches';
     noMatchesOption.style.color = 'red'; // Set the text color to red
-    noMatchesOption.disabled = true; // Disable the option so it can't be selected
+    noMatchesOption.disabled = False; // Disable the option so it can't be selected
     dropdown.appendChild(noMatchesOption);
   } else {
     // If there are matches, create an option for the match count with green text
