@@ -255,26 +255,23 @@ function populateDropdown(omData) {
 
   // Count the number of matches
   const matchCount = omData.length;
+  const firstLine = document.createElement('option');
   
   if (matchCount === 0) {
     // If there are no matches, create an option with red text
-    const firstLine = document.createElement('option');
     firstLine.textContent = 'No Matches';
     firstLine.style.color = 'red'; // Set the text color to red
-    firstLine.disabled = true;
-    firstLine.selected = true;
-    dropdown.appendChild(firstLine);
+    
   } else {
     // If there are matches, create an option for the match count with green text
-    const firstLine = document.createElement('option');
     firstLine.textContent = `Matches: ${matchCount}`;
     firstLine.style.color = 'green'; // Set the text color to green
+  }
+   
     firstLine.disabled = true;
     firstLine.selected = true;
     dropdown.appendChild(firstLine);
-  }
-   
-    
+  
     omData.forEach(item => {
       const terms = [];
 
