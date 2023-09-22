@@ -331,9 +331,9 @@ function searchData() {
   // Check if the search text is empty
   if (searchText === '') {
     // Populate and sort the dropdown with the original data when the search text is blank
-    populateDropdown(omData);
-    sortDropdownByTerm();
-  } else {
+    //populateDropdown(omData);
+    //sortDropdownByTerm();
+  //}  else {
     // Split the search text by space to handle multiple search terms
     const searchTerms = searchText.split(' ');
 
@@ -392,8 +392,8 @@ function searchData() {
 
     // Call the function to populate the dropdown with filtered and sorted data
     populateDropdown(filteredData);
-  }
-
+  
+  //}
   // Scroll to the top of the dropdown
   dropdown.scrollTop = 0;
 }
