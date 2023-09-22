@@ -603,6 +603,8 @@ function createOMTable(selectedData) {
     // Before processing each row, create a Set to store the already matched texts for all rows
     const matchedTexts = new Set();
     let allUpperCase = true; // Flag to check if all text in the row is in uppercase
+    let isInTop5Rows = row <= 5; // Check if row is in the top 5 rows
+    let trimmedValueNotBlank = false; // Flag to check if trimmed value is not blank
 
     const bodyRow = document.createElement('tr');
 
@@ -728,9 +730,14 @@ function createOMTable(selectedData) {
       bodyRow.appendChild(displayCell);
     }
 
-    // Check if the row meets all conditions
-    if (allUpperCase && row <= 5 && row.trim() !== '') {
-      // If all text in the row is in uppercase, it's in the top 5 rows, and the trimmed value is not blank, set the background color to light blue
+    // Check if the trimmed value is not blank
+    const trimmedValue = bodyRow.innerText.trim();
+    if (trimmedValue !== '') {
+      trimmedValueNotBlank = true;
+    }
+
+    if (allUpperCase && isInTop5Rows && trimmedValueNotBlank) {
+      // If all conditions are met, set the background color to light blue
       bodyRow.style.backgroundColor = 'lightblue';
     }
 
