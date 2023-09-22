@@ -256,48 +256,50 @@ function populateDropdown(omData) {
   // Count the number of matches
   const matchCount = omData.length;
 
-  // Create an option for the match count
-  const matchCountOption = document.createElement('option');
-  
-  if (matchCount > 0) {
-    matchCountOption.textContent = `Matches: ${matchCount}`;
-    matchCountOption.style.color = 'green'; // Set the text color to green for matches
+  if (matchCount === 0) {
+    // If there are no matches, create an option with red text
+    const noMatchesOption = document.createElement('option');
+    noMatchesOption.textContent = 'No Matches';
+    noMatchesOption.style.color = 'red'; // Set the text color to red
+    noMatchesOption.disabled = true; // Disable the option so it can't be selected
+    dropdown.appendChild(noMatchesOption);
   } else {
-    matchCountOption.textContent = 'No Matches';
-    matchCountOption.style.color = 'red'; // Set the text color to red for no matches
-  }
+    // If there are matches, create an option for the match count with green text
+    const matchCountOption = document.createElement('option');
+    matchCountOption.textContent = `Matches: ${matchCount}`;
+    matchCountOption.style.color = 'green'; // Set the text color to green
+    matchCountOption.disabled = true; // Disable the option so it can't be selected
+    dropdown.appendChild(matchCountOption);
 
-  matchCountOption.disabled = true; // Disable the option so it can't be selected
-  dropdown.appendChild(matchCountOption);
+    omData.forEach(item => {
+      const terms = [];
 
-  omData.forEach(item => {
-    const terms = [];
-
-    // Check for "Term1" through "Term99" in the item
-    for (let i = 1; i <= 99; i++) {
-      const termKey = `Term${i}`;
-      if (item[termKey]) {
-        terms.push(item[termKey]);
+      // Check for "Term1" through "Term99" in the item
+      for (let i = 1; i <= 99; i++) {
+        const termKey = `Term${i}`;
+        if (item[termKey]) {
+          terms.push(item[termKey]);
+        }
       }
-    }
 
-    // Create separate dropdown options for each "Term" value
-    terms.forEach(term => {
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = term;
-      dropdown.appendChild(option);
+      // Create separate dropdown options for each "Term" value
+      terms.forEach(term => {
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = term;
+        dropdown.appendChild(option);
+      });
+
+      if (terms.length === 0) {
+        // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
+        const option = document.createElement('option');
+        option.value = item.Name;
+        option.textContent = item.DisplayText || item.Name;
+        option.classList.add('no-term'); // Add a CSS class to hide this option
+        dropdown.appendChild(option);
+      }
     });
-
-    if (terms.length === 0) {
-      // If "Term1" through "Term99" don't exist, use "DisplayText" or "Name"
-      const option = document.createElement('option');
-      option.value = item.Name;
-      option.textContent = item.DisplayText || item.Name;
-      option.classList.add('no-term'); // Add a CSS class to hide this option
-      dropdown.appendChild(option);
-    }
-  });
+  }
 }
 
 // Helper function to get the number of matches in an item
@@ -391,34 +393,39 @@ function searchData() {
   dropdown.scrollTop = 0;
 }
 
+
 function searchAndOpenDropdown() {
   var searchInput = document.getElementById('searchInput');
   var dropdown = document.getElementById('filterDropdown');
-  
-function filterDropdownOptions(filterText) {
-  var options = dropdown.options;
-  var matchFound = false;
 
-  for (var i = 0; i < options.length; i++) {
-    var option = options[i];
-    var optionText = option.text.toLowerCase();
+  function filterDropdownOptions(filterText) {
+    var options = dropdown.options;
+    var matchFound = false;
 
-    if (optionText.indexOf(filterText) !== -1) {
-      option.selected = true;
-      matchFound = true;
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var optionText = option.text.toLowerCase();
+
+      if (optionText.indexOf(filterText) !== -1) {
+        option.selected = true;
+        matchFound = true;
+      }
     }
-  }
 
-  dropdown.size = options.length;
-}
+    dropdown.size = options.length;
+  }
 
   searchInput.addEventListener('input', function (event) {
     var filterText = searchInput.value.trim().toLowerCase();
     filterDropdownOptions(filterText);
   });
-  
+}
+
+// Call the searchAndOpenDropdown function initially
+searchAndOpenDropdown();
+
     // Function to handle click events outside of the search input and dropdown
-   function handleOutsideClick(event) {
+function handleOutsideClick(event) {
   const searchInput = document.getElementById('searchInput');
   const filterDropdown = document.getElementById('filterDropdown');
 
@@ -436,8 +443,20 @@ function filterDropdownOptions(filterText) {
   dropdown.addEventListener('change', function (event) {
     dropdown.style.display = 'none';
   });
-}
-
+    
+    // Function to open the dropdown when clicking into the search input
+    function openDropdown() {
+      const dropdown = document.getElementById('filterDropdown');
+      dropdown.size = dropdown.options.length;
+      dropdown.style.display = 'block';
+    }
+    
+    // Function to check if the target element or its parent is the search input
+    function isSearchInput(element) {
+      const searchInput = document.getElementById('searchInput');
+      return element === searchInput || element.parentNode === searchInput;
+    }
+  
 // Add event listener to sort the dropdown alphabetically when the search box is clicked but no text has been entered
 const searchInput = document.getElementById('searchInput');
 searchInput.addEventListener('click', function () {
@@ -840,19 +859,7 @@ function handleGoForward() {
       document.body.removeChild(element);
     }
 
-    // Function to open the dropdown when clicking into the search input
-    function openDropdown() {
-      const dropdown = document.getElementById('filterDropdown');
-      dropdown.size = dropdown.options.length;
-      dropdown.style.display = 'block';
-    }
-    
-    // Function to check if the target element or its parent is the search input
-    function isSearchInput(element) {
-      const searchInput = document.getElementById('searchInput');
-      return element === searchInput || element.parentNode === searchInput;
-    }
-  
+
 // Attach event listeners
 document.getElementById('downloadJSONButton').addEventListener('click', handleDownloadJSON);
 document.getElementById('goBackButton').addEventListener('click', handleGoBack);
