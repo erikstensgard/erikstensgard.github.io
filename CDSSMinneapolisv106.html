@@ -260,15 +260,11 @@ function populateDropdown(omData) {
     // If there are no matches, create an option with red text
     const noMatchesOption = document.createElement('option');
     noMatchesOption.textContent = 'No Matches';
-    //noMatchesOption.style.color = 'red'; // Set the text color to red
-    //noMatchesOption.disabled = true; // Disable the option so it can't be selected*/
     dropdown.appendChild(noMatchesOption);
   } else {
     // If there are matches, create an option for the match count with green text
     const matchCountOption = document.createElement('option');
     matchCountOption.textContent = `Matches: ${matchCount}`;
-    //matchCountOption.style.color = 'green'; // Set the text color to green
-    //matchCountOption.disabled = true; // Disable the option so it can't be selected
     dropdown.appendChild(matchCountOption);
 
     omData.forEach(item => {
@@ -300,7 +296,16 @@ function populateDropdown(omData) {
       }
     });
   }
+
+  // Add an event listener to the dropdown to prevent selection of specific options
+  dropdown.addEventListener('click', function(event) {
+    const selectedOption = event.target;
+    if (selectedOption.disabled) {
+      event.preventDefault();
+    }
+  });
 }
+
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
