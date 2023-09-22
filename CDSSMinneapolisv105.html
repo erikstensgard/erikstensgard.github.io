@@ -70,6 +70,19 @@
   box-sizing: border-box; /* Include padding and borders in the width calculation */
 }
 
+#footer {
+  position: sticky;
+  bottom: 0;
+  /*background-color: #0099ff;*/
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 900px;
+  box-sizing: border-box; /* Include padding and borders in the width calculation */
+}
+
 .buttons-container {
   margin: 10px; /* Add the desired margin value */
   display: flex;
@@ -106,15 +119,13 @@
     
   /* Add styles for the CDSS banner image */
 #cdssBanner {
-  width: 500px; /* Set the maximum width for the image */
+  width: 200px; /* Set the maximum width for the image */
   height: auto;
-  margin-top: 10px; /* Adjust the margin as needed */
   float: Left; /* Float the image to the right */
 }
 #vaSealBanner {
-  width: 400px; /* Set the maximum width for the image */
+  width: 125px; /* Set the maximum width for the image */
   height: auto;
-  margin-top: 10px; /* Adjust the margin as needed */
   float: Left; /* Float the image to the right */
 }
 
@@ -188,12 +199,12 @@
 </table>
   <div id="footer">
     <div class ="picture-container">
-    <img src="VASeal.jpg" alt="VA Seal Banner" id="vaSealBanner">
-    <img src="CDSSBanner.png" alt="CDSS Banner" id="cdssBanner">
+      <img src="VASeal.jpg" alt="VA Seal Banner" id="vaSealBanner">
+      <img src="CDSSBanner.png" alt="CDSS Banner" id="cdssBanner">
     </div>
-    <button id="downloadJSONButton">Download JSON</button>
   </div>
-
+  <button id="downloadJSONButton">Download JSON</button>
+  
   <script>
 // Fetch OMJSON Data
     async function fetchOMData() {
