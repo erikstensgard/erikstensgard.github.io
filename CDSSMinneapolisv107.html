@@ -296,15 +296,9 @@ function populateDropdown(omData) {
       }
     });
   }
-
-  // Add an event listener to the dropdown to prevent selection of specific options
-  dropdown.addEventListener('click', function(event) {
-    const selectedOption = event.target;
-    if (selectedOption.disabled) {
-      event.preventDefault();
-    }
-  });
+dropdown.scrollTop = 0;
 }
+
 
 
 // Helper function to get the number of matches in an item
