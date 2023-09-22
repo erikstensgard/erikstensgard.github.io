@@ -260,13 +260,15 @@ function populateDropdown(omData) {
     // If there are no matches, create an option with red text
     const noMatchesOption = document.createElement('option');
     noMatchesOption.textContent = 'No Matches';
+    noMatchesOption.disabled = true; // Disable the option so it can't be selected
     dropdown.appendChild(noMatchesOption);
   } else {
     // If there are matches, create an option for the match count with green text
     const matchCountOption = document.createElement('option');
     matchCountOption.textContent = `Matches: ${matchCount}`;
+    matchCountOption.disabled = true; // Disable the option so it can't be selected
     dropdown.appendChild(matchCountOption);
-  
+
     omData.forEach(item => {
       const terms = [];
 
@@ -296,10 +298,9 @@ function populateDropdown(omData) {
       }
     });
   }
-dropdown.scrollTop = 0;
+  // Scroll to the top of the dropdown
+  dropdown.scrollTop = 0;
 }
-
-
 
 // Helper function to get the number of matches in an item
 function getMatchCount(item, searchText) {
@@ -579,6 +580,7 @@ function scrollToTop() { // Add opening curly brace here
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
+  // Function to create the table with OMJSON data
 // Function to create the table with OMJSON data
 function createOMTable(selectedData) {
   const table = document.createElement('table');
