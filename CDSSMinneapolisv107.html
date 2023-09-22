@@ -266,7 +266,7 @@ function populateDropdown(omData) {
     const matchCountOption = document.createElement('option');
     matchCountOption.textContent = `Matches: ${matchCount}`;
     dropdown.appendChild(matchCountOption);
-
+  
     omData.forEach(item => {
       const terms = [];
 
@@ -596,9 +596,6 @@ function createOMTable(selectedData) {
   for (let row = 1; row <= maxRow; row++) {
     // Before processing each row, create a Set to store the already matched texts for all rows
     const matchedTexts = new Set();
-    let allUpperCase = true; // Flag to check if all text in the row is in uppercase
-    let isInTop5Rows = row <= 5; // Check if row is in the top 5 rows
-    let trimmedValueNotBlank = false; // Flag to check if trimmed value is not blank
 
     const bodyRow = document.createElement('tr');
 
@@ -713,26 +710,9 @@ function createOMTable(selectedData) {
           }
 
           displayCell.appendChild(cellContentElement);
-
-          // Check if the cell content is in uppercase
-          if (cellContent !== cellContent.toUpperCase()) {
-            allUpperCase = false;
-          }
         });
       }
-
       bodyRow.appendChild(displayCell);
-    }
-
-    // Check if the trimmed value is not blank
-    const trimmedValue = bodyRow.innerText.trim();
-    if (trimmedValue !== '') {
-      trimmedValueNotBlank = true;
-    }
-
-    if (allUpperCase && isInTop5Rows && trimmedValueNotBlank) {
-      // If all conditions are met, set the background color to light blue
-      bodyRow.style.backgroundColor = 'lightblue';
     }
 
     tbody.appendChild(bodyRow);
