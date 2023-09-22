@@ -440,8 +440,8 @@ function handleOutsideClick(event) {
   document.addEventListener('click', handleOutsideClick);
 
   // Add event listener to close the dropdown when an option is selected
-  dropdown.addEventListener('change', function (event) {
-    dropdown.style.display = 'none';
+ document.getElementById('filterDropdown').addEventListener('change', function (event) {
+  document.getElementById('filterDropdown').style.display = 'none';
   });
     
     // Function to open the dropdown when clicking into the search input
