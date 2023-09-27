@@ -223,16 +223,17 @@
   <button id="downloadJSONButton">Download JSON</button>
   
   <script>
-    var location;
-    var dropdown = document.getElementbyId("location");
-    dropdown.addEventListener("change", function(){
-    location = dropdown.value;
-    });
+var selectedLocation;
+var dropdown = document.getElementById("location");
+dropdown.addEventListener("change", function(){
+  selectedLocation = dropdown.value;
+});
+
 
     
 // Fetch OMJSON Data
     async function fetchOMData() {
-      const response = await fetch('MinneapolisOMJSON.json');
+      const response = await fetch(selectedLocation + 'OMJSON.json');
       const data = await response.json();
       return data;
     }
