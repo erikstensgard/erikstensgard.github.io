@@ -229,16 +229,16 @@ var dropdown = document.getElementById("location");
 
 dropdown.addEventListener("change", function() {
   selectedLocation = dropdown.value;
-  fetchOMData(); // Call the fetchOMData function after the location is selected
+  fetchOMData(selectedLocation); // Call the fetchOMData function after the location is selected
   /*createOMTable(selectedData)*/
 });
 
 // Add this line to fetch OMJSON data initially with the default value
-fetchOMData();
+fetchOMData(selectedLocation);
 
     
 // Fetch OMJSON Data
-    async function fetchOMData() {
+    async function fetchOMData(selectedLocation) {
       const response = await fetch(selectedLocation + 'OMJSON.json');
       const data = await response.json();
       return data;
