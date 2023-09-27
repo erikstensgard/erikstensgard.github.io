@@ -223,19 +223,15 @@
   <button id="downloadJSONButton">Download JSON</button>
   
   <script>
+    async function setLocation(){
 let selectedData = null; // Currently selected data
-    var selectedLocation = "Minneapolis"; // Initialize with a default value
+var selectedLocation = "Minneapolis"; // Initialize with a default value
 var dropdown = document.getElementById("location");
 
 dropdown.addEventListener("change", function() {
   selectedLocation = dropdown.value;
-  fetchOMData(selectedLocation); // Call the fetchOMData function after the location is selected
-  /*createOMTable(selectedData)*/
 });
-
-// Add this line to fetch OMJSON data initially with the default value
-fetchOMData(selectedLocation);
-
+    }
     
 // Fetch OMJSON Data
 async function fetchOMData(selectedLocation) {
@@ -964,7 +960,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener('resize', adjustFontSize);
     
 // Fetch data and initialize the dropdown
-Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
+Promise.all([setLocation()]) .then ([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => { 
     omData = omjsonData;
     odData = odjsonData;
