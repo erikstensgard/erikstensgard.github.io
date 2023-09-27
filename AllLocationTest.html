@@ -223,19 +223,21 @@
   <button id="downloadJSONButton">Download JSON</button>
   
   <script>
-    async function setLocation(){
 let selectedData = null; // Currently selected data
-var selectedLocation = "Minneapolis"; // Initialize with a default value
-var dropdown = document.getElementById("location");
+let selectedLocation = "Minneapolis"; // Initialize with a default value
+let dropdown = document.getElementById("location");
 
-dropdown.addEventListener("change", function() {
+dropdown.addEventListener("change", function () {
   selectedLocation = dropdown.value;
+  fetchOMData(selectedLocation); // Call the fetchOMData function after the location is selected
 });
-    }
-    
+
+// Add this line to fetch OMJSON data initially with the default value
+fetchOMData(selectedLocation);
+
 // Fetch OMJSON Data
-async function fetchOMData(selectedLocation) {
-  const filename = selectedLocation + 'OMJSON.json';
+async function fetchOMData(location) {
+  const filename = location + 'OMJSON.json';
   try {
     const response = await fetch(filename);
     if (!response.ok) {
@@ -249,6 +251,7 @@ async function fetchOMData(selectedLocation) {
     return null;
   }
 }
+
 
     // Fetch ODJSON Data
     async function fetchODData() {
@@ -960,7 +963,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener('resize', adjustFontSize);
     
 // Fetch data and initialize the dropdown
-Promise.all([setLocation()]) .then ([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
+Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // Add fetchIndex()
   .then(([omjsonData, odjsonData, itemlinkjsonData, abxlinkjsonData]) => { 
     omData = omjsonData;
     odData = odjsonData;
