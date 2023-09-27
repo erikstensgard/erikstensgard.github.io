@@ -223,12 +223,16 @@
   <button id="downloadJSONButton">Download JSON</button>
   
   <script>
-var selectedLocation;
+var selectedLocation = "Minneapolis"; // Initialize with a default value
 var dropdown = document.getElementById("location");
-dropdown.addEventListener("change", function(){
+
+dropdown.addEventListener("change", function() {
   selectedLocation = dropdown.value;
+  fetchOMData(); // Call the fetchOMData function after the location is selected
 });
 
+// Add this line to fetch OMJSON data initially with the default value
+fetchOMData();
 
     
 // Fetch OMJSON Data
