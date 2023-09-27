@@ -239,7 +239,8 @@ fetchOMData(selectedLocation);
     
 // Fetch OMJSON Data
     async function fetchOMData(selectedLocation) {
-      const response = await fetch(selectedLocation + 'OMJSON.json');
+      const filename = selectedLocation + 'OMJSON.json';
+      const response = await fetch(filename);
       const data = await response.json();
       return data;
     }
