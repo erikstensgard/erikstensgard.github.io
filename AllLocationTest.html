@@ -223,13 +223,14 @@
   <button id="downloadJSONButton">Download JSON</button>
   
   <script>
-var selectedLocation = "Minneapolis"; // Initialize with a default value
+let selectedData = null; // Currently selected data
+    var selectedLocation = "Minneapolis"; // Initialize with a default value
 var dropdown = document.getElementById("location");
 
 dropdown.addEventListener("change", function() {
   selectedLocation = dropdown.value;
   fetchOMData(); // Call the fetchOMData function after the location is selected
-  createOMTable()
+  createOMTable(selectedData)
 });
 
 // Add this line to fetch OMJSON data initially with the default value
@@ -266,7 +267,7 @@ fetchOMData();
     // Global variables
 let omData = []; // OMJSON data
 let odData = []; // ODJSON data
-let selectedData = null; // Currently selected data
+
 let history = []; // History of selected items
 let forwardHistory = []; // History of forward selections
 let historyIndex = -1; // Index of the current selection in the history
